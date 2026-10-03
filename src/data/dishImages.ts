@@ -50,15 +50,12 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
 
   // Chirashi
   "a2118c7dd7": "/menu-hd-onglet7-12/chirashi-saumon-avocat.png",
-  "3a8fb1f6ad": "/menu-hd-onglet7-12/chirashi-mixte.png",
 
   // Sashimi
   "dbca86e5a4": "/menu-hd-onglet7-12/sashimi-saumon.png",
-  "eaa53cd6d3": "/menu-hd-onglet7-12/sashimi-thon.png",
 
   // Carpaccio
   "5206f52f84": "/menu-hd-onglet7-12/carpaccio-saumon.png",
-  "eee25cf62b": "/menu-hd-onglet7-12/carpaccio-thon.png",
 
   // Tacos
   "2505b93cd8": "/menu-hd-onglet7-12/tacos-saumon-avocat.png",
@@ -76,7 +73,6 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "4cac8d8b4e": "/menu-hd-onglet14/nigiri-saumon-avocat.png",
   "0055351351": "/menu-hd-onglet14/nigiri-saumon.png",
   "9467aea043": "/menu-hd-onglet14/nigiri-saumon-braise.png",
-  "742209d9f7": "/menu-hd-onglet14/nigiri-thon.png",
 
   // Maki — WhatsApp 14.32.30 / 14.32.31
   "a134dbcb8f": "/menu-hd-onglet15/maki-saumon-cheese.png",
@@ -144,7 +140,6 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   // Makito Fry — captures Yumlo 15-59 (miniatures)
   "df7dc34617": "/menu-hd-onglet22/makito-saumon-epice.png",
   "e6820a6ec3": "/menu-hd-onglet22/makito-crevettes.png",
-  "6dd2877aea": "/menu-hd-onglet22/makito-thon.png",
 
   // Crispy Roll — captures Yumlo 16-00 (miniatures)
   "df8e4b755c": "/menu-hd-onglet23/crispy-red-white.png",
@@ -207,7 +202,6 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
 
   // Desserts — captures Yumlo 16-08 (miniatures)
   "5c15472d24": "/menu-hd-onglet33/dessert-cheese-cake-speculos.png",
-  "6038f3931e": "/menu-hd-onglet33/dessert-cheese-cake-citron.png",
   "6bfd43d617": "/menu-hd-onglet33/dessert-banoffee-pie.png",
 
   // Jus — captures Yumlo 16-08 (miniatures)

@@ -207,7 +207,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet3/burger.png",
     "variants": [
       { "id": "saumon-avocat", "label": "Saumon Avocat", "priceMAD": "79.00" },
-      { "id": "thon-mangue", "label": "Thon Mangue", "priceMAD": "79.00" },
       { "id": "crevettes-avocat", "label": "Crevettes Avocat", "priceMAD": "74.00" }
     ]
   },
@@ -221,7 +220,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet3/crunchy-burrito.png",
     "variants": [
       { "id": "saumon-avocat", "label": "Saumon Avocat", "priceMAD": "79.00" },
-      { "id": "thon-mangue", "label": "Thon Mangue", "priceMAD": "79.00" },
       { "id": "crevettes-avocat", "label": "Crevettes Avocat", "priceMAD": "74.00" }
     ]
   },
@@ -235,7 +233,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet3/sushi-burrito.png",
     "variants": [
       { "id": "saumon-avocat", "label": "Saumon Avocat", "priceMAD": "79.00" },
-      { "id": "thon-mangue", "label": "Thon Mangue", "priceMAD": "79.00" },
       { "id": "crevettes-avocat", "label": "Crevettes Avocat", "priceMAD": "74.00" },
       { "id": "chicken-fry-avocat", "label": "Chicken Fry Avocat", "priceMAD": "69.00" }
     ]
@@ -435,15 +432,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet7-12/chirashi-saumon-avocat.png"
   },
   {
-    "id": "3a8fb1f6ad",
-    "category": "Chirashi",
-    "name": "Chirashi Mixte",
-    "description": "Saumon, thon",
-    "priceMAD": "64.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet7-12/chirashi-mixte.png"
-  },
-  {
     "id": "dbca86e5a4",
     "category": "Sashimi",
     "name": "Sashimi Saumon 4 pcs",
@@ -453,15 +441,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet7-12/sashimi-saumon.png"
   },
   {
-    "id": "eaa53cd6d3",
-    "category": "Sashimi",
-    "name": "Sashimi Thon 4 pcs",
-    "description": "Thon",
-    "priceMAD": "34.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet7-12/sashimi-thon.png"
-  },
-  {
     "id": "5206f52f84",
     "category": "Carpaccio",
     "name": "Carpaccio Saumon 8 pcs",
@@ -469,15 +448,6 @@ export const YUMLO_MENU = [
     "priceMAD": "64.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet7-12/carpaccio-saumon.png"
-  },
-  {
-    "id": "eee25cf62b",
-    "category": "Carpaccio",
-    "name": "Carpaccio Thon 8 pcs",
-    "description": "Thon",
-    "priceMAD": "64.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet7-12/carpaccio-thon.png"
   },
   {
     "id": "2505b93cd8",
@@ -577,15 +547,6 @@ export const YUMLO_MENU = [
     "priceMAD": "34.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet14/nigiri-saumon-braise.png"
-  },
-  {
-    "id": "742209d9f7",
-    "category": "Nigiri",
-    "name": "Nigiri Thon 2 pcs",
-    "description": "Thon",
-    "priceMAD": "34.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet14/nigiri-thon.png"
   },
   {
     "id": "a134dbcb8f",
@@ -1047,15 +1008,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet22/makito-crevettes.png"
   },
   {
-    "id": "6dd2877aea",
-    "category": "Makito Fry",
-    "name": "Makito Thon",
-    "description": "Thon, fondu de gouda 6 Pièces",
-    "priceMAD": "49.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet22/makito-thon.png"
-  },
-  {
     "id": "df8e4b755c",
     "category": "Crispy Roll",
     "name": "Crispy Red White",
@@ -1453,15 +1405,6 @@ export const YUMLO_MENU = [
     "priceMAD": "39.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet33/dessert-cheese-cake-speculos.png"
-  },
-  {
-    "id": "6038f3931e",
-    "category": "Desserts",
-    "name": "Cheese Cake Citron",
-    "description": "Cheese Cake Citron",
-    "priceMAD": "39.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet33/dessert-cheese-cake-citron.png"
   },
   {
     "id": "6bfd43d617",
