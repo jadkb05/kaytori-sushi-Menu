@@ -3,6 +3,7 @@ import { createPortal } from "react-dom";
 import { lineSubtotalDh } from "../cart/buildOrderMessage";
 import { useCart } from "../cart/CartContext";
 import { formatDhAmount } from "../cart/formatDh";
+import { YUMLO_MENU } from "../data/yumloMenu";
 
 type Props = {
   /** Retour au menu sans rien changer. */
@@ -10,6 +11,14 @@ type Props = {
   /** Retour au menu avec le détail du panier ouvert. */
   onEdit: () => void;
 };
+
+/** Catégorie d'un plat, depuis les données du menu (id panier = `platId` ou `platId:variantId`). */
+const CATEGORY_BY_DISH_ID = new Map<string, string>(YUMLO_MENU.map((it) => [it.id, it.category]));
+
+function categoryOf(cartLineId: string): string | undefined {
+  const sep = cartLineId.indexOf(":");
+  return CATEGORY_BY_DISH_ID.get(sep >= 0 ? cartLineId.slice(0, sep) : cartLineId);
+}
 
 /** « Nems — Crevettes » → produit « Nems », variante « Crevettes » (affichage uniquement). */
 function splitName(name: string): { product: string; variant: string | null } {
@@ -105,24 +114,32 @@ export function OrderReview({ onClose, onEdit }: Props) {
           <ul className="mt-2 divide-y divide-kaytori-green/10">
             {lines.map((l) => {
               const { product, variant } = splitName(l.name);
+              const category = categoryOf(l.id);
               return (
-                <li key={l.id} className="flex items-start gap-3 py-3.5">
-                  <span className="w-8 shrink-0 pt-px font-sans text-[0.95rem] font-semibold tabular-nums text-kaytori-green">
-                    {l.quantity}×
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block font-sans text-[0.95rem] font-semibold leading-snug text-kaytori-black">
-                      {product}
+                <li key={l.id} className="py-3.5">
+                  {category ? (
+                    <p className="pl-11 font-sans text-[0.66rem] font-semibold uppercase leading-snug tracking-[0.14em] text-kaytori-green/75">
+                      {category}
+                    </p>
+                  ) : null}
+                  <div className={`flex items-start gap-3 ${category ? "mt-1" : ""}`}>
+                    <span className="w-8 shrink-0 pt-px font-sans text-[0.95rem] font-semibold tabular-nums text-kaytori-green">
+                      {l.quantity}×
                     </span>
-                    {variant ? (
-                      <span className="mt-0.5 block font-sans text-[0.82rem] leading-snug text-kaytori-muted">
-                        {variant}
+                    <span className="min-w-0 flex-1">
+                      <span className="block font-sans text-[0.95rem] font-semibold leading-snug text-kaytori-black">
+                        {product}
                       </span>
-                    ) : null}
-                  </span>
-                  <span className="shrink-0 whitespace-nowrap pt-px font-sans text-[0.95rem] font-semibold tabular-nums text-kaytori-black">
-                    {formatDhAmount(lineSubtotalDh(l))} DH
-                  </span>
+                      {variant ? (
+                        <span className="mt-0.5 block font-sans text-[0.82rem] leading-snug text-kaytori-muted">
+                          {variant}
+                        </span>
+                      ) : null}
+                    </span>
+                    <span className="shrink-0 whitespace-nowrap pt-px font-sans text-[0.95rem] font-semibold tabular-nums text-kaytori-black">
+                      {formatDhAmount(lineSubtotalDh(l))} DH
+                    </span>
+                  </div>
                 </li>
               );
             })}
