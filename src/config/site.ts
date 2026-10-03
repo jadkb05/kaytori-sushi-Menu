@@ -33,8 +33,12 @@ export const SITE = {
   hoursWeekend: "12h – minuit",
 } as const;
 
+/**
+ * Lien WhatsApp vers le restaurant. On cible directement api.whatsapp.com/send : la redirection
+ * de wa.me remplace les emojis (caractères UTF-8 sur 4 octets, ex. 🙂) par « � ».
+ */
 export function whatsappHref(message?: string): string {
-  const base = `https://wa.me/${SITE.whatsappE164}`;
+  const base = `https://api.whatsapp.com/send?phone=${SITE.whatsappE164}`;
   if (!message) return base;
-  return `${base}?text=${encodeURIComponent(message)}`;
+  return `${base}&text=${encodeURIComponent(message)}`;
 }
