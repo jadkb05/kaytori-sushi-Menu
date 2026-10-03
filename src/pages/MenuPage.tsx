@@ -5,7 +5,7 @@ import { CartBar } from "../components/CartBar";
 import { PhoneIcon } from "../components/Icons";
 import { MenuFooter } from "../components/MenuFooter";
 import { ReassuranceBand } from "../components/ReassuranceBand";
-import { SITE, heroTodayHoursRange } from "../config/site";
+import { SITE } from "../config/site";
 import { groupItemsForMenuTab } from "../data/menuTabSections";
 import { YUMLO_CATEGORIES, YUMLO_MENU } from "../data/yumloMenu";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
@@ -158,11 +158,8 @@ export function MenuPage() {
             <p className="truncate font-display text-[1.1rem] font-semibold tracking-tight text-kaytori-cream">
               {SITE.nameAccent} Sushi
             </p>
-            <p className="mt-1.5 flex min-w-0 items-baseline gap-1.5 whitespace-nowrap font-sans text-[0.625rem] font-semibold uppercase tracking-[0.18em]">
-              <span className="text-kaytori-gold/85">Sushi · Wok · Thaï</span>
-              <span className="truncate font-medium normal-case tracking-[0.04em] text-kaytori-cream/55 max-[374px]:hidden">
-                · {heroTodayHoursRange()}
-              </span>
+            <p className="mt-1.5 whitespace-nowrap font-sans text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-kaytori-gold/85">
+              Sushi · Wok · Thaï
             </p>
           </div>
           <a

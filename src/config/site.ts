@@ -29,15 +29,6 @@ export const SITE = {
   hoursWeekend: "12h – minuit",
 } as const;
 
-/**
- * Plage d’ouverture du jour affichée dans le header (lun–jeu vs ven–dim, selon la date du navigateur).
- */
-export function heroTodayHoursRange(): string {
-  const day = new Date().getDay(); // 0 dim … 6 sam
-  const isLunJeu = day >= 1 && day <= 4;
-  return isLunJeu ? SITE.hoursWeekdays : SITE.hoursWeekend;
-}
-
 export function whatsappHref(message?: string): string {
   const base = `https://wa.me/${SITE.whatsappE164}`;
   if (!message) return base;
