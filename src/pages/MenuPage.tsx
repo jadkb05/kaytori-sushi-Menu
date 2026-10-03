@@ -1,4 +1,4 @@
-import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { BrandLogo } from "../components/BrandLogo";
 import { CartAnnouncer } from "../cart/CartAnnouncer";
 import { CartBar } from "../components/CartBar";
@@ -24,6 +24,8 @@ export function MenuPage() {
   const headerRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLUListElement>(null);
+  /** Barre sous l'onglet actif : position et largeur du libellé actif. */
+  const [indicator, setIndicator] = useState<{ x: number; w: number } | null>(null);
   const progressRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<string>(SECTIONS[0]?.category ?? "");
   /**
@@ -123,6 +125,18 @@ export function MenuPage() {
     };
   }, [stickyOffset]);
 
+  // Place la barre sous l'onglet actif (au changement d'onglet, au redimensionnement, au chargement des polices).
+  useLayoutEffect(() => {
+    const place = () => {
+      const link = navRef.current?.querySelector<HTMLElement>(`[data-cat="${CSS.escape(active)}"]`);
+      if (link) setIndicator({ x: link.offsetLeft, w: link.offsetWidth });
+    };
+    place();
+    window.addEventListener("resize", place);
+    document.fonts?.ready.then(place).catch(() => {});
+    return () => window.removeEventListener("resize", place);
+  }, [active]);
+
   // Garde la catégorie active visible dans la navigation horizontale (sans bouger la page).
   useEffect(() => {
     const nav = navRef.current;
@@ -183,7 +197,7 @@ export function MenuPage() {
         <nav className="border-b border-kaytori-black/[0.06] bg-[#fafaf7]" aria-label="Catégories du menu">
           <ul
             ref={navRef}
-            className="mx-auto flex max-w-5xl list-none gap-5 overflow-x-auto overscroll-x-contain px-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-7 sm:px-6 [&::-webkit-scrollbar]:hidden"
+            className="relative mx-auto flex max-w-5xl list-none gap-5 overflow-x-auto overscroll-x-contain px-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-7 sm:px-6 [&::-webkit-scrollbar]:hidden"
           >
             {SECTIONS.map(({ category }) => {
               const isActive = category === active;
@@ -210,6 +224,13 @@ export function MenuPage() {
                 </li>
               );
             })}
+            {indicator ? (
+              <li
+                aria-hidden
+                className="pointer-events-none absolute bottom-0 left-0 h-[3px] rounded-full bg-kaytori-black transition-[transform,width] duration-200 ease-out motion-reduce:transition-none"
+                style={{ transform: `translateX(${indicator.x}px)`, width: indicator.w }}
+              />
+            ) : null}
           </ul>
         </nav>
         <div className="h-[2px] bg-kaytori-black/[0.05]" aria-hidden>
