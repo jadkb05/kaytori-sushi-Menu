@@ -72,11 +72,6 @@ export function DishRow({ item }: { item: YumloMenuItem }) {
 
   const priceBlock = (
     <span className="flex w-full flex-1 flex-col items-center justify-center bg-gold-shine px-1.5 py-1.5 text-kaytori-black">
-      {hasVariants ? (
-        <span className="font-sans text-[0.58rem] font-semibold uppercase leading-none tracking-[0.1em] text-kaytori-black/65">
-          dès
-        </span>
-      ) : null}
       <span className="font-sans text-[0.98rem] font-bold leading-tight tabular-nums">
         {formatPriceDH(lowestPriceMAD(item))}
       </span>
