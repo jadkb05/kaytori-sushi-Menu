@@ -13,7 +13,11 @@ export function CartBar() {
   const prevCount = useRef(itemCount);
 
   useEffect(() => {
-    if (itemCount > prevCount.current) setBump((b) => b + 1);
+    if (itemCount > prevCount.current) {
+      setBump((b) => b + 1);
+      // Après un ajout, on reste sur le menu : seule la barre panier est visible.
+      setOpen(false);
+    }
     prevCount.current = itemCount;
   }, [itemCount]);
 

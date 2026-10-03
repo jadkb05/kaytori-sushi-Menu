@@ -2,14 +2,12 @@ import {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useState,
   type ReactNode,
 } from "react";
 import { whatsappHref } from "../config/site";
 import { buildWhatsappOrderMessage, type CartLine } from "./buildOrderMessage";
-import { loadCartLines, saveCartLines } from "./cartStorage";
 
 function parseUnitPriceDh(priceMAD: string): number {
   const n = Number.parseFloat(priceMAD.replace(",", "."));
@@ -31,11 +29,8 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: ReactNode }) {
-  const [lines, setLines] = useState<CartLine[]>(loadCartLines);
-
-  useEffect(() => {
-    saveCartLines(lines);
-  }, [lines]);
+  /** Panier en mémoire uniquement : un rechargement de la page repart d'un panier vide. */
+  const [lines, setLines] = useState<CartLine[]>([]);
 
   const addItem = useCallback((id: string, name: string, priceMAD: string) => {
     const unit = parseUnitPriceDh(priceMAD);
