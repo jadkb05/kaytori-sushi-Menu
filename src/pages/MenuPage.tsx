@@ -1,9 +1,9 @@
 import { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { useCart } from "../cart/CartContext";
 import { BrandLogo } from "../components/BrandLogo";
 import { CartAnnouncer } from "../cart/CartAnnouncer";
 import { CartBar } from "../components/CartBar";
 import { PhoneIcon } from "../components/Icons";
+import { MenuFooter } from "../components/MenuFooter";
 import { SITE, heroTodayHoursRange } from "../config/site";
 import { groupItemsForMenuTab } from "../data/menuTabSections";
 import { YUMLO_CATEGORIES, YUMLO_MENU } from "../data/yumloMenu";
@@ -19,7 +19,6 @@ const SECTIONS = YUMLO_CATEGORIES.map((category) => ({
 
 /** Menu digital (/menu) — point d'entrée QR code : un seul scroll, catégories sticky. */
 export function MenuPage() {
-  const { itemCount } = useCart();
   const reducedMotion = usePrefersReducedMotion();
   const stickyRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLUListElement>(null);
@@ -216,7 +215,7 @@ export function MenuPage() {
 
       <main
         id="contenu-principal"
-        className={`mx-auto max-w-5xl px-3 pt-4 sm:px-6 ${itemCount > 0 ? "pb-36" : "pb-10"}`}
+        className="mx-auto max-w-5xl px-3 pb-12 pt-4 sm:px-6"
       >
         <div className="space-y-8">
           {sections.map(({ category, items, groups }) => (
@@ -254,13 +253,9 @@ export function MenuPage() {
           ))}
         </div>
 
-        <footer className="mt-10 border-t border-kaytori-black/[0.08] pt-5 text-center font-sans text-[0.72rem] leading-relaxed text-kaytori-muted">
-          <p>Tarifs indicatifs — confirmation au restaurant.</p>
-          <p className="mt-1">
-            {SITE.address} · {SITE.phoneFixeDisplay}
-          </p>
-        </footer>
       </main>
+
+      <MenuFooter />
 
       <CartBar />
       <CartAnnouncer />
