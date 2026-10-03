@@ -1,23 +1,37 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useCart } from "../cart/CartContext";
 import { formatDhAmount } from "../cart/formatDh";
 import { lineSubtotalDh } from "../cart/buildOrderMessage";
 import { CartIcon } from "./Icons";
+import { OrderReview } from "./OrderReview";
 
 export function CartBar() {
-  const { lines, itemCount, totalDh, increment, decrement, removeLine, clear, whatsappOrderUrl } =
-    useCart();
+  const { lines, itemCount, totalDh, increment, decrement, removeLine, clear } = useCart();
   const [open, setOpen] = useState(false);
+  /** Récapitulatif de commande (étape avant WhatsApp). */
+  const [reviewOpen, setReviewOpen] = useState(false);
+  const commandRef = useRef<HTMLButtonElement>(null);
+  const closeReview = useCallback(() => {
+    setReviewOpen(false);
+    commandRef.current?.focus({ preventScroll: true });
+  }, []);
+  const editFromReview = useCallback(() => {
+    setReviewOpen(false);
+    setOpen(true);
+  }, []);
   /** Incrémenté à chaque ajout : rejoue l'animation de la barre (feedback visuel uniquement). */
   const [bump, setBump] = useState(0);
   const prevCount = useRef(itemCount);
+  /** Vrai quand la hausse de quantité vient du « + » du panneau : il ne doit pas se refermer. */
+  const incrementFromPanel = useRef(false);
 
   useEffect(() => {
     if (itemCount > prevCount.current) {
       setBump((b) => b + 1);
-      // Après un ajout, on reste sur le menu : seule la barre panier est visible.
-      setOpen(false);
+      // Après un ajout depuis le menu, on reste sur le menu : seule la barre panier est visible.
+      if (!incrementFromPanel.current) setOpen(false);
     }
+    incrementFromPanel.current = false;
     prevCount.current = itemCount;
   }, [itemCount]);
 
@@ -61,7 +75,10 @@ export function CartBar() {
                     </span>
                     <button
                       type="button"
-                      onClick={() => increment(l.id)}
+                      onClick={() => {
+                        incrementFromPanel.current = true;
+                        increment(l.id);
+                      }}
                       className="grid min-h-[44px] min-w-[44px] place-items-center rounded-lg text-xl font-medium leading-none text-kaytori-black hover:bg-white active:bg-white"
                       aria-label={`Ajouter une unité de ${l.name}`}
                     >
@@ -129,17 +146,18 @@ export function CartBar() {
             </span>
           </span>
         </button>
-        <a
-          href={whatsappOrderUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          ref={commandRef}
+          type="button"
+          onClick={() => setReviewOpen(true)}
+          aria-haspopup="dialog"
           className="btn-shine inline-flex min-h-[52px] shrink-0 items-center justify-center gap-1.5 rounded-xl bg-gold-shine px-4 text-center text-[0.9rem] font-bold text-kaytori-black shadow-card transition-all hover:shadow-gold active:scale-[0.98] max-[359px]:px-3 sm:px-5"
-          aria-label="Commander sur WhatsApp"
         >
           Commander
           <span aria-hidden>›</span>
-        </a>
+        </button>
       </div>
+      {reviewOpen ? <OrderReview onClose={closeReview} onEdit={editFromReview} /> : null}
     </div>
   );
 }
