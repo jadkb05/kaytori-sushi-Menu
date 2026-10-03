@@ -163,9 +163,9 @@ export function MenuPage() {
             </p>
           </div>
           <a
-            href="tel:+212520026824"
+            href={`tel:+${SITE.callE164}`}
             className="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full border border-kaytori-gold/40 px-3.5 font-sans text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-kaytori-goldLight transition-colors hover:border-kaytori-gold/70 active:bg-white/10 sm:min-h-[40px] sm:px-4 sm:text-[0.72rem]"
-            aria-label={`Appeler ${SITE.phoneFixeDisplay}`}
+            aria-label={`Appeler ${SITE.callDisplay}`}
           >
             <PhoneIcon className="h-4 w-4 shrink-0" />
             <span className="max-[359px]:sr-only">Appeler</span>

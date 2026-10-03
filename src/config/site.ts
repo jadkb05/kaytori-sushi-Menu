@@ -10,6 +10,10 @@ export const SITE = {
   phoneFixeDisplay: "05 20 02 68 24",
   phoneMobileDisplay: "06 75 56 59 13",
 
+  /** Numéro composé par le bouton « Appeler » du header (sans + ni espaces). */
+  callE164: "212665801807",
+  callDisplay: "06 65 80 18 07",
+
   /** WhatsApp : ligne mobile (sans + ni espaces) */
   whatsappE164: "212675565913",
 
