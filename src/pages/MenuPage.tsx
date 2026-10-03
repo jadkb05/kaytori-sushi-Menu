@@ -188,7 +188,7 @@ export function MenuPage() {
       <ReassuranceBand />
 
       {/* Bannière photo (décorative) : courte, sans texte ni overlay. */}
-      <div className="h-40 w-full overflow-hidden bg-[#0f1815] sm:h-44 md:h-52 lg:h-56">
+      <div className="aspect-[2/1] max-h-[13.5rem] w-full overflow-hidden bg-[#0f1815] md:aspect-auto md:h-52 md:max-h-none lg:h-56">
         <img
           src="/banner/kaytori-makis-960.webp"
           srcSet="/banner/kaytori-makis-640.webp 640w, /banner/kaytori-makis-960.webp 960w, /banner/kaytori-makis-1280.webp 1280w"
@@ -198,7 +198,7 @@ export function MenuPage() {
           alt=""
           fetchPriority="high"
           decoding="async"
-          className="h-full w-full object-cover object-[50%_58%] md:object-[50%_40%]"
+          className="h-full w-full object-cover object-[50%_62%] md:object-[50%_40%]"
         />
       </div>
 
