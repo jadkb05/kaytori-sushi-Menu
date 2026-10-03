@@ -26,7 +26,6 @@ export function MenuPage() {
   const navRef = useRef<HTMLUListElement>(null);
   /** Barre sous l'onglet actif : position et largeur du libellé actif. */
   const [indicator, setIndicator] = useState<{ x: number; w: number } | null>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
   const [active, setActive] = useState<string>(SECTIONS[0]?.category ?? "");
   /**
    * Catégorie cliquée : elle reste active pendant tout le défilement animé, et le scrollspy
@@ -48,13 +47,8 @@ export function MenuPage() {
     let frame = 0;
     const update = () => {
       frame = 0;
-      // Ligne de progression : part de la page déjà défilée.
-      const doc = document.documentElement;
-      const max = doc.scrollHeight - window.innerHeight;
-      const p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
-      if (progressRef.current) progressRef.current.style.transform = `scaleX(${p})`;
-
       if (clicked.current?.locked) return;
+      const max = document.documentElement.scrollHeight - window.innerHeight;
       // Catégorie active : dernière section dont le haut a passé la barre sticky (tolérance 24 px).
       const limit = stickyOffset() + 24;
       let current: string = SECTIONS[0]?.category ?? "";
@@ -233,13 +227,6 @@ export function MenuPage() {
             ) : null}
           </ul>
         </nav>
-        <div className="h-[2px] bg-kaytori-black/[0.05]" aria-hidden>
-          <div
-            ref={progressRef}
-            className="h-full origin-left bg-kaytori-gold/80"
-            style={{ transform: "scaleX(0)" }}
-          />
-        </div>
       </div>
 
       <main
