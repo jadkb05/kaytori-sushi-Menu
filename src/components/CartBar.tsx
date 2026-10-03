@@ -15,10 +15,6 @@ export function CartBar() {
     setReviewOpen(false);
     commandRef.current?.focus({ preventScroll: true });
   }, []);
-  const editFromReview = useCallback(() => {
-    setReviewOpen(false);
-    setOpen(true);
-  }, []);
   /** Incrémenté à chaque ajout : rejoue l'animation de la barre (feedback visuel uniquement). */
   const [bump, setBump] = useState(0);
   const prevCount = useRef(itemCount);
@@ -32,6 +28,12 @@ export function CartBar() {
       if (!incrementFromPanel.current) setOpen(false);
     }
     incrementFromPanel.current = false;
+    // Panier vidé (confirmation, « Vider », dernier article retiré) : on revient à l'état initial,
+    // sinon le prochain ajout rouvrirait le panier ou son détail.
+    if (itemCount === 0) {
+      setReviewOpen(false);
+      setOpen(false);
+    }
     prevCount.current = itemCount;
   }, [itemCount]);
 
@@ -157,7 +159,7 @@ export function CartBar() {
           <span aria-hidden>›</span>
         </button>
       </div>
-      {reviewOpen ? <OrderReview onClose={closeReview} onEdit={editFromReview} /> : null}
+      {reviewOpen ? <OrderReview onClose={closeReview} /> : null}
     </div>
   );
 }
