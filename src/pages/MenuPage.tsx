@@ -200,10 +200,8 @@ export function MenuPage() {
                       goTo(category);
                     }}
                     aria-current={isActive ? "true" : undefined}
-                    className={`grid min-h-[44px] items-center whitespace-nowrap border-b-2 font-sans text-[0.86rem] transition-colors ${
-                      isActive
-                        ? "border-kaytori-gold font-bold text-kaytori-black"
-                        : "border-transparent font-medium text-kaytori-green/[0.78] hover:text-kaytori-green"
+                    className={`grid min-h-[44px] items-center whitespace-nowrap font-sans text-[0.86rem] text-kaytori-black ${
+                      isActive ? "font-bold" : "font-normal"
                     }`}
                   >
                     {/* Réserve la largeur du gras : pas de décalage quand l'onglet devient actif. */}
