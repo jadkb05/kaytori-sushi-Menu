@@ -205,7 +205,7 @@ export function MenuPage() {
                       goTo(category);
                     }}
                     aria-current={isActive ? "true" : undefined}
-                    className={`grid min-h-[44px] items-center whitespace-nowrap font-sans text-[0.86rem] text-kaytori-black ${
+                    className={`grid min-h-[48px] items-center whitespace-nowrap font-sans text-[0.925rem] text-kaytori-black ${
                       isActive ? "font-bold" : "font-normal"
                     }`}
                   >
