@@ -54,14 +54,14 @@ export function dishImage(item: YumloMenuItem) {
 
 /**
  * Vignettes WebP légères (scripts/generate-menu-thumbs.py) pour une image d'origine de
- * /menu-hd-*\/ ou /starters-hd/ : 136 px (2x) et 204 px (3x) pour un affichage en 68 px.
+ * /menu-hd-*\/ ou /starters-hd/ : 224 px et 336 px pour un affichage en 88–112 px.
  * null pour toute autre image : on garde alors l'original.
  */
-export function dishThumbs(src: string): { x2: string; x3: string } | null {
+export function dishThumbs(src: string): { small: string; large: string } | null {
   const m = src.match(/^\/((?:menu-hd-[^/]+)|starters-hd)\/([^/]+)\.(?:png|jpe?g|webp)$/i);
   if (!m) return null;
   const base = `/menu-thumbs/${m[1]}/${m[2]}`;
-  return { x2: `${base}-136.webp`, x3: `${base}-204.webp` };
+  return { small: `${base}-224.webp`, large: `${base}-336.webp` };
 }
 
 /** Prix le plus bas parmi les variantes (affichage « dès X DH ») ; prix du plat sinon. */

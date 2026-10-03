@@ -4,7 +4,7 @@ Génère les vignettes WebP du menu digital (/menu) à partir des photos d'origi
   python3 scripts/generate-menu-thumbs.py
 
 Source : public/menu-hd-*/ et public/starters-hd/ (fichiers d'origine conservés, jamais modifiés).
-Sortie : public/menu-thumbs/<dossier>/<nom>-136.webp et -204.webp (vignette 68 px en 2x / 3x).
+Sortie : public/menu-thumbs/<dossier>/<nom>-224.webp et -336.webp (vignette 96–112 px, écrans 2x / 3x).
 Une image plus petite que la cible n'est pas agrandie. Nécessite Pillow (pip install Pillow).
 """
 from pathlib import Path
@@ -14,7 +14,7 @@ from PIL import Image, ImageOps
 ROOT = Path(__file__).resolve().parent.parent
 PUBLIC = ROOT / "public"
 OUT = PUBLIC / "menu-thumbs"
-SIZES = (136, 204)
+SIZES = (224, 336)
 EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp"}
 
 
