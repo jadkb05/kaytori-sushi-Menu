@@ -26,10 +26,14 @@ const ITEMS = [
     featured: true,
     icon: (
       <Svg>
-        <path d="M3 6.5h10.5v9H3z" />
-        <path d="M13.5 9.5h3.6l2.9 3.1v2.9h-6.5" />
-        <circle cx="7" cy="17" r="1.7" />
-        <circle cx="16.8" cy="17" r="1.7" />
+        {/* Scooter de livraison avec coffre arrière */}
+        <circle cx="6" cy="17" r="2.3" />
+        <circle cx="18" cy="17" r="2.3" />
+        <path d="M8.3 17h5.2l2.2-7.5" />
+        <path d="M14.6 9.5h2.6" />
+        <path d="M15.7 9.5 18 17" />
+        <path d="M3.7 14.6A4.5 4.5 0 0 1 8 12h4.5" />
+        <rect x="3.6" y="6.6" width="5.6" height="4" rx="0.6" />
       </Svg>
     ),
   },
