@@ -146,28 +146,33 @@ export function MenuPage() {
   return (
     <div className="min-h-dvh bg-[#f7f6f2]">
       <div ref={stickyRef} className="sticky top-0 z-30 shadow-[0_6px_16px_-10px_rgba(10,15,13,0.25)]">
-        <header className="border-b border-kaytori-gold/35 bg-kaytori-black">
-          <div className="mx-auto flex h-14 max-w-5xl items-center gap-3 px-3 sm:px-6">
-            <BrandLogo size={34} />
+        <header className="relative bg-[#0c1712]">
+          <div className="mx-auto flex h-14 max-w-5xl items-center gap-2.5 px-3 sm:gap-3 sm:px-6">
+            <BrandLogo size={36} className="ring-1 ring-kaytori-gold/30" />
             <div className="min-w-0 flex-1 leading-none">
-              <p className="font-display text-[1.15rem] font-medium tracking-tight">
-                <span className="bg-gradient-to-br from-kaytori-goldLight via-kaytori-gold to-[#9a7828] bg-clip-text text-transparent">
-                  {SITE.nameAccent}
-                </span>
+              <p className="truncate font-display text-[1.1rem] font-semibold tracking-tight text-kaytori-cream">
+                {SITE.nameAccent} Sushi
               </p>
-              <p className="mt-1 truncate font-sans text-[0.62rem] font-medium uppercase tracking-[0.18em] text-kaytori-gold/75">
-                Notre carte · {heroTodayHoursRange()}
+              <p className="mt-1.5 flex min-w-0 items-baseline gap-1.5 whitespace-nowrap font-sans text-[0.625rem] font-semibold uppercase tracking-[0.18em]">
+                <span className="text-kaytori-gold/85">Sushi · Wok · Thaï</span>
+                <span className="truncate font-medium normal-case tracking-[0.04em] text-kaytori-cream/55 max-[374px]:hidden">
+                  · {heroTodayHoursRange()}
+                </span>
               </p>
             </div>
             <a
               href="tel:+212520026824"
-              className="inline-flex min-h-[40px] items-center gap-1.5 rounded-xl border border-kaytori-gold/35 px-3 font-sans text-[0.72rem] font-semibold uppercase tracking-[0.08em] text-kaytori-goldLight active:bg-white/10"
+              className="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full border border-kaytori-gold/40 px-3.5 font-sans text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-kaytori-goldLight transition-colors hover:border-kaytori-gold/70 active:bg-white/10 sm:min-h-[40px] sm:px-4 sm:text-[0.72rem]"
               aria-label={`Appeler ${SITE.phoneFixeDisplay}`}
             >
               <PhoneIcon className="h-4 w-4 shrink-0" />
               <span className="max-[359px]:sr-only">Appeler</span>
             </a>
           </div>
+          <div
+            className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-kaytori-gold/55 to-transparent"
+            aria-hidden
+          />
         </header>
 
         <nav className="border-b border-kaytori-black/[0.06] bg-[#fafaf7]" aria-label="Catégories du menu">
