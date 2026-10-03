@@ -27,15 +27,15 @@ export function DishRow({ item }: { item: YumloMenuItem }) {
   const body = (
     <div className="flex w-full items-center gap-3">
       <div className="relative shrink-0">
-        <div className="h-[88px] w-[88px] overflow-hidden rounded-xl bg-[#0f1815] min-[375px]:h-24 min-[375px]:w-24 md:h-28 md:w-28">
+        <div className="h-[90px] w-[90px] overflow-hidden rounded-xl bg-[#0f1815] min-[375px]:h-[104px] min-[375px]:w-[104px] md:h-[120px] md:w-[120px]">
           <img
             src={useThumb ? thumbs.small : original}
             srcSet={useThumb ? `${thumbs.small} 224w, ${thumbs.large} 336w` : undefined}
-            sizes={useThumb ? "(min-width: 768px) 112px, (min-width: 375px) 96px, 88px" : undefined}
+            sizes={useThumb ? "(min-width: 768px) 120px, (min-width: 375px) 104px, 90px" : undefined}
             onError={useThumb ? () => setThumbFailed(true) : undefined}
             alt=""
-            width={96}
-            height={96}
+            width={104}
+            height={104}
             loading="lazy"
             decoding="async"
             className="h-full w-full object-cover object-center"
