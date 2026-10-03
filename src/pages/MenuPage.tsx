@@ -187,6 +187,21 @@ export function MenuPage() {
 
       <ReassuranceBand />
 
+      {/* Bannière photo (décorative) : courte, sans texte ni overlay. */}
+      <div className="h-40 w-full overflow-hidden bg-[#0f1815] sm:h-44 md:h-52 lg:h-56">
+        <img
+          src="/banner/kaytori-makis-960.webp"
+          srcSet="/banner/kaytori-makis-640.webp 640w, /banner/kaytori-makis-960.webp 960w, /banner/kaytori-makis-1280.webp 1280w"
+          sizes="100vw"
+          width={1280}
+          height={852}
+          alt=""
+          fetchPriority="high"
+          decoding="async"
+          className="h-full w-full object-cover object-[50%_58%] md:object-[50%_40%]"
+        />
+      </div>
+
       <div ref={stickyRef} className="sticky top-14 z-20 shadow-[0_6px_16px_-10px_rgba(10,15,13,0.25)]">
         <nav className="border-b border-kaytori-black/[0.06] bg-[#fafaf7]" aria-label="Catégories du menu">
           <ul
