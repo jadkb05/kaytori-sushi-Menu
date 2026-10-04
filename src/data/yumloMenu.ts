@@ -214,14 +214,10 @@ export const YUMLO_MENU = [
     "id": "b6220c2315",
     "category": "Sushi Fusion",
     "name": "Crunchy Burrito",
-    "description": "Riz croustillant, cheese, surimi épicé, goma wakamé, tobiko, sauce japonaise.",
-    "priceMAD": "59.00",
+    "description": "Avocat, surimi épicé, goma wakamé, tobiko, sauce japonaise, cheese, riz croustillant",
+    "priceMAD": "84.15",
     "currency": "MAD",
-    "image": "/menu-hd-onglet3/crunchy-burrito.png",
-    "variants": [
-      { "id": "saumon-avocat", "label": "Saumon Avocat", "priceMAD": "79.00" },
-      { "id": "crevettes-avocat", "label": "Crevettes Avocat", "priceMAD": "74.00" }
-    ]
+    "image": "/menu-hd-onglet3/crunchy-burrito.png"
   },
   {
     "id": "5a7a6c1ff9",
