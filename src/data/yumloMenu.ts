@@ -130,6 +130,15 @@ export const YUMLO_MENU = [
     ]
   },
   {
+    "id": "2501bc64fe",
+    "category": "Starters",
+    "name": "Poulet Karaage",
+    "description": "Poulet",
+    "priceMAD": "39.00",
+    "currency": "MAD",
+    "image": "/starters-hd/poulet-karaage.png"
+  },
+  {
     "id": "a1aee64eaf",
     "category": "Nems & Gyoza & Rouleaux de printemps",
     "name": "Gyoza",

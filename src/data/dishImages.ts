@@ -10,6 +10,9 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "a1aee64eaf": "/menu-hd-onglet2/gyoza.png",
   "76d7875ff7": "/menu-hd-onglet2/rouleau-de-printemps.png",
 
+  // Starters
+  "2501bc64fe": "/starters-hd/poulet-karaage.png",
+
   // Sushi Fusion — visuels client WhatsApp 13.28.07
   "1842edff6e": "/menu-hd-onglet3/sushi-gratine.png",
   "da6c1fe793": "/menu-hd-onglet3/pizza-saumon-crabe.png",
