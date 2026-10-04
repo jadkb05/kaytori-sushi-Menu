@@ -1008,6 +1008,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet20/blossom-eby-roll.png"
   },
   {
+    "id": "cb9324ca52",
+    "category": "Blossom",
+    "name": "Blossom Tokyo",
+    "description": "Surimi pané, saumon, mangue, cheese, tobiko 4 Pièces",
+    "priceMAD": "62.90",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-tokyo.png"
+  },
+  {
     "id": "6c2ba70a6f",
     "category": "Premium",
     "name": "Premium Krabi Roll",
