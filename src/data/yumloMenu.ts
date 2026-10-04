@@ -1026,6 +1026,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet20/blossom-saumon-braise.png"
   },
   {
+    "id": "c435723d4c",
+    "category": "Blossom",
+    "name": "Blossom Bali",
+    "description": "Saumon mariné, surimi, avocat, cheese, sésame 4 Pièces",
+    "priceMAD": "58.65",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-bali.png"
+  },
+  {
     "id": "6c2ba70a6f",
     "category": "Premium",
     "name": "Premium Krabi Roll",
