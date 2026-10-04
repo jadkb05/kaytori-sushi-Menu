@@ -1211,6 +1211,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet24/crunchy-fry-eby-fry.png"
   },
   {
+    "id": "45bca3a281",
+    "category": "Crunchy Roll",
+    "name": "Crunchy Fry Salmon Fry",
+    "description": "Saumon cuit, cheese, tobiko 6 Pièces",
+    "priceMAD": "55.25",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet24/crunchy-fry-salmon-fry.png"
+  },
+  {
     "id": "083ac320dd",
     "category": "Wok & Thaï",
     "name": "Wok",
