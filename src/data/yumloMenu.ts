@@ -1035,6 +1035,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet20/blossom-bali.png"
   },
   {
+    "id": "4c6bec2d41",
+    "category": "Blossom",
+    "name": "Blossom Bangkok",
+    "description": "Thon mariné, surimi, mangue, cheese, sésame 4 Pièces",
+    "priceMAD": "58.65",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-bangkok.png"
+  },
+  {
     "id": "6c2ba70a6f",
     "category": "Premium",
     "name": "Premium Krabi Roll",
