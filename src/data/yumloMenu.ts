@@ -1193,6 +1193,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet24/crunchy-dragon-eyes.png"
   },
   {
+    "id": "e3a96c288b",
+    "category": "Crunchy Roll",
+    "name": "Crunchy Pacific",
+    "description": "Crevette pané, surimi pané, cheese, tobiko 6 Pièces",
+    "priceMAD": "55.25",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet24/crunchy-pacific.png"
+  },
+  {
     "id": "083ac320dd",
     "category": "Wok & Thaï",
     "name": "Wok",
