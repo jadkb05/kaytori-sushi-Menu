@@ -104,19 +104,15 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "302c4c0e8a": "/menu-hd-onglet17/california-nara.png",
   "566b2be815": "/menu-hd-onglet17/california-eby-avocado.png",
   "79e57587e9": "/menu-hd-onglet17/california-rainbow.png",
-  "e45aec3f53": "/menu-hd-onglet17/california-norvegien.png",
 
   // Special Roll — WhatsApp 14.32.32 (lot complet carte)
   "712e0027e2": "/menu-hd-onglet18/special-okinawa-saumon.png",
   "5ee8246804": "/menu-hd-onglet18/special-unagui-roll.png",
   "7412fc4ec3": "/menu-hd-onglet18/special-triangle-roll.png",
-  "f46b03f169": "/menu-hd-onglet18/special-pink-tuna.png",
   "7eeb7d6f83": "/menu-hd-onglet18/special-havana-roll.png",
   "a1b2c3d4e6": "/menu-hd-onglet18/special-goma-roll.png",
   "b2c3d4e5f7": "/menu-hd-onglet18/special-gambas-roll.png",
   "c3d4e5f6a8": "/menu-hd-onglet18/special-samurai-roll.png",
-  "d4e5f6a7b9": "/menu-hd-onglet18/special-palawan-roll.png",
-  "e5f6a7b8c0": "/menu-hd-onglet18/special-shogun-roll.png",
   "f6a7b8c9d1": "/menu-hd-onglet18/special-kunafa-roll.png",
   "a7b8c9d0e2": "/menu-hd-onglet18/special-naruto-roll.png",
 

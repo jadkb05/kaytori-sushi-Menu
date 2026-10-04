@@ -752,15 +752,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet17/california-rainbow.png"
   },
   {
-    "id": "e45aec3f53",
-    "category": "California Roll",
-    "name": "California Norvégien",
-    "description": "Saumon, thon, avocat, cheese 4 Pièces",
-    "priceMAD": "48.45",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet17/california-norvegien.png"
-  },
-  {
     "id": "712e0027e2",
     "category": "Special Roll",
     "name": "Okinawa Saumon 4 pcs",
@@ -786,15 +777,6 @@ export const YUMLO_MENU = [
     "priceMAD": "58.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-triangle-roll.png"
-  },
-  {
-    "id": "f46b03f169",
-    "category": "Special Roll",
-    "name": "Special Pink Tuna",
-    "description": "Thon, surimi pané, crabe, avocat, saumon, tobiko 4 Pièces",
-    "priceMAD": "58.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-pink-tuna.png"
   },
   {
     "id": "7eeb7d6f83",
@@ -831,24 +813,6 @@ export const YUMLO_MENU = [
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-samurai-roll.png"
-  },
-  {
-    "id": "d4e5f6a7b9",
-    "category": "Special Roll",
-    "name": "Special Palawan Roll",
-    "description": "Saumon, mangue, wakame, thon, fromage 4 Pièces",
-    "priceMAD": "58.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-palawan-roll.png"
-  },
-  {
-    "id": "e5f6a7b8c0",
-    "category": "Special Roll",
-    "name": "Special Shogun Roll",
-    "description": "Saumon, surimi, fromage, tobiko, tempura 4 Pièces",
-    "priceMAD": "58.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-shogun-roll.png"
   },
   {
     "id": "f6a7b8c9d1",
@@ -918,7 +882,7 @@ export const YUMLO_MENU = [
     "category": "Aromaki",
     "name": "Aromaki Exotique",
     "description": "Saumon, mangue, avocat, laitue, cheese, tobiko 6 Pièces",
-    "priceMAD": "58.65",
+    "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-exotique.png"
   },
@@ -927,7 +891,7 @@ export const YUMLO_MENU = [
     "category": "Aromaki",
     "name": "Aromaki Saumon",
     "description": "Saumon, surimi, avocat, cheese, tobiko 6 Pièces",
-    "priceMAD": "58.65",
+    "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-saumon.png"
   },
@@ -936,7 +900,7 @@ export const YUMLO_MENU = [
     "category": "Aromaki",
     "name": "Aromaki Panama",
     "description": "Saumon, surimi, goma wakamé, avocat, cheese, tobiko 6 Pièces",
-    "priceMAD": "58.65",
+    "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-panama.png"
   },
@@ -945,7 +909,7 @@ export const YUMLO_MENU = [
     "category": "Aromaki",
     "name": "Aromaki Crevettes",
     "description": "Crevettes pané, surimi, avocat, cheese, tobiko 6 Pièces",
-    "priceMAD": "58.65",
+    "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-crevettes.png"
   },
@@ -954,7 +918,7 @@ export const YUMLO_MENU = [
     "category": "Aromaki",
     "name": "Aromaki Printemps Saumon",
     "description": "Saumon, surimi, avocat, cheese, tobiko 6 Pièces",
-    "priceMAD": "58.65",
+    "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-printemps-saumon.png"
   },
@@ -963,7 +927,7 @@ export const YUMLO_MENU = [
     "category": "Aromaki",
     "name": "Aromaki Hawai",
     "description": "Saumon, mangue, avocat, surimi, cheese, tobiko 6 Pièces",
-    "priceMAD": "58.65",
+    "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-hawai.png"
   },
