@@ -76,13 +76,7 @@ export function ReassuranceBand() {
                 : ""
             }`}
           >
-            <span
-              className={`grid h-8 w-8 shrink-0 place-items-center rounded-full ${
-                item.featured
-                  ? "bg-kaytori-green text-kaytori-goldLight"
-                  : "text-kaytori-green ring-1 ring-inset ring-kaytori-gold/45"
-              }`}
-            >
+            <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-kaytori-green text-kaytori-goldLight">
               {item.icon}
             </span>
             <span className="mt-1.5 block min-w-0 md:mt-0">
