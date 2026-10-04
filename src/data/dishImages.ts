@@ -137,6 +137,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "f84280a0f7": "/menu-hd-onglet20/blossom-boston.png",
   "12117b00b9": "/menu-hd-onglet20/blossom-eby-roll.png",
   "cb9324ca52": "/menu-hd-onglet20/blossom-tokyo.png",
+  "ace54559af": "/menu-hd-onglet20/blossom-saumon-braise.png",
 
   // Premium — captures produit Yumlo 15-58 / 15-59 (miniatures)
   "6c2ba70a6f": "/menu-hd-onglet21/premium-krabi-roll.png",

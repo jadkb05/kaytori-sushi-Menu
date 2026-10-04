@@ -1017,6 +1017,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet20/blossom-tokyo.png"
   },
   {
+    "id": "ace54559af",
+    "category": "Blossom",
+    "name": "Blossom Saumon Braisé",
+    "description": "Saumon braisé, avocat, cheese 4 Pièces",
+    "priceMAD": "62.90",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-saumon-braise.png"
+  },
+  {
     "id": "6c2ba70a6f",
     "category": "Premium",
     "name": "Premium Krabi Roll",
