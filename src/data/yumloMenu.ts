@@ -954,6 +954,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet19/aromaki-printemps-saumon.png"
   },
   {
+    "id": "02d2e17d1c",
+    "category": "Aromaki",
+    "name": "Aromaki Hawai",
+    "description": "Saumon, mangue, avocat, surimi, cheese, tobiko 6 Pièces",
+    "priceMAD": "58.65",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet19/aromaki-hawai.png"
+  },
+  {
     "id": "e41a8a69ca",
     "category": "Blossom",
     "name": "Blossom Ceviché Roll",
