@@ -513,7 +513,7 @@ export const YUMLO_MENU = [
     "category": "Crispy Rice",
     "name": "Crispy Rice Crunchy Poulet 2 pcs",
     "description": "Poulet",
-    "priceMAD": "29.00",
+    "priceMAD": "33.15",
     "currency": "MAD",
     "image": "/menu-hd-onglet13/crispy-rice-crunchy-poulet.png"
   },
