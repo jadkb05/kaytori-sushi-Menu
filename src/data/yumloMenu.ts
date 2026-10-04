@@ -747,6 +747,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet17/california-rainbow.png"
   },
   {
+    "id": "e45aec3f53",
+    "category": "California Roll",
+    "name": "California Norvégien",
+    "description": "Saumon, thon, avocat, cheese 4 Pièces",
+    "priceMAD": "48.45",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet17/california-norvegien.png"
+  },
+  {
     "id": "712e0027e2",
     "category": "Special Roll",
     "name": "Okinawa Saumon 4 pcs",
