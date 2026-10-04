@@ -1202,6 +1202,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet24/crunchy-pacific.png"
   },
   {
+    "id": "3583d51b73",
+    "category": "Crunchy Roll",
+    "name": "Crunchy Fry Eby Fry",
+    "description": "Crevette pané, avocat, cheese 6 Pièces",
+    "priceMAD": "55.25",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet24/crunchy-fry-eby-fry.png"
+  },
+  {
     "id": "083ac320dd",
     "category": "Wok & Thaï",
     "name": "Wok",
