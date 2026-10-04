@@ -936,6 +936,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet19/aromaki-panama.png"
   },
   {
+    "id": "551465cab5",
+    "category": "Aromaki",
+    "name": "Aromaki Crevettes",
+    "description": "Crevettes pané, surimi, avocat, cheese, tobiko 6 Pièces",
+    "priceMAD": "58.65",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet19/aromaki-crevettes.png"
+  },
+  {
     "id": "e41a8a69ca",
     "category": "Blossom",
     "name": "Blossom Ceviché Roll",
