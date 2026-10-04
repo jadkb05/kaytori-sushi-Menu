@@ -927,6 +927,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet19/aromaki-saumon.png"
   },
   {
+    "id": "85abca6325",
+    "category": "Aromaki",
+    "name": "Aromaki Panama",
+    "description": "Saumon, surimi, goma wakamé, avocat, cheese, tobiko 6 Pièces",
+    "priceMAD": "58.65",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet19/aromaki-panama.png"
+  },
+  {
     "id": "e41a8a69ca",
     "category": "Blossom",
     "name": "Blossom Ceviché Roll",
