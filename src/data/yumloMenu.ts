@@ -1113,7 +1113,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, avocat, concombre, cheese, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet19/aromaki-marbella.png"
+    "image": "/menu-hd-onglet19/aromaki-marbella.jpg"
   },
   {
     "id": "e41a8a69ca",
