@@ -969,7 +969,7 @@ export const YUMLO_MENU = [
     "description": "Saumon pané, crabe, mangue, pavot",
     "priceMAD": "49.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-pavot-roll.png"
+    "image": "/menu-hd-onglet18/special-pavot-roll.jpg"
   },
   {
     "id": "3442a25d4d",
