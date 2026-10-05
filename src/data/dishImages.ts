@@ -156,11 +156,16 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "4c6bec2d41": "/menu-hd-onglet20/blossom-bangkok.png",
 
   // Premium — captures produit Yumlo 15-58 / 15-59 (miniatures)
+  "cec5e70b6a": "/menu-hd-onglet21/premium-cancun.png",
   "6c2ba70a6f": "/menu-hd-onglet21/premium-krabi-roll.png",
   "c6bf1f1759": "/menu-hd-onglet21/premium-fuji-roll.png",
   "b1b1b0e1ba": "/menu-hd-onglet21/premium-pink-salmon.png",
   "82bc3899c0": "/menu-hd-onglet21/premium-exotica-roll.png",
   "2aacef48a6": "/menu-hd-onglet21/premium-pataya.png",
+  "fd173daf85": "/menu-hd-onglet21/premium-sirena-roll.png",
+  "ef3a2da619": "/menu-hd-onglet21/premium-salmon-tataki.png",
+  "ffddedcf35": "/menu-hd-onglet21/premium-bora-bora.png",
+  "52d169b9dd": "/menu-hd-onglet21/premium-exotic-salmon.png",
 
   // Makito Fry — captures Yumlo 15-59 (miniatures)
   "df7dc34617": "/menu-hd-onglet22/makito-saumon-epice.png",

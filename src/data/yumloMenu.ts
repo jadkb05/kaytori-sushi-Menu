@@ -1152,11 +1152,20 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet20/blossom-bangkok.png"
   },
   {
+    "id": "cec5e70b6a",
+    "category": "Premium",
+    "name": "Premium Cancun",
+    "description": "",
+    "priceMAD": "65.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet21/premium-cancun.png"
+  },
+  {
     "id": "6c2ba70a6f",
     "category": "Premium",
     "name": "Premium Krabi Roll",
     "description": "Saumon, crevettes pané, surimi crabe, avocat, goma wakamé, cheese 4 Pièces",
-    "priceMAD": "85.00",
+    "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-krabi-roll.png"
   },
@@ -1165,7 +1174,7 @@ export const YUMLO_MENU = [
     "category": "Premium",
     "name": "Premium Fuji Roll",
     "description": "Saumon, crevettes pané, saumon cuit, mangue, cheese 4 Pièces",
-    "priceMAD": "85.00",
+    "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-fuji-roll.png"
   },
@@ -1174,7 +1183,7 @@ export const YUMLO_MENU = [
     "category": "Premium",
     "name": "Premium Pink Salmon",
     "description": "Crevette poché, saumon, surimi crevette pané 4 Pièces",
-    "priceMAD": "85.00",
+    "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-pink-salmon.png"
   },
@@ -1183,7 +1192,7 @@ export const YUMLO_MENU = [
     "category": "Premium",
     "name": "Premium Exotica Roll",
     "description": "Double crevette pané, saumon, surimi, avocat, goma wakamé 4 Pièces",
-    "priceMAD": "85.00",
+    "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-exotica-roll.png"
   },
@@ -1192,9 +1201,45 @@ export const YUMLO_MENU = [
     "category": "Premium",
     "name": "Premium Pataya",
     "description": "Double crevette pané, surimi, saumon, mangue, tobiko, ciboulette 4 Pièces",
-    "priceMAD": "85.00",
+    "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-pataya.png"
+  },
+  {
+    "id": "fd173daf85",
+    "category": "Premium",
+    "name": "Premium Sirena Roll",
+    "description": "",
+    "priceMAD": "69.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet21/premium-sirena-roll.png"
+  },
+  {
+    "id": "ef3a2da619",
+    "category": "Premium",
+    "name": "Premium Salmon Tataki",
+    "description": "",
+    "priceMAD": "69.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet21/premium-salmon-tataki.png"
+  },
+  {
+    "id": "ffddedcf35",
+    "category": "Premium",
+    "name": "Premium Bora Bora",
+    "description": "",
+    "priceMAD": "69.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet21/premium-bora-bora.png"
+  },
+  {
+    "id": "52d169b9dd",
+    "category": "Premium",
+    "name": "Premium Exotic Salmon",
+    "description": "",
+    "priceMAD": "69.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet21/premium-exotic-salmon.png"
   },
   {
     "id": "df7dc34617",
