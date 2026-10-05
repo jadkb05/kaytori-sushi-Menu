@@ -139,6 +139,60 @@ export const YUMLO_MENU = [
     "image": "/starters-hd/poulet-karaage.png"
   },
   {
+    "id": "228ccfc51d",
+    "category": "Starters",
+    "name": "Riz Nature",
+    "description": "",
+    "priceMAD": "15.00",
+    "currency": "MAD",
+    "image": "/starters-hd/riz-nature.png"
+  },
+  {
+    "id": "4d8b7659dc",
+    "category": "Starters",
+    "name": "Riz Vinaigré",
+    "description": "",
+    "priceMAD": "20.00",
+    "currency": "MAD",
+    "image": "/starters-hd/riz-vinaigre.png"
+  },
+  {
+    "id": "c1d464c327",
+    "category": "Starters",
+    "name": "Salade de Choux",
+    "description": "",
+    "priceMAD": "24.00",
+    "currency": "MAD",
+    "image": "/starters-hd/salade-de-choux.png"
+  },
+  {
+    "id": "dfa255110e",
+    "category": "Starters",
+    "name": "Edamame Spicy",
+    "description": "",
+    "priceMAD": "39.00",
+    "currency": "MAD",
+    "image": "/starters-hd/edamame-spicy.png"
+  },
+  {
+    "id": "f7dbe92aae",
+    "category": "Starters",
+    "name": "Edamame",
+    "description": "",
+    "priceMAD": "39.00",
+    "currency": "MAD",
+    "image": "/starters-hd/edamame.png"
+  },
+  {
+    "id": "140ae41112",
+    "category": "Starters",
+    "name": "Goma Wakamé",
+    "description": "",
+    "priceMAD": "39.00",
+    "currency": "MAD",
+    "image": "/starters-hd/goma-wakame.png"
+  },
+  {
     "id": "a1aee64eaf",
     "category": "Nems & Gyoza & Rouleaux de printemps",
     "name": "Gyoza",
