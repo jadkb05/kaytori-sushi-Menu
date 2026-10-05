@@ -311,6 +311,19 @@ export const YUMLO_MENU = [
     ]
   },
   {
+    "id": "da996bc4a5",
+    "category": "Nems & Gyoza & Rouleaux de printemps",
+    "name": "Bouchées Vapeur",
+    "description": "4 Pièces — au choix.",
+    "priceMAD": "44.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet2/bouchees-vapeur.png",
+    "variants": [
+      { "id": "poulet", "label": "Poulet", "priceMAD": "44.00" },
+      { "id": "crevettes", "label": "Crevettes", "priceMAD": "54.00" }
+    ]
+  },
+  {
     "id": "a043965b0e",
     "category": "Yakitori",
     "name": "Boeuf Fromage Pané 2 pcs",
