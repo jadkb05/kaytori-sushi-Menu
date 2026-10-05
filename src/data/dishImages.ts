@@ -21,7 +21,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "140ae41112": "/starters-hd/goma-wakame.jpg",
 
   // Sushi Fusion — visuels client WhatsApp 13.28.07
-  "1842edff6e": "/menu-hd-onglet3/sushi-gratine.png",
+  "1842edff6e": "/menu-hd-onglet3/sushi-gratine.jpg",
   "da6c1fe793": "/menu-hd-onglet3/pizza-saumon-crabe.png",
   "f6cb920bcd": "/menu-hd-onglet3/pizza-tropicale.png",
   "0ba6c99141": "/menu-hd-onglet3/pizza-saumon-mozza.png",

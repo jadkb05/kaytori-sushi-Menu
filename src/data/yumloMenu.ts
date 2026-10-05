@@ -226,7 +226,7 @@ export const YUMLO_MENU = [
     "description": "Gratiné au choix — sauce maison.",
     "priceMAD": "78.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet3/sushi-gratine.png",
+    "image": "/menu-hd-onglet3/sushi-gratine.jpg",
     "variants": [
       { "id": "gambas", "label": "Gambas", "priceMAD": "78.00" },
       { "id": "saumon-crabe", "label": "Saumon Crabe", "priceMAD": "78.00" },
