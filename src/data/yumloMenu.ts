@@ -317,7 +317,7 @@ export const YUMLO_MENU = [
     "description": "4 Pièces — au choix.",
     "priceMAD": "44.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet2/bouchees-vapeur.png",
+    "image": "/menu-hd-onglet2/bouchees-vapeur.jpg",
     "variants": [
       { "id": "poulet", "label": "Poulet", "priceMAD": "44.00" },
       { "id": "crevettes", "label": "Crevettes", "priceMAD": "54.00" }
