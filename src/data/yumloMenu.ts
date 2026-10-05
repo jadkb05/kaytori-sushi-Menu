@@ -987,7 +987,7 @@ export const YUMLO_MENU = [
     "description": "Eby fry, crabe mariné, avocat, mangue",
     "priceMAD": "44.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-tahiti-roll.png"
+    "image": "/menu-hd-onglet18/special-tahiti-roll.jpg"
   },
   {
     "id": "11b8f36cb5",
