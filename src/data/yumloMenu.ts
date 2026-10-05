@@ -172,7 +172,7 @@ export const YUMLO_MENU = [
     "description": "",
     "priceMAD": "39.00",
     "currency": "MAD",
-    "image": "/starters-hd/goma-wakame.png"
+    "image": "/starters-hd/goma-wakame.jpg"
   },
   {
     "id": "4d8b7659dc",
