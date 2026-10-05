@@ -1212,7 +1212,7 @@ export const YUMLO_MENU = [
     "description": "Saumon mariné, mangue, avocat, tobiko",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-mango-saumon.png"
+    "image": "/menu-hd-onglet20/blossom-mango-saumon.jpg"
   },
   {
     "id": "6d09d7bf8d",
