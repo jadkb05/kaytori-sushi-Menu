@@ -939,10 +939,10 @@ export const YUMLO_MENU = [
     "id": "47cc3a1126",
     "category": "Special Roll",
     "name": "Special Palawan",
-    "description": "Saumon flambé, thon, mangue, avocat",
+    "description": "Saumon flambé, saumon, mangue, avocat",
     "priceMAD": "58.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-palawan.png"
+    "image": "/menu-hd-onglet18/special-palawan.jpg"
   },
   {
     "id": "f466c46a8f",
