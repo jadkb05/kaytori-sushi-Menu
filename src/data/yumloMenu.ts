@@ -1104,7 +1104,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, crabe, mangue, laitue, cheese, tobiko",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet19/aromaki-antalya.png"
+    "image": "/menu-hd-onglet19/aromaki-antalya.jpg"
   },
   {
     "id": "77e046cbe4",
