@@ -154,7 +154,7 @@ export const YUMLO_MENU = [
     "description": "",
     "priceMAD": "39.00",
     "currency": "MAD",
-    "image": "/starters-hd/edamame-spicy.png"
+    "image": "/starters-hd/edamame-spicy.jpg"
   },
   {
     "id": "f7dbe92aae",
