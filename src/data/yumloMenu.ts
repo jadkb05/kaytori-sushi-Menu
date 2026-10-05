@@ -909,15 +909,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet18/special-gambas-roll.png"
   },
   {
-    "id": "c3d4e5f6a8",
-    "category": "Special Roll",
-    "name": "Special Samurai Roll",
-    "description": "Thon, saumon, surimi pané, wakamé",
-    "priceMAD": "54.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-samurai-roll.png"
-  },
-  {
     "id": "f6a7b8c9d1",
     "category": "Special Roll",
     "name": "Special Kunafa Roll",
