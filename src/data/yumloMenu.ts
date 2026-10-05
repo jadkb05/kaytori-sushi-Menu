@@ -465,7 +465,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, crevettes, surimi, mangue, tomate cerise, choux, carottes",
     "priceMAD": "64.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet6/exotic-del-mar.png"
+    "image": "/menu-hd-onglet6/exotic-del-mar.jpg"
   },
   {
     "id": "aa7a7bfe5c",
