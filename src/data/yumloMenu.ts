@@ -1329,7 +1329,7 @@ export const YUMLO_MENU = [
     "description": "Saumon cuit, saumon braisé, saumon mariné, surimi, avocat",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet21/premium-salmon-tataki.png"
+    "image": "/menu-hd-onglet21/premium-salmon-tataki.jpg"
   },
   {
     "id": "ffddedcf35",
