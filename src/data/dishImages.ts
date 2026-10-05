@@ -162,6 +162,13 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "ace54559af": "/menu-hd-onglet20/blossom-saumon-braise.png",
   "c435723d4c": "/menu-hd-onglet20/blossom-bali.png",
   "4c6bec2d41": "/menu-hd-onglet20/blossom-bangkok.png",
+  "e463b20218": "/menu-hd-onglet20/blossom-bonzai.png",
+  "0433bbd53c": "/menu-hd-onglet20/blossom-mango-saumon.png",
+  "6d09d7bf8d": "/menu-hd-onglet20/blossom-crabe.png",
+  "cf8623ce70": "/menu-hd-onglet20/blossom-green-salmon.png",
+  "f33f401dd2": "/menu-hd-onglet20/blossom-cheezy-salmon.png",
+  "dfe30cb647": "/menu-hd-onglet20/blossom-toro-roll.png",
+  "cd27240259": "/menu-hd-onglet20/blossom-exotic.png",
 
   // Premium — captures produit Yumlo 15-58 / 15-59 (miniatures)
   "cec5e70b6a": "/menu-hd-onglet21/premium-cancun.png",

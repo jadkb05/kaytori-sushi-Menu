@@ -1192,7 +1192,7 @@ export const YUMLO_MENU = [
     "category": "Blossom",
     "name": "Blossom Tokyo",
     "description": "Surimi pané, saumon, mangue, cheese, tobiko 4 Pièces",
-    "priceMAD": "62.90",
+    "priceMAD": "59.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-tokyo.png"
   },
@@ -1201,7 +1201,7 @@ export const YUMLO_MENU = [
     "category": "Blossom",
     "name": "Blossom Saumon Braisé",
     "description": "Saumon braisé, avocat, cheese 4 Pièces",
-    "priceMAD": "62.90",
+    "priceMAD": "59.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-saumon-braise.png"
   },
@@ -1210,7 +1210,7 @@ export const YUMLO_MENU = [
     "category": "Blossom",
     "name": "Blossom Bali",
     "description": "Saumon mariné, surimi, avocat, cheese, sésame 4 Pièces",
-    "priceMAD": "58.65",
+    "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-bali.png"
   },
@@ -1219,9 +1219,72 @@ export const YUMLO_MENU = [
     "category": "Blossom",
     "name": "Blossom Bangkok",
     "description": "Thon mariné, surimi, mangue, cheese, sésame 4 Pièces",
-    "priceMAD": "58.65",
+    "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-bangkok.png"
+  },
+  {
+    "id": "e463b20218",
+    "category": "Blossom",
+    "name": "Blossom Bonzaï",
+    "description": "Anguille, avocat, surimi, cheese, sésame",
+    "priceMAD": "64.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-bonzai.png"
+  },
+  {
+    "id": "0433bbd53c",
+    "category": "Blossom",
+    "name": "Blossom Mango Saumon",
+    "description": "Saumon mariné, mangue, avocat, tobiko",
+    "priceMAD": "59.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-mango-saumon.png"
+  },
+  {
+    "id": "6d09d7bf8d",
+    "category": "Blossom",
+    "name": "Blossom Crabe",
+    "description": "Crabe mariné, saumon, mangue, cheese",
+    "priceMAD": "64.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-crabe.png"
+  },
+  {
+    "id": "cf8623ce70",
+    "category": "Blossom",
+    "name": "Blossom Green Salmon",
+    "description": "Saumon, avocat, concombre",
+    "priceMAD": "55.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-green-salmon.png"
+  },
+  {
+    "id": "f33f401dd2",
+    "category": "Blossom",
+    "name": "Blossom Cheezy Salmon",
+    "description": "Saumon, avocat, cheese, tobiko",
+    "priceMAD": "59.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-cheezy-salmon.png"
+  },
+  {
+    "id": "dfe30cb647",
+    "category": "Blossom",
+    "name": "Blossom Toro Roll",
+    "description": "Thon mariné, saumon, cheese, tobiko",
+    "priceMAD": "64.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-toro-roll.png"
+  },
+  {
+    "id": "cd27240259",
+    "category": "Blossom",
+    "name": "Blossom Exotic",
+    "description": "Saumon, avocat, mangue, cheese",
+    "priceMAD": "59.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet20/blossom-exotic.png"
   },
   {
     "id": "cec5e70b6a",
