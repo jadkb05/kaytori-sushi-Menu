@@ -864,15 +864,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet17/shake-saumon.png"
   },
   {
-    "id": "712e0027e2",
-    "category": "Special Roll",
-    "name": "Okinawa Saumon 4 pcs",
-    "description": "Saumon, crème d’anguille",
-    "priceMAD": "59.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-okinawa-saumon.png"
-  },
-  {
     "id": "5ee8246804",
     "category": "Special Roll",
     "name": "Special Unagui Roll",
