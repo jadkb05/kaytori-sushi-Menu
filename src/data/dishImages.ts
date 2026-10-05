@@ -140,6 +140,9 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "551465cab5": "/menu-hd-onglet19/aromaki-crevettes.png",
   "89b5ce5b7a": "/menu-hd-onglet19/aromaki-printemps-saumon.png",
   "02d2e17d1c": "/menu-hd-onglet19/aromaki-hawai.png",
+  "fff5c41eda": "/menu-hd-onglet19/aromaki-oslo.png",
+  "412918d0e5": "/menu-hd-onglet19/aromaki-antalya.png",
+  "77e046cbe4": "/menu-hd-onglet19/aromaki-marbella.png",
 
   // Blossom — captures produit Yumlo 15-57 (miniatures)
   "e41a8a69ca": "/menu-hd-onglet20/blossom-ceviche-roll.png",

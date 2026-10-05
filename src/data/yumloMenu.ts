@@ -1044,6 +1044,33 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet19/aromaki-hawai.png"
   },
   {
+    "id": "fff5c41eda",
+    "category": "Aromaki",
+    "name": "Aromaki Oslo",
+    "description": "Saumon, mangue, goma wakamé, cheese, tobiko",
+    "priceMAD": "54.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet19/aromaki-oslo.png"
+  },
+  {
+    "id": "412918d0e5",
+    "category": "Aromaki",
+    "name": "Aromaki Antalya",
+    "description": "Saumon, crabe, mangue, laitue, cheese, tobiko",
+    "priceMAD": "59.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet19/aromaki-antalya.png"
+  },
+  {
+    "id": "77e046cbe4",
+    "category": "Aromaki",
+    "name": "Aromaki Marbella",
+    "description": "Saumon, avocat, concombre, cheese, tobiko",
+    "priceMAD": "54.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet19/aromaki-marbella.png"
+  },
+  {
     "id": "e41a8a69ca",
     "category": "Blossom",
     "name": "Blossom Ceviché Roll",
