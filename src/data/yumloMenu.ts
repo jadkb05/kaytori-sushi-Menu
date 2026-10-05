@@ -987,7 +987,7 @@ export const YUMLO_MENU = [
     "description": "Eby fry, poireaux, fondue de gouda, kunafa",
     "priceMAD": "44.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-spider-roll.png"
+    "image": "/menu-hd-onglet18/special-spider-roll.jpg"
   },
   {
     "id": "101f7551db",
