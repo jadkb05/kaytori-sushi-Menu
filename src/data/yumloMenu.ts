@@ -280,7 +280,7 @@ export const YUMLO_MENU = [
     "description": "Avocat, surimi épicé, goma wakamé, tobiko, sauce japonaise, cheese, riz croustillant",
     "priceMAD": "84.15",
     "currency": "MAD",
-    "image": "/menu-hd-onglet3/crunchy-burrito.png"
+    "image": "/menu-hd-onglet3/crunchy-burrito.jpg"
   },
   {
     "id": "5a7a6c1ff9",
