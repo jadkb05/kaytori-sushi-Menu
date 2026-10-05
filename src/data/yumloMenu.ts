@@ -474,7 +474,7 @@ export const YUMLO_MENU = [
     "description": "Bœuf caramélisé, crevettes, nems poulet, vermicelle, légumes, cacahuètes",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet6/bobun.png"
+    "image": "/menu-hd-onglet6/bobun.jpg"
   },
   {
     "id": "743455af94",
