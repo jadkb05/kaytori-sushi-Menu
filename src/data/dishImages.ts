@@ -13,7 +13,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
 
   // Starters
   "2501bc64fe": "/starters-hd/poulet-karaage.jpg",
-  "228ccfc51d": "/starters-hd/riz-nature.png",
+  "228ccfc51d": "/starters-hd/riz-nature.jpg",
   "4d8b7659dc": "/starters-hd/riz-vinaigre.png",
   "c1d464c327": "/starters-hd/salade-de-choux.png",
   "dfa255110e": "/starters-hd/edamame-spicy.png",

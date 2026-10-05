@@ -190,7 +190,7 @@ export const YUMLO_MENU = [
     "description": "",
     "priceMAD": "15.00",
     "currency": "MAD",
-    "image": "/starters-hd/riz-nature.png"
+    "image": "/starters-hd/riz-nature.jpg"
   },
   {
     "id": "a1aee64eaf",
