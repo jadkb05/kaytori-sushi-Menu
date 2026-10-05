@@ -861,7 +861,7 @@ export const YUMLO_MENU = [
     "description": "Saumon cuit, avocat, saumon",
     "priceMAD": "44.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet17/shake-saumon.png"
+    "image": "/menu-hd-onglet17/shake-saumon.jpg"
   },
   {
     "id": "5ee8246804",

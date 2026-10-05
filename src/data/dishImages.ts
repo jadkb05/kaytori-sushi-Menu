@@ -115,7 +115,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "79e57587e9": "/menu-hd-onglet17/california-rainbow.png",
   "fe6a2d104e": "/menu-hd-onglet17/eby-salmon.png",
   "35e32c3559": "/menu-hd-onglet17/fresh-mango.jpg",
-  "2ce74d5ed1": "/menu-hd-onglet17/shake-saumon.png",
+  "2ce74d5ed1": "/menu-hd-onglet17/shake-saumon.jpg",
 
   // Special Roll — WhatsApp 14.32.32 (lot complet carte)
   "5ee8246804": "/menu-hd-onglet18/special-unagui-roll.png",
