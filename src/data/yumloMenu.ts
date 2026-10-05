@@ -978,7 +978,7 @@ export const YUMLO_MENU = [
     "description": "Crevettes, saumon, mangue, avocat, tobiko",
     "priceMAD": "52.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-mango-tango.png"
+    "image": "/menu-hd-onglet18/special-mango-tango.jpg"
   },
   {
     "id": "53f1432678",
