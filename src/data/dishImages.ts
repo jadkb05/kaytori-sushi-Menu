@@ -131,7 +131,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "c1abc56904": "/menu-hd-onglet18/special-exotic-unagui.jpg",
   "449ca2a7f1": "/menu-hd-onglet18/special-mango-tango.jpg",
   "53f1432678": "/menu-hd-onglet18/special-spider-roll.jpg",
-  "101f7551db": "/menu-hd-onglet18/special-tahiti-roll.jpg",
+  "101f7551db": "/menu-hd-onglet18/special-tahiti-roll.png",
 
   // Aromaki — captures produit Yumlo 15-53 (145px, miniatures officielles)
   "11b8f36cb5": "/menu-hd-onglet19/aromaki-ibiza.png",
