@@ -139,24 +139,6 @@ export const YUMLO_MENU = [
     "image": "/starters-hd/poulet-karaage.png"
   },
   {
-    "id": "228ccfc51d",
-    "category": "Starters",
-    "name": "Riz Nature",
-    "description": "",
-    "priceMAD": "15.00",
-    "currency": "MAD",
-    "image": "/starters-hd/riz-nature.png"
-  },
-  {
-    "id": "4d8b7659dc",
-    "category": "Starters",
-    "name": "Riz Vinaigré",
-    "description": "",
-    "priceMAD": "20.00",
-    "currency": "MAD",
-    "image": "/starters-hd/riz-vinaigre.png"
-  },
-  {
     "id": "c1d464c327",
     "category": "Starters",
     "name": "Salade de Choux",
@@ -191,6 +173,24 @@ export const YUMLO_MENU = [
     "priceMAD": "39.00",
     "currency": "MAD",
     "image": "/starters-hd/goma-wakame.png"
+  },
+  {
+    "id": "4d8b7659dc",
+    "category": "Starters",
+    "name": "Riz Vinaigré",
+    "description": "",
+    "priceMAD": "20.00",
+    "currency": "MAD",
+    "image": "/starters-hd/riz-vinaigre.png"
+  },
+  {
+    "id": "228ccfc51d",
+    "category": "Starters",
+    "name": "Riz Nature",
+    "description": "",
+    "priceMAD": "15.00",
+    "currency": "MAD",
+    "image": "/starters-hd/riz-nature.png"
   },
   {
     "id": "a1aee64eaf",
