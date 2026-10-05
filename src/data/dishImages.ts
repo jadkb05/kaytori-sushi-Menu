@@ -48,6 +48,9 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "c2651f806f": "/menu-hd-onglet6/salade-tropicale.png",
   "2c80cdd361": "/menu-hd-onglet6/salade-fruits-de-mer.png",
   "fb89c84798": "/menu-hd-onglet6/salade-vietnamienne.png",
+  "b56ed1406f": "/menu-hd-onglet6/salade-crevettes-tempura.png",
+  "3a75439af2": "/menu-hd-onglet6/exotic-del-mar.png",
+  "aa7a7bfe5c": "/menu-hd-onglet6/bobun.png",
 
   // Poké Bowl — WhatsApp 13.31.26
   "743455af94": "/menu-hd-onglet7-12/poke-saumon.png",

@@ -450,6 +450,33 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet6/salade-vietnamienne.png"
   },
   {
+    "id": "b56ed1406f",
+    "category": "Salades",
+    "name": "Crevettes Tempura",
+    "description": "Crevettes tempura, mangue, épis de maïs, wakamé, pomme, tomate cerise, tobiko, ciboulette",
+    "priceMAD": "59.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet6/salade-crevettes-tempura.png"
+  },
+  {
+    "id": "3a75439af2",
+    "category": "Salades",
+    "name": "Exotic Del Mar",
+    "description": "Saumon, crevettes, surimi, mangue, tomate cerise, choux, carottes",
+    "priceMAD": "64.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet6/exotic-del-mar.png"
+  },
+  {
+    "id": "aa7a7bfe5c",
+    "category": "Salades",
+    "name": "Bobun",
+    "description": "Bœuf caramélisé, crevettes, nems poulet, vermicelle, légumes, cacahuètes",
+    "priceMAD": "69.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet6/bobun.png"
+  },
+  {
     "id": "743455af94",
     "category": "Poké Bowl",
     "name": "Poké Saumon",
