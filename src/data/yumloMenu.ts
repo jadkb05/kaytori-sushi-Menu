@@ -136,7 +136,7 @@ export const YUMLO_MENU = [
     "description": "Poulet",
     "priceMAD": "39.00",
     "currency": "MAD",
-    "image": "/starters-hd/poulet-karaage.png"
+    "image": "/starters-hd/poulet-karaage.jpg"
   },
   {
     "id": "c1d464c327",
