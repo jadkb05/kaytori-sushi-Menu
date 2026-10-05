@@ -420,7 +420,7 @@ export const YUMLO_MENU = [
     "description": "Calamar, crevettes, crabe, surimi, mangue, choux, carottes, laitue",
     "priceMAD": "54.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet6/salade-fruits-de-mer.png"
+    "image": "/menu-hd-onglet6/salade-fruits-de-mer.jpg"
   },
   {
     "id": "c2651f806f",
