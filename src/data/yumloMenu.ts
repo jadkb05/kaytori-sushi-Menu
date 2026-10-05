@@ -447,7 +447,7 @@ export const YUMLO_MENU = [
     "description": "Poulet, crevettes, choux, carottes, cacahuète, germe de soja, concombre, laitue, sauce viet",
     "priceMAD": "54.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet6/salade-vietnamienne.png"
+    "image": "/menu-hd-onglet6/salade-vietnamienne.jpg"
   },
   {
     "id": "b56ed1406f",
