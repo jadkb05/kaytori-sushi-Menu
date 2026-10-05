@@ -774,15 +774,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet17/california-saumon-avocat.png"
   },
   {
-    "id": "c6d7e8f9a0",
-    "category": "California Roll",
-    "name": "California Thon Avocat",
-    "description": "Thon, avocat, tobiko 4 Pièces",
-    "priceMAD": "39.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet17/california-thon-avocat.png"
-  },
-  {
     "id": "f3a4b5c6d7",
     "category": "California Roll",
     "name": "California Eby Tobiko",
@@ -844,6 +835,33 @@ export const YUMLO_MENU = [
     "priceMAD": "48.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-rainbow.png"
+  },
+  {
+    "id": "fe6a2d104e",
+    "category": "California Roll",
+    "name": "Eby Salmon",
+    "description": "Crevette pané, avocat, saumon, cheese",
+    "priceMAD": "48.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet17/eby-salmon.png"
+  },
+  {
+    "id": "35e32c3559",
+    "category": "California Roll",
+    "name": "Fresh Mango",
+    "description": "Mangue, surimi, avocat, concombre",
+    "priceMAD": "36.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet17/fresh-mango.png"
+  },
+  {
+    "id": "2ce74d5ed1",
+    "category": "California Roll",
+    "name": "Shake Saumon",
+    "description": "Saumon cuit, avocat, saumon",
+    "priceMAD": "44.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet17/shake-saumon.png"
   },
   {
     "id": "712e0027e2",
