@@ -303,7 +303,7 @@ export const YUMLO_MENU = [
     "description": "Au choix : végétarien, poulet ou crevettes — 8 pièces, sauce au choix.",
     "priceMAD": "39.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet2/rouleau-de-printemps.png",
+    "image": "/menu-hd-onglet2/rouleau-de-printemps.jpg",
     "variants": [
       { "id": "vegetarien", "label": "Végétarien", "priceMAD": "29.00" },
       { "id": "poulet", "label": "Poulet", "priceMAD": "39.00" },

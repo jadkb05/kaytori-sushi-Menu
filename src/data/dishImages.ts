@@ -8,7 +8,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   // Nems & Gyoza & Rouleaux de printemps (visuels client WhatsApp 13.27.28)
   "a720b7b300": "/menu-hd-onglet2/nems.png",
   "a1aee64eaf": "/menu-hd-onglet2/gyoza.png",
-  "76d7875ff7": "/menu-hd-onglet2/rouleau-de-printemps.png",
+  "76d7875ff7": "/menu-hd-onglet2/rouleau-de-printemps.jpg",
   "da996bc4a5": "/menu-hd-onglet2/bouchees-vapeur.jpg",
 
   // Starters
