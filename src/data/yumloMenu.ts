@@ -945,24 +945,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet18/special-palawan.png"
   },
   {
-    "id": "b82bc1ad74",
-    "category": "Special Roll",
-    "name": "Special Shogun",
-    "description": "Saumon, crabe, thon, surimi pané, avocat",
-    "priceMAD": "58.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-shogun.png"
-  },
-  {
-    "id": "4f6d0a1f8d",
-    "category": "Special Roll",
-    "name": "Special Anaconda",
-    "description": "Thon épicé, eby fry, avocat",
-    "priceMAD": "54.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-anaconda.png"
-  },
-  {
     "id": "f466c46a8f",
     "category": "Special Roll",
     "name": "Special Pavot Roll",
