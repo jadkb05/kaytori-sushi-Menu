@@ -1266,7 +1266,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, eby fry, surimi, avocat, laitue, cheese",
     "priceMAD": "65.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet21/premium-cancun.png"
+    "image": "/menu-hd-onglet21/premium-cancun.jpg"
   },
   {
     "id": "6c2ba70a6f",
