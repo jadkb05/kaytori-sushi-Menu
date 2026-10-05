@@ -969,7 +969,7 @@ export const YUMLO_MENU = [
     "description": "Anguille, saumon, surimi, mangue",
     "priceMAD": "64.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-exotic-unagui.png"
+    "image": "/menu-hd-onglet18/special-exotic-unagui.jpg"
   },
   {
     "id": "449ca2a7f1",

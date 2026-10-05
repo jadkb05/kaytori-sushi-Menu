@@ -129,7 +129,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "47cc3a1126": "/menu-hd-onglet18/special-palawan.jpg",
   "f466c46a8f": "/menu-hd-onglet18/special-pavot-roll.jpg",
   "3442a25d4d": "/menu-hd-onglet18/special-green-tiger.jpg",
-  "c1abc56904": "/menu-hd-onglet18/special-exotic-unagui.png",
+  "c1abc56904": "/menu-hd-onglet18/special-exotic-unagui.jpg",
   "449ca2a7f1": "/menu-hd-onglet18/special-mango-tango.png",
   "53f1432678": "/menu-hd-onglet18/special-spider-roll.png",
   "101f7551db": "/menu-hd-onglet18/special-tahiti-roll.png",
