@@ -1095,7 +1095,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, mangue, goma wakamé, cheese, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet19/aromaki-oslo.png"
+    "image": "/menu-hd-onglet19/aromaki-oslo.jpg"
   },
   {
     "id": "412918d0e5",
