@@ -408,7 +408,7 @@ export const YUMLO_MENU = [
     "id": "4240ad621c",
     "category": "Salades",
     "name": "Salade Royale",
-    "description": "Crabe, crevettes, poulet, mangue, avocat, mais, tomate cerise, laitue",
+    "description": "Crabe, crevettes, poulet, mangue, avocat, maïs, tomate cerise, laitue",
     "priceMAD": "64.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet6/salade-royale.png"
@@ -426,7 +426,7 @@ export const YUMLO_MENU = [
     "id": "c2651f806f",
     "category": "Salades",
     "name": "Salade Tropicale",
-    "description": "Crevettes tempura, mangue, épis de maïs, wakamé, pomme, tomate cerise, tobiko, ciboulette",
+    "description": "Crevettes, avocat, surimi, pomme, concombre, maïs, tomates cerise, gouda pané",
     "priceMAD": "59.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet6/salade-tropicale.png"
@@ -435,7 +435,7 @@ export const YUMLO_MENU = [
     "id": "b446a7355a",
     "category": "Salades",
     "name": "Salade Exotic Chicken",
-    "description": "Poulet pané, avocat, mangue, surimi, épis de mais, tomate cerise, choux, carottes, tobiko",
+    "description": "Poulet pané, avocat, mangue, surimi, épis de maïs, tomate cerise, choux, carottes, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet6/salade-exotic-chicken.png"
@@ -741,7 +741,7 @@ export const YUMLO_MENU = [
     "id": "c0a1b2c3d4",
     "category": "California Roll",
     "name": "California Cream Cheese",
-    "description": "Saumon, surimi, avocat, tobiko 4 Pièces",
+    "description": "Saumon, surimi, avocat, tobiko",
     "priceMAD": "39.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-cream-cheese.png"
@@ -750,7 +750,7 @@ export const YUMLO_MENU = [
     "id": "d1e2f3a4b5",
     "category": "California Roll",
     "name": "California Classic",
-    "description": "Surimi, avocat, concombre, tobiko 4 Pièces",
+    "description": "Surimi, avocat, concombre, tobiko",
     "priceMAD": "29.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-classic.png"
@@ -759,7 +759,7 @@ export const YUMLO_MENU = [
     "id": "e2f3a4b5c6",
     "category": "California Roll",
     "name": "California Shake Yaki",
-    "description": "Saumon cuit, avocat, ciboulette 4 Pièces",
+    "description": "Saumon cuit, avocat, ciboulette",
     "priceMAD": "34.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-shake-yaki.png"
@@ -768,7 +768,7 @@ export const YUMLO_MENU = [
     "id": "cc76387393",
     "category": "California Roll",
     "name": "California Saumon Avocat",
-    "description": "Saumon, avocat, sésame 4 Pièces",
+    "description": "Saumon, avocat, sésame",
     "priceMAD": "34.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-saumon-avocat.png"
@@ -777,7 +777,7 @@ export const YUMLO_MENU = [
     "id": "f3a4b5c6d7",
     "category": "California Roll",
     "name": "California Eby Tobiko",
-    "description": "Crevette panée, avocat, tobiko 4 Pièces",
+    "description": "Crevette pané, avocat, tobiko",
     "priceMAD": "39.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-eby-tobiko.png"
@@ -786,7 +786,7 @@ export const YUMLO_MENU = [
     "id": "a4b5c6d7e8",
     "category": "California Roll",
     "name": "California Eby Fry",
-    "description": "Crevette tempura, avocat, ciboulette 4 Pièces",
+    "description": "Crevette tempura, avocat, ciboulette",
     "priceMAD": "34.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-eby-fry.png"
@@ -795,7 +795,7 @@ export const YUMLO_MENU = [
     "id": "b5c6d7e8f9",
     "category": "California Roll",
     "name": "California Chicken Crispy",
-    "description": "Chicken crispy, avocat, tobiko 4 Pièces",
+    "description": "Chicken crispy, avocat, tobiko",
     "priceMAD": "39.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-chicken-crispy.png"
@@ -804,7 +804,7 @@ export const YUMLO_MENU = [
     "id": "84f445e743",
     "category": "California Roll",
     "name": "California Chicken Eby",
-    "description": "Poulet pané, crevette pané, cheese, tobiko 4 Pièces",
+    "description": "Poulet pané, crevette pané, cheese, tobiko",
     "priceMAD": "48.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-chicken-eby.png"
@@ -813,7 +813,7 @@ export const YUMLO_MENU = [
     "id": "302c4c0e8a",
     "category": "California Roll",
     "name": "California Nara",
-    "description": "Saumon, crevette pané, avocat, cheese 4 Pièces",
+    "description": "Saumon, crevette pané, avocat, cheese",
     "priceMAD": "48.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-nara.png"
@@ -822,7 +822,7 @@ export const YUMLO_MENU = [
     "id": "566b2be815",
     "category": "California Roll",
     "name": "California Eby Avocado",
-    "description": "Crevette pané, surimi, saumon, cheese, avocat 4 Pièces",
+    "description": "Crevette pané, surimi, saumon, cheese, avocat",
     "priceMAD": "48.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-eby-avocado.png"
@@ -831,7 +831,7 @@ export const YUMLO_MENU = [
     "id": "79e57587e9",
     "category": "California Roll",
     "name": "California Rainbow",
-    "description": "Saumon, avocat, cheese, tobiko 4 Pièces",
+    "description": "Saumon, avocat, tobiko",
     "priceMAD": "48.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet17/california-rainbow.png"
@@ -867,7 +867,7 @@ export const YUMLO_MENU = [
     "id": "5ee8246804",
     "category": "Special Roll",
     "name": "Special Unagui Roll",
-    "description": "Anguilles, crevettes pané, avocat, cheese 4 Pièces",
+    "description": "Anguill, eby fry, avocat",
     "priceMAD": "64.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-unagui-roll.png"
@@ -876,7 +876,7 @@ export const YUMLO_MENU = [
     "id": "7412fc4ec3",
     "category": "Special Roll",
     "name": "Special Triangle Roll",
-    "description": "Saumon, crevettes pané, crabe, surimi, avocat, tobiko 4 Pièces",
+    "description": "Saumon, eby fry, crabe, surimi, avocat",
     "priceMAD": "58.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-triangle-roll.png"
@@ -885,7 +885,7 @@ export const YUMLO_MENU = [
     "id": "7eeb7d6f83",
     "category": "Special Roll",
     "name": "Special Havana Roll",
-    "description": "Saumon, crevettes pané, mangue, surimi, cheese, tobiko 4 Pièces",
+    "description": "Saumon, eby fry, mangue, surimi, cheese, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-havana-roll.png"
@@ -894,7 +894,7 @@ export const YUMLO_MENU = [
     "id": "a1b2c3d4e6",
     "category": "Special Roll",
     "name": "Special Goma Roll",
-    "description": "Saumon, fromage à la crème, sauce 4 Pièces",
+    "description": "Saumon, avocat, goma wakamé",
     "priceMAD": "49.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-goma-roll.png"
@@ -903,7 +903,7 @@ export const YUMLO_MENU = [
     "id": "b2c3d4e5f7",
     "category": "Special Roll",
     "name": "Special Gambas Roll",
-    "description": "Crevettes, surimi, avocat, tempura 4 Pièces",
+    "description": "Crevette poché, eby fry, surimi, avocat",
     "priceMAD": "49.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-gambas-roll.png"
@@ -912,7 +912,7 @@ export const YUMLO_MENU = [
     "id": "c3d4e5f6a8",
     "category": "Special Roll",
     "name": "Special Samurai Roll",
-    "description": "Saumon, thon, crevettes pané, avocat, sauce 4 Pièces",
+    "description": "Thon, saumon, surimi pané, wakamé",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-samurai-roll.png"
@@ -921,7 +921,7 @@ export const YUMLO_MENU = [
     "id": "f6a7b8c9d1",
     "category": "Special Roll",
     "name": "Special Kunafa Roll",
-    "description": "Crevettes pané, crabe épicé, avocat, mangue, nori 4 Pièces",
+    "description": "Saumon, eby fry, avocat, kunafa",
     "priceMAD": "49.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-kunafa-roll.png"
@@ -930,7 +930,7 @@ export const YUMLO_MENU = [
     "id": "a7b8c9d0e2",
     "category": "Special Roll",
     "name": "Special Naruto Roll",
-    "description": "Saumon, avocat, crevettes pané, concombre 4 Pièces",
+    "description": "Crevettes, eby fry",
     "priceMAD": "45.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet18/special-naruto-roll.png"
@@ -1020,7 +1020,7 @@ export const YUMLO_MENU = [
     "id": "11b8f36cb5",
     "category": "Aromaki",
     "name": "Aromaki Ibiza",
-    "description": "Saumon, surimi, crevettes pané, avocat, crabe, cheese, tobiko 6 Pièces",
+    "description": "Saumon, surimi, crevettes pané, avocat, crabe, cheese, tobiko",
     "priceMAD": "64.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-ibiza.png"
@@ -1029,7 +1029,7 @@ export const YUMLO_MENU = [
     "id": "4da542fb7e",
     "category": "Aromaki",
     "name": "Aromaki Kyoto",
-    "description": "Saumon, crabe, surimi, mangue, cheese, tobiko 6 Pièces",
+    "description": "Saumon, crabe, surimi, mangue, cheese, tobiko",
     "priceMAD": "59.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-kyoto.png"
@@ -1038,7 +1038,7 @@ export const YUMLO_MENU = [
     "id": "be681d7f41",
     "category": "Aromaki",
     "name": "Aromaki Rio",
-    "description": "Saumon, surimi, crevettes pané, cheese, tobiko 6 Pièces",
+    "description": "Saumon, surimi, crevettes pané, cheese, tobiko",
     "priceMAD": "59.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-rio.png"
@@ -1047,7 +1047,7 @@ export const YUMLO_MENU = [
     "id": "dabf870bd3",
     "category": "Aromaki",
     "name": "Aromaki Tropicale",
-    "description": "Crabe, crevettes pané, avocat, mangue, cheese, tobiko 6 Pièces",
+    "description": "Crabe, crevettes pané, avocat, mangue, cheese, tobiko",
     "priceMAD": "59.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-tropicale.png"
@@ -1056,7 +1056,7 @@ export const YUMLO_MENU = [
     "id": "4646423648",
     "category": "Aromaki",
     "name": "Aromaki Honolulu",
-    "description": "Saumon, surimi, avocat, saumon mariné, cheese, tobiko 6 Pièces",
+    "description": "Saumon, surimi, avocat, saumon mariné, cheese, tobiko",
     "priceMAD": "59.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-honolulu.png"
@@ -1065,7 +1065,7 @@ export const YUMLO_MENU = [
     "id": "cae1232225",
     "category": "Aromaki",
     "name": "Aromaki Exotique",
-    "description": "Saumon, mangue, avocat, laitue, cheese, tobiko 6 Pièces",
+    "description": "Saumon, mangue, avocat, laitue, cheese, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-exotique.png"
@@ -1074,7 +1074,7 @@ export const YUMLO_MENU = [
     "id": "6af2df4ee9",
     "category": "Aromaki",
     "name": "Aromaki Saumon",
-    "description": "Saumon, surimi, avocat, cheese, tobiko 6 Pièces",
+    "description": "Saumon, surimi, avocat, cheese, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-saumon.png"
@@ -1083,7 +1083,7 @@ export const YUMLO_MENU = [
     "id": "85abca6325",
     "category": "Aromaki",
     "name": "Aromaki Panama",
-    "description": "Saumon, surimi, goma wakamé, avocat, cheese, tobiko 6 Pièces",
+    "description": "Saumon, surimi, goma wakamé, avocat, cheese, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-panama.png"
@@ -1092,7 +1092,7 @@ export const YUMLO_MENU = [
     "id": "551465cab5",
     "category": "Aromaki",
     "name": "Aromaki Crevettes",
-    "description": "Crevettes pané, surimi, avocat, cheese, tobiko 6 Pièces",
+    "description": "Crevettes pané, surimi, avocat, cheese, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-crevettes.png"
@@ -1101,7 +1101,7 @@ export const YUMLO_MENU = [
     "id": "89b5ce5b7a",
     "category": "Aromaki",
     "name": "Aromaki Printemps Saumon",
-    "description": "Saumon, surimi, avocat, cheese, tobiko 6 Pièces",
+    "description": "Saumon, surimi, avocat, cheese, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-printemps-saumon.png"
@@ -1110,7 +1110,7 @@ export const YUMLO_MENU = [
     "id": "02d2e17d1c",
     "category": "Aromaki",
     "name": "Aromaki Hawai",
-    "description": "Saumon, mangue, avocat, surimi, cheese, tobiko 6 Pièces",
+    "description": "Saumon, mangue, avocat, surimi, cheese, tobiko",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet19/aromaki-hawai.png"
@@ -1146,7 +1146,7 @@ export const YUMLO_MENU = [
     "id": "e41a8a69ca",
     "category": "Blossom",
     "name": "Blossom Ceviché Roll",
-    "description": "Saumon, mangue, avocat, surimi tobiko, sésame 4 pièces",
+    "description": "Saumon, mangue, avocat, surimi, tobiko, sésame",
     "priceMAD": "68.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-ceviche-roll.png"
@@ -1155,7 +1155,7 @@ export const YUMLO_MENU = [
     "id": "5347977dbc",
     "category": "Blossom",
     "name": "Blossom Hawai",
-    "description": "Crevettes pané, crabe, avocat, mangue, cheese, tobiko 4 pièces",
+    "description": "Eby fry, crabe, avocat, mangue, tobiko",
     "priceMAD": "62.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-hawai.png"
@@ -1164,7 +1164,7 @@ export const YUMLO_MENU = [
     "id": "2d6c4738f9",
     "category": "Blossom",
     "name": "Blossom New York",
-    "description": "Saumon pané, crevettes, cheese, tobiko 4 Pièces",
+    "description": "Saumon pané, crevettes, cheese, tobiko",
     "priceMAD": "62.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-new-york.png"
@@ -1173,7 +1173,7 @@ export const YUMLO_MENU = [
     "id": "f84280a0f7",
     "category": "Blossom",
     "name": "Blossom Boston",
-    "description": "Crevettes pané, avocat, cheese, crabe, poireaux, tobiko 4 Pièces",
+    "description": "Eby fry, avocat, cheese, crabe, poireaux, tobiko",
     "priceMAD": "64.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-boston.png"
@@ -1182,7 +1182,7 @@ export const YUMLO_MENU = [
     "id": "12117b00b9",
     "category": "Blossom",
     "name": "Blossom Eby Roll",
-    "description": "Crevettes, saumon, avocat, cheese 4 Pièces",
+    "description": "Crevettes, saumon, avocat, cheese",
     "priceMAD": "64.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-eby-roll.png"
@@ -1191,7 +1191,7 @@ export const YUMLO_MENU = [
     "id": "cb9324ca52",
     "category": "Blossom",
     "name": "Blossom Tokyo",
-    "description": "Surimi pané, saumon, mangue, cheese, tobiko 4 Pièces",
+    "description": "Surimi pané, saumon, mangue, cheese, tobiko",
     "priceMAD": "59.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-tokyo.png"
@@ -1200,7 +1200,7 @@ export const YUMLO_MENU = [
     "id": "ace54559af",
     "category": "Blossom",
     "name": "Blossom Saumon Braisé",
-    "description": "Saumon braisé, avocat, cheese 4 Pièces",
+    "description": "Saumon braisé, avocat, cheese",
     "priceMAD": "59.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-saumon-braise.png"
@@ -1209,7 +1209,7 @@ export const YUMLO_MENU = [
     "id": "c435723d4c",
     "category": "Blossom",
     "name": "Blossom Bali",
-    "description": "Saumon mariné, surimi, avocat, cheese, sésame 4 Pièces",
+    "description": "Saumon mariné, surimi, avocat, cheese, sésame",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-bali.png"
@@ -1218,7 +1218,7 @@ export const YUMLO_MENU = [
     "id": "4c6bec2d41",
     "category": "Blossom",
     "name": "Blossom Bangkok",
-    "description": "Thon mariné, surimi, mangue, cheese, sésame 4 Pièces",
+    "description": "Thon mariné, surimi, mangue, cheese, sésame",
     "priceMAD": "54.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet20/blossom-bangkok.png"
@@ -1290,7 +1290,7 @@ export const YUMLO_MENU = [
     "id": "cec5e70b6a",
     "category": "Premium",
     "name": "Premium Cancun",
-    "description": "",
+    "description": "Saumon, eby fry, surimi, avocat, laitue, cheese",
     "priceMAD": "65.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-cancun.png"
@@ -1299,7 +1299,7 @@ export const YUMLO_MENU = [
     "id": "6c2ba70a6f",
     "category": "Premium",
     "name": "Premium Krabi Roll",
-    "description": "Saumon, crevettes pané, surimi crabe, avocat, goma wakamé, cheese 4 Pièces",
+    "description": "Saumon, eby fry, surimi crabe, avocat, goma wakamé",
     "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-krabi-roll.png"
@@ -1308,7 +1308,7 @@ export const YUMLO_MENU = [
     "id": "c6bf1f1759",
     "category": "Premium",
     "name": "Premium Fuji Roll",
-    "description": "Saumon, crevettes pané, saumon cuit, mangue, cheese 4 Pièces",
+    "description": "Saumon, eby fry, saumon cuit, mangue",
     "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-fuji-roll.png"
@@ -1317,7 +1317,7 @@ export const YUMLO_MENU = [
     "id": "b1b1b0e1ba",
     "category": "Premium",
     "name": "Premium Pink Salmon",
-    "description": "Crevette poché, saumon, surimi crevette pané 4 Pièces",
+    "description": "Crevette poché, saumon, surimi crevette pané",
     "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-pink-salmon.png"
@@ -1326,7 +1326,7 @@ export const YUMLO_MENU = [
     "id": "82bc3899c0",
     "category": "Premium",
     "name": "Premium Exotica Roll",
-    "description": "Double crevette pané, saumon, surimi, avocat, goma wakamé 4 Pièces",
+    "description": "Double eby fry, saumon, surimi, avocat, wakamé",
     "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-exotica-roll.png"
@@ -1335,7 +1335,7 @@ export const YUMLO_MENU = [
     "id": "2aacef48a6",
     "category": "Premium",
     "name": "Premium Pataya",
-    "description": "Double crevette pané, surimi, saumon, mangue, tobiko, ciboulette 4 Pièces",
+    "description": "Double crevette pané, surimi, saumon, mangue, tobiko, ciboulette",
     "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-pataya.png"
@@ -1344,7 +1344,7 @@ export const YUMLO_MENU = [
     "id": "fd173daf85",
     "category": "Premium",
     "name": "Premium Sirena Roll",
-    "description": "",
+    "description": "Eby fry, saumon flambé, fondue de gouda",
     "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-sirena-roll.png"
@@ -1353,7 +1353,7 @@ export const YUMLO_MENU = [
     "id": "ef3a2da619",
     "category": "Premium",
     "name": "Premium Salmon Tataki",
-    "description": "",
+    "description": "Saumon cuit, saumon braisé, saumon mariné, surimi, avocat",
     "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-salmon-tataki.png"
@@ -1362,7 +1362,7 @@ export const YUMLO_MENU = [
     "id": "ffddedcf35",
     "category": "Premium",
     "name": "Premium Bora Bora",
-    "description": "",
+    "description": "Saumon, mangue, wakamé, avocat, surimi, saumon cuit",
     "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-bora-bora.png"
@@ -1371,7 +1371,7 @@ export const YUMLO_MENU = [
     "id": "52d169b9dd",
     "category": "Premium",
     "name": "Premium Exotic Salmon",
-    "description": "",
+    "description": "Saumon, mangue, eby fry, surimi, saumon cuit, tobiko",
     "priceMAD": "69.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet21/premium-exotic-salmon.png"
