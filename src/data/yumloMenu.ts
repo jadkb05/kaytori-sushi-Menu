@@ -843,7 +843,7 @@ export const YUMLO_MENU = [
     "description": "Crevette pané, avocat, saumon, cheese",
     "priceMAD": "48.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet17/eby-salmon.png"
+    "image": "/menu-hd-onglet17/eby-salmon.jpg"
   },
   {
     "id": "35e32c3559",
