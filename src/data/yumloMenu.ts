@@ -1131,7 +1131,7 @@ export const YUMLO_MENU = [
     "description": "Eby fry, crabe, avocat, mangue, tobiko",
     "priceMAD": "62.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-hawai.png"
+    "image": "/menu-hd-onglet20/blossom-hawai.jpg"
   },
   {
     "id": "2d6c4738f9",
