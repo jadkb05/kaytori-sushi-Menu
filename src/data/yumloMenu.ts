@@ -1203,7 +1203,7 @@ export const YUMLO_MENU = [
     "description": "Anguille, avocat, surimi, cheese, sésame",
     "priceMAD": "64.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-bonzai.png"
+    "image": "/menu-hd-onglet20/blossom-bonzai.jpg"
   },
   {
     "id": "0433bbd53c",
