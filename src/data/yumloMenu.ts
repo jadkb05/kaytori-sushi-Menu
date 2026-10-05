@@ -1149,7 +1149,7 @@ export const YUMLO_MENU = [
     "description": "Eby fry, avocat, cheese, crabe, poireaux, tobiko",
     "priceMAD": "64.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-boston.png"
+    "image": "/menu-hd-onglet20/blossom-boston.jpg"
   },
   {
     "id": "12117b00b9",
