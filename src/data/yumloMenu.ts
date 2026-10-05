@@ -1221,7 +1221,7 @@ export const YUMLO_MENU = [
     "description": "Crabe mariné, saumon, mangue, cheese",
     "priceMAD": "64.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-crabe.png"
+    "image": "/menu-hd-onglet20/blossom-crabe.jpg"
   },
   {
     "id": "cf8623ce70",
