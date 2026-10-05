@@ -933,7 +933,7 @@ export const YUMLO_MENU = [
     "description": "Crevettes, eby fry",
     "priceMAD": "45.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-naruto-roll.png"
+    "image": "/menu-hd-onglet18/special-naruto-roll.jpg"
   },
   {
     "id": "47cc3a1126",
