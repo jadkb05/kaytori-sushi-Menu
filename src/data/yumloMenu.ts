@@ -852,7 +852,7 @@ export const YUMLO_MENU = [
     "description": "Mangue, surimi, avocat, concombre",
     "priceMAD": "36.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet17/fresh-mango.png"
+    "image": "/menu-hd-onglet17/fresh-mango.jpg"
   },
   {
     "id": "2ce74d5ed1",
