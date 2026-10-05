@@ -456,7 +456,7 @@ export const YUMLO_MENU = [
     "description": "Crevettes tempura, mangue, épis de maïs, wakamé, pomme, tomate cerise, tobiko, ciboulette",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet6/salade-crevettes-tempura.png"
+    "image": "/menu-hd-onglet6/salade-crevettes-tempura.jpg"
   },
   {
     "id": "3a75439af2",

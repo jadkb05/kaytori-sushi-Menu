@@ -48,7 +48,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "c2651f806f": "/menu-hd-onglet6/salade-tropicale.png",
   "2c80cdd361": "/menu-hd-onglet6/salade-fruits-de-mer.jpg",
   "fb89c84798": "/menu-hd-onglet6/salade-vietnamienne.jpg",
-  "b56ed1406f": "/menu-hd-onglet6/salade-crevettes-tempura.png",
+  "b56ed1406f": "/menu-hd-onglet6/salade-crevettes-tempura.jpg",
   "3a75439af2": "/menu-hd-onglet6/exotic-del-mar.jpg",
   "aa7a7bfe5c": "/menu-hd-onglet6/bobun.jpg",
 
