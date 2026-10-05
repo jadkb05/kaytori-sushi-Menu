@@ -936,6 +936,87 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet18/special-naruto-roll.png"
   },
   {
+    "id": "47cc3a1126",
+    "category": "Special Roll",
+    "name": "Special Palawan",
+    "description": "Saumon flambé, thon, mangue, avocat",
+    "priceMAD": "58.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet18/special-palawan.png"
+  },
+  {
+    "id": "b82bc1ad74",
+    "category": "Special Roll",
+    "name": "Special Shogun",
+    "description": "Saumon, crabe, thon, surimi pané, avocat",
+    "priceMAD": "58.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet18/special-shogun.png"
+  },
+  {
+    "id": "4f6d0a1f8d",
+    "category": "Special Roll",
+    "name": "Special Anaconda",
+    "description": "Thon épicé, eby fry, avocat",
+    "priceMAD": "54.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet18/special-anaconda.png"
+  },
+  {
+    "id": "f466c46a8f",
+    "category": "Special Roll",
+    "name": "Special Pavot Roll",
+    "description": "Saumon pané, crabe, mangue, pavot",
+    "priceMAD": "49.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet18/special-pavot-roll.png"
+  },
+  {
+    "id": "3442a25d4d",
+    "category": "Special Roll",
+    "name": "Special Green Tiger",
+    "description": "Eby fry, surimi épicé, avocat",
+    "priceMAD": "44.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet18/special-green-tiger.png"
+  },
+  {
+    "id": "c1abc56904",
+    "category": "Special Roll",
+    "name": "Special Exotic Unagui",
+    "description": "Anguille, saumon, surimi, mangue",
+    "priceMAD": "64.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet18/special-exotic-unagui.png"
+  },
+  {
+    "id": "449ca2a7f1",
+    "category": "Special Roll",
+    "name": "Special Mango Tango",
+    "description": "Crevettes, saumon, mangue, avocat, tobiko",
+    "priceMAD": "52.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet18/special-mango-tango.png"
+  },
+  {
+    "id": "53f1432678",
+    "category": "Special Roll",
+    "name": "Special Spider Roll",
+    "description": "Eby fry, poireaux, fondue de gouda, kunafa",
+    "priceMAD": "44.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet18/special-spider-roll.png"
+  },
+  {
+    "id": "101f7551db",
+    "category": "Special Roll",
+    "name": "Special Tahiti Roll",
+    "description": "Eby fry, crabe mariné, avocat, mangue",
+    "priceMAD": "44.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet18/special-tahiti-roll.png"
+  },
+  {
     "id": "11b8f36cb5",
     "category": "Aromaki",
     "name": "Aromaki Ibiza",

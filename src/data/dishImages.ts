@@ -126,6 +126,15 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "c3d4e5f6a8": "/menu-hd-onglet18/special-samurai-roll.png",
   "f6a7b8c9d1": "/menu-hd-onglet18/special-kunafa-roll.png",
   "a7b8c9d0e2": "/menu-hd-onglet18/special-naruto-roll.png",
+  "47cc3a1126": "/menu-hd-onglet18/special-palawan.png",
+  "b82bc1ad74": "/menu-hd-onglet18/special-shogun.png",
+  "4f6d0a1f8d": "/menu-hd-onglet18/special-anaconda.png",
+  "f466c46a8f": "/menu-hd-onglet18/special-pavot-roll.png",
+  "3442a25d4d": "/menu-hd-onglet18/special-green-tiger.png",
+  "c1abc56904": "/menu-hd-onglet18/special-exotic-unagui.png",
+  "449ca2a7f1": "/menu-hd-onglet18/special-mango-tango.png",
+  "53f1432678": "/menu-hd-onglet18/special-spider-roll.png",
+  "101f7551db": "/menu-hd-onglet18/special-tahiti-roll.png",
 
   // Aromaki — captures produit Yumlo 15-53 (145px, miniatures officielles)
   "11b8f36cb5": "/menu-hd-onglet19/aromaki-ibiza.png",
