@@ -145,7 +145,7 @@ export const YUMLO_MENU = [
     "description": "",
     "priceMAD": "24.00",
     "currency": "MAD",
-    "image": "/starters-hd/salade-de-choux.png"
+    "image": "/starters-hd/salade-de-choux.jpg"
   },
   {
     "id": "dfa255110e",
