@@ -960,7 +960,7 @@ export const YUMLO_MENU = [
     "description": "Eby fry, surimi épicé, avocat",
     "priceMAD": "44.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet18/special-green-tiger.png"
+    "image": "/menu-hd-onglet18/special-green-tiger.jpg"
   },
   {
     "id": "c1abc56904",
