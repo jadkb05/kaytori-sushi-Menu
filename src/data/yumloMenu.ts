@@ -181,7 +181,7 @@ export const YUMLO_MENU = [
     "description": "",
     "priceMAD": "20.00",
     "currency": "MAD",
-    "image": "/starters-hd/riz-vinaigre.png"
+    "image": "/starters-hd/riz-vinaigre.jpg"
   },
   {
     "id": "228ccfc51d",
