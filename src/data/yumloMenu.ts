@@ -636,7 +636,7 @@ export const YUMLO_MENU = [
     "description": "Saumon",
     "priceMAD": "34.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet14/nigiri-saumon.png"
+    "image": "/menu-hd-onglet14/nigiri-saumon.jpg"
   },
   {
     "id": "9467aea043",

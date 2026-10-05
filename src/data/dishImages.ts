@@ -84,7 +84,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
 
   // Nigiri — WhatsApp 14.32.30 (_4–_7)
   "4cac8d8b4e": "/menu-hd-onglet14/nigiri-saumon-avocat.png",
-  "0055351351": "/menu-hd-onglet14/nigiri-saumon.png",
+  "0055351351": "/menu-hd-onglet14/nigiri-saumon.jpg",
   "9467aea043": "/menu-hd-onglet14/nigiri-saumon-braise.png",
 
   // Maki — WhatsApp 14.32.30 / 14.32.31
