@@ -289,7 +289,7 @@ export const YUMLO_MENU = [
     "description": "Riz, cheese, surimi épicé, goma wakamé, tobiko, sauce japonaise.",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet3/sushi-burrito.png",
+    "image": "/menu-hd-onglet3/sushi-burrito.jpg",
     "variants": [
       { "id": "saumon-avocat", "label": "Saumon Avocat", "priceMAD": "79.00" },
       { "id": "crevettes-avocat", "label": "Crevettes Avocat", "priceMAD": "74.00" },

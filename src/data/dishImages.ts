@@ -27,7 +27,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "0ba6c99141": "/menu-hd-onglet3/pizza-saumon-mozza.png",
   "79bda10a6e": "/menu-hd-onglet3/burger.jpg",
   "b6220c2315": "/menu-hd-onglet3/crunchy-burrito.jpg",
-  "5a7a6c1ff9": "/menu-hd-onglet3/sushi-burrito.png",
+  "5a7a6c1ff9": "/menu-hd-onglet3/sushi-burrito.jpg",
 
   // Yakitori — visuels client WhatsApp 13.28.07 (_7–_10)
   "99671b537e": "/menu-hd-onglet4/yakitori-boeuf-fromage.png",
