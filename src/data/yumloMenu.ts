@@ -1656,6 +1656,83 @@ export const YUMLO_MENU = [
     ]
   },
   {
+    "id": "a8016335cd",
+    "category": "Plats Thaï",
+    "name": "Basilic Thaï",
+    "description": "",
+    "priceMAD": "69.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet26/basilic-thai.jpg",
+    "variants": [
+      { "id": "poulet", "label": "Poulet", "priceMAD": "69.00" },
+      { "id": "boeuf", "label": "Bœuf", "priceMAD": "74.00" },
+      { "id": "crevette", "label": "Crevette", "priceMAD": "74.00" },
+      { "id": "fruits-de-mer", "label": "Fruits de mer", "priceMAD": "79.00" }
+    ]
+  },
+  {
+    "id": "4afcd30489",
+    "category": "Plats Thaï",
+    "name": "Champignon & Bambou",
+    "description": "",
+    "priceMAD": "69.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet26/champignon-bambou.jpg",
+    "variants": [
+      { "id": "poulet", "label": "Poulet", "priceMAD": "69.00" },
+      { "id": "boeuf", "label": "Bœuf", "priceMAD": "74.00" },
+      { "id": "crevette", "label": "Crevette", "priceMAD": "74.00" },
+      { "id": "fruits-de-mer", "label": "Fruits de mer", "priceMAD": "79.00" }
+    ]
+  },
+  {
+    "id": "9e1d2c99ca",
+    "category": "Plats Thaï",
+    "name": "Chop Suey",
+    "description": "",
+    "priceMAD": "69.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet26/chop-suey.jpg",
+    "variants": [
+      { "id": "poulet", "label": "Poulet", "priceMAD": "69.00" },
+      { "id": "boeuf", "label": "Bœuf", "priceMAD": "74.00" },
+      { "id": "crevette", "label": "Crevette", "priceMAD": "74.00" },
+      { "id": "fruits-de-mer", "label": "Fruits de mer", "priceMAD": "79.00" }
+    ]
+  },
+  {
+    "id": "55088e9b04",
+    "category": "Plats Thaï",
+    "name": "Pavé de Saumon",
+    "description": "",
+    "priceMAD": "89.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet26/pave-de-saumon.jpg"
+  },
+  {
+    "id": "18b0c7ab53",
+    "category": "Plats Thaï",
+    "name": "Chicken Katsu",
+    "description": "",
+    "priceMAD": "74.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet26/chicken-katsu.jpg"
+  },
+  {
+    "id": "1568a2e365",
+    "category": "Plats Thaï",
+    "name": "Teppanyaki",
+    "description": "",
+    "priceMAD": "69.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet26/teppanyaki.jpg",
+    "variants": [
+      { "id": "poulet", "label": "Poulet", "priceMAD": "69.00" },
+      { "id": "boeuf", "label": "Bœuf", "priceMAD": "84.00" },
+      { "id": "saumon", "label": "Saumon", "priceMAD": "89.00" }
+    ]
+  },
+  {
     "id": "d99671dda4",
     "category": "Assortiments",
     "name": "Prime Box 16 pcs",
