@@ -1353,7 +1353,7 @@ export const YUMLO_MENU = [
     "id": "7256c43d8d",
     "category": "Makito Fry",
     "name": "Makito Anguille",
-    "description": "Anguille marinée, fondu de gouda",
+    "description": "Anguille marinée, fondu de gouda 6 Pièces",
     "priceMAD": "56.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet22/makito-anguille.jpg"
@@ -1362,7 +1362,7 @@ export const YUMLO_MENU = [
     "id": "0ee40fc997",
     "category": "Makito Fry",
     "name": "Makito Crabe",
-    "description": "Crabe mariné, fondu de gouda",
+    "description": "Crabe mariné, fondu de gouda 6 Pièces",
     "priceMAD": "55.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet22/makito-crabe.jpg"
@@ -1371,7 +1371,7 @@ export const YUMLO_MENU = [
     "id": "112f439dc8",
     "category": "Makito Fry",
     "name": "Makito Saumon",
-    "description": "Saumon, fondu de gouda",
+    "description": "Saumon, fondu de gouda 6 Pièces",
     "priceMAD": "49.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet22/makito-saumon.jpg"
