@@ -59,7 +59,7 @@ export const YUMLO_MENU = [
     "description": "1 Nem poulet, 1 gambas pané, salade viet, 4 fry eby fry, riz cantonais crevettes.",
     "priceMAD": "128.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-g.png"
+    "image": "/menu-hd-onglet36/bento-g.jpg"
   },
   {
     "id": "d570740bae",
