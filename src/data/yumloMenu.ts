@@ -1802,7 +1802,7 @@ export const YUMLO_MENU = [
     "description": "4 classic, 4 chicken crispy, 4 ebi fry, 4 cream cheese.",
     "priceMAD": "119.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet27/assort16-california-box.png"
+    "image": "/menu-hd-onglet27/assort16-california-box.jpg"
   },
   {
     "id": "8827d5820f",

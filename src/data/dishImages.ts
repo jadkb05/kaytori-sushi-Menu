@@ -229,7 +229,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "f7e59011ae": "/menu-hd-onglet27/assort16-funny.png",
   "794bc29deb": "/menu-hd-onglet27/assort16-eby-lovers.png",
   "5e0ccaac41": "/menu-hd-onglet27/assort16-crunchy-box.png",
-  "6515d6b542": "/menu-hd-onglet27/assort16-california-box.png",
+  "6515d6b542": "/menu-hd-onglet27/assort16-california-box.jpg",
 
   // Assortiments 24 pcs — captures Yumlo 16-05 (miniatures)
   "8827d5820f": "/menu-hd-onglet28/assort24-aromaki-lovers.png",
@@ -306,7 +306,7 @@ export const CUSTOM_DISH_IMAGES: Record<string, string> = {
   "f7e59011ae": "/menu-hd-onglet27/assort16-funny.png",
   "794bc29deb": "/menu-hd-onglet27/assort16-eby-lovers.png",
   "5e0ccaac41": "/menu-hd-onglet27/assort16-crunchy-box.png",
-  "6515d6b542": "/menu-hd-onglet27/assort16-california-box.png",
+  "6515d6b542": "/menu-hd-onglet27/assort16-california-box.jpg",
 
   // Assortiments 24 pcs (alignés sur CLIENT_DISH_IMAGES — miniatures Yumlo)
   "8827d5820f": "/menu-hd-onglet28/assort24-aromaki-lovers.png",
