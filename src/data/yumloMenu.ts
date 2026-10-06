@@ -1275,7 +1275,7 @@ export const YUMLO_MENU = [
     "description": "Crevette poché, saumon, surimi crevette pané",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet21/premium-pink-salmon.png"
+    "image": "/menu-hd-onglet21/premium-pink-salmon.jpg"
   },
   {
     "id": "82bc3899c0",
