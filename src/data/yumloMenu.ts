@@ -71,6 +71,33 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet36/bento-h.png"
   },
   {
+    "id": "f9047d3930",
+    "category": "Bentos",
+    "name": "Bento A",
+    "description": "Salade veggie, 2 nems poulet, 4 ébi fry, wok poulet",
+    "priceMAD": "105.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet36/bento-a.jpg"
+  },
+  {
+    "id": "d4738254f1",
+    "category": "Bentos",
+    "name": "Bento C",
+    "description": "1 Nem poulet, 1 gambas panée, salade gambas, 4 eby fry, 4 california eby, 4 california classic",
+    "priceMAD": "124.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet36/bento-c.jpg"
+  },
+  {
+    "id": "cba8d279df",
+    "category": "Bentos",
+    "name": "Bento E",
+    "description": "Salade viet, fry eby fry, wok végétarien, brochettes bœuf fromage",
+    "priceMAD": "119.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet36/bento-e.jpg"
+  },
+  {
     "id": "b6fe11da37",
     "category": "Starters",
     "name": "Saumon Wakamé Avocat",
