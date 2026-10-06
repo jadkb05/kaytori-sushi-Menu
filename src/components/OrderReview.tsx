@@ -1,9 +1,10 @@
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { lineSubtotalDh } from "../cart/buildOrderMessage";
 import { useCart } from "../cart/CartContext";
 import { formatDhAmount } from "../cart/formatDh";
-import { YUMLO_MENU, type YumloMenuItem } from "../data/yumloMenu";
+import type { YumloMenuItem } from "../data/yumloMenu";
+import { useMenu } from "../menu/MenuProvider";
 import { dishImage, dishThumbs } from "../menu/menuDisplay";
 
 type Props = {
@@ -12,11 +13,9 @@ type Props = {
 };
 
 /** Plat d'une ligne panier, depuis les données du menu (id panier = `platId` ou `platId:variantId`). */
-const DISH_BY_ID = new Map<string, YumloMenuItem>(YUMLO_MENU.map((it) => [it.id, it]));
-
-function dishOf(cartLineId: string): YumloMenuItem | undefined {
+function dishOf(dishById: ReadonlyMap<string, YumloMenuItem>, cartLineId: string): YumloMenuItem | undefined {
   const sep = cartLineId.indexOf(":");
-  return DISH_BY_ID.get(sep >= 0 ? cartLineId.slice(0, sep) : cartLineId);
+  return dishById.get(sep >= 0 ? cartLineId.slice(0, sep) : cartLineId);
 }
 
 /** « Nems — Crevettes » → produit « Nems », variante « Crevettes » (affichage uniquement). */
@@ -82,6 +81,8 @@ function LineThumb({ item }: { item: YumloMenuItem | undefined }) {
  */
 export function OrderReview({ onClose }: Props) {
   const { lines, totalDh, whatsappOrderUrl, increment, decrement, removeLine, clear } = useCart();
+  const menu = useMenu();
+  const dishById = useMemo(() => new Map(menu.items.map((it) => [it.id, it])), [menu]);
   const [confirmClear, setConfirmClear] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -192,7 +193,7 @@ export function OrderReview({ onClose }: Props) {
           <ul className="divide-y divide-kaytori-green/10">
             {lines.map((l) => {
               const { product, variant } = splitName(l.name);
-              const dish = dishOf(l.id);
+              const dish = dishOf(dishById, l.id);
               return (
                 <li key={l.id} className="flex items-center gap-3 py-3.5">
                   <LineThumb item={dish} />

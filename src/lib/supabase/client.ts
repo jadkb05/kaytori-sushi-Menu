@@ -8,8 +8,16 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 export type SupabaseConfig = { url: string; anonKey: string };
 
-/** Lit VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY ; null si non configuré. */
-export function readSupabaseConfig(env: Record<string, string | undefined> = import.meta.env): SupabaseConfig | null {
+/**
+ * Lit VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY ; null si non configuré.
+ * (Lecture variable par variable : `import.meta.env` entier serait inliné dans le bundle.)
+ */
+export function readSupabaseConfig(
+  env: Record<string, string | undefined> = {
+    VITE_SUPABASE_URL: import.meta.env.VITE_SUPABASE_URL,
+    VITE_SUPABASE_ANON_KEY: import.meta.env.VITE_SUPABASE_ANON_KEY,
+  },
+): SupabaseConfig | null {
   const url = env.VITE_SUPABASE_URL?.trim();
   const anonKey = env.VITE_SUPABASE_ANON_KEY?.trim();
   if (!url || !anonKey) return null;
