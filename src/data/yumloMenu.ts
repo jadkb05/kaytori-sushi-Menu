@@ -1185,7 +1185,7 @@ export const YUMLO_MENU = [
     "description": "Saumon mariné, surimi, avocat, cheese, sésame",
     "priceMAD": "54.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-bali.png"
+    "image": "/menu-hd-onglet20/blossom-bali.jpg"
   },
   {
     "id": "4c6bec2d41",
