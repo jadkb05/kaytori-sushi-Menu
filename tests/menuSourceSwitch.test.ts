@@ -118,6 +118,13 @@ describe("source Supabase (base PostgreSQL en mémoire, migration + seed réels)
 describe("repli statique (fallback)", () => {
   const failing = (load: () => Promise<MenuSnapshot>): MenuSource => ({ id: "supabase", load });
 
+  // Préchargement du module Supabase (import dynamique de lazySupabaseMenuSource) : son premier
+  // chargement à froid peut dépasser 5 s quand les autres fichiers de tests tournent en parallèle.
+  // Le test « non configuré » mesure ensuite uniquement le repli, pas la compilation du module.
+  beforeAll(async () => {
+    await import("../src/data/supabaseMenuSource");
+  }, 30_000);
+
   it("erreur de la source → menu statique + raison + avertissement", async () => {
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const result = await loadMenu(failing(async () => Promise.reject(new Error("réseau indisponible"))));

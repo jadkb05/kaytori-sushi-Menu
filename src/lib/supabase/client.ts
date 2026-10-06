@@ -2,7 +2,7 @@
  * Client Supabase (navigateur / scripts locaux), basé uniquement sur la clé publique « anon ».
  * Ne jamais utiliser la clé service_role ici : elle donnerait un accès complet sans RLS.
  *
- * Phase 1 : préparé mais pas utilisé par le menu public (source active : statique).
+ * Client unique partagé par le menu public (VITE_MENU_SOURCE=supabase) et l'espace /admin.
  */
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
@@ -32,7 +32,9 @@ export function getSupabaseClient(): SupabaseClient | null {
   const config = readSupabaseConfig();
   if (!config) return null;
   client = createClient(config.url, config.anonKey, {
-    auth: { persistSession: false },
+    // Session conservée (localStorage) pour l'espace /admin ; sans effet sur le menu public,
+    // qui ne retient que le contenu actif (rowsToMenu) quelle que soit la session.
+    auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false },
   });
   return client;
 }
