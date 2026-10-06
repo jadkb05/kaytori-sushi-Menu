@@ -68,7 +68,6 @@ export const ZIP_ORDER_DISH_IMAGES: Record<string, string> = {
   "f5de1461f2": "/menu-zip-order/064.jpg",
   "a1051484c6": "/menu-zip-order/065.jpg",
   "5f48df3cac": "/menu-zip-order/066.jpg",
-  "ecc7c8cd38": "/menu-zip-order/067.png",
   "302c4c0e8a": "/menu-zip-order/068.jpg",
   "566b2be815": "/menu-zip-order/069.jpg",
   "79e57587e9": "/menu-zip-order/070.jpg",

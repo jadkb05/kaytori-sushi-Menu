@@ -4,7 +4,6 @@
  */
 import { CLIENT_DISH_IMAGES, CUSTOM_DISH_IMAGES } from "../data/dishImages";
 import { STARTER_IMAGE_URL_BY_ID } from "../data/startersYakamon";
-import { CLIENT_SUSHU_POOL } from "../data/clientSushuPhotoPool";
 import { ZIP_ORDER_DISH_IMAGES } from "../data/zipOrderDishImages";
 import type { YumloMenuItem } from "../data/yumloMenu";
 
@@ -33,14 +32,6 @@ export function categoryAnchorId(c: string) {
   );
 }
 
-function dishPoolFallback(id: string): string | undefined {
-  const pool: readonly string[] = CLIENT_SUSHU_POOL;
-  if (pool.length === 0) return undefined;
-  let h = 0;
-  for (let i = 0; i < id.length; i++) h = (h * 31 + id.charCodeAt(i)) >>> 0;
-  return pool[h % pool.length];
-}
-
 /**
  * Image affichée d'un plat. `item.image` est prioritaire : en mode Supabase, c'est la photo
  * gérée depuis l'admin (products.image_url). En mode statique, `image` est identique à l'entrée
@@ -54,7 +45,6 @@ export function dishImage(item: YumloMenuItem) {
     CLIENT_DISH_IMAGES[item.id] ??
     CUSTOM_DISH_IMAGES[item.id] ??
     ZIP_ORDER_DISH_IMAGES[item.id] ??
-    dishPoolFallback(item.id) ??
     item.image
   );
 }
