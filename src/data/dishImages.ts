@@ -219,6 +219,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "9443eb67b5": "/menu-hd-onglet26/sate.jpg",
   "a8016335cd": "/menu-hd-onglet26/basilic-thai.jpg",
   "4afcd30489": "/menu-hd-onglet26/champignon-bambou.jpg",
+  "55088e9b04": "/menu-hd-onglet26/pave-de-saumon.jpg",
 
   // Assortiments 16 pcs — captures Yumlo 16-04 / 16-05 (miniatures)
   "d99671dda4": "/menu-hd-onglet27/assort16-prime-box.png",
