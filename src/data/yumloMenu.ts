@@ -1242,15 +1242,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet20/blossom-cheezy-salmon.png"
   },
   {
-    "id": "dfe30cb647",
-    "category": "Blossom",
-    "name": "Blossom Toro Roll",
-    "description": "Thon mariné, saumon, cheese, tobiko",
-    "priceMAD": "64.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-toro-roll.png"
-  },
-  {
     "id": "cd27240259",
     "category": "Blossom",
     "name": "Blossom Exotic",
