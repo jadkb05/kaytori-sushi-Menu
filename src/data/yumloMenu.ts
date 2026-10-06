@@ -1509,7 +1509,7 @@ export const YUMLO_MENU = [
     "description": "Crevette pané, avocat, cheese 6 Pièces",
     "priceMAD": "55.25",
     "currency": "MAD",
-    "image": "/menu-hd-onglet24/crunchy-fry-eby-fry.png"
+    "image": "/menu-hd-onglet24/crunchy-fry-eby-fry.jpg"
   },
   {
     "id": "45bca3a281",
