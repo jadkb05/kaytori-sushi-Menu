@@ -1464,7 +1464,7 @@ export const YUMLO_MENU = [
     "description": "Crevette pané, saumon, concombre, tobiko, cheese 6 Pièces",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet24/crunchy-eby-tempura.png"
+    "image": "/menu-hd-onglet24/crunchy-eby-tempura.jpg"
   },
   {
     "id": "b2336232f7",
