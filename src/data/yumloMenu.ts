@@ -1410,7 +1410,7 @@ export const YUMLO_MENU = [
     "description": "Poisson pané, surimi pané, fondu de gouda 6 pièces",
     "priceMAD": "54.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet23/crispy-cheesy-fish.png"
+    "image": "/menu-hd-onglet23/crispy-cheesy-fish.jpg"
   },
   {
     "id": "9f730f7289",
