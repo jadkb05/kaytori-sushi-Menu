@@ -1578,6 +1578,21 @@ export const YUMLO_MENU = [
     ]
   },
   {
+    "id": "382bef2bb1",
+    "category": "Wok & Thaï",
+    "name": "Pad Thaï",
+    "description": "",
+    "priceMAD": "64.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet25/pad-thai.jpg",
+    "variants": [
+      { "id": "poulet", "label": "Poulet", "priceMAD": "64.00" },
+      { "id": "boeuf", "label": "Bœuf", "priceMAD": "74.00" },
+      { "id": "crevettes", "label": "Crevettes", "priceMAD": "74.00" },
+      { "id": "fruits-de-mer", "label": "Fruits de Mer", "priceMAD": "79.00" }
+    ]
+  },
+  {
     "id": "cd6fcbb51e",
     "category": "Plats Thaï",
     "name": "Boeuf Bulgogi",
