@@ -1455,7 +1455,7 @@ export const YUMLO_MENU = [
     "description": "saumon, surimi, avocat, tobiko, cheese 6 Pièces",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet24/crunchy-saumon-avocat.png"
+    "image": "/menu-hd-onglet24/crunchy-saumon-avocat.jpg"
   },
   {
     "id": "fc97991608",
