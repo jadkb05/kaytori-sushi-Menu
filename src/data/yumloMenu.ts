@@ -1293,7 +1293,7 @@ export const YUMLO_MENU = [
     "description": "Double eby fry, saumon, surimi, avocat, wakamé",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet21/premium-exotica-roll.png"
+    "image": "/menu-hd-onglet21/premium-exotica-roll.jpg"
   },
   {
     "id": "2aacef48a6",
