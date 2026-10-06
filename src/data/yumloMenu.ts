@@ -41,7 +41,7 @@ export const YUMLO_MENU = [
     "description": "4 Croquette saumon, 4 ébi fry, 2 bœuf fromage, 1 ébi tempura, 1 nems poulet.",
     "priceMAD": "129.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-f.png"
+    "image": "/menu-hd-onglet36/bento-f.jpg"
   },
   {
     "id": "bd099ce53c",
