@@ -176,7 +176,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "fd173daf85": "/menu-hd-onglet21/premium-sirena-roll.png",
   "ef3a2da619": "/menu-hd-onglet21/premium-salmon-tataki.jpg",
   "ffddedcf35": "/menu-hd-onglet21/premium-bora-bora.png",
-  "52d169b9dd": "/menu-hd-onglet21/premium-exotic-salmon.png",
+  "52d169b9dd": "/menu-hd-onglet21/premium-exotic-salmon.jpg",
 
   // Makito Fry — captures Yumlo 15-59 (miniatures)
   "df7dc34617": "/menu-hd-onglet22/makito-saumon-epice.png",

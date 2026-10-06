@@ -1338,7 +1338,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, mangue, eby fry, surimi, saumon cuit, tobiko",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet21/premium-exotic-salmon.png"
+    "image": "/menu-hd-onglet21/premium-exotic-salmon.jpg"
   },
   {
     "id": "df7dc34617",
