@@ -168,7 +168,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
 
   // Premium — captures produit Yumlo 15-58 / 15-59 (miniatures)
   "cec5e70b6a": "/menu-hd-onglet21/premium-cancun.jpg",
-  "6c2ba70a6f": "/menu-hd-onglet21/premium-krabi-roll.png",
+  "6c2ba70a6f": "/menu-hd-onglet21/premium-krabi-roll.jpg",
   "c6bf1f1759": "/menu-hd-onglet21/premium-fuji-roll.png",
   "b1b1b0e1ba": "/menu-hd-onglet21/premium-pink-salmon.png",
   "82bc3899c0": "/menu-hd-onglet21/premium-exotica-roll.png",

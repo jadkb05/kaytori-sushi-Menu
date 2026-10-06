@@ -1266,7 +1266,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, eby fry, surimi crabe, avocat, goma wakamé",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet21/premium-krabi-roll.png"
+    "image": "/menu-hd-onglet21/premium-krabi-roll.jpg"
   },
   {
     "id": "c6bf1f1759",
