@@ -281,6 +281,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "bd099ce53c": "/menu-hd-onglet36/bento-b.jpg",
   "d2ba4b91b8": "/menu-hd-onglet36/bento-g.png",
   "d570740bae": "/menu-hd-onglet36/bento-h.png",
+  "f9047d3930": "/menu-hd-onglet36/bento-a.jpg",
 };
 
 /**
@@ -294,6 +295,7 @@ export const CUSTOM_DISH_IMAGES: Record<string, string> = {
   "bd099ce53c": "/menu-hd-onglet36/bento-b.jpg",
   "d2ba4b91b8": "/menu-hd-onglet36/bento-g.png",
   "d570740bae": "/menu-hd-onglet36/bento-h.png",
+  "f9047d3930": "/menu-hd-onglet36/bento-a.jpg",
 
   // Assortiments 16 pcs (alignés sur CLIENT_DISH_IMAGES — miniatures Yumlo)
   "d99671dda4": "/menu-hd-onglet27/assort16-prime-box.png",
