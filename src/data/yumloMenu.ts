@@ -1500,7 +1500,7 @@ export const YUMLO_MENU = [
     "description": "Crevette pané, surimi pané, cheese, tobiko 6 Pièces",
     "priceMAD": "55.25",
     "currency": "MAD",
-    "image": "/menu-hd-onglet24/crunchy-pacific.png"
+    "image": "/menu-hd-onglet24/crunchy-pacific.jpg"
   },
   {
     "id": "3583d51b73",
