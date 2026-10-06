@@ -1491,7 +1491,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, poireaux, carottes, ciboulette, cheese, tobiko 6 Pièces",
     "priceMAD": "55.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet24/crunchy-dragon-eyes.png"
+    "image": "/menu-hd-onglet24/crunchy-dragon-eyes.jpg"
   },
   {
     "id": "e3a96c288b",
