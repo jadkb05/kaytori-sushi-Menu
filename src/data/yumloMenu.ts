@@ -1188,15 +1188,6 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet20/blossom-bali.jpg"
   },
   {
-    "id": "4c6bec2d41",
-    "category": "Blossom",
-    "name": "Blossom Bangkok",
-    "description": "Thon mariné, surimi, mangue, cheese, sésame",
-    "priceMAD": "54.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-bangkok.png"
-  },
-  {
     "id": "e463b20218",
     "category": "Blossom",
     "name": "Blossom Bonzaï",
