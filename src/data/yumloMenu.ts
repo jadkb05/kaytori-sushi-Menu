@@ -1230,7 +1230,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, avocat, concombre",
     "priceMAD": "55.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-green-salmon.png"
+    "image": "/menu-hd-onglet20/blossom-green-salmon.jpg"
   },
   {
     "id": "f33f401dd2",
