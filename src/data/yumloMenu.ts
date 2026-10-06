@@ -1608,7 +1608,7 @@ export const YUMLO_MENU = [
     "description": "Lait de coco, sauce curry thaï poivrons, champignon, brocolis, carottes, courgettes, échalotes (servi avec du riz)",
     "priceMAD": "64.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet26/red-curry-thai.png",
+    "image": "/menu-hd-onglet26/red-curry-thai.jpg",
     "variants": [
       { "id": "poulet", "label": "Poulet", "priceMAD": "69.00" },
       { "id": "boeuf", "label": "Bœuf", "priceMAD": "74.00" },
