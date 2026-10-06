@@ -87,14 +87,15 @@ describe("création réussie", () => {
     for (const it of await publicCategory("Salades")) if (it.id !== NEW_ID) expect(it).toEqual(byId.get(it.id));
   });
 
-  it("avec variantes : prix parent = prix de variante le plus bas, variantes créées dans l'ordre", async () => {
+  it("avec variantes : prix parent = variante ACTIVE la moins chère (Phase 3E), variantes créées dans l'ordre", async () => {
     const res = await create(admin, base({ price: undefined }), [
       { id: "poulet", label: "Poulet", price: 64, sort_order: 0 },
       { id: "fruits-de-mer", label: "Fruits de mer", price: 59.5, sort_order: 1, is_active: false },
     ], 2);
     expect(res.error).toBeNull();
     const rows = await readMenuRows(db);
-    expect(rows.products.find((p) => p.id === NEW_ID)!.price).toBe("59.50");
+    // « Fruits de mer » (59,50) est inactive : le prix parent est celui de la variante active la moins chère.
+    expect(rows.products.find((p) => p.id === NEW_ID)!.price).toBe("64.00");
     expect(rows.variants.filter((v) => v.product_id === NEW_ID)).toEqual([
       { product_id: NEW_ID, id: "poulet", label: "Poulet", price: "64.00", sort_order: 0, is_active: true },
       { product_id: NEW_ID, id: "fruits-de-mer", label: "Fruits de mer", price: "59.50", sort_order: 1, is_active: false },

@@ -76,7 +76,7 @@ export function ProductCreateForm({
     const found = validateNewProduct(form, rows, photo?.file ?? null);
     setErrors(found);
     if (hasNewProductErrors(found) || !photo) {
-      setSaveError("Corrigez les champs indiqués avant de créer le produit.");
+      setSaveError(!photo ? "Ajoutez une photo avant de créer le produit." : "Corrigez les champs indiqués avant de créer le produit.");
       return;
     }
     setPending(true);
@@ -274,7 +274,7 @@ export function ProductCreatePage({ client }: { client: SupabaseClient }) {
       <PageHeader title="Nouveau produit" description="La photo est obligatoire." />
       {created ? (
         <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5" role="status">
-          <p className="text-sm font-medium text-emerald-900">« {created.name} » a été créé.</p>
+          <p className="text-sm font-medium text-emerald-900">Produit créé avec succès : « {created.name} ».</p>
           <div className="mt-3 flex flex-wrap gap-2">
             <AdminLink href={productEditPath(created.productId)} className="rounded-lg bg-kaytori-green px-4 py-2 text-sm font-semibold text-white">
               Voir / modifier le produit

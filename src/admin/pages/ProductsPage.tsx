@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { takeFlash } from "../lib/flash";
 import { AdminLink } from "../components/AdminLink";
 import { ErrorState, LoadingState, PageHeader, StatusBadge, inputClass } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
@@ -54,6 +55,7 @@ function ProductRow({ p }: { p: AdminProduct }) {
 /** Liste des produits (lecture seule) avec recherche et filtre par catégorie. */
 export function ProductsPage() {
   const data = useAdminMenuData();
+  const [flash] = useState(() => takeFlash());
   const [query, setQuery] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
 
@@ -72,6 +74,11 @@ export function ProductsPage() {
           </AdminLink>
         }
       />
+      {flash ? (
+        <p className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">
+          {flash}
+        </p>
+      ) : null}
       {data.status === "loading" ? <LoadingState /> : null}
       {data.status === "error" ? <ErrorState message={data.error} onRetry={data.reload} /> : null}
       {data.status === "ready" ? (
