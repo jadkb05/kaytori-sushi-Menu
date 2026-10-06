@@ -50,7 +50,7 @@ export const YUMLO_MENU = [
     "description": "6 Aromaki saumon, salade viet, 4 ébi fry, 4 croquettes saumon.",
     "priceMAD": "129.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-b.png"
+    "image": "/menu-hd-onglet36/bento-b.jpg"
   },
   {
     "id": "d2ba4b91b8",
