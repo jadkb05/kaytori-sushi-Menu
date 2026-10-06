@@ -1350,6 +1350,33 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet22/makito-crevettes.jpg"
   },
   {
+    "id": "7256c43d8d",
+    "category": "Makito Fry",
+    "name": "Makito Anguille",
+    "description": "Anguille marinée, fondu de gouda",
+    "priceMAD": "56.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet22/makito-anguille.jpg"
+  },
+  {
+    "id": "0ee40fc997",
+    "category": "Makito Fry",
+    "name": "Makito Crabe",
+    "description": "Crabe mariné, fondu de gouda",
+    "priceMAD": "55.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet22/makito-crabe.jpg"
+  },
+  {
+    "id": "112f439dc8",
+    "category": "Makito Fry",
+    "name": "Makito Saumon",
+    "description": "Saumon, fondu de gouda",
+    "priceMAD": "49.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet22/makito-saumon.jpg"
+  },
+  {
     "id": "df8e4b755c",
     "category": "Crispy Roll",
     "name": "Crispy Red White",
