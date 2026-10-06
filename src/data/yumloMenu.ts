@@ -1140,7 +1140,7 @@ export const YUMLO_MENU = [
     "description": "Saumon pané, crevettes, cheese, tobiko",
     "priceMAD": "62.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-new-york.png"
+    "image": "/menu-hd-onglet20/blossom-new-york.jpg"
   },
   {
     "id": "f84280a0f7",

@@ -152,7 +152,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   // Blossom — captures produit Yumlo 15-57 (miniatures)
   "e41a8a69ca": "/menu-hd-onglet20/blossom-ceviche-roll.jpg",
   "5347977dbc": "/menu-hd-onglet20/blossom-hawai.jpg",
-  "2d6c4738f9": "/menu-hd-onglet20/blossom-new-york.png",
+  "2d6c4738f9": "/menu-hd-onglet20/blossom-new-york.jpg",
   "f84280a0f7": "/menu-hd-onglet20/blossom-boston.jpg",
   "12117b00b9": "/menu-hd-onglet20/blossom-eby-roll.jpg",
   "cb9324ca52": "/menu-hd-onglet20/blossom-tokyo.jpg",
