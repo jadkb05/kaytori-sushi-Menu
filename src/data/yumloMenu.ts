@@ -1638,7 +1638,7 @@ export const YUMLO_MENU = [
     "description": "Poulet caramélisé , servi avec nouilles ou riz sauté aux légumes",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet26/corean-chicken.png"
+    "image": "/menu-hd-onglet26/corean-chicken.jpg"
   },
   {
     "id": "9443eb67b5",
