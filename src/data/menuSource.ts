@@ -15,7 +15,8 @@ export type MenuSnapshot = {
   items: readonly YumloMenuItem[];
 };
 
-export type MenuSourceId = "static";
+/** « supabase » : préparée (supabaseMenuSource.ts) mais jamais active à ce stade. */
+export type MenuSourceId = "static" | "supabase";
 
 export type MenuSource = {
   id: MenuSourceId;
@@ -37,7 +38,7 @@ export const staticMenuSource: MenuSource = {
   load: async () => STATIC_SNAPSHOT,
 };
 
-/** Source utilisée par le menu public. Phase 0 : toujours le fichier statique. */
+/** Source utilisée par le menu public. Phases 0 et 1 : toujours le fichier statique. */
 export const ACTIVE_MENU_SOURCE: MenuSource = staticMenuSource;
 
 /** Charge le menu depuis la source active. */
