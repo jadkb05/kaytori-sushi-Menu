@@ -1401,7 +1401,7 @@ export const YUMLO_MENU = [
     "description": "Poulet pané, crevette pané, avocat, surimi 6 Pièces",
     "priceMAD": "58.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet23/crispy-eby-chicken-fry.png"
+    "image": "/menu-hd-onglet23/crispy-eby-chicken-fry.jpg"
   },
   {
     "id": "deb56ea325",

@@ -187,7 +187,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   // Crispy Roll — captures Yumlo 16-00 (miniatures)
   "df8e4b755c": "/menu-hd-onglet23/crispy-red-white.jpg",
   "007985588c": "/menu-hd-onglet23/crispy-sakura.jpg",
-  "f0b86623a1": "/menu-hd-onglet23/crispy-eby-chicken-fry.png",
+  "f0b86623a1": "/menu-hd-onglet23/crispy-eby-chicken-fry.jpg",
   "deb56ea325": "/menu-hd-onglet23/crispy-cheesy-fish.png",
   "9f730f7289": "/menu-hd-onglet23/crispy-saumon-tempura.png",
 
