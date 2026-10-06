@@ -195,7 +195,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "c1d4661e91": "/menu-hd-onglet23/crispy-saumon-cheese.jpg",
 
   // Crunchy Roll — captures Yumlo 16-01 (miniatures)
-  "5ec25676a2": "/menu-hd-onglet24/crunchy-saumon-avocat.jpg",
+  "5ec25676a2": "/menu-hd-onglet24/crunchy-saumon-avocat.png",
   "fc97991608": "/menu-hd-onglet24/crunchy-eby-tempura.png",
   "b2336232f7": "/menu-hd-onglet24/crunchy-casablanca.png",
   "b6bb8210a3": "/menu-hd-onglet24/crunchy-tiger-fry.png",
