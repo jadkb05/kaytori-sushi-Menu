@@ -1536,7 +1536,7 @@ export const YUMLO_MENU = [
     "description": "Nouilles — sauce au choix : oyster, teriyaki, aigre doux, sweet chili.",
     "priceMAD": "49.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet25/wok-nouilles.png",
+    "image": "/menu-hd-onglet25/wok-nouilles.jpg",
     "variants": [
       { "id": "vegetarien", "label": "Végétarien", "priceMAD": "49.00" },
       { "id": "poulet", "label": "Poulet", "priceMAD": "59.00" },
