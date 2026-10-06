@@ -1176,7 +1176,7 @@ export const YUMLO_MENU = [
     "description": "Saumon braisé, avocat, cheese",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-saumon-braise.png"
+    "image": "/menu-hd-onglet20/blossom-saumon-braise.jpg"
   },
   {
     "id": "c435723d4c",
