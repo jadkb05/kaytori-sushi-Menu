@@ -1275,7 +1275,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, eby fry, saumon cuit, mangue",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet21/premium-fuji-roll.png"
+    "image": "/menu-hd-onglet21/premium-fuji-roll.jpg"
   },
   {
     "id": "b1b1b0e1ba",
