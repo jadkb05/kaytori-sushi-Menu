@@ -6,16 +6,19 @@ import { PhoneIcon } from "../components/Icons";
 import { MenuFooter } from "../components/MenuFooter";
 import { ReassuranceBand } from "../components/ReassuranceBand";
 import { SITE } from "../config/site";
+import { getStaticMenu } from "../data/menuSource";
 import { groupItemsForMenuTab } from "../data/menuTabSections";
-import { YUMLO_CATEGORIES, YUMLO_MENU } from "../data/yumloMenu";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { DishRow } from "../menu/DishRow";
 import { categoryAnchorId } from "../menu/menuDisplay";
 
-/** Sections dans l'ordre client (YUMLO_CATEGORIES), catégories vides ignorées. */
-const SECTIONS = YUMLO_CATEGORIES.map((category) => ({
+/** Menu lu via la couche d'accès (source active : yumloMenu.ts). */
+const MENU = getStaticMenu();
+
+/** Sections dans l'ordre client (catégories du menu), catégories vides ignorées. */
+const SECTIONS = MENU.categories.map((category) => ({
   category,
-  items: YUMLO_MENU.filter((it) => it.category === category),
+  items: MENU.items.filter((it) => it.category === category),
 })).filter((s) => s.items.length > 0);
 
 /** Menu digital (/menu) — point d'entrée QR code : un seul scroll, catégories sticky. */

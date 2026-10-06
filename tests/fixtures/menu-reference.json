@@ -1,0 +1,4612 @@
+{
+  "categories": [
+    {
+      "name": "Starters",
+      "position": 0,
+      "productIds": [
+        "b6fe11da37",
+        "2a41bacc9f",
+        "4bb9d46122",
+        "3f0f832948",
+        "c4b4c870b0",
+        "8f3c2a91b0",
+        "2501bc64fe",
+        "c1d464c327",
+        "dfa255110e",
+        "f7dbe92aae",
+        "140ae41112",
+        "4d8b7659dc",
+        "228ccfc51d"
+      ]
+    },
+    {
+      "name": "Nems & Gyoza & Rouleaux de printemps",
+      "position": 1,
+      "productIds": [
+        "a1aee64eaf",
+        "a720b7b300",
+        "76d7875ff7",
+        "da996bc4a5"
+      ]
+    },
+    {
+      "name": "Sushi Fusion",
+      "position": 2,
+      "productIds": [
+        "1842edff6e",
+        "da6c1fe793",
+        "f6cb920bcd",
+        "0ba6c99141",
+        "79bda10a6e",
+        "b6220c2315",
+        "5a7a6c1ff9"
+      ]
+    },
+    {
+      "name": "Yakitori",
+      "position": 3,
+      "productIds": [
+        "a043965b0e",
+        "99671b537e",
+        "1dfecb937d",
+        "7cb2b13500"
+      ]
+    },
+    {
+      "name": "Soupes",
+      "position": 4,
+      "productIds": [
+        "261985956b",
+        "fb33c65f0c",
+        "a03e0a6aff",
+        "1714470567",
+        "58ab2c54d0"
+      ]
+    },
+    {
+      "name": "Salades",
+      "position": 5,
+      "productIds": [
+        "4240ad621c",
+        "2c80cdd361",
+        "c2651f806f",
+        "b446a7355a",
+        "fb89c84798",
+        "b56ed1406f",
+        "3a75439af2",
+        "aa7a7bfe5c"
+      ]
+    },
+    {
+      "name": "Poké Bowl",
+      "position": 6,
+      "productIds": [
+        "743455af94",
+        "bd77948103",
+        "5034601de3"
+      ]
+    },
+    {
+      "name": "Tartare",
+      "position": 7,
+      "productIds": [
+        "d4d9f53292",
+        "1eef119afb"
+      ]
+    },
+    {
+      "name": "Chirashi",
+      "position": 8,
+      "productIds": [
+        "a2118c7dd7"
+      ]
+    },
+    {
+      "name": "Sashimi",
+      "position": 9,
+      "productIds": [
+        "dbca86e5a4"
+      ]
+    },
+    {
+      "name": "Carpaccio",
+      "position": 10,
+      "productIds": [
+        "5206f52f84"
+      ]
+    },
+    {
+      "name": "Tacos",
+      "position": 11,
+      "productIds": [
+        "2505b93cd8",
+        "8101c52f8c",
+        "b5131a7c46",
+        "0d86283322"
+      ]
+    },
+    {
+      "name": "Crispy Rice",
+      "position": 12,
+      "productIds": [
+        "f1773a150f",
+        "e624eac353",
+        "b276b0ceb2",
+        "d56e6ad4c1"
+      ]
+    },
+    {
+      "name": "Nigiri",
+      "position": 13,
+      "productIds": [
+        "4cac8d8b4e",
+        "0055351351",
+        "9467aea043"
+      ]
+    },
+    {
+      "name": "Maki",
+      "position": 14,
+      "productIds": [
+        "a134dbcb8f",
+        "07f5e99819",
+        "2594bcb7b0",
+        "6be7c32896",
+        "78b88fbc91"
+      ]
+    },
+    {
+      "name": "Futomaki",
+      "position": 15,
+      "productIds": [
+        "48d9b28c3c",
+        "f5de1461f2",
+        "a1051484c6",
+        "5f48df3cac",
+        "ecc7c8cd38"
+      ]
+    },
+    {
+      "name": "California Roll",
+      "position": 16,
+      "productIds": [
+        "c0a1b2c3d4",
+        "d1e2f3a4b5",
+        "e2f3a4b5c6",
+        "cc76387393",
+        "f3a4b5c6d7",
+        "a4b5c6d7e8",
+        "b5c6d7e8f9",
+        "84f445e743",
+        "302c4c0e8a",
+        "566b2be815",
+        "79e57587e9",
+        "fe6a2d104e",
+        "35e32c3559",
+        "2ce74d5ed1"
+      ]
+    },
+    {
+      "name": "Special Roll",
+      "position": 17,
+      "productIds": [
+        "5ee8246804",
+        "7412fc4ec3",
+        "7eeb7d6f83",
+        "a1b2c3d4e6",
+        "b2c3d4e5f7",
+        "f6a7b8c9d1",
+        "a7b8c9d0e2",
+        "47cc3a1126",
+        "f466c46a8f",
+        "3442a25d4d",
+        "c1abc56904",
+        "449ca2a7f1",
+        "53f1432678",
+        "101f7551db"
+      ]
+    },
+    {
+      "name": "Aromaki",
+      "position": 18,
+      "productIds": [
+        "11b8f36cb5",
+        "4da542fb7e",
+        "be681d7f41",
+        "dabf870bd3",
+        "4646423648",
+        "cae1232225",
+        "6af2df4ee9",
+        "85abca6325",
+        "551465cab5",
+        "89b5ce5b7a",
+        "02d2e17d1c",
+        "fff5c41eda",
+        "412918d0e5",
+        "77e046cbe4"
+      ]
+    },
+    {
+      "name": "Blossom",
+      "position": 19,
+      "productIds": [
+        "e41a8a69ca",
+        "5347977dbc",
+        "2d6c4738f9",
+        "f84280a0f7",
+        "12117b00b9",
+        "cb9324ca52",
+        "ace54559af",
+        "c435723d4c",
+        "e463b20218",
+        "0433bbd53c",
+        "6d09d7bf8d",
+        "cf8623ce70",
+        "f33f401dd2",
+        "cd27240259"
+      ]
+    },
+    {
+      "name": "Premium",
+      "position": 20,
+      "productIds": [
+        "cec5e70b6a",
+        "6c2ba70a6f",
+        "c6bf1f1759",
+        "b1b1b0e1ba",
+        "82bc3899c0",
+        "2aacef48a6",
+        "fd173daf85",
+        "ef3a2da619",
+        "ffddedcf35",
+        "52d169b9dd"
+      ]
+    },
+    {
+      "name": "Makito Fry",
+      "position": 21,
+      "productIds": [
+        "df7dc34617",
+        "e6820a6ec3",
+        "7256c43d8d",
+        "0ee40fc997",
+        "112f439dc8"
+      ]
+    },
+    {
+      "name": "Crispy Roll",
+      "position": 22,
+      "productIds": [
+        "df8e4b755c",
+        "007985588c",
+        "f0b86623a1",
+        "deb56ea325",
+        "9f730f7289",
+        "06066ec740",
+        "e3c612287f",
+        "c1d4661e91"
+      ]
+    },
+    {
+      "name": "Crunchy Roll",
+      "position": 23,
+      "productIds": [
+        "5ec25676a2",
+        "fc97991608",
+        "b2336232f7",
+        "b6bb8210a3",
+        "e8077d2295",
+        "e3a96c288b",
+        "3583d51b73",
+        "45bca3a281",
+        "53578ea799"
+      ]
+    },
+    {
+      "name": "Wok & Thaï",
+      "position": 24,
+      "productIds": [
+        "083ac320dd",
+        "0c48c8093e",
+        "5c227884f6",
+        "382bef2bb1"
+      ]
+    },
+    {
+      "name": "Bentos",
+      "position": 25,
+      "productIds": [
+        "f9047d3930",
+        "bd099ce53c",
+        "d4738254f1",
+        "66073a8aee",
+        "cba8d279df",
+        "6a0c00190c",
+        "d2ba4b91b8",
+        "d570740bae"
+      ]
+    },
+    {
+      "name": "Plats Thaï",
+      "position": 26,
+      "productIds": [
+        "cd6fcbb51e",
+        "36987b1e67",
+        "9eba998f82",
+        "0755e5b16d",
+        "9443eb67b5",
+        "a8016335cd",
+        "4afcd30489",
+        "18b0c7ab53",
+        "9e1d2c99ca",
+        "55088e9b04",
+        "1568a2e365"
+      ]
+    },
+    {
+      "name": "Assortiments",
+      "position": 27,
+      "productIds": [
+        "6515d6b542",
+        "5e0ccaac41",
+        "794bc29deb",
+        "f7e59011ae",
+        "d99671dda4",
+        "58c0a31b31",
+        "8827d5820f",
+        "c9b4e3431d",
+        "d2212cb6f2",
+        "941fda2c02",
+        "a39d62353c",
+        "0679c0f898",
+        "267463ea64",
+        "c800597832",
+        "b5dd505e6f",
+        "59108b5a10",
+        "a4fdedb9b3",
+        "b4a12d5c8c",
+        "225dc32819",
+        "4a3cdf3348",
+        "10fc49f9b4"
+      ]
+    },
+    {
+      "name": "Desserts",
+      "position": 28,
+      "productIds": [
+        "5c15472d24",
+        "6bfd43d617"
+      ]
+    },
+    {
+      "name": "Jus",
+      "position": 29,
+      "productIds": [
+        "787c236c7b",
+        "fde993538f",
+        "2b9993080d",
+        "a2b893eb78",
+        "cb223847c5"
+      ]
+    },
+    {
+      "name": "Boissons",
+      "position": 30,
+      "productIds": [
+        "0229f0431e",
+        "8e12069c86",
+        "4750e9d01c",
+        "cf01bd2066",
+        "5b62bf8e93"
+      ]
+    }
+  ],
+  "products": [
+    {
+      "id": "b6fe11da37",
+      "category": "Starters",
+      "section": "",
+      "position": 0,
+      "name": "Saumon Wakamé Avocat",
+      "description": "Saumon",
+      "priceMAD": "48.00",
+      "displayedPriceMAD": "48.00",
+      "currency": "MAD",
+      "image": "/starters-hd/saumon-wakame-avocat.png",
+      "displayedImage": "/starters-hd/saumon-wakame-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/saumon-wakame-avocat-224.webp",
+        "large": "/menu-thumbs/starters-hd/saumon-wakame-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "2a41bacc9f",
+      "category": "Starters",
+      "section": "",
+      "position": 1,
+      "name": "Crevettes Tempura 5 pcs",
+      "description": "Crevettes",
+      "priceMAD": "45.00",
+      "displayedPriceMAD": "45.00",
+      "currency": "MAD",
+      "image": "/starters-hd/crevettes-tempura.png",
+      "displayedImage": "/starters-hd/crevettes-tempura.png",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/crevettes-tempura-224.webp",
+        "large": "/menu-thumbs/starters-hd/crevettes-tempura-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "4bb9d46122",
+      "category": "Starters",
+      "section": "",
+      "position": 2,
+      "name": "Crevettes Dynamite",
+      "description": "Crevettes",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/starters-hd/crevettes-dynamite.png",
+      "displayedImage": "/starters-hd/crevettes-dynamite.png",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/crevettes-dynamite-224.webp",
+        "large": "/menu-thumbs/starters-hd/crevettes-dynamite-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "3f0f832948",
+      "category": "Starters",
+      "section": "",
+      "position": 3,
+      "name": "Saumon Sweet & Sour",
+      "description": "Saumon",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/starters-hd/saumon-sweet-sour.png",
+      "displayedImage": "/starters-hd/saumon-sweet-sour.png",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/saumon-sweet-sour-224.webp",
+        "large": "/menu-thumbs/starters-hd/saumon-sweet-sour-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c4b4c870b0",
+      "category": "Starters",
+      "section": "",
+      "position": 4,
+      "name": "Poulet Sweet & Sour",
+      "description": "Poulet",
+      "priceMAD": "44.00",
+      "displayedPriceMAD": "44.00",
+      "currency": "MAD",
+      "image": "/starters-hd/poulet-sweet-sour.png",
+      "displayedImage": "/starters-hd/poulet-sweet-sour.png",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/poulet-sweet-sour-224.webp",
+        "large": "/menu-thumbs/starters-hd/poulet-sweet-sour-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "8f3c2a91b0",
+      "category": "Starters",
+      "section": "",
+      "position": 5,
+      "name": "Croquettes (5 pcs)",
+      "description": "Au choix : fromage, poulet ou saumon — sauce maison.",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/starters-hd/croquettes.png",
+      "displayedImage": "/starters-hd/croquettes.png",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/croquettes-224.webp",
+        "large": "/menu-thumbs/starters-hd/croquettes-336.webp"
+      },
+      "variants": [
+        {
+          "id": "fromage",
+          "label": "Fromage",
+          "priceMAD": "39.00"
+        },
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "39.00"
+        },
+        {
+          "id": "saumon",
+          "label": "Saumon",
+          "priceMAD": "49.00"
+        }
+      ]
+    },
+    {
+      "id": "2501bc64fe",
+      "category": "Starters",
+      "section": "",
+      "position": 6,
+      "name": "Poulet Karaage",
+      "description": "Poulet",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/starters-hd/poulet-karaage.jpg",
+      "displayedImage": "/starters-hd/poulet-karaage.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/poulet-karaage-224.webp",
+        "large": "/menu-thumbs/starters-hd/poulet-karaage-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c1d464c327",
+      "category": "Starters",
+      "section": "",
+      "position": 7,
+      "name": "Salade de Choux",
+      "description": "",
+      "priceMAD": "24.00",
+      "displayedPriceMAD": "24.00",
+      "currency": "MAD",
+      "image": "/starters-hd/salade-de-choux.jpg",
+      "displayedImage": "/starters-hd/salade-de-choux.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/salade-de-choux-224.webp",
+        "large": "/menu-thumbs/starters-hd/salade-de-choux-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "dfa255110e",
+      "category": "Starters",
+      "section": "",
+      "position": 8,
+      "name": "Edamame Spicy",
+      "description": "",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/starters-hd/edamame-spicy.jpg",
+      "displayedImage": "/starters-hd/edamame-spicy.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/edamame-spicy-224.webp",
+        "large": "/menu-thumbs/starters-hd/edamame-spicy-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f7dbe92aae",
+      "category": "Starters",
+      "section": "",
+      "position": 9,
+      "name": "Edamame",
+      "description": "",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/starters-hd/edamame.jpg",
+      "displayedImage": "/starters-hd/edamame.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/edamame-224.webp",
+        "large": "/menu-thumbs/starters-hd/edamame-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "140ae41112",
+      "category": "Starters",
+      "section": "",
+      "position": 10,
+      "name": "Goma Wakamé",
+      "description": "",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/starters-hd/goma-wakame.jpg",
+      "displayedImage": "/starters-hd/goma-wakame.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/goma-wakame-224.webp",
+        "large": "/menu-thumbs/starters-hd/goma-wakame-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "4d8b7659dc",
+      "category": "Starters",
+      "section": "",
+      "position": 11,
+      "name": "Riz Vinaigré",
+      "description": "",
+      "priceMAD": "20.00",
+      "displayedPriceMAD": "20.00",
+      "currency": "MAD",
+      "image": "/starters-hd/riz-vinaigre.jpg",
+      "displayedImage": "/starters-hd/riz-vinaigre.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/riz-vinaigre-224.webp",
+        "large": "/menu-thumbs/starters-hd/riz-vinaigre-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "228ccfc51d",
+      "category": "Starters",
+      "section": "",
+      "position": 12,
+      "name": "Riz Nature",
+      "description": "",
+      "priceMAD": "15.00",
+      "displayedPriceMAD": "15.00",
+      "currency": "MAD",
+      "image": "/starters-hd/riz-nature.jpg",
+      "displayedImage": "/starters-hd/riz-nature.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/starters-hd/riz-nature-224.webp",
+        "large": "/menu-thumbs/starters-hd/riz-nature-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a1aee64eaf",
+      "category": "Nems & Gyoza & Rouleaux de printemps",
+      "section": "",
+      "position": 0,
+      "name": "Gyoza",
+      "description": "4 Pièces — au choix.",
+      "priceMAD": "44.00",
+      "displayedPriceMAD": "44.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet2/gyoza.png",
+      "displayedImage": "/menu-hd-onglet2/gyoza.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet2/gyoza-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet2/gyoza-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "44.00"
+        },
+        {
+          "id": "crevettes",
+          "label": "Crevettes",
+          "priceMAD": "54.00"
+        }
+      ]
+    },
+    {
+      "id": "a720b7b300",
+      "category": "Nems & Gyoza & Rouleaux de printemps",
+      "section": "",
+      "position": 1,
+      "name": "Nems",
+      "description": "4 pièces — au choix.",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet2/nems.png",
+      "displayedImage": "/menu-hd-onglet2/nems.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet2/nems-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet2/nems-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "39.00"
+        },
+        {
+          "id": "crevettes",
+          "label": "Crevettes",
+          "priceMAD": "49.00"
+        },
+        {
+          "id": "mixte",
+          "label": "Mixte",
+          "priceMAD": "49.00"
+        }
+      ]
+    },
+    {
+      "id": "76d7875ff7",
+      "category": "Nems & Gyoza & Rouleaux de printemps",
+      "section": "",
+      "position": 2,
+      "name": "Rouleaux de Printemps (8 pcs)",
+      "description": "Au choix : végétarien, poulet ou crevettes — 8 pièces, sauce au choix.",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "29.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet2/rouleau-de-printemps.jpg",
+      "displayedImage": "/menu-hd-onglet2/rouleau-de-printemps.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet2/rouleau-de-printemps-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet2/rouleau-de-printemps-336.webp"
+      },
+      "variants": [
+        {
+          "id": "vegetarien",
+          "label": "Végétarien",
+          "priceMAD": "29.00"
+        },
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "39.00"
+        },
+        {
+          "id": "crevettes",
+          "label": "Crevettes",
+          "priceMAD": "44.00"
+        }
+      ]
+    },
+    {
+      "id": "da996bc4a5",
+      "category": "Nems & Gyoza & Rouleaux de printemps",
+      "section": "",
+      "position": 3,
+      "name": "Bouchées Vapeur",
+      "description": "4 Pièces — au choix.",
+      "priceMAD": "44.00",
+      "displayedPriceMAD": "44.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet2/bouchees-vapeur.jpg",
+      "displayedImage": "/menu-hd-onglet2/bouchees-vapeur.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet2/bouchees-vapeur-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet2/bouchees-vapeur-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "44.00"
+        },
+        {
+          "id": "crevettes",
+          "label": "Crevettes",
+          "priceMAD": "54.00"
+        }
+      ]
+    },
+    {
+      "id": "1842edff6e",
+      "category": "Sushi Fusion",
+      "section": "",
+      "position": 0,
+      "name": "Sushi Gratiné",
+      "description": "Gratiné au choix — sauce maison.",
+      "priceMAD": "78.00",
+      "displayedPriceMAD": "74.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet3/sushi-gratine.jpg",
+      "displayedImage": "/menu-hd-onglet3/sushi-gratine.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet3/sushi-gratine-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet3/sushi-gratine-336.webp"
+      },
+      "variants": [
+        {
+          "id": "gambas",
+          "label": "Gambas",
+          "priceMAD": "78.00"
+        },
+        {
+          "id": "saumon-crabe",
+          "label": "Saumon Crabe",
+          "priceMAD": "78.00"
+        },
+        {
+          "id": "chicken",
+          "label": "Chicken",
+          "priceMAD": "74.00"
+        }
+      ]
+    },
+    {
+      "id": "da6c1fe793",
+      "category": "Sushi Fusion",
+      "section": "",
+      "position": 1,
+      "name": "Pizza Saumon Crabe",
+      "description": "Saumon, surimi, crabe, avocat, mozzarelle, tobiko 8 Pièces",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet3/pizza-saumon-crabe.jpg",
+      "displayedImage": "/menu-hd-onglet3/pizza-saumon-crabe.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet3/pizza-saumon-crabe-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet3/pizza-saumon-crabe-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f6cb920bcd",
+      "category": "Sushi Fusion",
+      "section": "",
+      "position": 2,
+      "name": "Pizza Tropicale",
+      "description": "Crevettes, mangue, surimi, mozzarelle, tobiko 8 Pièces",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet3/pizza-tropicale.jpg",
+      "displayedImage": "/menu-hd-onglet3/pizza-tropicale.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet3/pizza-tropicale-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet3/pizza-tropicale-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "0ba6c99141",
+      "category": "Sushi Fusion",
+      "section": "",
+      "position": 3,
+      "name": "Pizza Saumon Mozza",
+      "description": "Saumon, surimi, mozzarelle, tobiko 8 Pièces",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet3/pizza-saumon-mozza.jpg",
+      "displayedImage": "/menu-hd-onglet3/pizza-saumon-mozza.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet3/pizza-saumon-mozza-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet3/pizza-saumon-mozza-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "79bda10a6e",
+      "category": "Sushi Fusion",
+      "section": "",
+      "position": 4,
+      "name": "Sushi Burger",
+      "description": "Riz croustillant, cheese, surimi épicé, goma wakamé, tobiko, sauce japonaise.",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "74.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet3/burger.jpg",
+      "displayedImage": "/menu-hd-onglet3/burger.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet3/burger-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet3/burger-336.webp"
+      },
+      "variants": [
+        {
+          "id": "saumon-avocat",
+          "label": "Saumon Avocat",
+          "priceMAD": "79.00"
+        },
+        {
+          "id": "crevettes-avocat",
+          "label": "Crevettes Avocat",
+          "priceMAD": "74.00"
+        }
+      ]
+    },
+    {
+      "id": "b6220c2315",
+      "category": "Sushi Fusion",
+      "section": "",
+      "position": 5,
+      "name": "Crunchy Burrito",
+      "description": "Avocat, surimi épicé, goma wakamé, tobiko, sauce japonaise, cheese, riz croustillant",
+      "priceMAD": "84.15",
+      "displayedPriceMAD": "84.15",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet3/crunchy-burrito.jpg",
+      "displayedImage": "/menu-hd-onglet3/crunchy-burrito.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet3/crunchy-burrito-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet3/crunchy-burrito-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5a7a6c1ff9",
+      "category": "Sushi Fusion",
+      "section": "",
+      "position": 6,
+      "name": "Sushi Burrito",
+      "description": "Riz, cheese, surimi épicé, goma wakamé, tobiko, sauce japonaise.",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet3/sushi-burrito.jpg",
+      "displayedImage": "/menu-hd-onglet3/sushi-burrito.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet3/sushi-burrito-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet3/sushi-burrito-336.webp"
+      },
+      "variants": [
+        {
+          "id": "saumon-avocat",
+          "label": "Saumon Avocat",
+          "priceMAD": "79.00"
+        },
+        {
+          "id": "crevettes-avocat",
+          "label": "Crevettes Avocat",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "chicken-fry-avocat",
+          "label": "Chicken Fry Avocat",
+          "priceMAD": "69.00"
+        }
+      ]
+    },
+    {
+      "id": "a043965b0e",
+      "category": "Yakitori",
+      "section": "",
+      "position": 0,
+      "name": "Boeuf Fromage Pané 2 pcs",
+      "description": "Servi avec du riz",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet4/yakitori-boeuf-fromage-pane.png",
+      "displayedImage": "/menu-hd-onglet4/yakitori-boeuf-fromage-pane.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet4/yakitori-boeuf-fromage-pane-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet4/yakitori-boeuf-fromage-pane-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "99671b537e",
+      "category": "Yakitori",
+      "section": "",
+      "position": 1,
+      "name": "Yakitori Bœuf Fromage 2 pcs",
+      "description": "Servi avec du riz",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet4/yakitori-boeuf-fromage.png",
+      "displayedImage": "/menu-hd-onglet4/yakitori-boeuf-fromage.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet4/yakitori-boeuf-fromage-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet4/yakitori-boeuf-fromage-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "1dfecb937d",
+      "category": "Yakitori",
+      "section": "",
+      "position": 2,
+      "name": "Yakitori Poulet Pané 2 pcs",
+      "description": "Servi avec du riz",
+      "priceMAD": "44.00",
+      "displayedPriceMAD": "44.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet4/yakitori-poulet-pane.png",
+      "displayedImage": "/menu-hd-onglet4/yakitori-poulet-pane.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet4/yakitori-poulet-pane-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet4/yakitori-poulet-pane-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "7cb2b13500",
+      "category": "Yakitori",
+      "section": "",
+      "position": 3,
+      "name": "Yakitori Poulet Tsukun 2 pcs",
+      "description": "Servi avec du riz",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet4/yakitori-poulet-tsukun.png",
+      "displayedImage": "/menu-hd-onglet4/yakitori-poulet-tsukun.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet4/yakitori-poulet-tsukun-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet4/yakitori-poulet-tsukun-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "261985956b",
+      "category": "Soupes",
+      "section": "",
+      "position": 0,
+      "name": "Soupe Tom Kha Kaï",
+      "description": "Poulet, lait de coco, tomate cerise, citronnelle, champignon",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet5/soupe-tom-kha-kai.png",
+      "displayedImage": "/menu-hd-onglet5/soupe-tom-kha-kai.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet5/soupe-tom-kha-kai-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet5/soupe-tom-kha-kai-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "fb33c65f0c",
+      "category": "Soupes",
+      "section": "",
+      "position": 1,
+      "name": "Soupe Royale",
+      "description": "Crevettes, calamar, saumon, boulettes de poulet, surimi, champignon noir, vermicelle, ciboulette",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet5/soupe-royale.png",
+      "displayedImage": "/menu-hd-onglet5/soupe-royale.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet5/soupe-royale-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet5/soupe-royale-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a03e0a6aff",
+      "category": "Soupes",
+      "section": "",
+      "position": 2,
+      "name": "Soupe Tom Yum",
+      "description": "Crevettes, pate tom yum, champignon, citronnelle",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet5/soupe-tom-yum.png",
+      "displayedImage": "/menu-hd-onglet5/soupe-tom-yum.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet5/soupe-tom-yum-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet5/soupe-tom-yum-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "1714470567",
+      "category": "Soupes",
+      "section": "",
+      "position": 3,
+      "name": "Soupe Fruits de Mer",
+      "description": "Crevettes, calamar, saumon, boulettes de poulet, surimi, champignon noir, vermicelle, ciboulette",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet5/soupe-fruits-de-mer.png",
+      "displayedImage": "/menu-hd-onglet5/soupe-fruits-de-mer.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet5/soupe-fruits-de-mer-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet5/soupe-fruits-de-mer-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "58ab2c54d0",
+      "category": "Soupes",
+      "section": "",
+      "position": 4,
+      "name": "Soupe Pékinoise",
+      "description": "Crevettes, poulet, vermicelle, champignon noir",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet5/soupe-pekinoise.png",
+      "displayedImage": "/menu-hd-onglet5/soupe-pekinoise.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet5/soupe-pekinoise-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet5/soupe-pekinoise-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "4240ad621c",
+      "category": "Salades",
+      "section": "",
+      "position": 0,
+      "name": "Salade Royale",
+      "description": "Crabe, crevettes, poulet, mangue, avocat, maïs, tomate cerise, laitue",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet6/salade-royale.png",
+      "displayedImage": "/menu-hd-onglet6/salade-royale.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet6/salade-royale-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet6/salade-royale-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "2c80cdd361",
+      "category": "Salades",
+      "section": "",
+      "position": 1,
+      "name": "Salade Fruits de Mer",
+      "description": "Calamar, crevettes, crabe, surimi, mangue, choux, carottes, laitue",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet6/salade-fruits-de-mer.jpg",
+      "displayedImage": "/menu-hd-onglet6/salade-fruits-de-mer.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet6/salade-fruits-de-mer-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet6/salade-fruits-de-mer-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c2651f806f",
+      "category": "Salades",
+      "section": "",
+      "position": 2,
+      "name": "Salade Tropicale",
+      "description": "Crevettes, avocat, surimi, pomme, concombre, maïs, tomates cerise, gouda pané",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet6/salade-tropicale.png",
+      "displayedImage": "/menu-hd-onglet6/salade-tropicale.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet6/salade-tropicale-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet6/salade-tropicale-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b446a7355a",
+      "category": "Salades",
+      "section": "",
+      "position": 3,
+      "name": "Salade Exotic Chicken",
+      "description": "Poulet pané, avocat, mangue, surimi, épis de maïs, tomate cerise, choux, carottes, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet6/salade-exotic-chicken.png",
+      "displayedImage": "/menu-hd-onglet6/salade-exotic-chicken.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet6/salade-exotic-chicken-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet6/salade-exotic-chicken-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "fb89c84798",
+      "category": "Salades",
+      "section": "",
+      "position": 4,
+      "name": "Salade Vietnamienne",
+      "description": "Poulet, crevettes, choux, carottes, cacahuète, germe de soja, concombre, laitue, sauce viet",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet6/salade-vietnamienne.jpg",
+      "displayedImage": "/menu-hd-onglet6/salade-vietnamienne.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet6/salade-vietnamienne-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet6/salade-vietnamienne-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b56ed1406f",
+      "category": "Salades",
+      "section": "",
+      "position": 5,
+      "name": "Crevettes Tempura",
+      "description": "Crevettes tempura, mangue, épis de maïs, wakamé, pomme, tomate cerise, tobiko, ciboulette",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet6/salade-crevettes-tempura.jpg",
+      "displayedImage": "/menu-hd-onglet6/salade-crevettes-tempura.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet6/salade-crevettes-tempura-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet6/salade-crevettes-tempura-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "3a75439af2",
+      "category": "Salades",
+      "section": "",
+      "position": 6,
+      "name": "Exotic Del Mar",
+      "description": "Saumon, crevettes, surimi, mangue, tomate cerise, choux, carottes",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet6/exotic-del-mar.jpg",
+      "displayedImage": "/menu-hd-onglet6/exotic-del-mar.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet6/exotic-del-mar-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet6/exotic-del-mar-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "aa7a7bfe5c",
+      "category": "Salades",
+      "section": "",
+      "position": 7,
+      "name": "Bobun",
+      "description": "Bœuf caramélisé, crevettes, nems poulet, vermicelle, légumes, cacahuètes",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet6/bobun.jpg",
+      "displayedImage": "/menu-hd-onglet6/bobun.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet6/bobun-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet6/bobun-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "743455af94",
+      "category": "Poké Bowl",
+      "section": "",
+      "position": 0,
+      "name": "Poké Saumon",
+      "description": "Saumon, mangue, avocat, goma wakamé, carottes, tomate cerise, edamame, riz vinaigré",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/poke-saumon.png",
+      "displayedImage": "/menu-hd-onglet7-12/poke-saumon.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/poke-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/poke-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "bd77948103",
+      "category": "Poké Bowl",
+      "section": "",
+      "position": 1,
+      "name": "Poké Crevettes",
+      "description": "Crevettes, mangue, avocat, goma wakamé, carottes, tomate cerise, edamame, riz vinaigré",
+      "priceMAD": "65.00",
+      "displayedPriceMAD": "65.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/poke-crevettes.png",
+      "displayedImage": "/menu-hd-onglet7-12/poke-crevettes.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/poke-crevettes-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/poke-crevettes-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5034601de3",
+      "category": "Poké Bowl",
+      "section": "",
+      "position": 2,
+      "name": "Poké Poulet",
+      "description": "Poulet, mangue, avocat, goma wakamé, carottes, tomate cerise, edamame, riz vinaigré",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/poke-poulet.png",
+      "displayedImage": "/menu-hd-onglet7-12/poke-poulet.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/poke-poulet-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/poke-poulet-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "d4d9f53292",
+      "category": "Tartare",
+      "section": "",
+      "position": 0,
+      "name": "Tartare Tropical",
+      "description": "Saumon, mangue, avocat, tobiko, ciboulette",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/tartare-tropical.png",
+      "displayedImage": "/menu-hd-onglet7-12/tartare-tropical.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/tartare-tropical-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/tartare-tropical-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "1eef119afb",
+      "category": "Tartare",
+      "section": "",
+      "position": 1,
+      "name": "Tartare Saumon Avocat",
+      "description": "Saumon, avocat, tobiko, kunafa, ciboulette",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/tartare-saumon-avocat.png",
+      "displayedImage": "/menu-hd-onglet7-12/tartare-saumon-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/tartare-saumon-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/tartare-saumon-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a2118c7dd7",
+      "category": "Chirashi",
+      "section": "",
+      "position": 0,
+      "name": "Chirashi Saumon Avocat",
+      "description": "Saumon, avocat",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/chirashi-saumon-avocat.png",
+      "displayedImage": "/menu-hd-onglet7-12/chirashi-saumon-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/chirashi-saumon-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/chirashi-saumon-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "dbca86e5a4",
+      "category": "Sashimi",
+      "section": "",
+      "position": 0,
+      "name": "Sashimi Saumon 4 pcs",
+      "description": "Saumon",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/sashimi-saumon.png",
+      "displayedImage": "/menu-hd-onglet7-12/sashimi-saumon.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/sashimi-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/sashimi-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5206f52f84",
+      "category": "Carpaccio",
+      "section": "",
+      "position": 0,
+      "name": "Carpaccio Saumon 8 pcs",
+      "description": "Saumon",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/carpaccio-saumon.png",
+      "displayedImage": "/menu-hd-onglet7-12/carpaccio-saumon.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/carpaccio-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/carpaccio-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "2505b93cd8",
+      "category": "Tacos",
+      "section": "",
+      "position": 0,
+      "name": "Tacos Saumon Avocat 2 pcs",
+      "description": "Saumon, avocat, tobiko",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/tacos-saumon-avocat.png",
+      "displayedImage": "/menu-hd-onglet7-12/tacos-saumon-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/tacos-saumon-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/tacos-saumon-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "8101c52f8c",
+      "category": "Tacos",
+      "section": "",
+      "position": 1,
+      "name": "Tacos Saumon Epicé 2 pcs",
+      "description": "Saumon épicé, poireaux, guacamole, sésame",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/tacos-saumon-epice.png",
+      "displayedImage": "/menu-hd-onglet7-12/tacos-saumon-epice.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/tacos-saumon-epice-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/tacos-saumon-epice-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b5131a7c46",
+      "category": "Tacos",
+      "section": "",
+      "position": 2,
+      "name": "Tacos Gambas Shitaké 2 pcs",
+      "description": "Gambas, champignon shitaké, sauce chili",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/tacos-gambas-shitake.png",
+      "displayedImage": "/menu-hd-onglet7-12/tacos-gambas-shitake.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/tacos-gambas-shitake-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/tacos-gambas-shitake-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "0d86283322",
+      "category": "Tacos",
+      "section": "",
+      "position": 3,
+      "name": "Tacos Chicken Garlic 2 pcs",
+      "description": "Chicken, sauce chili",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet7-12/tacos-chicken-garlic.png",
+      "displayedImage": "/menu-hd-onglet7-12/tacos-chicken-garlic.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet7-12/tacos-chicken-garlic-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet7-12/tacos-chicken-garlic-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f1773a150f",
+      "category": "Crispy Rice",
+      "section": "",
+      "position": 0,
+      "name": "Crispy Rice Saumon Avocat 2 pcs",
+      "description": "Saumon, avocat",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet13/crispy-rice-saumon-avocat.png",
+      "displayedImage": "/menu-hd-onglet13/crispy-rice-saumon-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet13/crispy-rice-saumon-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet13/crispy-rice-saumon-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "e624eac353",
+      "category": "Crispy Rice",
+      "section": "",
+      "position": 1,
+      "name": "Crispy Rice Ebi Avocat 2 pcs",
+      "description": "Crevettes, avocat",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet13/crispy-rice-ebi-avocat.png",
+      "displayedImage": "/menu-hd-onglet13/crispy-rice-ebi-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet13/crispy-rice-ebi-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet13/crispy-rice-ebi-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b276b0ceb2",
+      "category": "Crispy Rice",
+      "section": "",
+      "position": 2,
+      "name": "Crispy Rice Mangue Avocat 2 pcs",
+      "description": "Mangue, avocat",
+      "priceMAD": "29.00",
+      "displayedPriceMAD": "29.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet13/crispy-rice-mangue-avocat.png",
+      "displayedImage": "/menu-hd-onglet13/crispy-rice-mangue-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet13/crispy-rice-mangue-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet13/crispy-rice-mangue-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "d56e6ad4c1",
+      "category": "Crispy Rice",
+      "section": "",
+      "position": 3,
+      "name": "Crispy Rice Crunchy Poulet 2 pcs",
+      "description": "Poulet",
+      "priceMAD": "33.15",
+      "displayedPriceMAD": "33.15",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet13/crispy-rice-crunchy-poulet.png",
+      "displayedImage": "/menu-hd-onglet13/crispy-rice-crunchy-poulet.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet13/crispy-rice-crunchy-poulet-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet13/crispy-rice-crunchy-poulet-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "4cac8d8b4e",
+      "category": "Nigiri",
+      "section": "",
+      "position": 0,
+      "name": "Nigiri Saumon Avocat 2 pcs",
+      "description": "Saumon, avocat",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet14/nigiri-saumon-avocat.png",
+      "displayedImage": "/menu-hd-onglet14/nigiri-saumon-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet14/nigiri-saumon-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet14/nigiri-saumon-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "0055351351",
+      "category": "Nigiri",
+      "section": "",
+      "position": 1,
+      "name": "Nigiri Saumon 2 pcs",
+      "description": "Saumon",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet14/nigiri-saumon.jpg",
+      "displayedImage": "/menu-hd-onglet14/nigiri-saumon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet14/nigiri-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet14/nigiri-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "9467aea043",
+      "category": "Nigiri",
+      "section": "",
+      "position": 2,
+      "name": "Nigiri Saumon Braisé 2 pcs",
+      "description": "Saumon",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet14/nigiri-saumon-braise.png",
+      "displayedImage": "/menu-hd-onglet14/nigiri-saumon-braise.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet14/nigiri-saumon-braise-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet14/nigiri-saumon-braise-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a134dbcb8f",
+      "category": "Maki",
+      "section": "",
+      "position": 0,
+      "name": "Maki Saumon Cheese",
+      "description": "6 Pièces",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet15/maki-saumon-cheese.png",
+      "displayedImage": "/menu-hd-onglet15/maki-saumon-cheese.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet15/maki-saumon-cheese-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet15/maki-saumon-cheese-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "07f5e99819",
+      "category": "Maki",
+      "section": "",
+      "position": 1,
+      "name": "Maki Saumon Avocat",
+      "description": "6 Pièces",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet15/maki-saumon-avocat.png",
+      "displayedImage": "/menu-hd-onglet15/maki-saumon-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet15/maki-saumon-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet15/maki-saumon-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "2594bcb7b0",
+      "category": "Maki",
+      "section": "",
+      "position": 2,
+      "name": "Maki Eby Fry",
+      "description": "6 Pièces",
+      "priceMAD": "29.00",
+      "displayedPriceMAD": "29.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet15/maki-eby-fry.png",
+      "displayedImage": "/menu-hd-onglet15/maki-eby-fry.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet15/maki-eby-fry-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet15/maki-eby-fry-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "6be7c32896",
+      "category": "Maki",
+      "section": "",
+      "position": 3,
+      "name": "Maki Saumon",
+      "description": "6 Pièces",
+      "priceMAD": "29.00",
+      "displayedPriceMAD": "29.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet15/maki-saumon.png",
+      "displayedImage": "/menu-hd-onglet15/maki-saumon.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet15/maki-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet15/maki-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "78b88fbc91",
+      "category": "Maki",
+      "section": "",
+      "position": 4,
+      "name": "Maki Avocat Cheese",
+      "description": "6 Pièces",
+      "priceMAD": "26.00",
+      "displayedPriceMAD": "26.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet15/maki-avocat-cheese.png",
+      "displayedImage": "/menu-hd-onglet15/maki-avocat-cheese.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet15/maki-avocat-cheese-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet15/maki-avocat-cheese-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "48d9b28c3c",
+      "category": "Futomaki",
+      "section": "",
+      "position": 0,
+      "name": "Futomaki Crabe Mango",
+      "description": "Crevettes poché, mangue, saumon, crabe, tobiko, cheese 5 Pièces",
+      "priceMAD": "58.00",
+      "displayedPriceMAD": "58.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet16/futomaki-crabe-mango.png",
+      "displayedImage": "/menu-hd-onglet16/futomaki-crabe-mango.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet16/futomaki-crabe-mango-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet16/futomaki-crabe-mango-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f5de1461f2",
+      "category": "Futomaki",
+      "section": "",
+      "position": 1,
+      "name": "Futomaki Salmon Eby",
+      "description": "Saumon, avocat, crevette pané, surimi, tobiko, cheese 5 Pièces",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet16/futomaki-salmon-eby.png",
+      "displayedImage": "/menu-hd-onglet16/futomaki-salmon-eby.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet16/futomaki-salmon-eby-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet16/futomaki-salmon-eby-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a1051484c6",
+      "category": "Futomaki",
+      "section": "",
+      "position": 2,
+      "name": "Futomaki Eby Mango",
+      "description": "Crevette pané, avocat, mangue, concombre ciselé, carottes, tobiko, cheese 5 Pièces",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet16/futomaki-eby-mango.png",
+      "displayedImage": "/menu-hd-onglet16/futomaki-eby-mango.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet16/futomaki-eby-mango-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet16/futomaki-eby-mango-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5f48df3cac",
+      "category": "Futomaki",
+      "section": "",
+      "position": 3,
+      "name": "Futomaki Eby Roll",
+      "description": "Crevette pochée, surimi, ebi tempura, avocat, cheese 5 Pièces",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet16/futomaki-eby-roll.png",
+      "displayedImage": "/menu-hd-onglet16/futomaki-eby-roll.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet16/futomaki-eby-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet16/futomaki-eby-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "ecc7c8cd38",
+      "category": "Futomaki",
+      "section": "",
+      "position": 4,
+      "name": "Futomaki Tobiko Roll",
+      "description": "Saumon, avocat, surimi, tobiko, cheese 5 Pièces",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet16/futomaki-tobiko-roll.png",
+      "displayedImage": "/menu-hd-onglet16/futomaki-tobiko-roll.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet16/futomaki-tobiko-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet16/futomaki-tobiko-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c0a1b2c3d4",
+      "category": "California Roll",
+      "section": "",
+      "position": 0,
+      "name": "California Cream Cheese",
+      "description": "Saumon, surimi, avocat, tobiko",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-cream-cheese.png",
+      "displayedImage": "/menu-hd-onglet17/california-cream-cheese.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-cream-cheese-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-cream-cheese-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "d1e2f3a4b5",
+      "category": "California Roll",
+      "section": "",
+      "position": 1,
+      "name": "California Classic",
+      "description": "Surimi, avocat, concombre, tobiko",
+      "priceMAD": "29.00",
+      "displayedPriceMAD": "29.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-classic.png",
+      "displayedImage": "/menu-hd-onglet17/california-classic.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-classic-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-classic-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "e2f3a4b5c6",
+      "category": "California Roll",
+      "section": "",
+      "position": 2,
+      "name": "California Shake Yaki",
+      "description": "Saumon cuit, avocat, ciboulette",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-shake-yaki.png",
+      "displayedImage": "/menu-hd-onglet17/california-shake-yaki.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-shake-yaki-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-shake-yaki-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cc76387393",
+      "category": "California Roll",
+      "section": "",
+      "position": 3,
+      "name": "California Saumon Avocat",
+      "description": "Saumon, avocat, sésame",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-saumon-avocat.png",
+      "displayedImage": "/menu-hd-onglet17/california-saumon-avocat.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-saumon-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-saumon-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f3a4b5c6d7",
+      "category": "California Roll",
+      "section": "",
+      "position": 4,
+      "name": "California Eby Tobiko",
+      "description": "Crevette pané, avocat, tobiko",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-eby-tobiko.png",
+      "displayedImage": "/menu-hd-onglet17/california-eby-tobiko.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-eby-tobiko-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-eby-tobiko-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a4b5c6d7e8",
+      "category": "California Roll",
+      "section": "",
+      "position": 5,
+      "name": "California Eby Fry",
+      "description": "Crevette tempura, avocat, ciboulette",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-eby-fry.png",
+      "displayedImage": "/menu-hd-onglet17/california-eby-fry.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-eby-fry-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-eby-fry-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b5c6d7e8f9",
+      "category": "California Roll",
+      "section": "",
+      "position": 6,
+      "name": "California Chicken Crispy",
+      "description": "Chicken crispy, avocat, tobiko",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-chicken-crispy.png",
+      "displayedImage": "/menu-hd-onglet17/california-chicken-crispy.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-chicken-crispy-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-chicken-crispy-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "84f445e743",
+      "category": "California Roll",
+      "section": "",
+      "position": 7,
+      "name": "California Chicken Eby",
+      "description": "Poulet pané, crevette pané, cheese, tobiko",
+      "priceMAD": "48.00",
+      "displayedPriceMAD": "48.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-chicken-eby.png",
+      "displayedImage": "/menu-hd-onglet17/california-chicken-eby.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-chicken-eby-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-chicken-eby-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "302c4c0e8a",
+      "category": "California Roll",
+      "section": "",
+      "position": 8,
+      "name": "California Nara",
+      "description": "Saumon, crevette pané, avocat, cheese",
+      "priceMAD": "48.00",
+      "displayedPriceMAD": "48.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-nara.png",
+      "displayedImage": "/menu-hd-onglet17/california-nara.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-nara-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-nara-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "566b2be815",
+      "category": "California Roll",
+      "section": "",
+      "position": 9,
+      "name": "California Eby Avocado",
+      "description": "Crevette pané, surimi, saumon, cheese, avocat",
+      "priceMAD": "48.00",
+      "displayedPriceMAD": "48.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-eby-avocado.png",
+      "displayedImage": "/menu-hd-onglet17/california-eby-avocado.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-eby-avocado-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-eby-avocado-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "79e57587e9",
+      "category": "California Roll",
+      "section": "",
+      "position": 10,
+      "name": "California Rainbow",
+      "description": "Saumon, avocat, tobiko",
+      "priceMAD": "48.00",
+      "displayedPriceMAD": "48.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/california-rainbow.png",
+      "displayedImage": "/menu-hd-onglet17/california-rainbow.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/california-rainbow-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/california-rainbow-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "fe6a2d104e",
+      "category": "California Roll",
+      "section": "",
+      "position": 11,
+      "name": "Eby Salmon",
+      "description": "Crevette pané, avocat, saumon, cheese",
+      "priceMAD": "48.00",
+      "displayedPriceMAD": "48.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/eby-salmon.jpg",
+      "displayedImage": "/menu-hd-onglet17/eby-salmon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/eby-salmon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/eby-salmon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "35e32c3559",
+      "category": "California Roll",
+      "section": "",
+      "position": 12,
+      "name": "Fresh Mango",
+      "description": "Mangue, surimi, avocat, concombre",
+      "priceMAD": "36.00",
+      "displayedPriceMAD": "36.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/fresh-mango.jpg",
+      "displayedImage": "/menu-hd-onglet17/fresh-mango.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/fresh-mango-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/fresh-mango-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "2ce74d5ed1",
+      "category": "California Roll",
+      "section": "",
+      "position": 13,
+      "name": "Shake Saumon",
+      "description": "Saumon cuit, avocat, saumon",
+      "priceMAD": "44.00",
+      "displayedPriceMAD": "44.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet17/shake-saumon.jpg",
+      "displayedImage": "/menu-hd-onglet17/shake-saumon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet17/shake-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet17/shake-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5ee8246804",
+      "category": "Special Roll",
+      "section": "",
+      "position": 0,
+      "name": "Special Unagui Roll",
+      "description": "Anguill, eby fry, avocat",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-unagui-roll.png",
+      "displayedImage": "/menu-hd-onglet18/special-unagui-roll.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-unagui-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-unagui-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "7412fc4ec3",
+      "category": "Special Roll",
+      "section": "",
+      "position": 1,
+      "name": "Special Triangle Roll",
+      "description": "Saumon, eby fry, crabe, surimi, avocat",
+      "priceMAD": "58.00",
+      "displayedPriceMAD": "58.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-triangle-roll.png",
+      "displayedImage": "/menu-hd-onglet18/special-triangle-roll.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-triangle-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-triangle-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "7eeb7d6f83",
+      "category": "Special Roll",
+      "section": "",
+      "position": 2,
+      "name": "Special Havana Roll",
+      "description": "Saumon, eby fry, mangue, surimi, cheese, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-havana-roll.png",
+      "displayedImage": "/menu-hd-onglet18/special-havana-roll.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-havana-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-havana-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a1b2c3d4e6",
+      "category": "Special Roll",
+      "section": "",
+      "position": 3,
+      "name": "Special Goma Roll",
+      "description": "Saumon, avocat, goma wakamé",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-goma-roll.png",
+      "displayedImage": "/menu-hd-onglet18/special-goma-roll.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-goma-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-goma-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b2c3d4e5f7",
+      "category": "Special Roll",
+      "section": "",
+      "position": 4,
+      "name": "Special Gambas Roll",
+      "description": "Crevette poché, eby fry, surimi, avocat",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-gambas-roll.png",
+      "displayedImage": "/menu-hd-onglet18/special-gambas-roll.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-gambas-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-gambas-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f6a7b8c9d1",
+      "category": "Special Roll",
+      "section": "",
+      "position": 5,
+      "name": "Special Kunafa Roll",
+      "description": "Saumon, eby fry, avocat, kunafa",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-kunafa-roll.png",
+      "displayedImage": "/menu-hd-onglet18/special-kunafa-roll.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-kunafa-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-kunafa-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a7b8c9d0e2",
+      "category": "Special Roll",
+      "section": "",
+      "position": 6,
+      "name": "Special Naruto Roll",
+      "description": "Crevettes, eby fry",
+      "priceMAD": "45.00",
+      "displayedPriceMAD": "45.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-naruto-roll.jpg",
+      "displayedImage": "/menu-hd-onglet18/special-naruto-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-naruto-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-naruto-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "47cc3a1126",
+      "category": "Special Roll",
+      "section": "",
+      "position": 7,
+      "name": "Special Palawan",
+      "description": "Saumon flambé, saumon, mangue, avocat",
+      "priceMAD": "58.00",
+      "displayedPriceMAD": "58.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-palawan.jpg",
+      "displayedImage": "/menu-hd-onglet18/special-palawan.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-palawan-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-palawan-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f466c46a8f",
+      "category": "Special Roll",
+      "section": "",
+      "position": 8,
+      "name": "Special Pavot Roll",
+      "description": "Saumon pané, crabe, mangue, pavot",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-pavot-roll.jpg",
+      "displayedImage": "/menu-hd-onglet18/special-pavot-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-pavot-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-pavot-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "3442a25d4d",
+      "category": "Special Roll",
+      "section": "",
+      "position": 9,
+      "name": "Special Green Tiger",
+      "description": "Eby fry, surimi épicé, avocat",
+      "priceMAD": "44.00",
+      "displayedPriceMAD": "44.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-green-tiger.jpg",
+      "displayedImage": "/menu-hd-onglet18/special-green-tiger.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-green-tiger-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-green-tiger-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c1abc56904",
+      "category": "Special Roll",
+      "section": "",
+      "position": 10,
+      "name": "Special Exotic Unagui",
+      "description": "Anguille, saumon, surimi, mangue",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-exotic-unagui.jpg",
+      "displayedImage": "/menu-hd-onglet18/special-exotic-unagui.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-exotic-unagui-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-exotic-unagui-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "449ca2a7f1",
+      "category": "Special Roll",
+      "section": "",
+      "position": 11,
+      "name": "Special Mango Tango",
+      "description": "Crevettes, saumon, mangue, avocat, tobiko",
+      "priceMAD": "52.00",
+      "displayedPriceMAD": "52.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-mango-tango.jpg",
+      "displayedImage": "/menu-hd-onglet18/special-mango-tango.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-mango-tango-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-mango-tango-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "53f1432678",
+      "category": "Special Roll",
+      "section": "",
+      "position": 12,
+      "name": "Special Spider Roll",
+      "description": "Eby fry, poireaux, fondue de gouda, kunafa",
+      "priceMAD": "44.00",
+      "displayedPriceMAD": "44.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-spider-roll.jpg",
+      "displayedImage": "/menu-hd-onglet18/special-spider-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-spider-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-spider-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "101f7551db",
+      "category": "Special Roll",
+      "section": "",
+      "position": 13,
+      "name": "Special Tahiti Roll",
+      "description": "Eby fry, crabe mariné, avocat, mangue",
+      "priceMAD": "44.00",
+      "displayedPriceMAD": "44.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet18/special-tahiti-roll.jpg",
+      "displayedImage": "/menu-hd-onglet18/special-tahiti-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet18/special-tahiti-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet18/special-tahiti-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "11b8f36cb5",
+      "category": "Aromaki",
+      "section": "",
+      "position": 0,
+      "name": "Aromaki Ibiza",
+      "description": "Saumon, surimi, crevettes pané, avocat, crabe, cheese, tobiko",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-ibiza.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-ibiza.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-ibiza-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-ibiza-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "4da542fb7e",
+      "category": "Aromaki",
+      "section": "",
+      "position": 1,
+      "name": "Aromaki Kyoto",
+      "description": "Saumon, crabe, surimi, mangue, cheese, tobiko",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-kyoto.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-kyoto.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-kyoto-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-kyoto-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "be681d7f41",
+      "category": "Aromaki",
+      "section": "",
+      "position": 2,
+      "name": "Aromaki Rio",
+      "description": "Saumon, surimi, crevettes pané, cheese, tobiko",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-rio.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-rio.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-rio-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-rio-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "dabf870bd3",
+      "category": "Aromaki",
+      "section": "",
+      "position": 3,
+      "name": "Aromaki Tropicale",
+      "description": "Crabe, crevettes pané, avocat, mangue, cheese, tobiko",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-tropicale.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-tropicale.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-tropicale-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-tropicale-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "4646423648",
+      "category": "Aromaki",
+      "section": "",
+      "position": 4,
+      "name": "Aromaki Honolulu",
+      "description": "Saumon, surimi, avocat, saumon mariné, cheese, tobiko",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-honolulu.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-honolulu.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-honolulu-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-honolulu-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cae1232225",
+      "category": "Aromaki",
+      "section": "",
+      "position": 5,
+      "name": "Aromaki Exotique",
+      "description": "Saumon, mangue, avocat, laitue, cheese, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-exotique.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-exotique.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-exotique-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-exotique-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "6af2df4ee9",
+      "category": "Aromaki",
+      "section": "",
+      "position": 6,
+      "name": "Aromaki Saumon",
+      "description": "Saumon, surimi, avocat, cheese, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-saumon.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-saumon.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "85abca6325",
+      "category": "Aromaki",
+      "section": "",
+      "position": 7,
+      "name": "Aromaki Panama",
+      "description": "Saumon, surimi, goma wakamé, avocat, cheese, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-panama.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-panama.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-panama-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-panama-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "551465cab5",
+      "category": "Aromaki",
+      "section": "",
+      "position": 8,
+      "name": "Aromaki Crevettes",
+      "description": "Crevettes pané, surimi, avocat, cheese, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-crevettes.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-crevettes.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-crevettes-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-crevettes-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "89b5ce5b7a",
+      "category": "Aromaki",
+      "section": "",
+      "position": 9,
+      "name": "Aromaki Printemps Saumon",
+      "description": "Saumon, surimi, avocat, cheese, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-printemps-saumon.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-printemps-saumon.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-printemps-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-printemps-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "02d2e17d1c",
+      "category": "Aromaki",
+      "section": "",
+      "position": 10,
+      "name": "Aromaki Hawai",
+      "description": "Saumon, mangue, avocat, surimi, cheese, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-hawai.png",
+      "displayedImage": "/menu-hd-onglet19/aromaki-hawai.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-hawai-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-hawai-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "fff5c41eda",
+      "category": "Aromaki",
+      "section": "",
+      "position": 11,
+      "name": "Aromaki Oslo",
+      "description": "Saumon, mangue, goma wakamé, cheese, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-oslo.jpg",
+      "displayedImage": "/menu-hd-onglet19/aromaki-oslo.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-oslo-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-oslo-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "412918d0e5",
+      "category": "Aromaki",
+      "section": "",
+      "position": 12,
+      "name": "Aromaki Antalya",
+      "description": "Saumon, crabe, mangue, laitue, cheese, tobiko",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-antalya.jpg",
+      "displayedImage": "/menu-hd-onglet19/aromaki-antalya.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-antalya-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-antalya-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "77e046cbe4",
+      "category": "Aromaki",
+      "section": "",
+      "position": 13,
+      "name": "Aromaki Marbella",
+      "description": "Saumon, avocat, concombre, cheese, tobiko",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet19/aromaki-marbella.jpg",
+      "displayedImage": "/menu-hd-onglet19/aromaki-marbella.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet19/aromaki-marbella-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet19/aromaki-marbella-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "e41a8a69ca",
+      "category": "Blossom",
+      "section": "",
+      "position": 0,
+      "name": "Blossom Ceviché Roll",
+      "description": "Saumon, mangue, avocat, surimi, tobiko, sésame",
+      "priceMAD": "68.00",
+      "displayedPriceMAD": "68.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-ceviche-roll.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-ceviche-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-ceviche-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-ceviche-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5347977dbc",
+      "category": "Blossom",
+      "section": "",
+      "position": 1,
+      "name": "Blossom Hawai",
+      "description": "Eby fry, crabe, avocat, mangue, tobiko",
+      "priceMAD": "62.00",
+      "displayedPriceMAD": "62.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-hawai.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-hawai.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-hawai-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-hawai-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "2d6c4738f9",
+      "category": "Blossom",
+      "section": "",
+      "position": 2,
+      "name": "Blossom New York",
+      "description": "Saumon pané, crevettes, cheese, tobiko",
+      "priceMAD": "62.00",
+      "displayedPriceMAD": "62.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-new-york.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-new-york.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-new-york-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-new-york-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f84280a0f7",
+      "category": "Blossom",
+      "section": "",
+      "position": 3,
+      "name": "Blossom Boston",
+      "description": "Eby fry, avocat, cheese, crabe, poireaux, tobiko",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-boston.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-boston.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-boston-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-boston-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "12117b00b9",
+      "category": "Blossom",
+      "section": "",
+      "position": 4,
+      "name": "Blossom Eby Roll",
+      "description": "Crevettes, saumon, avocat, cheese",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-eby-roll.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-eby-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-eby-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-eby-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cb9324ca52",
+      "category": "Blossom",
+      "section": "",
+      "position": 5,
+      "name": "Blossom Tokyo",
+      "description": "Surimi pané, saumon, mangue, cheese, tobiko",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-tokyo.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-tokyo.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-tokyo-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-tokyo-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "ace54559af",
+      "category": "Blossom",
+      "section": "",
+      "position": 6,
+      "name": "Blossom Saumon Braisé",
+      "description": "Saumon braisé, avocat, cheese",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-saumon-braise.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-saumon-braise.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-saumon-braise-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-saumon-braise-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c435723d4c",
+      "category": "Blossom",
+      "section": "",
+      "position": 7,
+      "name": "Blossom Bali",
+      "description": "Saumon mariné, surimi, avocat, cheese, sésame",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-bali.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-bali.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-bali-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-bali-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "e463b20218",
+      "category": "Blossom",
+      "section": "",
+      "position": 8,
+      "name": "Blossom Bonzaï",
+      "description": "Anguille, avocat, surimi, cheese, sésame",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-bonzai.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-bonzai.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-bonzai-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-bonzai-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "0433bbd53c",
+      "category": "Blossom",
+      "section": "",
+      "position": 9,
+      "name": "Blossom Mango Saumon",
+      "description": "Saumon mariné, mangue, avocat, tobiko",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-mango-saumon.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-mango-saumon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-mango-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-mango-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "6d09d7bf8d",
+      "category": "Blossom",
+      "section": "",
+      "position": 10,
+      "name": "Blossom Crabe",
+      "description": "Crabe mariné, saumon, mangue, cheese",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-crabe.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-crabe.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-crabe-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-crabe-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cf8623ce70",
+      "category": "Blossom",
+      "section": "",
+      "position": 11,
+      "name": "Blossom Green Salmon",
+      "description": "Saumon, avocat, concombre",
+      "priceMAD": "55.00",
+      "displayedPriceMAD": "55.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-green-salmon.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-green-salmon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-green-salmon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-green-salmon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f33f401dd2",
+      "category": "Blossom",
+      "section": "",
+      "position": 12,
+      "name": "Blossom Cheezy Salmon",
+      "description": "Saumon, avocat, cheese, tobiko",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-cheezy-salmon.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-cheezy-salmon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-cheezy-salmon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-cheezy-salmon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cd27240259",
+      "category": "Blossom",
+      "section": "",
+      "position": 13,
+      "name": "Blossom Exotic",
+      "description": "Saumon, avocat, mangue, cheese",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet20/blossom-exotic.jpg",
+      "displayedImage": "/menu-hd-onglet20/blossom-exotic.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet20/blossom-exotic-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet20/blossom-exotic-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cec5e70b6a",
+      "category": "Premium",
+      "section": "",
+      "position": 0,
+      "name": "Premium Cancun",
+      "description": "Saumon, eby fry, surimi, avocat, laitue, cheese",
+      "priceMAD": "65.00",
+      "displayedPriceMAD": "65.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-cancun.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-cancun.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-cancun-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-cancun-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "6c2ba70a6f",
+      "category": "Premium",
+      "section": "",
+      "position": 1,
+      "name": "Premium Krabi Roll",
+      "description": "Saumon, eby fry, surimi crabe, avocat, goma wakamé",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-krabi-roll.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-krabi-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-krabi-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-krabi-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c6bf1f1759",
+      "category": "Premium",
+      "section": "",
+      "position": 2,
+      "name": "Premium Fuji Roll",
+      "description": "Saumon, eby fry, saumon cuit, mangue",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-fuji-roll.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-fuji-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-fuji-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-fuji-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b1b1b0e1ba",
+      "category": "Premium",
+      "section": "",
+      "position": 3,
+      "name": "Premium Pink Salmon",
+      "description": "Crevette poché, saumon, surimi crevette pané",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-pink-salmon.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-pink-salmon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-pink-salmon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-pink-salmon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "82bc3899c0",
+      "category": "Premium",
+      "section": "",
+      "position": 4,
+      "name": "Premium Exotica Roll",
+      "description": "Double eby fry, saumon, surimi, avocat, wakamé",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-exotica-roll.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-exotica-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-exotica-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-exotica-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "2aacef48a6",
+      "category": "Premium",
+      "section": "",
+      "position": 5,
+      "name": "Premium Pataya",
+      "description": "Double crevette pané, surimi, saumon, mangue, tobiko, ciboulette",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-pataya.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-pataya.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-pataya-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-pataya-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "fd173daf85",
+      "category": "Premium",
+      "section": "",
+      "position": 6,
+      "name": "Premium Sirena Roll",
+      "description": "Eby fry, saumon flambé, fondue de gouda",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-sirena-roll.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-sirena-roll.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-sirena-roll-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-sirena-roll-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "ef3a2da619",
+      "category": "Premium",
+      "section": "",
+      "position": 7,
+      "name": "Premium Salmon Tataki",
+      "description": "Saumon cuit, saumon braisé, saumon mariné, surimi, avocat",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-salmon-tataki.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-salmon-tataki.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-salmon-tataki-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-salmon-tataki-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "ffddedcf35",
+      "category": "Premium",
+      "section": "",
+      "position": 8,
+      "name": "Premium Bora Bora",
+      "description": "Saumon, mangue, wakamé, avocat, surimi, saumon cuit",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-bora-bora.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-bora-bora.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-bora-bora-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-bora-bora-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "52d169b9dd",
+      "category": "Premium",
+      "section": "",
+      "position": 9,
+      "name": "Premium Exotic Salmon",
+      "description": "Saumon, mangue, eby fry, surimi, saumon cuit, tobiko",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet21/premium-exotic-salmon.jpg",
+      "displayedImage": "/menu-hd-onglet21/premium-exotic-salmon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet21/premium-exotic-salmon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet21/premium-exotic-salmon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "df7dc34617",
+      "category": "Makito Fry",
+      "section": "",
+      "position": 0,
+      "name": "Makito Saumon Epicé",
+      "description": "Saumon épicé, fondu de gouda 6 Pièces",
+      "priceMAD": "52.00",
+      "displayedPriceMAD": "52.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet22/makito-saumon-epice.jpg",
+      "displayedImage": "/menu-hd-onglet22/makito-saumon-epice.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet22/makito-saumon-epice-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet22/makito-saumon-epice-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "e6820a6ec3",
+      "category": "Makito Fry",
+      "section": "",
+      "position": 1,
+      "name": "Makito Crevettes",
+      "description": "Crevette mariné, gambas, fondu de gouda 6 Pièces",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet22/makito-crevettes.jpg",
+      "displayedImage": "/menu-hd-onglet22/makito-crevettes.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet22/makito-crevettes-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet22/makito-crevettes-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "7256c43d8d",
+      "category": "Makito Fry",
+      "section": "",
+      "position": 2,
+      "name": "Makito Anguille",
+      "description": "Anguille marinée, fondu de gouda 6 Pièces",
+      "priceMAD": "56.00",
+      "displayedPriceMAD": "56.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet22/makito-anguille.jpg",
+      "displayedImage": "/menu-hd-onglet22/makito-anguille.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet22/makito-anguille-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet22/makito-anguille-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "0ee40fc997",
+      "category": "Makito Fry",
+      "section": "",
+      "position": 3,
+      "name": "Makito Crabe",
+      "description": "Crabe mariné, fondu de gouda 6 Pièces",
+      "priceMAD": "55.00",
+      "displayedPriceMAD": "55.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet22/makito-crabe.jpg",
+      "displayedImage": "/menu-hd-onglet22/makito-crabe.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet22/makito-crabe-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet22/makito-crabe-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "112f439dc8",
+      "category": "Makito Fry",
+      "section": "",
+      "position": 4,
+      "name": "Makito Saumon",
+      "description": "Saumon, fondu de gouda 6 Pièces",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet22/makito-saumon.jpg",
+      "displayedImage": "/menu-hd-onglet22/makito-saumon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet22/makito-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet22/makito-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "df8e4b755c",
+      "category": "Crispy Roll",
+      "section": "",
+      "position": 0,
+      "name": "Crispy Red White",
+      "description": "Saumon, crevette, poisson, cheese, tobiko 6 Pièces",
+      "priceMAD": "62.00",
+      "displayedPriceMAD": "62.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet23/crispy-red-white.jpg",
+      "displayedImage": "/menu-hd-onglet23/crispy-red-white.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet23/crispy-red-white-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet23/crispy-red-white-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "007985588c",
+      "category": "Crispy Roll",
+      "section": "",
+      "position": 1,
+      "name": "Crispy Sakura",
+      "description": "Saumon, surimi, tobiko, avocat 6 Pièces",
+      "priceMAD": "56.00",
+      "displayedPriceMAD": "56.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet23/crispy-sakura.jpg",
+      "displayedImage": "/menu-hd-onglet23/crispy-sakura.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet23/crispy-sakura-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet23/crispy-sakura-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f0b86623a1",
+      "category": "Crispy Roll",
+      "section": "",
+      "position": 2,
+      "name": "Crispy Eby Chicken Fry",
+      "description": "Poulet pané, crevette pané, avocat, surimi 6 Pièces",
+      "priceMAD": "58.00",
+      "displayedPriceMAD": "58.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet23/crispy-eby-chicken-fry.jpg",
+      "displayedImage": "/menu-hd-onglet23/crispy-eby-chicken-fry.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet23/crispy-eby-chicken-fry-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet23/crispy-eby-chicken-fry-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "deb56ea325",
+      "category": "Crispy Roll",
+      "section": "",
+      "position": 3,
+      "name": "Crispy Cheesy Fish",
+      "description": "Poisson pané, surimi pané, fondu de gouda 6 pièces",
+      "priceMAD": "54.00",
+      "displayedPriceMAD": "54.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet23/crispy-cheesy-fish.jpg",
+      "displayedImage": "/menu-hd-onglet23/crispy-cheesy-fish.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet23/crispy-cheesy-fish-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet23/crispy-cheesy-fish-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "9f730f7289",
+      "category": "Crispy Roll",
+      "section": "",
+      "position": 4,
+      "name": "Crispy Saumon Tempura",
+      "description": "Saumon tempura, avocat, surimi, cheese, tobiko 6 Pièces",
+      "priceMAD": "52.00",
+      "displayedPriceMAD": "52.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet23/crispy-saumon-tempura.jpg",
+      "displayedImage": "/menu-hd-onglet23/crispy-saumon-tempura.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet23/crispy-saumon-tempura-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet23/crispy-saumon-tempura-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "06066ec740",
+      "category": "Crispy Roll",
+      "section": "",
+      "position": 5,
+      "name": "Crispy Saumon Cuit",
+      "description": "Saumon cuit, avocat 6 Pièces",
+      "priceMAD": "52.00",
+      "displayedPriceMAD": "52.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet23/crispy-saumon-cuit.jpg",
+      "displayedImage": "/menu-hd-onglet23/crispy-saumon-cuit.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet23/crispy-saumon-cuit-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet23/crispy-saumon-cuit-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "e3c612287f",
+      "category": "Crispy Roll",
+      "section": "",
+      "position": 6,
+      "name": "Crispy Crevette Avocat",
+      "description": "Crevette, avocat, surimi 6 Pièces",
+      "priceMAD": "52.00",
+      "displayedPriceMAD": "52.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet23/crispy-crevette-avocat.jpg",
+      "displayedImage": "/menu-hd-onglet23/crispy-crevette-avocat.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet23/crispy-crevette-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet23/crispy-crevette-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c1d4661e91",
+      "category": "Crispy Roll",
+      "section": "",
+      "position": 7,
+      "name": "Crispy Saumon Cheese",
+      "description": "Saumon, tobiko, cheese 6 Pièces",
+      "priceMAD": "52.00",
+      "displayedPriceMAD": "52.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet23/crispy-saumon-cheese.jpg",
+      "displayedImage": "/menu-hd-onglet23/crispy-saumon-cheese.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet23/crispy-saumon-cheese-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet23/crispy-saumon-cheese-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5ec25676a2",
+      "category": "Crunchy Roll",
+      "section": "",
+      "position": 0,
+      "name": "Crunchy Saumon Avocat",
+      "description": "saumon, surimi, avocat, tobiko, cheese 6 Pièces",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet24/crunchy-saumon-avocat.jpg",
+      "displayedImage": "/menu-hd-onglet24/crunchy-saumon-avocat.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet24/crunchy-saumon-avocat-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet24/crunchy-saumon-avocat-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "fc97991608",
+      "category": "Crunchy Roll",
+      "section": "",
+      "position": 1,
+      "name": "Crunchy Eby Tempura",
+      "description": "Crevette pané, saumon, concombre, tobiko, cheese 6 Pièces",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet24/crunchy-eby-tempura.jpg",
+      "displayedImage": "/menu-hd-onglet24/crunchy-eby-tempura.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet24/crunchy-eby-tempura-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet24/crunchy-eby-tempura-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b2336232f7",
+      "category": "Crunchy Roll",
+      "section": "",
+      "position": 2,
+      "name": "Crunchy Casablanca",
+      "description": "Crevettes pané, crabe, mangue, cheese, tobiko 6 Pièces",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet24/crunchy-casablanca.jpg",
+      "displayedImage": "/menu-hd-onglet24/crunchy-casablanca.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet24/crunchy-casablanca-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet24/crunchy-casablanca-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b6bb8210a3",
+      "category": "Crunchy Roll",
+      "section": "",
+      "position": 3,
+      "name": "Crunchy Tiger Fry",
+      "description": "Crevette pané, surimi, avocat, cheese, tobiko 6 Pièces",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet24/crunchy-tiger-fry.jpg",
+      "displayedImage": "/menu-hd-onglet24/crunchy-tiger-fry.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet24/crunchy-tiger-fry-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet24/crunchy-tiger-fry-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "e8077d2295",
+      "category": "Crunchy Roll",
+      "section": "",
+      "position": 4,
+      "name": "Crunchy Dragon Eyes",
+      "description": "Saumon, poireaux, carottes, ciboulette, cheese, tobiko 6 Pièces",
+      "priceMAD": "55.00",
+      "displayedPriceMAD": "55.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet24/crunchy-dragon-eyes.jpg",
+      "displayedImage": "/menu-hd-onglet24/crunchy-dragon-eyes.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet24/crunchy-dragon-eyes-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet24/crunchy-dragon-eyes-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "e3a96c288b",
+      "category": "Crunchy Roll",
+      "section": "",
+      "position": 5,
+      "name": "Crunchy Pacific",
+      "description": "Crevette pané, surimi pané, cheese, tobiko 6 Pièces",
+      "priceMAD": "55.25",
+      "displayedPriceMAD": "55.25",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet24/crunchy-pacific.jpg",
+      "displayedImage": "/menu-hd-onglet24/crunchy-pacific.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet24/crunchy-pacific-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet24/crunchy-pacific-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "3583d51b73",
+      "category": "Crunchy Roll",
+      "section": "",
+      "position": 6,
+      "name": "Crunchy Fry Eby Fry",
+      "description": "Crevette pané, avocat, cheese 6 Pièces",
+      "priceMAD": "55.25",
+      "displayedPriceMAD": "55.25",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet24/crunchy-fry-eby-fry.jpg",
+      "displayedImage": "/menu-hd-onglet24/crunchy-fry-eby-fry.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet24/crunchy-fry-eby-fry-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet24/crunchy-fry-eby-fry-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "45bca3a281",
+      "category": "Crunchy Roll",
+      "section": "",
+      "position": 7,
+      "name": "Crunchy Fry Salmon Fry",
+      "description": "Saumon cuit, cheese, tobiko 6 Pièces",
+      "priceMAD": "55.25",
+      "displayedPriceMAD": "55.25",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet24/crunchy-fry-salmon-fry.jpg",
+      "displayedImage": "/menu-hd-onglet24/crunchy-fry-salmon-fry.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet24/crunchy-fry-salmon-fry-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet24/crunchy-fry-salmon-fry-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "53578ea799",
+      "category": "Crunchy Roll",
+      "section": "",
+      "position": 8,
+      "name": "Crunchy Osaka",
+      "description": "Saumon, surimi, wakamé 6 Pièces",
+      "priceMAD": "59.00",
+      "displayedPriceMAD": "59.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet24/crunchy-osaka.jpg",
+      "displayedImage": "/menu-hd-onglet24/crunchy-osaka.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet24/crunchy-osaka-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet24/crunchy-osaka-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "083ac320dd",
+      "category": "Wok & Thaï",
+      "section": "",
+      "position": 0,
+      "name": "Wok",
+      "description": "Nouilles — sauce au choix : oyster, teriyaki, aigre doux, sweet chili.",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet25/wok-nouilles.jpg",
+      "displayedImage": "/menu-hd-onglet25/wok-nouilles.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet25/wok-nouilles-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet25/wok-nouilles-336.webp"
+      },
+      "variants": [
+        {
+          "id": "vegetarien",
+          "label": "Végétarien",
+          "priceMAD": "49.00"
+        },
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "59.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "64.00"
+        },
+        {
+          "id": "crevettes",
+          "label": "Crevettes",
+          "priceMAD": "64.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de mer",
+          "priceMAD": "74.00"
+        }
+      ]
+    },
+    {
+      "id": "0c48c8093e",
+      "category": "Wok & Thaï",
+      "section": "",
+      "position": 1,
+      "name": "Vermicelle",
+      "description": "Vermicelle — sauce au choix : oyster, teriyaki, aigre doux, sweet chili.",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "49.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet25/vermicelle.jpg",
+      "displayedImage": "/menu-hd-onglet25/vermicelle.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet25/vermicelle-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet25/vermicelle-336.webp"
+      },
+      "variants": [
+        {
+          "id": "vegetarien",
+          "label": "Végétarien",
+          "priceMAD": "49.00"
+        },
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "59.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "64.00"
+        },
+        {
+          "id": "crevettes",
+          "label": "Crevettes",
+          "priceMAD": "64.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de mer",
+          "priceMAD": "74.00"
+        }
+      ]
+    },
+    {
+      "id": "5c227884f6",
+      "category": "Wok & Thaï",
+      "section": "",
+      "position": 2,
+      "name": "Riz Cantonais",
+      "description": "Riz cantonais.",
+      "priceMAD": "49.00",
+      "displayedPriceMAD": "44.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet25/riz-cantonais.jpg",
+      "displayedImage": "/menu-hd-onglet25/riz-cantonais.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet25/riz-cantonais-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet25/riz-cantonais-336.webp"
+      },
+      "variants": [
+        {
+          "id": "vegetarien",
+          "label": "Végétarien",
+          "priceMAD": "44.00"
+        },
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "54.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "59.00"
+        },
+        {
+          "id": "crevettes",
+          "label": "Crevettes",
+          "priceMAD": "64.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de mer",
+          "priceMAD": "69.00"
+        }
+      ]
+    },
+    {
+      "id": "382bef2bb1",
+      "category": "Wok & Thaï",
+      "section": "",
+      "position": 3,
+      "name": "Pad Thaï",
+      "description": "",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "64.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet25/pad-thai.jpg",
+      "displayedImage": "/menu-hd-onglet25/pad-thai.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet25/pad-thai-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet25/pad-thai-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "64.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "crevettes",
+          "label": "Crevettes",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de Mer",
+          "priceMAD": "79.00"
+        }
+      ]
+    },
+    {
+      "id": "f9047d3930",
+      "category": "Bentos",
+      "section": "",
+      "position": 0,
+      "name": "Bento A",
+      "description": "Salade veggie, 2 nems poulet, 4 ébi fry, wok poulet",
+      "priceMAD": "105.00",
+      "displayedPriceMAD": "105.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet36/bento-a.jpg",
+      "displayedImage": "/menu-hd-onglet36/bento-a.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet36/bento-a-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet36/bento-a-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "bd099ce53c",
+      "category": "Bentos",
+      "section": "",
+      "position": 1,
+      "name": "Bento B",
+      "description": "6 Aromaki saumon, salade viet, 4 ébi fry, 4 croquettes saumon.",
+      "priceMAD": "129.00",
+      "displayedPriceMAD": "129.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet36/bento-b.jpg",
+      "displayedImage": "/menu-hd-onglet36/bento-b.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet36/bento-b-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet36/bento-b-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "d4738254f1",
+      "category": "Bentos",
+      "section": "",
+      "position": 2,
+      "name": "Bento C",
+      "description": "1 Nem poulet, 1 gambas panée, salade gambas, 4 eby fry, 4 california eby, 4 california classic",
+      "priceMAD": "124.00",
+      "displayedPriceMAD": "124.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet36/bento-c.jpg",
+      "displayedImage": "/menu-hd-onglet36/bento-c.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet36/bento-c-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet36/bento-c-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "66073a8aee",
+      "category": "Bentos",
+      "section": "",
+      "position": 3,
+      "name": "Bento D",
+      "description": "4 Fry Ebi Fry, 4 Shake Yaki, salade gambas, yakitori Bœuf fromage.",
+      "priceMAD": "135.00",
+      "displayedPriceMAD": "135.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet36/bento-d.jpg",
+      "displayedImage": "/menu-hd-onglet36/bento-d.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet36/bento-d-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet36/bento-d-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cba8d279df",
+      "category": "Bentos",
+      "section": "",
+      "position": 4,
+      "name": "Bento E",
+      "description": "Salade viet, fry eby fry, wok végétarien, brochettes bœuf fromage",
+      "priceMAD": "119.00",
+      "displayedPriceMAD": "119.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet36/bento-e.jpg",
+      "displayedImage": "/menu-hd-onglet36/bento-e.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet36/bento-e-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet36/bento-e-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "6a0c00190c",
+      "category": "Bentos",
+      "section": "",
+      "position": 5,
+      "name": "Bento F",
+      "description": "4 Croquette saumon, 4 ébi fry, 2 bœuf fromage, 1 ébi tempura, 1 nems poulet.",
+      "priceMAD": "129.00",
+      "displayedPriceMAD": "129.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet36/bento-f.jpg",
+      "displayedImage": "/menu-hd-onglet36/bento-f.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet36/bento-f-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet36/bento-f-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "d2ba4b91b8",
+      "category": "Bentos",
+      "section": "",
+      "position": 6,
+      "name": "Bento G",
+      "description": "1 Nem poulet, 1 gambas pané, salade viet, 4 fry eby fry, riz cantonais crevettes.",
+      "priceMAD": "128.00",
+      "displayedPriceMAD": "128.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet36/bento-g.jpg",
+      "displayedImage": "/menu-hd-onglet36/bento-g.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet36/bento-g-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet36/bento-g-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "d570740bae",
+      "category": "Bentos",
+      "section": "",
+      "position": 7,
+      "name": "Bento H",
+      "description": "Salade veggie, 4 gambas dynamite, 4 California eby fry, wok poulet.",
+      "priceMAD": "128.00",
+      "displayedPriceMAD": "128.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet36/bento-h.jpg",
+      "displayedImage": "/menu-hd-onglet36/bento-h.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet36/bento-h-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet36/bento-h-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cd6fcbb51e",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 0,
+      "name": "Boeuf Bulgogi",
+      "description": "Boeuf, gingembre, huile de sésame, Ail, sauce cacahuète, cacahuètes (servi avec du riz)",
+      "priceMAD": "79.00",
+      "displayedPriceMAD": "79.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/boeuf-bulgogi.jpg",
+      "displayedImage": "/menu-hd-onglet26/boeuf-bulgogi.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/boeuf-bulgogi-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/boeuf-bulgogi-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "36987b1e67",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 1,
+      "name": "Red Curry Thaï",
+      "description": "Lait de coco, sauce curry thaï poivrons, champignon, brocolis, carottes, courgettes, échalotes (servi avec du riz)",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/red-curry-thai.jpg",
+      "displayedImage": "/menu-hd-onglet26/red-curry-thai.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/red-curry-thai-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/red-curry-thai-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "69.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "crevette",
+          "label": "Crevette",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de mer",
+          "priceMAD": "79.00"
+        }
+      ]
+    },
+    {
+      "id": "9eba998f82",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 2,
+      "name": "Ananas Aigre Doux",
+      "description": "Ananas, poivrons, champignon noir, champignon paris, noix de cajou, sauce aigre doux (servi avec du riz)",
+      "priceMAD": "64.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/ananas-aigre-doux.jpg",
+      "displayedImage": "/menu-hd-onglet26/ananas-aigre-doux.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/ananas-aigre-doux-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/ananas-aigre-doux-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "69.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "crevette",
+          "label": "Crevette",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de mer",
+          "priceMAD": "79.00"
+        }
+      ]
+    },
+    {
+      "id": "0755e5b16d",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 3,
+      "name": "Corean Chicken",
+      "description": "Poulet caramélisé , servi avec nouilles ou riz sauté aux légumes",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/corean-chicken.jpg",
+      "displayedImage": "/menu-hd-onglet26/corean-chicken.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/corean-chicken-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/corean-chicken-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "9443eb67b5",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 4,
+      "name": "Saté",
+      "description": "servi avec du riz",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/sate.jpg",
+      "displayedImage": "/menu-hd-onglet26/sate.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/sate-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/sate-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "69.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "crevette",
+          "label": "Crevette",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de mer",
+          "priceMAD": "79.00"
+        }
+      ]
+    },
+    {
+      "id": "a8016335cd",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 5,
+      "name": "Basilic Thaï",
+      "description": "Basilic, poivrons, brocolis, carottes, gingembre, échalotes, champignons frais, sauce huîtres.",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/basilic-thai.jpg",
+      "displayedImage": "/menu-hd-onglet26/basilic-thai.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/basilic-thai-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/basilic-thai-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "69.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "crevette",
+          "label": "Crevette",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de mer",
+          "priceMAD": "79.00"
+        }
+      ]
+    },
+    {
+      "id": "4afcd30489",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 6,
+      "name": "Champignon & Bambou",
+      "description": "Champignons de Paris, pousses de bambou, champignon noir, échalotes, sauce huîtres.",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/champignon-bambou.jpg",
+      "displayedImage": "/menu-hd-onglet26/champignon-bambou.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/champignon-bambou-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/champignon-bambou-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "69.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "crevette",
+          "label": "Crevette",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de mer",
+          "priceMAD": "79.00"
+        }
+      ]
+    },
+    {
+      "id": "18b0c7ab53",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 7,
+      "name": "Chicken Katsu",
+      "description": "Poulet crunchy accompagné de légumes et riz et sauce katsu.",
+      "priceMAD": "74.00",
+      "displayedPriceMAD": "74.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/chicken-katsu.jpg",
+      "displayedImage": "/menu-hd-onglet26/chicken-katsu.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/chicken-katsu-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/chicken-katsu-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "9e1d2c99ca",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 8,
+      "name": "Chop Suey",
+      "description": "Brocolis, haricots verts, courgettes, carottes, germes de soja, épis de maïs, mix poivrons, gingembre, champignons de Paris, chou, ail.",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/chop-suey.jpg",
+      "displayedImage": "/menu-hd-onglet26/chop-suey.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/chop-suey-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/chop-suey-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "69.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "crevette",
+          "label": "Crevette",
+          "priceMAD": "74.00"
+        },
+        {
+          "id": "fruits-de-mer",
+          "label": "Fruits de mer",
+          "priceMAD": "79.00"
+        }
+      ]
+    },
+    {
+      "id": "55088e9b04",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 9,
+      "name": "Pavé de Saumon",
+      "description": "Pavé de saumon à la sauce ail citron gingembre ou à la sauce teriyaki accompagné de riz et légumes.",
+      "priceMAD": "89.00",
+      "displayedPriceMAD": "89.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/pave-de-saumon.jpg",
+      "displayedImage": "/menu-hd-onglet26/pave-de-saumon.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/pave-de-saumon-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/pave-de-saumon-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "1568a2e365",
+      "category": "Plats Thaï",
+      "section": "",
+      "position": 10,
+      "name": "Teppanyaki",
+      "description": "Grillé à la sauce teriyaki accompagné de légumes et riz.",
+      "priceMAD": "69.00",
+      "displayedPriceMAD": "69.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet26/teppanyaki.jpg",
+      "displayedImage": "/menu-hd-onglet26/teppanyaki.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet26/teppanyaki-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet26/teppanyaki-336.webp"
+      },
+      "variants": [
+        {
+          "id": "poulet",
+          "label": "Poulet",
+          "priceMAD": "69.00"
+        },
+        {
+          "id": "boeuf",
+          "label": "Bœuf",
+          "priceMAD": "84.00"
+        },
+        {
+          "id": "saumon",
+          "label": "Saumon",
+          "priceMAD": "89.00"
+        }
+      ]
+    },
+    {
+      "id": "6515d6b542",
+      "category": "Assortiments",
+      "section": "Assortiments 16 pcs",
+      "position": 0,
+      "name": "California Box 16 pcs",
+      "description": "4 classic, 4 chicken crispy, 4 ebi fry, 4 cream cheese.",
+      "priceMAD": "119.00",
+      "displayedPriceMAD": "119.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet27/assort16-california-box.jpg",
+      "displayedImage": "/menu-hd-onglet27/assort16-california-box.jpg",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet27/assort16-california-box-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet27/assort16-california-box-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5e0ccaac41",
+      "category": "Assortiments",
+      "section": "Assortiments 16 pcs",
+      "position": 1,
+      "name": "Crunchy Box 16 pcs",
+      "description": "4 fry salmon fry, 4 fry ebi fry, 4 croquette poulet, 4 pacific.",
+      "priceMAD": "119.00",
+      "displayedPriceMAD": "119.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet27/assort16-crunchy-box.png",
+      "displayedImage": "/menu-hd-onglet27/assort16-crunchy-box.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet27/assort16-crunchy-box-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet27/assort16-crunchy-box-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "794bc29deb",
+      "category": "Assortiments",
+      "section": "Assortiments 16 pcs",
+      "position": 2,
+      "name": "Eby Lovers 16 pcs",
+      "description": "4 pacific, 4 ebi fry, 8 aromaki crevettes.",
+      "priceMAD": "119.00",
+      "displayedPriceMAD": "119.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet27/assort16-eby-lovers.png",
+      "displayedImage": "/menu-hd-onglet27/assort16-eby-lovers.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet27/assort16-eby-lovers-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet27/assort16-eby-lovers-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "f7e59011ae",
+      "category": "Assortiments",
+      "section": "Assortiments 16 pcs",
+      "position": 3,
+      "name": "Funny 16 pcs",
+      "description": "4 cream cheese, 4 eby fry, 6 maki saumon, 2 nigiri saumon.",
+      "priceMAD": "119.00",
+      "displayedPriceMAD": "119.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet27/assort16-funny.png",
+      "displayedImage": "/menu-hd-onglet27/assort16-funny.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet27/assort16-funny-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet27/assort16-funny-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "d99671dda4",
+      "category": "Assortiments",
+      "section": "Assortiments 16 pcs",
+      "position": 4,
+      "name": "Prime Box 16 pcs",
+      "description": "6 aromaki saumon, 4 cream cheese, 6 maki saumon.",
+      "priceMAD": "119.00",
+      "displayedPriceMAD": "119.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet27/assort16-prime-box.png",
+      "displayedImage": "/menu-hd-onglet27/assort16-prime-box.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet27/assort16-prime-box-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet27/assort16-prime-box-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "58c0a31b31",
+      "category": "Assortiments",
+      "section": "Assortiments 20 pcs",
+      "position": 5,
+      "name": "Summer 20 pcs",
+      "description": "4 ebi salmon, 4 green tiger, 4 spider, 6 aromaki crevettes, 2 nigiri saumon.",
+      "priceMAD": "255.00",
+      "displayedPriceMAD": "255.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet28/assort20-summer.png",
+      "displayedImage": "/menu-hd-onglet28/assort20-summer.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet28/assort20-summer-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet28/assort20-summer-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "8827d5820f",
+      "category": "Assortiments",
+      "section": "Assortiments 24 pcs",
+      "position": 6,
+      "name": "Aromaki Lovers 24 pcs",
+      "description": "6 aromaki saumon, 6 aromaki crevettes, 6 sunchine, 6 spring roll crevettes.",
+      "priceMAD": "255.00",
+      "displayedPriceMAD": "255.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet28/assort24-aromaki-lovers.png",
+      "displayedImage": "/menu-hd-onglet28/assort24-aromaki-lovers.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet28/assort24-aromaki-lovers-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet28/assort24-aromaki-lovers-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c9b4e3431d",
+      "category": "Assortiments",
+      "section": "Assortiments 24 pcs",
+      "position": 7,
+      "name": "California Lovers 24 pcs",
+      "description": "4 classic, 4 ebi fry, 4 cream cheese, 4 shake yaki, 4 saumon avocat, 4 chicken crispy.",
+      "priceMAD": "255.00",
+      "displayedPriceMAD": "255.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet28/assort24-california-lovers.png",
+      "displayedImage": "/menu-hd-onglet28/assort24-california-lovers.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet28/assort24-california-lovers-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet28/assort24-california-lovers-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "d2212cb6f2",
+      "category": "Assortiments",
+      "section": "Assortiments 24 pcs",
+      "position": 8,
+      "name": "Crunchy Lovers 24 pcs",
+      "description": "8 pizza saumon mozza, 4 crunchy crevettes, 4 croquette poulet, 4 fry salmon fry, 4 pacific.",
+      "priceMAD": "255.00",
+      "displayedPriceMAD": "255.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet28/assort24-crunchy-lovers.png",
+      "displayedImage": "/menu-hd-onglet28/assort24-crunchy-lovers.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet28/assort24-crunchy-lovers-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet28/assort24-crunchy-lovers-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "941fda2c02",
+      "category": "Assortiments",
+      "section": "Assortiments 24 pcs",
+      "position": 9,
+      "name": "Deluxe 24 pcs",
+      "description": "4 classic, 4 ebi fry, 4 maki saumon, 4 fry ebi fry, 4 fry salmon fry, 4 makito saumon épicé.",
+      "priceMAD": "255.00",
+      "displayedPriceMAD": "255.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet28/assort24-deluxe.png",
+      "displayedImage": "/menu-hd-onglet28/assort24-deluxe.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet28/assort24-deluxe-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet28/assort24-deluxe-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a39d62353c",
+      "category": "Assortiments",
+      "section": "Assortiments 30 pcs",
+      "position": 10,
+      "name": "Delice 30 pcs",
+      "description": "6 classic, 4 ebi fry, 4 shake yaki, 4 cream cheese, 6 maki saumon, 4 aromaki saumon, 2 nigiri saumon.",
+      "priceMAD": "235.00",
+      "displayedPriceMAD": "235.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet29/assort30-delice.png",
+      "displayedImage": "/menu-hd-onglet29/assort30-delice.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet29/assort30-delice-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet29/assort30-delice-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "0679c0f898",
+      "category": "Assortiments",
+      "section": "Assortiments 30 pcs",
+      "position": 11,
+      "name": "Enjoy Box 30 pcs",
+      "description": "4 classic, 4 ebi fry, 4 pacific, 4 fry salmon fry, 6 aromaki crevettes, 6 aromaki saumon, 2 nigiri saumon.",
+      "priceMAD": "235.00",
+      "displayedPriceMAD": "235.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet29/assort30-enjoy-box.png",
+      "displayedImage": "/menu-hd-onglet29/assort30-enjoy-box.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet29/assort30-enjoy-box-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet29/assort30-enjoy-box-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "267463ea64",
+      "category": "Assortiments",
+      "section": "Assortiments 30 pcs",
+      "position": 12,
+      "name": "Jocker 30 pcs",
+      "description": "6 classic, 6 ebi fry, 4 cream cheese, 4 pacific, 6 fry salmon fry, 4 aromaki crevettes.",
+      "priceMAD": "235.00",
+      "displayedPriceMAD": "235.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet29/assort30-jocker.png",
+      "displayedImage": "/menu-hd-onglet29/assort30-jocker.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet29/assort30-jocker-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet29/assort30-jocker-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "c800597832",
+      "category": "Assortiments",
+      "section": "Assortiments 36 pcs",
+      "position": 13,
+      "name": "Dream 36 pcs",
+      "description": "4 green tiger, 4 Tahiti, 4 naruto, 4 goma roll, 4 spider, 4 eby salmon, 6 aromaki saumon, 6 aromaki crevettes.",
+      "priceMAD": "295.00",
+      "displayedPriceMAD": "295.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet30/assort36-dream.png",
+      "displayedImage": "/menu-hd-onglet30/assort36-dream.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet30/assort36-dream-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet30/assort36-dream-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b5dd505e6f",
+      "category": "Assortiments",
+      "section": "Assortiments 36 pcs",
+      "position": 14,
+      "name": "Extasy 40",
+      "description": "4 classic, 4 ebi fry, 4 cream cheese, 4 shake yaki, 4 saumon avocat, 4 chicken crispy, 8 fry salmon fry, 8 pacific. (40 pcs)",
+      "priceMAD": "295.00",
+      "displayedPriceMAD": "295.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet30/assort40-extasy.png",
+      "displayedImage": "/menu-hd-onglet30/assort40-extasy.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet30/assort40-extasy-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet30/assort40-extasy-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "59108b5a10",
+      "category": "Assortiments",
+      "section": "Assortiments 36 pcs",
+      "position": 15,
+      "name": "Gourmet 36 pcs",
+      "description": "4 classic, 4 ebi fry, 4 cream cheese, 4 saumon avocat, 4 nara, 4 green tiger, 4 naruto, 4 tahiti, 4 spider.",
+      "priceMAD": "295.00",
+      "displayedPriceMAD": "295.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet30/assort36-gourmet.png",
+      "displayedImage": "/menu-hd-onglet30/assort36-gourmet.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet30/assort36-gourmet-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet30/assort36-gourmet-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a4fdedb9b3",
+      "category": "Assortiments",
+      "section": "Assortiments 48 pcs",
+      "position": 16,
+      "name": "Festival 48 pcs",
+      "description": "4 classic, 4 ebi fry, 4 shake yaki, 4 cream cheese, 4 saumon avocat, 8 fry salmon fry, 8 fry ebi fry, 4 chicken crispy, 8 makito saumon epicé.",
+      "priceMAD": "355.00",
+      "displayedPriceMAD": "355.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet31/assort48-festival.png",
+      "displayedImage": "/menu-hd-onglet31/assort48-festival.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet31/assort48-festival-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet31/assort48-festival-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "b4a12d5c8c",
+      "category": "Assortiments",
+      "section": "Assortiments 48 pcs",
+      "position": 17,
+      "name": "Fiesta 48 pcs",
+      "description": "4 classic, 4 ebi fry, 4 shake yaki, 4 cream cheese, 4 saumon avocat, 4 chicken crispy, 4 pacific, 4 fry salmon fry, 4 fry ebi fry, 6 aromaki saumon, 6 aromaki crevettes.",
+      "priceMAD": "355.00",
+      "displayedPriceMAD": "355.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet31/assort48-fiesta.png",
+      "displayedImage": "/menu-hd-onglet31/assort48-fiesta.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet31/assort48-fiesta-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet31/assort48-fiesta-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "225dc32819",
+      "category": "Assortiments",
+      "section": "Assortiments 48 pcs",
+      "position": 18,
+      "name": "Happy Box 44 pcs",
+      "description": "4 goma roll, 4 Tahiti, 4 green tiger, 4 ebi salmon, 4 bali, 4 spider, 4 maki saumon épicé, 4 naruto, 6 aromaki crevettes, 6 aromaki saumon.",
+      "priceMAD": "355.00",
+      "displayedPriceMAD": "355.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet31/assort44-happy-box.png",
+      "displayedImage": "/menu-hd-onglet31/assort44-happy-box.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet31/assort44-happy-box-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet31/assort44-happy-box-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "4a3cdf3348",
+      "category": "Assortiments",
+      "section": "Assortiments 60 pcs",
+      "position": 19,
+      "name": "Carnaval 60 pcs",
+      "description": "4 classic, 4 ebi fry, 4 cream cheese, 4 shake yaki, 4 saumon avocat, 4 chicken crispy, 4 green tiger, 4 aromaki saumon, 4 ebi salmon, 4 aromaki crevettes, 4 tahiti, 4 naruto, 4 goma roll, 8 spider.",
+      "priceMAD": "450.00",
+      "displayedPriceMAD": "450.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet32/assort60-carnaval.png",
+      "displayedImage": "/menu-hd-onglet32/assort60-carnaval.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet32/assort60-carnaval-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet32/assort60-carnaval-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "10fc49f9b4",
+      "category": "Assortiments",
+      "section": "Assortiments 60 pcs",
+      "position": 20,
+      "name": "Family Box 60 pcs",
+      "description": "4 classic, 4 ebi fry, 4 cream cheese, 4 saumon avocat, 4 green tiger, 4 tahiti, 4 naruto, 4 ebi salmon, 8 fry salmon fry, 8 pacific, 4 aromaki saumon, 8 aromaki crevettes.",
+      "priceMAD": "450.00",
+      "displayedPriceMAD": "450.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet32/assort60-family-box.png",
+      "displayedImage": "/menu-hd-onglet32/assort60-family-box.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet32/assort60-family-box-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet32/assort60-family-box-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5c15472d24",
+      "category": "Desserts",
+      "section": "",
+      "position": 0,
+      "name": "Cheese Cake Speculos",
+      "description": "Cheese Cake Speculos",
+      "priceMAD": "39.00",
+      "displayedPriceMAD": "39.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet33/dessert-cheese-cake-speculos.png",
+      "displayedImage": "/menu-hd-onglet33/dessert-cheese-cake-speculos.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet33/dessert-cheese-cake-speculos-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet33/dessert-cheese-cake-speculos-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "6bfd43d617",
+      "category": "Desserts",
+      "section": "",
+      "position": 1,
+      "name": "Banoffee Pie",
+      "description": "Banoffee Pie",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet33/dessert-banoffee-pie.png",
+      "displayedImage": "/menu-hd-onglet33/dessert-banoffee-pie.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet33/dessert-banoffee-pie-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet33/dessert-banoffee-pie-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "787c236c7b",
+      "category": "Jus",
+      "section": "",
+      "position": 0,
+      "name": "Jus Exotique",
+      "description": "Exotique",
+      "priceMAD": "34.00",
+      "displayedPriceMAD": "34.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet34/jus-exotique.png",
+      "displayedImage": "/menu-hd-onglet34/jus-exotique.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet34/jus-exotique-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet34/jus-exotique-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "fde993538f",
+      "category": "Jus",
+      "section": "",
+      "position": 1,
+      "name": "Jus Fraise",
+      "description": "Fraise",
+      "priceMAD": "32.00",
+      "displayedPriceMAD": "32.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet34/jus-fraise.png",
+      "displayedImage": "/menu-hd-onglet34/jus-fraise.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet34/jus-fraise-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet34/jus-fraise-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "2b9993080d",
+      "category": "Jus",
+      "section": "",
+      "position": 2,
+      "name": "Jus Ananas",
+      "description": "Ananas",
+      "priceMAD": "32.00",
+      "displayedPriceMAD": "32.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet34/jus-ananas.png",
+      "displayedImage": "/menu-hd-onglet34/jus-ananas.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet34/jus-ananas-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet34/jus-ananas-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "a2b893eb78",
+      "category": "Jus",
+      "section": "",
+      "position": 3,
+      "name": "Jus Mangue",
+      "description": "Mangue",
+      "priceMAD": "32.00",
+      "displayedPriceMAD": "32.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet34/jus-mangue.png",
+      "displayedImage": "/menu-hd-onglet34/jus-mangue.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet34/jus-mangue-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet34/jus-mangue-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cb223847c5",
+      "category": "Jus",
+      "section": "",
+      "position": 4,
+      "name": "Jus Kiwi",
+      "description": "Kiwi",
+      "priceMAD": "32.00",
+      "displayedPriceMAD": "32.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet34/jus-kiwi.png",
+      "displayedImage": "/menu-hd-onglet34/jus-kiwi.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet34/jus-kiwi-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet34/jus-kiwi-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "0229f0431e",
+      "category": "Boissons",
+      "section": "",
+      "position": 0,
+      "name": "Coca Cola",
+      "description": "33 cl",
+      "priceMAD": "15.00",
+      "displayedPriceMAD": "15.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet35/boisson-coca-cola.png",
+      "displayedImage": "/menu-hd-onglet35/boisson-coca-cola.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet35/boisson-coca-cola-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet35/boisson-coca-cola-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "8e12069c86",
+      "category": "Boissons",
+      "section": "",
+      "position": 1,
+      "name": "Coca Cola Zéro",
+      "description": "33 cl",
+      "priceMAD": "15.00",
+      "displayedPriceMAD": "15.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet35/boisson-coca-cola-zero.png",
+      "displayedImage": "/menu-hd-onglet35/boisson-coca-cola-zero.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet35/boisson-coca-cola-zero-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet35/boisson-coca-cola-zero-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "4750e9d01c",
+      "category": "Boissons",
+      "section": "",
+      "position": 2,
+      "name": "Sprite",
+      "description": "33 cl",
+      "priceMAD": "15.00",
+      "displayedPriceMAD": "15.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet35/boisson-sprite.png",
+      "displayedImage": "/menu-hd-onglet35/boisson-sprite.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet35/boisson-sprite-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet35/boisson-sprite-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "cf01bd2066",
+      "category": "Boissons",
+      "section": "",
+      "position": 3,
+      "name": "Hawai",
+      "description": "33 cl",
+      "priceMAD": "15.00",
+      "displayedPriceMAD": "15.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet35/boisson-hawai.png",
+      "displayedImage": "/menu-hd-onglet35/boisson-hawai.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet35/boisson-hawai-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet35/boisson-hawai-336.webp"
+      },
+      "variants": []
+    },
+    {
+      "id": "5b62bf8e93",
+      "category": "Boissons",
+      "section": "",
+      "position": 4,
+      "name": "Poms",
+      "description": "33 cl",
+      "priceMAD": "15.00",
+      "displayedPriceMAD": "15.00",
+      "currency": "MAD",
+      "image": "/menu-hd-onglet35/boisson-poms.png",
+      "displayedImage": "/menu-hd-onglet35/boisson-poms.png",
+      "thumbs": {
+        "small": "/menu-thumbs/menu-hd-onglet35/boisson-poms-224.webp",
+        "large": "/menu-thumbs/menu-hd-onglet35/boisson-poms-336.webp"
+      },
+      "variants": []
+    }
+  ]
+}
