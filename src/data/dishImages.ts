@@ -178,7 +178,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "52d169b9dd": "/menu-hd-onglet21/premium-exotic-salmon.jpg",
 
   // Makito Fry — captures Yumlo 15-59 (miniatures)
-  "df7dc34617": "/menu-hd-onglet22/makito-saumon-epice.png",
+  "df7dc34617": "/menu-hd-onglet22/makito-saumon-epice.jpg",
   "e6820a6ec3": "/menu-hd-onglet22/makito-crevettes.jpg",
 
   // Crispy Roll — captures Yumlo 16-00 (miniatures)

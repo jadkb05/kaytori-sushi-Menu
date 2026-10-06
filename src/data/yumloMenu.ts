@@ -1338,7 +1338,7 @@ export const YUMLO_MENU = [
     "description": "Saumon épicé, fondu de gouda 6 Pièces",
     "priceMAD": "52.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet22/makito-saumon-epice.png"
+    "image": "/menu-hd-onglet22/makito-saumon-epice.jpg"
   },
   {
     "id": "e6820a6ec3",
