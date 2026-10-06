@@ -1568,7 +1568,7 @@ export const YUMLO_MENU = [
     "description": "Riz cantonais.",
     "priceMAD": "49.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet25/riz-cantonais.png",
+    "image": "/menu-hd-onglet25/riz-cantonais.jpg",
     "variants": [
       { "id": "vegetarien", "label": "Végétarien", "priceMAD": "44.00" },
       { "id": "poulet", "label": "Poulet", "priceMAD": "54.00" },
