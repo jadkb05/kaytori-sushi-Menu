@@ -1392,7 +1392,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, surimi, tobiko, avocat 6 Pièces",
     "priceMAD": "56.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet23/crispy-sakura.png"
+    "image": "/menu-hd-onglet23/crispy-sakura.jpg"
   },
   {
     "id": "f0b86623a1",
