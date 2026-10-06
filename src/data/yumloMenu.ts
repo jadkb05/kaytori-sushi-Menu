@@ -1167,7 +1167,7 @@ export const YUMLO_MENU = [
     "description": "Surimi pané, saumon, mangue, cheese, tobiko",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-tokyo.png"
+    "image": "/menu-hd-onglet20/blossom-tokyo.jpg"
   },
   {
     "id": "ace54559af",
