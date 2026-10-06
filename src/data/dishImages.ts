@@ -207,7 +207,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
 
   // Wok & Thaï — captures Yumlo 16-02 (miniatures)
   "083ac320dd": "/menu-hd-onglet25/wok-nouilles.png",
-  "0c48c8093e": "/menu-hd-onglet25/vermicelle.png",
+  "0c48c8093e": "/menu-hd-onglet25/vermicelle.jpg",
   "5c227884f6": "/menu-hd-onglet25/riz-cantonais.jpg",
 
   // Plats Thaï (hors Bentos) — captures Yumlo 16-03 (miniatures)

@@ -1552,7 +1552,7 @@ export const YUMLO_MENU = [
     "description": "Vermicelle — sauce au choix : oyster, teriyaki, aigre doux, sweet chili.",
     "priceMAD": "49.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet25/vermicelle.png",
+    "image": "/menu-hd-onglet25/vermicelle.jpg",
     "variants": [
       { "id": "vegetarien", "label": "Végétarien", "priceMAD": "49.00" },
       { "id": "poulet", "label": "Poulet", "priceMAD": "59.00" },
