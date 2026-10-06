@@ -1122,7 +1122,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, mangue, avocat, surimi, tobiko, sésame",
     "priceMAD": "68.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-ceviche-roll.png"
+    "image": "/menu-hd-onglet20/blossom-ceviche-roll.jpg"
   },
   {
     "id": "5347977dbc",
