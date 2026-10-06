@@ -240,7 +240,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, surimi, crabe, avocat, mozzarelle, tobiko 8 Pièces",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet3/pizza-saumon-crabe.png"
+    "image": "/menu-hd-onglet3/pizza-saumon-crabe.jpg"
   },
   {
     "id": "f6cb920bcd",
