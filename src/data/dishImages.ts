@@ -276,7 +276,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "5b62bf8e93": "/menu-hd-onglet35/boisson-poms.png",
 
   // Bentos — captures Yumlo 16-35 (miniatures, alignées CUSTOM_DISH_IMAGES)
-  "66073a8aee": "/menu-hd-onglet36/bento-d.png",
+  "66073a8aee": "/menu-hd-onglet36/bento-d.jpg",
   "6a0c00190c": "/menu-hd-onglet36/bento-f.png",
   "bd099ce53c": "/menu-hd-onglet36/bento-b.png",
   "d2ba4b91b8": "/menu-hd-onglet36/bento-g.png",
@@ -289,7 +289,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
  */
 export const CUSTOM_DISH_IMAGES: Record<string, string> = {
   // Bentos — captures Yumlo 16-35 (miniatures)
-  "66073a8aee": "/menu-hd-onglet36/bento-d.png",
+  "66073a8aee": "/menu-hd-onglet36/bento-d.jpg",
   "6a0c00190c": "/menu-hd-onglet36/bento-f.png",
   "bd099ce53c": "/menu-hd-onglet36/bento-b.png",
   "d2ba4b91b8": "/menu-hd-onglet36/bento-g.png",

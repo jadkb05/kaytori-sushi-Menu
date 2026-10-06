@@ -32,7 +32,7 @@ export const YUMLO_MENU = [
     "description": "4 Fry Ebi Fry, 4 Shake Yaki, salade gambas, yakitori Bœuf fromage.",
     "priceMAD": "135.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-d.png"
+    "image": "/menu-hd-onglet36/bento-d.jpg"
   },
   {
     "id": "6a0c00190c",
