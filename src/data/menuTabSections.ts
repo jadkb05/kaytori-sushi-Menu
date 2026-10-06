@@ -1,6 +1,6 @@
 import type { YumloMenuItem } from "./yumloMenu";
 
-/** Ordre d’affichage des sous-blocs dans la section Plats Thaï (hors bentos — catégorie dédiée). */
+/** Ordre d’affichage des plats dans la section Plats Thaï (hors bentos — catégorie dédiée). */
 const PLATS_THAI_SECTION_ORDER = [
   "Bœuf bulgogi",
   "Red curry thaï",
@@ -42,7 +42,7 @@ export type MenuSectionGroup = { title: string; items: YumloMenuItem[] };
 
 /**
  * Découpe les plats d’un onglet en sous-sections (titres + cartes).
- * Utilisé pour Assortiments (16 / 24 / … pcs) et Plats Thaï (currys, bulgogi, etc.).
+ * Utilisé pour Assortiments (16 / 24 / … pcs) ; Plats Thaï est seulement trié, sans titres.
  */
 export function groupItemsForMenuTab(category: string, items: YumloMenuItem[]): MenuSectionGroup[] {
   if (items.length === 0) return [];
@@ -58,18 +58,8 @@ export function groupItemsForMenuTab(category: string, items: YumloMenuItem[]): 
       if (ra !== rb) return ra - rb;
       return a.name.localeCompare(b.name, "fr");
     });
-    const groups: MenuSectionGroup[] = [];
-    let currentTitle = "";
-    for (const it of sorted) {
-      const t = platsThaiSection(it.name);
-      if (groups.length === 0 || t !== currentTitle) {
-        currentTitle = t;
-        groups.push({ title: t, items: [it] });
-      } else {
-        groups[groups.length - 1].items.push(it);
-      }
-    }
-    return groups;
+    // Ordre conservé, mais sans titres de sous-sections affichés.
+    return [{ title: "", items: sorted }];
   }
 
   if (category === "Assortiments") {
