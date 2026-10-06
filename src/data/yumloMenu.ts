@@ -1248,7 +1248,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, avocat, mangue, cheese",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-exotic.png"
+    "image": "/menu-hd-onglet20/blossom-exotic.jpg"
   },
   {
     "id": "cec5e70b6a",
