@@ -163,7 +163,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "0433bbd53c": "/menu-hd-onglet20/blossom-mango-saumon.jpg",
   "6d09d7bf8d": "/menu-hd-onglet20/blossom-crabe.jpg",
   "cf8623ce70": "/menu-hd-onglet20/blossom-green-salmon.jpg",
-  "f33f401dd2": "/menu-hd-onglet20/blossom-cheezy-salmon.png",
+  "f33f401dd2": "/menu-hd-onglet20/blossom-cheezy-salmon.jpg",
   "cd27240259": "/menu-hd-onglet20/blossom-exotic.png",
 
   // Premium — captures produit Yumlo 15-58 / 15-59 (miniatures)

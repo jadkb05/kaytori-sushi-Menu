@@ -1239,7 +1239,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, avocat, cheese, tobiko",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-cheezy-salmon.png"
+    "image": "/menu-hd-onglet20/blossom-cheezy-salmon.jpg"
   },
   {
     "id": "cd27240259",
