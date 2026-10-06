@@ -1419,7 +1419,7 @@ export const YUMLO_MENU = [
     "description": "Saumon tempura, avocat, surimi, cheese, tobiko 6 Pièces",
     "priceMAD": "52.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet23/crispy-saumon-tempura.png"
+    "image": "/menu-hd-onglet23/crispy-saumon-tempura.jpg"
   },
   {
     "id": "06066ec740",
