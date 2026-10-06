@@ -1158,7 +1158,7 @@ export const YUMLO_MENU = [
     "description": "Crevettes, saumon, avocat, cheese",
     "priceMAD": "64.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet20/blossom-eby-roll.png"
+    "image": "/menu-hd-onglet20/blossom-eby-roll.jpg"
   },
   {
     "id": "cb9324ca52",

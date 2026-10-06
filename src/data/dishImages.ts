@@ -154,7 +154,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "5347977dbc": "/menu-hd-onglet20/blossom-hawai.jpg",
   "2d6c4738f9": "/menu-hd-onglet20/blossom-new-york.png",
   "f84280a0f7": "/menu-hd-onglet20/blossom-boston.jpg",
-  "12117b00b9": "/menu-hd-onglet20/blossom-eby-roll.png",
+  "12117b00b9": "/menu-hd-onglet20/blossom-eby-roll.jpg",
   "cb9324ca52": "/menu-hd-onglet20/blossom-tokyo.png",
   "ace54559af": "/menu-hd-onglet20/blossom-saumon-braise.png",
   "c435723d4c": "/menu-hd-onglet20/blossom-bali.jpg",
