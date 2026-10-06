@@ -1302,7 +1302,7 @@ export const YUMLO_MENU = [
     "description": "Eby fry, saumon flambé, fondue de gouda",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet21/premium-sirena-roll.png"
+    "image": "/menu-hd-onglet21/premium-sirena-roll.jpg"
   },
   {
     "id": "ef3a2da619",
