@@ -1518,7 +1518,7 @@ export const YUMLO_MENU = [
     "description": "Saumon cuit, cheese, tobiko 6 Pièces",
     "priceMAD": "55.25",
     "currency": "MAD",
-    "image": "/menu-hd-onglet24/crunchy-fry-salmon-fry.png"
+    "image": "/menu-hd-onglet24/crunchy-fry-salmon-fry.jpg"
   },
   {
     "id": "53578ea799",
