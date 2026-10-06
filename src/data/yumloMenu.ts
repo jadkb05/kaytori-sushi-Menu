@@ -1422,6 +1422,33 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet23/crispy-saumon-tempura.png"
   },
   {
+    "id": "06066ec740",
+    "category": "Crispy Roll",
+    "name": "Crispy Saumon Cuit",
+    "description": "Saumon cuit, avocat 6 Pièces",
+    "priceMAD": "52.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet23/crispy-saumon-cuit.jpg"
+  },
+  {
+    "id": "e3c612287f",
+    "category": "Crispy Roll",
+    "name": "Crispy Crevette Avocat",
+    "description": "Crevette, avocat, surimi 6 Pièces",
+    "priceMAD": "52.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet23/crispy-crevette-avocat.jpg"
+  },
+  {
+    "id": "c1d4661e91",
+    "category": "Crispy Roll",
+    "name": "Crispy Saumon Cheese",
+    "description": "Saumon, tobiko, cheese 6 Pièces",
+    "priceMAD": "52.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet23/crispy-saumon-cheese.jpg"
+  },
+  {
     "id": "5ec25676a2",
     "category": "Crunchy Roll",
     "name": "Crunchy Saumon Avocat",
