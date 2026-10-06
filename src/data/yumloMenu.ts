@@ -249,7 +249,7 @@ export const YUMLO_MENU = [
     "description": "Crevettes, mangue, surimi, mozzarelle, tobiko 8 Pièces",
     "priceMAD": "54.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet3/pizza-tropicale.png"
+    "image": "/menu-hd-onglet3/pizza-tropicale.jpg"
   },
   {
     "id": "0ba6c99141",
