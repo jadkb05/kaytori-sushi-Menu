@@ -1647,7 +1647,7 @@ export const YUMLO_MENU = [
     "description": "servi avec du riz",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet26/sate.png",
+    "image": "/menu-hd-onglet26/sate.jpg",
     "variants": [
       { "id": "poulet", "label": "Poulet", "priceMAD": "69.00" },
       { "id": "boeuf", "label": "Bœuf", "priceMAD": "74.00" },
