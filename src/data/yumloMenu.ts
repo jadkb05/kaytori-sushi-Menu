@@ -1383,7 +1383,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, crevette, poisson, cheese, tobiko 6 Pièces",
     "priceMAD": "62.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet23/crispy-red-white.png"
+    "image": "/menu-hd-onglet23/crispy-red-white.jpg"
   },
   {
     "id": "007985588c",
