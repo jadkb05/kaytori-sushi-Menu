@@ -26,22 +26,13 @@ export type YumloMenuItem = {
 
 export const YUMLO_MENU = [
   {
-    "id": "66073a8aee",
+    "id": "f9047d3930",
     "category": "Bentos",
-    "name": "Bento D",
-    "description": "4 Fry Ebi Fry, 4 Shake Yaki, salade gambas, yakitori Bœuf fromage.",
-    "priceMAD": "135.00",
+    "name": "Bento A",
+    "description": "Salade veggie, 2 nems poulet, 4 ébi fry, wok poulet",
+    "priceMAD": "105.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-d.jpg"
-  },
-  {
-    "id": "6a0c00190c",
-    "category": "Bentos",
-    "name": "Bento F",
-    "description": "4 Croquette saumon, 4 ébi fry, 2 bœuf fromage, 1 ébi tempura, 1 nems poulet.",
-    "priceMAD": "129.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-f.jpg"
+    "image": "/menu-hd-onglet36/bento-a.jpg"
   },
   {
     "id": "bd099ce53c",
@@ -51,6 +42,42 @@ export const YUMLO_MENU = [
     "priceMAD": "129.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet36/bento-b.jpg"
+  },
+  {
+    "id": "d4738254f1",
+    "category": "Bentos",
+    "name": "Bento C",
+    "description": "1 Nem poulet, 1 gambas panée, salade gambas, 4 eby fry, 4 california eby, 4 california classic",
+    "priceMAD": "124.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet36/bento-c.jpg"
+  },
+  {
+    "id": "66073a8aee",
+    "category": "Bentos",
+    "name": "Bento D",
+    "description": "4 Fry Ebi Fry, 4 Shake Yaki, salade gambas, yakitori Bœuf fromage.",
+    "priceMAD": "135.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet36/bento-d.jpg"
+  },
+  {
+    "id": "cba8d279df",
+    "category": "Bentos",
+    "name": "Bento E",
+    "description": "Salade viet, fry eby fry, wok végétarien, brochettes bœuf fromage",
+    "priceMAD": "119.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet36/bento-e.jpg"
+  },
+  {
+    "id": "6a0c00190c",
+    "category": "Bentos",
+    "name": "Bento F",
+    "description": "4 Croquette saumon, 4 ébi fry, 2 bœuf fromage, 1 ébi tempura, 1 nems poulet.",
+    "priceMAD": "129.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet36/bento-f.jpg"
   },
   {
     "id": "d2ba4b91b8",
@@ -69,33 +96,6 @@ export const YUMLO_MENU = [
     "priceMAD": "128.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet36/bento-h.jpg"
-  },
-  {
-    "id": "f9047d3930",
-    "category": "Bentos",
-    "name": "Bento A",
-    "description": "Salade veggie, 2 nems poulet, 4 ébi fry, wok poulet",
-    "priceMAD": "105.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-a.jpg"
-  },
-  {
-    "id": "d4738254f1",
-    "category": "Bentos",
-    "name": "Bento C",
-    "description": "1 Nem poulet, 1 gambas panée, salade gambas, 4 eby fry, 4 california eby, 4 california classic",
-    "priceMAD": "124.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-c.jpg"
-  },
-  {
-    "id": "cba8d279df",
-    "category": "Bentos",
-    "name": "Bento E",
-    "description": "Salade viet, fry eby fry, wok végétarien, brochettes bœuf fromage",
-    "priceMAD": "119.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-e.jpg"
   },
   {
     "id": "b6fe11da37",
