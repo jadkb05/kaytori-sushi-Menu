@@ -1347,7 +1347,7 @@ export const YUMLO_MENU = [
     "description": "Crevette mariné, gambas, fondu de gouda 6 Pièces",
     "priceMAD": "49.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet22/makito-crevettes.png"
+    "image": "/menu-hd-onglet22/makito-crevettes.jpg"
   },
   {
     "id": "df8e4b755c",
