@@ -198,7 +198,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "5ec25676a2": "/menu-hd-onglet24/crunchy-saumon-avocat.png",
   "fc97991608": "/menu-hd-onglet24/crunchy-eby-tempura.jpg",
   "b2336232f7": "/menu-hd-onglet24/crunchy-casablanca.jpg",
-  "b6bb8210a3": "/menu-hd-onglet24/crunchy-tiger-fry.png",
+  "b6bb8210a3": "/menu-hd-onglet24/crunchy-tiger-fry.jpg",
   "e8077d2295": "/menu-hd-onglet24/crunchy-dragon-eyes.jpg",
   "e3a96c288b": "/menu-hd-onglet24/crunchy-pacific.jpg",
   "3583d51b73": "/menu-hd-onglet24/crunchy-fry-eby-fry.jpg",

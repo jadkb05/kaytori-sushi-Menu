@@ -1482,7 +1482,7 @@ export const YUMLO_MENU = [
     "description": "Crevette pané, surimi, avocat, cheese, tobiko 6 Pièces",
     "priceMAD": "59.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet24/crunchy-tiger-fry.png"
+    "image": "/menu-hd-onglet24/crunchy-tiger-fry.jpg"
   },
   {
     "id": "e8077d2295",
