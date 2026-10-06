@@ -203,6 +203,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "e3a96c288b": "/menu-hd-onglet24/crunchy-pacific.png",
   "3583d51b73": "/menu-hd-onglet24/crunchy-fry-eby-fry.jpg",
   "45bca3a281": "/menu-hd-onglet24/crunchy-fry-salmon-fry.jpg",
+  "53578ea799": "/menu-hd-onglet24/crunchy-osaka.jpg",
 
   // Wok & Thaï — captures Yumlo 16-02 (miniatures)
   "083ac320dd": "/menu-hd-onglet25/wok-nouilles.png",
