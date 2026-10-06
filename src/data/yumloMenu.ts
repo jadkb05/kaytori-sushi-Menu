@@ -68,7 +68,7 @@ export const YUMLO_MENU = [
     "description": "Salade veggie, 4 gambas dynamite, 4 California eby fry, wok poulet.",
     "priceMAD": "128.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet36/bento-h.png"
+    "image": "/menu-hd-onglet36/bento-h.jpg"
   },
   {
     "id": "f9047d3930",
