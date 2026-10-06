@@ -24,7 +24,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "1842edff6e": "/menu-hd-onglet3/sushi-gratine.jpg",
   "da6c1fe793": "/menu-hd-onglet3/pizza-saumon-crabe.jpg",
   "f6cb920bcd": "/menu-hd-onglet3/pizza-tropicale.png",
-  "0ba6c99141": "/menu-hd-onglet3/pizza-saumon-mozza.png",
+  "0ba6c99141": "/menu-hd-onglet3/pizza-saumon-mozza.jpg",
   "79bda10a6e": "/menu-hd-onglet3/burger.jpg",
   "b6220c2315": "/menu-hd-onglet3/crunchy-burrito.jpg",
   "5a7a6c1ff9": "/menu-hd-onglet3/sushi-burrito.jpg",

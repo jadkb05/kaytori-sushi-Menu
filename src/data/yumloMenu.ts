@@ -258,7 +258,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, surimi, mozzarelle, tobiko 8 Pièces",
     "priceMAD": "54.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet3/pizza-saumon-mozza.png"
+    "image": "/menu-hd-onglet3/pizza-saumon-mozza.jpg"
   },
   {
     "id": "79bda10a6e",
