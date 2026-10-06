@@ -1623,7 +1623,7 @@ export const YUMLO_MENU = [
     "description": "Ananas, poivrons, champignon noir, champignon paris, noix de cajou, sauce aigre doux (servi avec du riz)",
     "priceMAD": "64.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet26/ananas-aigre-doux.png",
+    "image": "/menu-hd-onglet26/ananas-aigre-doux.jpg",
     "variants": [
       { "id": "poulet", "label": "Poulet", "priceMAD": "69.00" },
       { "id": "boeuf", "label": "Bœuf", "priceMAD": "74.00" },
