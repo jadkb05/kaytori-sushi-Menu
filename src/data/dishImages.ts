@@ -212,7 +212,7 @@ export const CLIENT_DISH_IMAGES: Record<string, string> = {
   "382bef2bb1": "/menu-hd-onglet25/pad-thai.jpg",
 
   // Plats Thaï (hors Bentos) — captures Yumlo 16-03 (miniatures)
-  "cd6fcbb51e": "/menu-hd-onglet26/boeuf-bulgogi.png",
+  "cd6fcbb51e": "/menu-hd-onglet26/boeuf-bulgogi.jpg",
   "36987b1e67": "/menu-hd-onglet26/red-curry-thai.png",
   "9eba998f82": "/menu-hd-onglet26/ananas-aigre-doux.png",
   "0755e5b16d": "/menu-hd-onglet26/corean-chicken.png",

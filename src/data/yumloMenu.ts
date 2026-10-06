@@ -1599,7 +1599,7 @@ export const YUMLO_MENU = [
     "description": "Boeuf, gingembre, huile de sésame, Ail, sauce cacahuète, cacahuètes (servi avec du riz)",
     "priceMAD": "79.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet26/boeuf-bulgogi.png"
+    "image": "/menu-hd-onglet26/boeuf-bulgogi.jpg"
   },
   {
     "id": "36987b1e67",
