@@ -1,7 +1,9 @@
 import { useMemo, useState } from "react";
+import { AdminLink } from "../components/AdminLink";
 import { ErrorState, LoadingState, PageHeader, StatusBadge, inputClass } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { buildCategoryList, buildProductList, filterProducts, type AdminProduct } from "../lib/menuAdmin";
+import { ADMIN_ROUTES, productEditPath } from "../lib/routes";
 
 function ProductRow({ p }: { p: AdminProduct }) {
   return (
@@ -14,7 +16,9 @@ function ProductRow({ p }: { p: AdminProduct }) {
         )}
       </td>
       <td className="px-3 py-2.5">
-        <p className="font-medium text-stone-900">{p.name}</p>
+        <AdminLink href={productEditPath(p.id)} className="font-medium text-stone-900 hover:text-kaytori-green hover:underline">
+          {p.name}
+        </AdminLink>
         <p className="text-xs text-stone-400">{p.id}</p>
       </td>
       <td className="px-3 py-2.5 text-stone-600">{p.categoryName}</td>
@@ -31,8 +35,17 @@ function ProductRow({ p }: { p: AdminProduct }) {
           <span className="text-stone-400">—</span>
         )}
       </td>
-      <td className="py-2.5 pl-3 pr-4">
+      <td className="px-3 py-2.5">
         <StatusBadge active={p.visible} activeLabel="Visible" inactiveLabel={p.isActive ? "Catégorie masquée" : "Masqué"} />
+      </td>
+      <td className="py-2.5 pl-3 pr-4 text-right">
+        <AdminLink
+          href={productEditPath(p.id)}
+          className="rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:bg-stone-50"
+          aria-label={`Modifier ${p.name}`}
+        >
+          Modifier
+        </AdminLink>
       </td>
     </tr>
   );
@@ -50,7 +63,15 @@ export function ProductsPage() {
 
   return (
     <>
-      <PageHeader title="Produits" description="Lecture seule pour le moment." />
+      <PageHeader
+        title="Produits"
+        description="Cliquez sur un produit pour le modifier."
+        actions={
+          <AdminLink href={ADMIN_ROUTES.productNew} className="rounded-lg bg-kaytori-green px-4 py-2 text-sm font-semibold text-white hover:bg-kaytori-greenDark">
+            + Nouveau produit
+          </AdminLink>
+        }
+      />
       {data.status === "loading" ? <LoadingState /> : null}
       {data.status === "error" ? <ErrorState message={data.error} onRetry={data.reload} /> : null}
       {data.status === "ready" ? (
@@ -90,7 +111,10 @@ export function ProductsPage() {
                   <th scope="col" className="px-3 py-2.5">Catégorie</th>
                   <th scope="col" className="px-3 py-2.5">Prix</th>
                   <th scope="col" className="px-3 py-2.5">Variantes</th>
-                  <th scope="col" className="py-2.5 pl-3 pr-4">Statut</th>
+                  <th scope="col" className="px-3 py-2.5">Statut</th>
+                  <th scope="col" className="py-2.5 pl-3 pr-4">
+                    <span className="sr-only">Actions</span>
+                  </th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-stone-100">

@@ -3,7 +3,7 @@ import { BrandLogo } from "../../components/BrandLogo";
 import { ADMIN_ROUTES, type AdminContentPage } from "../lib/routes";
 import { AdminLink } from "./AdminLink";
 
-const NAV: { page: AdminContentPage; href: string; label: string }[] = [
+const NAV: { page: Exclude<AdminContentPage, "productEdit" | "productCreate">; href: string; label: string }[] = [
   { page: "dashboard", href: ADMIN_ROUTES.dashboard, label: "Tableau de bord" },
   { page: "products", href: ADMIN_ROUTES.products, label: "Produits" },
   { page: "categories", href: ADMIN_ROUTES.categories, label: "Catégories" },
@@ -22,7 +22,8 @@ export function AdminLayout({
   children: ReactNode;
 }) {
   const navLink = (item: (typeof NAV)[number]) => {
-    const active = item.page === current;
+    const active =
+      item.page === current || ((current === "productEdit" || current === "productCreate") && item.page === "products");
     return (
       <AdminLink
         key={item.page}

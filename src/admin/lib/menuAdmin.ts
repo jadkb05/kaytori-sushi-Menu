@@ -5,6 +5,7 @@
  */
 import { formatDhAmount } from "../../cart/formatDh";
 import type { CategoryDisplayMode, MenuRows } from "../../data/menuRows";
+import { dishThumbs } from "../../menu/menuDisplay";
 
 export type DashboardStats = {
   activeCategories: number;
@@ -43,6 +44,15 @@ export type AdminCategory = {
   visibleProductCount: number;
 };
 
+/**
+ * Vignette de la liste : la vignette 224 px n'est utilisée que si elle correspond encore à la
+ * photo actuelle (après un changement de photo depuis l'admin, elle désigne l'ancienne).
+ */
+function listImage(imageUrl: string | null, thumbSmall: string | null): string | null {
+  if (thumbSmall && imageUrl && dishThumbs(imageUrl)?.small === thumbSmall) return thumbSmall;
+  return imageUrl;
+}
+
 const price = (v: number | string) => formatDhAmount(typeof v === "number" ? v : Number.parseFloat(v));
 
 export function computeDashboardStats(rows: MenuRows): DashboardStats {
@@ -71,7 +81,7 @@ export function buildProductList(rows: MenuRows): AdminProduct[] {
   const catOrder = (id: string) => categories.get(id)?.sort_order ?? Number.MAX_SAFE_INTEGER;
 
   return [...rows.products]
-    .sort((a, b) => catOrder(a.category_id) - catOrder(b.category_id) || a.sort_order - b.sort_order)
+    .sort((a, b) => catOrder(a.category_id) - catOrder(b.category_id) || a.sort_order - b.sort_order || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
     .map((p) => {
       const cat = categories.get(p.category_id);
       const variants = [...(variantsByProduct.get(p.id) ?? [])].sort((a, b) => a.sort_order - b.sort_order);
@@ -84,7 +94,7 @@ export function buildProductList(rows: MenuRows): AdminProduct[] {
         categoryName: cat?.name ?? p.category_id,
         price: price(p.price),
         displayPrice: activePrices.length > 0 ? price(Math.min(...activePrices)) : price(p.price),
-        imageUrl: p.thumb_small_url ?? p.image_url,
+        imageUrl: listImage(p.image_url, p.thumb_small_url),
         isActive: p.is_active,
         categoryActive,
         visible: p.is_active && categoryActive,

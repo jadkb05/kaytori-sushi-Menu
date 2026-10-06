@@ -3,7 +3,9 @@
  *
  *   /admin/login        connexion
  *   /admin              tableau de bord
- *   /admin/products     produits (lecture seule)
+ *   /admin/products     produits
+ *   /admin/products/new création d'un produit
+ *   /admin/products/:id édition d'un produit existant
  *   /admin/categories   catégories (lecture seule)
  */
 import { useEffect, useMemo } from "react";
@@ -19,6 +21,8 @@ import { AccessDeniedPage, AccessErrorPage, UnconfiguredPage } from "./pages/Acc
 import { CategoriesPage } from "./pages/CategoriesPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LoginPage } from "./pages/LoginPage";
+import { ProductCreatePage } from "./pages/ProductCreatePage";
+import { ProductEditPage } from "./pages/ProductEditPage";
 import { ProductsPage } from "./pages/ProductsPage";
 
 /** Titre de l'onglet et exclusion des moteurs de recherche, le temps de la visite de l'admin. */
@@ -77,6 +81,10 @@ export default function AdminApp() {
             {decision.page === "dashboard" ? <DashboardPage /> : null}
             {decision.page === "products" ? <ProductsPage /> : null}
             {decision.page === "categories" ? <CategoriesPage /> : null}
+            {decision.page === "productCreate" ? <ProductCreatePage client={client!} /> : null}
+            {decision.page === "productEdit" && decision.productId ? (
+              <ProductEditPage productId={decision.productId} client={client!} />
+            ) : null}
           </AdminLayout>
         </AdminMenuDataProvider>
       );

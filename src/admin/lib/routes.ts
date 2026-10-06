@@ -9,15 +9,21 @@ export const ADMIN_ROUTES = {
   login: "/admin/login",
   products: "/admin/products",
   categories: "/admin/categories",
+  productNew: "/admin/products/new",
 } as const;
 
-export type AdminContentPage = "dashboard" | "products" | "categories";
+/** /admin/products/:id — édition d'un produit existant. */
+export function productEditPath(productId: string): string {
+  return `${ADMIN_ROUTES.products}/${encodeURIComponent(productId)}`;
+}
+
+export type AdminContentPage = "dashboard" | "products" | "categories" | "productEdit" | "productCreate";
 export type AdminPage = AdminContentPage | "login" | "denied" | "unconfigured" | "error";
 
 export type AdminRouteDecision =
   | { kind: "loading" }
   | { kind: "redirect"; to: string }
-  | { kind: "page"; page: AdminPage };
+  | { kind: "page"; page: AdminPage; productId?: string };
 
 /** « /admin/products/ » → « /admin/products ». */
 export function normalizeAdminPath(pathname: string): string {
@@ -34,7 +40,22 @@ const CONTENT_PAGES: Record<string, AdminContentPage> = {
   [ADMIN_ROUTES.dashboard]: "dashboard",
   [ADMIN_ROUTES.products]: "products",
   [ADMIN_ROUTES.categories]: "categories",
+  // Avant /admin/products/:id : « new » n'est jamais un ID produit (10 caractères hexadécimaux).
+  [ADMIN_ROUTES.productNew]: "productCreate",
 };
+
+/** « /admin/products/743455af94 » → « 743455af94 » (un seul segment), sinon null. */
+function productIdFromPath(path: string): string | null {
+  const prefix = `${ADMIN_ROUTES.products}/`;
+  if (!path.startsWith(prefix)) return null;
+  const segment = path.slice(prefix.length);
+  if (segment === "" || segment.includes("/")) return null;
+  try {
+    return decodeURIComponent(segment);
+  } catch {
+    return null;
+  }
+}
 
 /**
  * Décide quoi afficher pour un chemin /admin selon l'accès :
@@ -59,7 +80,10 @@ export function resolveAdminRoute(pathname: string, access: AdminAccess): AdminR
       return { kind: "page", page: "denied" };
     case "admin": {
       const page = CONTENT_PAGES[path];
-      return page ? { kind: "page", page } : { kind: "redirect", to: ADMIN_ROUTES.dashboard };
+      if (page) return { kind: "page", page };
+      const productId = productIdFromPath(path);
+      if (productId) return { kind: "page", page: "productEdit", productId };
+      return { kind: "redirect", to: ADMIN_ROUTES.dashboard };
     }
   }
 }

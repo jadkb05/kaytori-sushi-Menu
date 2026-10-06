@@ -41,8 +41,15 @@ function dishPoolFallback(id: string): string | undefined {
   return pool[h % pool.length];
 }
 
+/**
+ * Image affichée d'un plat. `item.image` est prioritaire : en mode Supabase, c'est la photo
+ * gérée depuis l'admin (products.image_url). En mode statique, `image` est identique à l'entrée
+ * des tables ci-dessous pour chaque plat (vérifié par le test de référence) : rendu inchangé.
+ * Les tables ne servent plus que de repli si un plat n'a pas d'image.
+ */
 export function dishImage(item: YumloMenuItem) {
   return (
+    (item.image || undefined) ??
     STARTER_IMAGE_URL_BY_ID[item.id] ??
     CLIENT_DISH_IMAGES[item.id] ??
     CUSTOM_DISH_IMAGES[item.id] ??
