@@ -1521,6 +1521,15 @@ export const YUMLO_MENU = [
     "image": "/menu-hd-onglet24/crunchy-fry-salmon-fry.png"
   },
   {
+    "id": "53578ea799",
+    "category": "Crunchy Roll",
+    "name": "Crunchy Osaka",
+    "description": "Saumon, surimi, wakamé 6 Pièces",
+    "priceMAD": "59.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet24/crunchy-osaka.jpg"
+  },
+  {
     "id": "083ac320dd",
     "category": "Wok & Thaï",
     "name": "Wok",
