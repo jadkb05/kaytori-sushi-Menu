@@ -1329,7 +1329,7 @@ export const YUMLO_MENU = [
     "description": "Saumon, mangue, wakamé, avocat, surimi, saumon cuit",
     "priceMAD": "69.00",
     "currency": "MAD",
-    "image": "/menu-hd-onglet21/premium-bora-bora.png"
+    "image": "/menu-hd-onglet21/premium-bora-bora.jpg"
   },
   {
     "id": "52d169b9dd",
