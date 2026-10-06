@@ -9,6 +9,7 @@
  * Si Supabase est choisi mais indisponible (non configuré, erreur, délai dépassé, menu vide),
  * le menu retombe sur la source statique : le site reste toujours utilisable.
  */
+import type { CategoryDisplayMode } from "./menuRows";
 import { YUMLO_CATEGORIES, YUMLO_MENU, type YumloMenuItem } from "./yumloMenu";
 
 /** Menu complet, dans le format consommé par l'app V1. */
@@ -17,6 +18,11 @@ export type MenuSnapshot = {
   categories: readonly string[];
   /** Plats, dans l'ordre du fichier source (l'ordre d'affichage par catégorie en découle). */
   items: readonly YumloMenuItem[];
+  /**
+   * Mode d'affichage par nom de catégorie, issu de la base (categories.display_mode, attaché à
+   * l'identifiant : il survit à un renommage). Absent pour le menu statique : règle par nom.
+   */
+  displayModes?: Readonly<Record<string, CategoryDisplayMode>>;
 };
 
 export type MenuSourceId = "static" | "supabase";

@@ -60,11 +60,19 @@ export function categorySlug(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
-/** Règles d'affichage particulières, aujourd'hui codées sur le nom (menuTabSections.ts). */
+/**
+ * Mode d'affichage d'après le NOM : uniquement pour le menu statique (yumloMenu.ts) et le seed.
+ * Le menu Supabase utilise categories.display_mode (voir menuCategoryDisplayMode).
+ */
 export function categoryDisplayMode(name: string): CategoryDisplayMode {
   if (name === "Plats Thaï") return "plats_thai_sorted";
   if (name === "Assortiments") return "assortiments_by_pcs";
   return "list";
+}
+
+/** Mode d'affichage d'une catégorie du menu chargé : celui de la base, sinon la règle par nom. */
+export function menuCategoryDisplayMode(menu: MenuSnapshot, category: string): CategoryDisplayMode {
+  return menu.displayModes?.[category] ?? categoryDisplayMode(category);
 }
 
 /** Menu statique → lignes de la base. Les IDs existants sont repris tels quels. */
@@ -162,5 +170,9 @@ export function rowsToMenu(rows: MenuRows): MenuSnapshot {
       return variants.length > 0 ? { ...item, variants } : item;
     });
 
-  return { categories: categories.map((c) => c.name), items };
+  return {
+    categories: categories.map((c) => c.name),
+    items,
+    displayModes: Object.fromEntries(categories.map((c) => [c.name, c.display_mode])),
+  };
 }

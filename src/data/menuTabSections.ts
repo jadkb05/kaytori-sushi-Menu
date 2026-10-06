@@ -1,3 +1,4 @@
+import { categoryDisplayMode, type CategoryDisplayMode } from "./menuRows";
 import type { YumloMenuItem } from "./yumloMenu";
 
 /** Ordre d’affichage des plats dans la section Plats Thaï (hors bentos — catégorie dédiée). */
@@ -43,11 +44,17 @@ export type MenuSectionGroup = { title: string; items: YumloMenuItem[] };
 /**
  * Découpe les plats d’un onglet en sous-sections (titres + cartes).
  * Utilisé pour Assortiments (16 / 24 / … pcs) ; Plats Thaï est seulement trié, sans titres.
+ * La règle suit le mode d'affichage de la catégorie (display_mode), pas son nom : un renommage
+ * ne la perd pas. Sans mode fourni (menu statique), il est déduit du nom.
  */
-export function groupItemsForMenuTab(category: string, items: YumloMenuItem[]): MenuSectionGroup[] {
+export function groupItemsForMenuTab(
+  category: string,
+  items: YumloMenuItem[],
+  mode: CategoryDisplayMode = categoryDisplayMode(category),
+): MenuSectionGroup[] {
   if (items.length === 0) return [];
 
-  if (category === "Plats Thaï") {
+  if (mode === "plats_thai_sorted") {
     const sorted = [...items].sort((a, b) => {
       const sa = platsThaiSection(a.name);
       const sb = platsThaiSection(b.name);
@@ -62,7 +69,7 @@ export function groupItemsForMenuTab(category: string, items: YumloMenuItem[]): 
     return [{ title: "", items: sorted }];
   }
 
-  if (category === "Assortiments") {
+  if (mode === "assortiments_by_pcs") {
     const sorted = [...items].sort((a, b) => {
       const ka = assortimentSortKey(a.name);
       const kb = assortimentSortKey(b.name);

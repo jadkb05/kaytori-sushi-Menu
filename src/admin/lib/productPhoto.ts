@@ -6,6 +6,7 @@
  * politique « products: admin » (update réservé à is_admin()). Aucune clé secrète.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { defaultPhotoOptimizer, type PhotoOptimizer } from "./photoOptimize";
 
 export const PHOTO_BUCKET = "menu-images";
 /** Photos actuelles du menu : 53 à 259 Ko. 5 Mo laisse une marge large sans accepter n'importe quoi. */
@@ -61,10 +62,21 @@ function storageErrorMessage(message: string): string {
   return `Téléversement impossible : ${message}`;
 }
 
-/** Téléverse la photo (sans toucher à la base). Un fichier identique déjà présent est réutilisé. */
-export async function uploadProductPhoto(client: SupabaseClient, productId: string, file: File): Promise<PhotoUploadResult> {
-  const invalid = validatePhotoFile(file);
+/**
+ * Photo d'origine → validation → redimensionnement / compression → Storage (sans toucher à la base).
+ * Un fichier identique déjà présent est réutilisé.
+ */
+export async function uploadProductPhoto(
+  client: SupabaseClient,
+  productId: string,
+  original: File,
+  optimize: PhotoOptimizer = defaultPhotoOptimizer,
+): Promise<PhotoUploadResult> {
+  const invalid = validatePhotoFile(original);
   if (invalid) return { ok: false, error: invalid };
+  const optimized = await optimize(original);
+  if (!optimized.ok) return { ok: false, error: optimized.error };
+  const file = optimized.file;
   const path = photoStoragePath(productId, await sha256Hex(file), file.type);
   const bucket = client.storage.from(PHOTO_BUCKET);
   const { error } = await bucket.upload(path, file, {

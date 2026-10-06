@@ -53,6 +53,11 @@ export function MenuProvider({
   return <MenuContext.Provider value={menu}>{children}</MenuContext.Provider>;
 }
 
+/** Menu chargé, ou null hors de MenuProvider (le panier retombe alors sur le statique). */
+export function useOptionalMenu(): MenuSnapshot | null {
+  return useContext(MenuContext);
+}
+
 /** Menu chargé (catégories + plats), au format de l'app V1. */
 export function useMenu(): MenuSnapshot {
   const menu = useContext(MenuContext);

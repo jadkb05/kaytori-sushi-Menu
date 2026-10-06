@@ -7,7 +7,8 @@ import {
   type ReactNode,
 } from "react";
 import { whatsappHref } from "../config/site";
-import { buildWhatsappOrderMessage, type CartLine } from "./buildOrderMessage";
+import { useOptionalMenu } from "../menu/MenuProvider";
+import { buildWhatsappOrderMessage, categoryLookupFromMenu, type CartLine } from "./buildOrderMessage";
 
 function parseUnitPriceDh(priceMAD: string): number {
   const n = Number.parseFloat(priceMAD.replace(",", "."));
@@ -65,13 +66,17 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clear = useCallback(() => setLines([]), []);
 
+  /** Catégories du menu réellement chargé (Supabase ou statique) pour le message WhatsApp. */
+  const menu = useOptionalMenu();
+  const categories = useMemo(() => (menu ? categoryLookupFromMenu(menu.items) : undefined), [menu]);
+
   const { itemCount, totalDh, whatsappOrderUrl } = useMemo(() => {
     const itemCount = lines.reduce((s, l) => s + l.quantity, 0);
     const totalDh = lines.reduce((s, l) => s + l.unitPriceDh * l.quantity, 0);
     const whatsappOrderUrl =
-      lines.length > 0 ? whatsappHref(buildWhatsappOrderMessage(lines, totalDh)) : whatsappHref();
+      lines.length > 0 ? whatsappHref(buildWhatsappOrderMessage(lines, totalDh, categories)) : whatsappHref();
     return { itemCount, totalDh, whatsappOrderUrl };
-  }, [lines]);
+  }, [lines, categories]);
 
   const value = useMemo<CartContextValue>(
     () => ({

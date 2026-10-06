@@ -38,6 +38,8 @@ export type AdminCategory = {
   id: string;
   name: string;
   sortOrder: number;
+  /** Position humaine dans l'ordre du menu (1…N, masquées comprises). */
+  position: number;
   isActive: boolean;
   displayMode: CategoryDisplayMode;
   productCount: number;
@@ -125,13 +127,14 @@ export function filterProducts(list: AdminProduct[], { query, categoryId }: Prod
 
 export function buildCategoryList(rows: MenuRows): AdminCategory[] {
   return [...rows.categories]
-    .sort((a, b) => a.sort_order - b.sort_order)
-    .map((c) => {
+    .sort((a, b) => a.sort_order - b.sort_order || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+    .map((c, i) => {
       const products = rows.products.filter((p) => p.category_id === c.id);
       return {
         id: c.id,
         name: c.name,
         sortOrder: c.sort_order,
+        position: i + 1,
         isActive: c.is_active,
         displayMode: c.display_mode,
         productCount: products.length,

@@ -144,7 +144,7 @@ export function ProductPhotoField({
         </p>
       ) : (
         <p className="mt-2 text-xs text-stone-500">
-          {selection ? `${selection.file.name} · envoyée à l'enregistrement.` : "JPEG, PNG ou WebP · 5 Mo maximum · format carré conseillé."}
+          {selection ? `${selection.file.name} · envoyée à l'enregistrement.` : "JPEG, PNG ou WebP · 5 Mo maximum · format carré conseillé · redimensionnée (1254 px) et compressée automatiquement."}
         </p>
       )}
     </div>

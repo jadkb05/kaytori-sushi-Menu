@@ -7,6 +7,7 @@ import { MenuFooter } from "../components/MenuFooter";
 import { ReassuranceBand } from "../components/ReassuranceBand";
 import { SITE } from "../config/site";
 import type { MenuSnapshot } from "../data/menuSource";
+import { menuCategoryDisplayMode } from "../data/menuRows";
 import { groupItemsForMenuTab } from "../data/menuTabSections";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { DishRow } from "../menu/DishRow";
@@ -161,8 +162,12 @@ export function MenuPage() {
   };
 
   const sections = useMemo(
-    () => SECTIONS.map((s) => ({ ...s, groups: groupItemsForMenuTab(s.category, [...s.items]) })),
-    [SECTIONS],
+    () =>
+      SECTIONS.map((s) => ({
+        ...s,
+        groups: groupItemsForMenuTab(s.category, [...s.items], menuCategoryDisplayMode(menu, s.category)),
+      })),
+    [SECTIONS, menu],
   );
 
   return (

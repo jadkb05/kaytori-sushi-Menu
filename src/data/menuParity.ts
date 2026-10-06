@@ -6,6 +6,7 @@
  * prix (bruts et affichés), images (champ source, image affichée, vignettes) et variantes.
  */
 import { dishImage, dishThumbs, lowestPriceMAD } from "../menu/menuDisplay";
+import { menuCategoryDisplayMode } from "./menuRows";
 import { groupItemsForMenuTab } from "./menuTabSections";
 import type { MenuSnapshot } from "./menuSource";
 
@@ -57,7 +58,7 @@ export function toParityModel(menu: MenuSnapshot): MenuParityModel {
     if (items.length === 0) continue;
     const productIds: string[] = [];
     let position = 0;
-    for (const group of groupItemsForMenuTab(category, [...items])) {
+    for (const group of groupItemsForMenuTab(category, [...items], menuCategoryDisplayMode(menu, category))) {
       for (const it of group.items) {
         const displayedImage = dishImage(it);
         productIds.push(it.id);
