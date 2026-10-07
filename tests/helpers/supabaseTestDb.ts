@@ -24,7 +24,10 @@ const SUPABASE_PLATFORM_STUB = `
   grant execute on function auth.uid() to anon, authenticated;
 
   create schema storage;
-  create table storage.buckets (id text primary key, name text not null, public boolean not null default false);
+  create table storage.buckets (
+    id text primary key, name text not null, public boolean not null default false,
+    file_size_limit bigint, allowed_mime_types text[]
+  );
   create table storage.objects (
     id uuid primary key default gen_random_uuid(),
     bucket_id text references storage.buckets (id),
@@ -48,10 +51,16 @@ export function readSeedSql(): string {
   return readFileSync(new URL("seed.sql", SUPABASE_DIR), "utf8");
 }
 
-/** Nouvelle base : plateforme simulée + toutes les migrations, sans seed. */
-export async function createMigratedDb(): Promise<PGlite> {
+/** Projet Supabase « vide » simulé (avant toute migration) : cas d'un nouveau projet PRODUCTION. */
+export async function createPlatformDb(): Promise<PGlite> {
   const db = new PGlite();
   await db.exec(SUPABASE_PLATFORM_STUB);
+  return db;
+}
+
+/** Nouvelle base : plateforme simulée + toutes les migrations, sans seed. */
+export async function createMigratedDb(): Promise<PGlite> {
+  const db = await createPlatformDb();
   for (const file of migrationFiles()) {
     await db.exec(readFileSync(new URL(`migrations/${file}`, SUPABASE_DIR), "utf8"));
   }
