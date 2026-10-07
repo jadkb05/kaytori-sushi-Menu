@@ -13,7 +13,10 @@ function GoldMark({ className = "" }: { className?: string }) {
   );
 }
 
-/** Footer de marque minimal : identité, signature éditoriale, copyright. */
+/** « @kaytorisushi » depuis l'URL du profil Instagram. */
+const instagramHandle = SITE.instagram.split("/").filter(Boolean).pop();
+
+/** Footer de marque minimal : identité, signature éditoriale, infos pratiques, copyright. */
 export function MenuFooter() {
   const { itemCount } = useCart();
 
@@ -57,7 +60,49 @@ export function MenuFooter() {
           </figure>
         </div>
 
-        <p className="mt-7 border-t border-white/[0.07] pt-4 text-center font-sans text-[0.75rem] tracking-wide text-white/40 md:mt-8">
+        {/* Infos pratiques (identiques au JSON-LD d'index.html) : discrètes, sous la signature. */}
+        <div className="mt-7 border-t border-white/[0.07] pt-5 text-center font-sans text-[0.75rem] leading-relaxed text-white/60 md:mt-8">
+          <address className="not-italic">
+            <ul className="flex flex-col items-center gap-1 md:flex-row md:flex-wrap md:justify-center md:gap-x-5">
+              <li>
+                <a
+                  href={SITE.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-white/20 underline-offset-2 transition-colors hover:text-kaytori-goldLight"
+                >
+                  {SITE.address}
+                  <span className="sr-only"> (Google Maps, nouvel onglet)</span>
+                </a>
+              </li>
+              <li>
+                <a href={`tel:+${SITE.phoneFixeE164}`} className="tabular-nums transition-colors hover:text-kaytori-goldLight">
+                  {SITE.phoneFixeDisplay}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={SITE.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-kaytori-goldLight"
+                >
+                  @{instagramHandle}
+                  <span className="sr-only"> (Instagram, nouvel onglet)</span>
+                </a>
+              </li>
+            </ul>
+          </address>
+          <p className="mt-2 flex flex-col items-center gap-0.5 text-white/45 md:flex-row md:justify-center md:gap-x-5">
+            {SITE.hours.map(({ days, range }) => (
+              <span key={days}>
+                {days} : <span className="tabular-nums">{range}</span>
+              </span>
+            ))}
+          </p>
+        </div>
+
+        <p className="mt-5 border-t border-white/[0.07] pt-4 text-center font-sans text-[0.75rem] tracking-wide text-white/40">
           © {new Date().getFullYear()} {SITE.nameAccent} Sushi
         </p>
       </div>

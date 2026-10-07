@@ -176,9 +176,10 @@ export function MenuPage() {
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-2.5 px-3 sm:gap-3 sm:px-6">
           <BrandLogo size={36} className="ring-1 ring-kaytori-gold/30" />
           <div className="min-w-0 flex-1 leading-none">
-            <p className="truncate font-display text-[1.1rem] font-semibold tracking-tight text-kaytori-cream">
+            {/* Titre principal de la page (seul H1 public) : rendu visuel identique à l'ancien <p>. */}
+            <h1 className="truncate font-display text-[1.1rem] font-semibold tracking-tight text-kaytori-cream">
               {SITE.nameAccent} Sushi
-            </p>
+            </h1>
             <p className="mt-1.5 whitespace-nowrap font-sans text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-kaytori-gold/85">
               Sushi · Wok · Thaï
             </p>
@@ -261,6 +262,10 @@ export function MenuPage() {
         id="contenu-principal"
         className="mx-auto max-w-5xl px-3 pb-12 pt-4 sm:px-6"
       >
+        <p className="mx-auto mb-5 max-w-xl text-balance text-center font-sans text-[0.8rem] leading-relaxed text-kaytori-muted">
+          Bienvenue chez {SITE.nameAccent} Sushi à {SITE.city} : découvrez notre carte de sushi, makis,
+          wok et plats thaï, préparés avec soin.
+        </p>
         <div className="space-y-8">
           {sections.map(({ category, items, groups }) => (
             <section
