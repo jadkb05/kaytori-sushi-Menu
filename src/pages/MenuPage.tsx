@@ -12,7 +12,7 @@ import { groupItemsForMenuTab } from "../data/menuTabSections";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { DishRow } from "../menu/DishRow";
 import { useMenu } from "../menu/MenuProvider";
-import { categoryAnchorId } from "../menu/menuDisplay";
+import { categoryAnchorId, categoryDisplayTitle } from "../menu/menuDisplay";
 
 /** Sections dans l'ordre client (catégories du menu), catégories vides ignorées. */
 function toSections(menu: MenuSnapshot) {
@@ -272,7 +272,7 @@ export function MenuPage() {
                 id={`heading-${categoryAnchorId(category)}`}
                 className="mb-3 flex items-baseline gap-2 border-b-2 border-kaytori-gold/40 pb-2 font-display text-[1.25rem] font-bold leading-tight tracking-tight text-kaytori-black sm:text-[1.45rem]"
               >
-                <span className="min-w-0">{category}</span>
+                <span className="min-w-0">{categoryDisplayTitle(category)}</span>
                 <span className="ml-auto shrink-0 whitespace-nowrap font-sans text-[0.68rem] font-medium uppercase tracking-[0.14em] text-kaytori-muted">
                   {items.length} plat{items.length !== 1 ? "s" : ""}
                 </span>

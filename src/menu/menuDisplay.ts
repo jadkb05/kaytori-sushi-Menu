@@ -33,6 +33,41 @@ export function categoryAnchorId(c: string) {
 }
 
 /**
+ * Nombre de pièces affiché après le titre de certaines catégories (comme le menu PDF client).
+ * Affichage uniquement : le nom réel de la catégorie (données, Supabase, ancres, WhatsApp) ne change pas.
+ */
+const CATEGORY_PIECES: ReadonlyMap<string, string> = new Map([
+  ["Yakitori", "2 pcs"],
+  ["Sashimi", "4 pcs"],
+  ["Carpaccio", "8 pcs"],
+  ["Tataki", "5 pcs"],
+  ["Okinawa", "4 pcs"],
+  ["Tacos", "2 pcs"],
+  ["Crispy Rice", "2 pcs"],
+  ["Gunkan", "2 pcs"],
+  ["Nigiri", "2 pcs"],
+  ["Temakis", "1 pc"],
+  ["Maki", "6 pcs"],
+  ["Futomaki", "5 pcs"],
+  ["California Roll", "4 pcs"],
+  ["Special Roll", "4 pcs"],
+  ["Aromaki", "6 pcs"],
+  ["Slim Roll", "4 pcs"],
+  ["Spring Roll", "5 pcs"],
+  ["Blossom", "4 pcs"],
+  ["Premium", "4 pcs"],
+  ["Makito Fry", "6 pcs"],
+  ["Crispy Roll", "6 pcs"],
+  ["Crunchy Roll", "6 pcs"],
+]);
+
+/** Titre affiché d'une catégorie : « Nigiri (2 pcs) », ou le nom seul si aucune quantité n'est prévue. */
+export function categoryDisplayTitle(category: string): string {
+  const pieces = CATEGORY_PIECES.get(category);
+  return pieces ? `${category} (${pieces})` : category;
+}
+
+/**
  * Image affichée d'un plat. `item.image` est prioritaire : en mode Supabase, c'est la photo
  * gérée depuis l'admin (products.image_url). En mode statique, `image` est identique à l'entrée
  * des tables ci-dessous pour chaque plat (vérifié par le test de référence) : rendu inchangé.
