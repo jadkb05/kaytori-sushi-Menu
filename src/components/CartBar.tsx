@@ -156,7 +156,7 @@ export function CartBar() {
           className="btn-shine inline-flex min-h-[52px] shrink-0 items-center justify-center gap-1.5 rounded-xl bg-gold-shine px-4 text-center text-[0.9rem] font-bold text-kaytori-black shadow-card transition-all hover:shadow-gold active:scale-[0.98] max-[359px]:px-3 sm:px-5"
         >
           Voir le panier
-          <span aria-hidden>›</span>
+          <span aria-hidden>→</span>
         </button>
       </div>
       {reviewOpen ? <OrderReview onClose={closeReview} /> : null}
