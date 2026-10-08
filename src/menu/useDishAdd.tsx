@@ -1,20 +1,31 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useCart } from "../cart/CartContext";
+import { formatDhAmount } from "../cart/formatDh";
+import { PRODUCT_CUSTOMIZATIONS, customizedCartLine } from "../data/productOptions";
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { formatPriceDH, getDisplayProductName } from "./menuDisplay";
+
+/** Quantité maximale choisie dans la modale d'un plat personnalisé. */
+const MAX_QUANTITY = 20;
 
 /**
  * Logique d'ajout au panier d'un plat :
  * - sans variante → ajout direct ;
- * - avec variantes → modale de choix, ligne panier `platId:variantId` / « Nom — Variante ».
+ * - avec variantes → modale de choix, ligne panier `platId:variantId` / « Nom — Variante » ;
+ * - plat personnalisé (PRODUCT_CUSTOMIZATIONS) → variante + options requises, sans présélection,
+ *   quantité et bouton « Ajouter N pour X DH » ; ligne « Nom — Variante — Sauce : X ».
  */
 export function useDishAdd(item: YumloMenuItem) {
   const { addItem } = useCart();
   const variants = item.variants;
   const hasVariants = Boolean(variants && variants.length > 0);
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [modalVariantId, setModalVariantId] = useState(() => variants?.[0]?.id ?? "");
+  const custom = PRODUCT_CUSTOMIZATIONS[item.id];
+  const [modalVariantId, setModalVariantId] = useState(() => (custom ? "" : (variants?.[0]?.id ?? "")));
+  /** Plat personnalisé : option choisie par section (id de section → id d'option). */
+  const [chosen, setChosen] = useState<Record<string, string>>({});
+  const [quantity, setQuantity] = useState(1);
   const dialogRef = useRef<HTMLDivElement>(null);
   /** Élément qui a ouvert la modale : il retrouve le focus à la fermeture. */
   const openerRef = useRef<HTMLElement | null>(null);
@@ -29,22 +40,38 @@ export function useDishAdd(item: YumloMenuItem) {
         : active instanceof HTMLElement && active !== document.body
           ? active
           : null;
-    setModalVariantId(variants[0].id);
+    setModalVariantId(custom ? "" : variants[0].id);
+    setChosen({});
+    setQuantity(1);
     setPickerOpen(true);
   };
 
   const selectedInModal =
     hasVariants && variants
-      ? (variants.find((x) => x.id === modalVariantId) ?? variants[0])
+      ? (variants.find((x) => x.id === modalVariantId) ?? (custom ? null : variants[0]))
       : null;
+  /** Plat personnalisé : ajout possible seulement avec une variante et une option par section. */
+  const customReady = Boolean(custom && selectedInModal && custom.groups.every((g) => chosen[g.id]));
 
   useEffect(() => {
     if (!pickerOpen) return;
-    /** Éléments atteignables au clavier : la variante cochée (groupe radio) puis les boutons. */
-    const focusables = () =>
-      Array.from(
-        dialogRef.current?.querySelectorAll<HTMLElement>("input[type=radio]:checked, button") ?? [],
-      );
+    /**
+     * Éléments atteignables au clavier : un radio par groupe (le coché, sinon le premier) et les
+     * boutons actifs.
+     */
+    const focusables = () => {
+      const root = dialogRef.current;
+      if (!root) return [];
+      return Array.from(root.querySelectorAll<HTMLElement>("input[type=radio], button")).filter((el) => {
+        if (el instanceof HTMLButtonElement) return !el.disabled;
+        const radio = el as HTMLInputElement;
+        if (radio.checked) return true;
+        const group = Array.from(root.querySelectorAll<HTMLInputElement>("input[type=radio]")).filter(
+          (r) => r.name === radio.name,
+        );
+        return group[0] === radio && !group.some((r) => r.checked);
+      });
+    };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         setPickerOpen(false);
@@ -89,6 +116,13 @@ export function useDishAdd(item: YumloMenuItem) {
 
   const confirmVariantAdd = () => {
     if (!hasVariants || !variants || !selectedInModal) return;
+    if (custom) {
+      if (!customReady) return;
+      const line = customizedCartLine(item, selectedInModal, custom, chosen);
+      for (let i = 0; i < quantity; i += 1) addItem(line.id, line.name, selectedInModal.priceMAD);
+      setPickerOpen(false);
+      return;
+    }
     addItem(
       `${item.id}:${selectedInModal.id}`,
       `${item.name} — ${selectedInModal.label}`,
@@ -96,6 +130,116 @@ export function useDishAdd(item: YumloMenuItem) {
     );
     setPickerOpen(false);
   };
+
+  /** Plat personnalisé : prix de base (variante la moins chère), suppléments et total. */
+  const basePriceDh = variants?.length ? Math.min(...variants.map((v) => Number.parseFloat(v.priceMAD))) : 0;
+  const unitPriceDh = selectedInModal ? Number.parseFloat(selectedInModal.priceMAD) : basePriceDh;
+
+  /** Section à choix unique et obligatoire (« Requis »), sans présélection. */
+  const requiredSection = (
+    key: string,
+    title: string,
+    options: readonly { id: string; label: string; description?: string; extra?: string }[],
+    selectedId: string | undefined,
+    onSelect: (id: string) => void,
+  ) => (
+    <fieldset key={key} className="border-0 px-4 pt-5 sm:px-5">
+      {/* Légende flottante : rendue comme un titre normal, sans l'espacement propre aux <legend>. */}
+      <legend className="float-left flex w-full items-start justify-between gap-3">
+        <span>
+          <span className="block font-display text-[0.98rem] font-semibold text-kaytori-black">{title}</span>
+          <span className="block font-sans text-[0.74rem] text-kaytori-muted">Choisissez 1 produit</span>
+        </span>
+        <span className="mt-0.5 shrink-0 rounded-full bg-kaytori-black/[0.07] px-2 py-0.5 font-sans text-[0.64rem] font-semibold uppercase tracking-[0.08em] text-kaytori-black/70">
+          Requis
+        </span>
+      </legend>
+      <div className="clear-both flex flex-col gap-2 pt-3">
+        {options.map((o) => {
+          const checked = o.id === selectedId;
+          return (
+            <label
+              key={o.id}
+              className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border px-3 py-3 font-sans text-[0.82rem] transition-colors ${
+                checked
+                  ? "border-kaytori-green/45 bg-kaytori-green/[0.06] text-kaytori-black"
+                  : "border-kaytori-black/10 bg-white hover:border-kaytori-gold/35"
+              }`}
+            >
+              <span className="flex min-w-0 flex-1 items-center gap-2.5">
+                <input
+                  type="radio"
+                  name={`${key}-${item.id}`}
+                  value={o.id}
+                  checked={checked}
+                  onChange={() => onSelect(o.id)}
+                  className="h-4 w-4 shrink-0 accent-kaytori-green"
+                />
+                <span className="min-w-0">
+                  <span className="block font-medium">{o.label}</span>
+                  {o.description ? (
+                    <span className="block text-[0.74rem] leading-snug text-kaytori-muted">{o.description}</span>
+                  ) : null}
+                </span>
+              </span>
+              {o.extra ? (
+                <span className="shrink-0 tabular-nums font-semibold text-kaytori-black">{o.extra}</span>
+              ) : null}
+            </label>
+          );
+        })}
+      </div>
+    </fieldset>
+  );
+
+  const qtyButton =
+    "grid h-10 w-10 place-items-center rounded-full border border-kaytori-black/15 bg-white text-xl leading-none text-kaytori-green transition-colors disabled:opacity-35";
+
+  const customBody =
+    custom && variants ? (
+      <>
+        {requiredSection(
+          "variant",
+          custom.variantTitle,
+          variants.map((v) => {
+            const extraDh = Number.parseFloat(v.priceMAD) - basePriceDh;
+            return {
+              id: v.id,
+              label: `${custom.variantTitle} ${v.label}`,
+              extra: extraDh > 0 ? `+${formatDhAmount(extraDh)} DH` : undefined,
+            };
+          }),
+          modalVariantId || undefined,
+          setModalVariantId,
+        )}
+        {custom.groups.map((g) =>
+          requiredSection(g.id, g.title, g.options, chosen[g.id], (id) => setChosen((c) => ({ ...c, [g.id]: id }))),
+        )}
+        <div className="flex items-center justify-center gap-5 px-4 py-5 sm:px-5">
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+            disabled={quantity <= 1}
+            className={qtyButton}
+            aria-label="Retirer une unité"
+          >
+            −
+          </button>
+          <span className="min-w-6 text-center font-sans text-base font-semibold tabular-nums" aria-live="polite">
+            {quantity}
+          </span>
+          <button
+            type="button"
+            onClick={() => setQuantity((q) => Math.min(MAX_QUANTITY, q + 1))}
+            disabled={quantity >= MAX_QUANTITY}
+            className={qtyButton}
+            aria-label="Ajouter une unité"
+          >
+            +
+          </button>
+        </div>
+      </>
+    ) : null;
 
   const variantModal =
     pickerOpen &&
@@ -127,49 +271,62 @@ export function useDishAdd(item: YumloMenuItem) {
                   {item.description}
                 </p>
               </div>
-              <fieldset className="border-0 px-4 py-4 sm:px-5">
-                <legend className="mb-3 w-full text-center font-sans text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-kaytori-black/70">
-                  Votre choix
-                </legend>
-                <div className="flex flex-col gap-2">
-                  {variants.map((v) => {
-                    const checked = v.id === modalVariantId;
-                    return (
-                      <label
-                        key={v.id}
-                        className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border px-3 py-3 font-sans text-[0.82rem] transition-colors ${
-                          checked
-                            ? "border-kaytori-green/45 bg-kaytori-green/[0.06] text-kaytori-black"
-                            : "border-kaytori-black/10 bg-white hover:border-kaytori-gold/35"
-                        }`}
-                      >
-                        <span className="flex min-w-0 flex-1 items-center gap-2.5">
-                          <input
-                            type="radio"
-                            name={`variant-${item.id}`}
-                            value={v.id}
-                            checked={checked}
-                            onChange={() => setModalVariantId(v.id)}
-                            className="h-4 w-4 shrink-0 accent-kaytori-green"
-                          />
-                          <span className="font-medium">{v.label}</span>
-                        </span>
-                        <span className="shrink-0 tabular-nums font-semibold text-kaytori-black">
-                          {formatPriceDH(v.priceMAD)} DH
-                        </span>
-                      </label>
-                    );
-                  })}
-                </div>
-              </fieldset>
+              {custom ? customBody : (
+                <fieldset className="border-0 px-4 py-4 sm:px-5">
+                  <legend className="mb-3 w-full text-center font-sans text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-kaytori-black/70">
+                    Votre choix
+                  </legend>
+                  <div className="flex flex-col gap-2">
+                    {variants.map((v) => {
+                      const checked = v.id === modalVariantId;
+                      return (
+                        <label
+                          key={v.id}
+                          className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl border px-3 py-3 font-sans text-[0.82rem] transition-colors ${
+                            checked
+                              ? "border-kaytori-green/45 bg-kaytori-green/[0.06] text-kaytori-black"
+                              : "border-kaytori-black/10 bg-white hover:border-kaytori-gold/35"
+                          }`}
+                        >
+                          <span className="flex min-w-0 flex-1 items-center gap-2.5">
+                            <input
+                              type="radio"
+                              name={`variant-${item.id}`}
+                              value={v.id}
+                              checked={checked}
+                              onChange={() => setModalVariantId(v.id)}
+                              className="h-4 w-4 shrink-0 accent-kaytori-green"
+                            />
+                            <span className="font-medium">{v.label}</span>
+                          </span>
+                          <span className="shrink-0 tabular-nums font-semibold text-kaytori-black">
+                            {formatPriceDH(v.priceMAD)} DH
+                          </span>
+                        </label>
+                      );
+                    })}
+                  </div>
+                </fieldset>
+              )}
               <div className="flex flex-col gap-2 border-t border-kaytori-black/[0.06] bg-[#f2ebe3]/90 px-4 py-4 sm:flex-row-reverse sm:px-5">
-                <button
-                  type="button"
-                  onClick={confirmVariantAdd}
-                  className="btn-shine min-h-[48px] flex-1 rounded-xl bg-gold-shine px-4 py-3 text-sm font-semibold text-kaytori-black shadow-card transition-all hover:-translate-y-0.5 hover:shadow-gold"
-                >
-                  Ajouter au panier
-                </button>
+                {custom ? (
+                  <button
+                    type="button"
+                    onClick={confirmVariantAdd}
+                    disabled={!customReady}
+                    className="btn-shine min-h-[48px] flex-1 rounded-xl bg-gold-shine px-4 py-3 text-sm font-semibold tabular-nums text-kaytori-black shadow-card transition-all enabled:hover:-translate-y-0.5 enabled:hover:shadow-gold disabled:cursor-not-allowed disabled:opacity-45"
+                  >
+                    Ajouter {quantity} pour {formatDhAmount(unitPriceDh * quantity)} DH
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={confirmVariantAdd}
+                    className="btn-shine min-h-[48px] flex-1 rounded-xl bg-gold-shine px-4 py-3 text-sm font-semibold text-kaytori-black shadow-card transition-all hover:-translate-y-0.5 hover:shadow-gold"
+                  >
+                    Ajouter au panier
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => setPickerOpen(false)}
