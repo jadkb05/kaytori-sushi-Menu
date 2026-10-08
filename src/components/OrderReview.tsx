@@ -76,7 +76,7 @@ function LineThumb({ item }: { item: YumloMenuItem | undefined }) {
 
 /**
  * Panier plein écran (étape avant WhatsApp) : articles avec photo, catégorie, variante, prix et
- * quantité ; total et « Confirmer la commande » en bas. Confirmer ouvre WhatsApp avec le message
+ * quantité ; total et « Commander » en bas. Commander ouvre WhatsApp avec le message
  * existant puis vide le panier.
  */
 export function OrderReview({ onClose }: Props) {
@@ -279,7 +279,7 @@ export function OrderReview({ onClose }: Props) {
             onClick={confirm}
             className="btn-shine inline-flex min-h-[52px] min-w-0 flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold-shine px-3 text-[0.9rem] font-bold text-kaytori-black shadow-card transition-all hover:shadow-gold active:scale-[0.99]"
           >
-            <span className="truncate">Confirmer la commande</span>
+            <span className="truncate">Commander</span>
             <span aria-hidden>→</span>
           </button>
         </div>
