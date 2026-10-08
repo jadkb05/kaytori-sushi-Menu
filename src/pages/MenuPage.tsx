@@ -262,17 +262,6 @@ export function MenuPage() {
         id="contenu-principal"
         className="mx-auto max-w-5xl px-3 pb-12 pt-4 sm:px-6"
       >
-        {/*
-          Mot d'accueil : petite phrase manuscrite (Parisienne), sans fond, cadre ni filet ; texte HTML
-          conservé pour le SEO. Or profond (#876815) : l'or de la marque est trop clair sur le fond crème.
-          Pas de gras ni d'italique : la police script n'en a pas (ils seraient simulés).
-        */}
-        <p className="mx-auto mb-4 max-w-[520px] text-balance px-4 pb-1 pt-2 text-center font-script text-[18px] leading-[1.6] text-kaytori-black/85 sm:mb-5 sm:text-[21px]">
-          Bienvenue chez <span className="text-[#876815]">{SITE.nameAccent} Sushi</span>.{" "}
-          <span className="whitespace-nowrap">Laissez-vous</span> tenter par une expérience culinaire unique, où{" "}
-          <em className="not-italic text-[#876815]">fraîcheur, créativité et raffinement</em> se rencontrent pour
-          éveiller vos papilles.
-        </p>
         <div className="space-y-8">
           {sections.map(({ category, items, groups }) => (
             <section

@@ -6,8 +6,6 @@ export default {
       fontFamily: {
         sans: ['"Outfit"', "system-ui", "sans-serif"],
         display: ['"Playfair Display"', "Georgia", "serif"],
-        /** Écriture manuscrite fine : mot d'accueil du menu uniquement. */
-        script: ['"Parisienne"', '"Playfair Display"', "Georgia", "serif"],
       },
       colors: {
         kaytori: {

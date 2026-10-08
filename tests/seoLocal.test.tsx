@@ -45,18 +45,6 @@ describe("SEO-04 : H1 et introduction", () => {
     expect(h1[0][2]).toBe("Kaytôri Sushi");
     expect(h1[0][1]).toContain("font-display text-[1.1rem] font-semibold tracking-tight text-kaytori-cream");
   });
-
-  it("introduction en texte HTML dans <main> (marque), sans promesse de livraison ; ville visible sur la page", () => {
-    const intro = page
-      .match(/<main[^>]*>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/)![1]
-      .replace(/<[^>]+>/g, "")
-      .replace(/\s+/g, " ");
-    expect(intro).toBe(
-      "Bienvenue chez Kaytôri Sushi. Laissez-vous tenter par une expérience culinaire unique, où fraîcheur, créativité et raffinement se rencontrent pour éveiller vos papilles.",
-    );
-    expect(intro.toLowerCase()).not.toContain("livraison");
-    expect(visibleText).toContain("Casablanca");
-  });
 });
 
 describe("SEO-04 : informations locales visibles (footer)", () => {
