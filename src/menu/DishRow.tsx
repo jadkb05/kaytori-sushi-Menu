@@ -1,7 +1,7 @@
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "../cart/CartContext";
 import type { YumloMenuItem } from "../data/yumloMenu";
-import { dishImage, dishThumbs, formatPriceDH, lowestPriceMAD } from "./menuDisplay";
+import { dishImage, dishThumbs, formatPriceDH, getDisplayProductName, lowestPriceMAD } from "./menuDisplay";
 import { useDishAdd } from "./useDishAdd";
 
 /** Description compacte (2 lignes). « Voir plus » seulement si le texte dépasse. */
@@ -62,6 +62,8 @@ function DishDescription({ text }: { text: string }) {
 export function DishRow({ item }: { item: YumloMenuItem }) {
   const { hasVariants, pickerOpen, openPicker, handleAdd, variantModal } = useDishAdd(item);
   const { lines } = useCart();
+  /** Nom affiché sous le titre de catégorie (le panier garde le nom complet). */
+  const displayName = getDisplayProductName(item, item.category);
   const original = dishImage(item);
   const thumbs = dishThumbs(original);
   /** Vignette absente ou en erreur → retour à l'image d'origine. */
@@ -124,7 +126,7 @@ export function DishRow({ item }: { item: YumloMenuItem }) {
 
   const title = (
     <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-kaytori-black">
-      {item.name}
+      {displayName}
     </h3>
   );
 
@@ -140,7 +142,7 @@ export function DishRow({ item }: { item: YumloMenuItem }) {
             className="block w-full bg-transparent text-left outline-none focus-visible:ring-2 focus-visible:ring-kaytori-green/40"
             aria-haspopup="dialog"
             aria-expanded={pickerOpen}
-            aria-label={`Choisir une option pour ${item.name}`}
+            aria-label={`Choisir une option pour ${displayName}`}
           >
             {title}
           </button>
@@ -182,7 +184,7 @@ export function DishRow({ item }: { item: YumloMenuItem }) {
               type="button"
               onClick={handleAdd}
               className={`${plusClass} border-t border-kaytori-black/[0.06] transition-colors active:bg-kaytori-cream/70`}
-              aria-label={`Choisir une option pour ${item.name}`}
+              aria-label={`Choisir une option pour ${displayName}`}
             >
               +
             </button>
@@ -193,7 +195,7 @@ export function DishRow({ item }: { item: YumloMenuItem }) {
             type="button"
             onClick={handleAdd}
             className="group/add flex w-[4.75rem] shrink-0 flex-col border-l border-kaytori-black/[0.05] text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-kaytori-green/50"
-            aria-label={`Ajouter ${item.name} au panier`}
+            aria-label={`Ajouter ${displayName} au panier`}
           >
             {priceBlock}
             <span

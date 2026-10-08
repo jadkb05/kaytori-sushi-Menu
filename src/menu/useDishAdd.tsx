@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useCart } from "../cart/CartContext";
 import type { YumloMenuItem } from "../data/yumloMenu";
-import { formatPriceDH } from "./menuDisplay";
+import { formatPriceDH, getDisplayProductName } from "./menuDisplay";
 
 /**
  * Logique d'ajout au panier d'un plat :
@@ -121,7 +121,7 @@ export function useDishAdd(item: YumloMenuItem) {
                   id={`variant-title-${item.id}`}
                   className="text-center font-display text-base font-semibold uppercase tracking-wide text-kaytori-black"
                 >
-                  {item.name}
+                  {getDisplayProductName(item, item.category)}
                 </h3>
                 <p className="mt-1.5 text-center font-sans text-[0.78rem] leading-relaxed text-kaytori-muted">
                   {item.description}
