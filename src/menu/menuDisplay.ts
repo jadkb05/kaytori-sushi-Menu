@@ -68,6 +68,20 @@ export function categoryDisplayTitle(category: string): string {
 }
 
 /**
+ * Préfixes courts répétés par les plats de certaines catégories de deux mots
+ * (« California Classic » dans California Roll → « Classic »). Clé : nom réel de la catégorie.
+ * Essayés dans l'ordre : le plus long d'abord (« Crunchy Fry Eby Fry » → « Eby Fry »).
+ */
+const CATEGORY_SHORT_PREFIXES: ReadonlyMap<string, readonly string[]> = new Map([
+  ["Poké Bowl", ["Poké"]],
+  ["California Roll", ["California"]],
+  ["Special Roll", ["Special"]],
+  ["Makito Fry", ["Makito"]],
+  ["Crispy Roll", ["Crispy"]],
+  ["Crunchy Roll", ["Crunchy Fry", "Crunchy"]],
+]);
+
+/**
  * Nom affiché d'un plat sous le titre de sa catégorie : le préfixe répétant la catégorie est retiré
  * (« Tartare Saumon Avocat » dans Tartare → « Saumon Avocat »).
  * Affichage uniquement : le nom réel (données, Supabase, panier, WhatsApp) ne change pas.
@@ -76,12 +90,16 @@ export function categoryDisplayTitle(category: string): string {
  * (« Soupe Royale » dans Soupes → « Royale »), suivie d'un espace. Le nom reste intact s'il ne
  * commence pas ainsi, s'il est égal à la catégorie, ou si le reste ne serait plus parlant :
  * quantité seule (« Sashimi (4 pcs) ») ou lettre seule (« Bento A » dans Bentos).
+ * Certaines catégories de deux mots ont en plus un préfixe court (CATEGORY_SHORT_PREFIXES).
  */
 export function getDisplayProductName(product: { name: string }, category: string): string {
   const { name } = product;
   if (category === "") return name;
   const singular = category.endsWith("s") ? category.slice(0, -1) : null;
-  const prefix = [category, singular].find((p) => p && name.startsWith(p) && /^\s/.test(name.slice(p.length)));
+  const shortPrefixes = CATEGORY_SHORT_PREFIXES.get(category) ?? [];
+  const prefix = [category, singular, ...shortPrefixes].find(
+    (p) => p && name.startsWith(p) && /^\s/.test(name.slice(p.length)),
+  );
   if (!prefix) return name;
   const shortName = name.slice(prefix.length).trim();
   const withoutQuantity = shortName.replace(/\([^)]*\)/g, "").replace(/\b\d+\s*pcs?\b/gi, "");

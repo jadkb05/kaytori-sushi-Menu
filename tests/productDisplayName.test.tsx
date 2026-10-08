@@ -13,7 +13,10 @@ import { MenuPage } from "../src/pages/MenuPage";
 
 const display = (name: string, category: string) => getDisplayProductName({ name }, category);
 
-/** Plats raccourcis par catégorie (audit du menu actuel ; Soupes / Salades : préfixe au singulier). */
+/**
+ * Plats raccourcis par catégorie (audit du menu actuel ; Soupes / Salades : préfixe au singulier ;
+ * catégories de deux mots : préfixe court).
+ */
 const PREFIXED_CATEGORIES: Record<string, number> = {
   Yakitori: 3,
   Soupes: 5,
@@ -31,6 +34,22 @@ const PREFIXED_CATEGORIES: Record<string, number> = {
   Blossom: 14,
   Premium: 10,
   Jus: 5,
+  "Poké Bowl": 3,
+  "California Roll": 11,
+  "Special Roll": 14,
+  "Makito Fry": 5,
+  "Crispy Roll": 8,
+  "Crunchy Roll": 9,
+};
+
+/** Préfixes courts attendus des catégories de deux mots. */
+const SHORT_PREFIXES: Record<string, string[]> = {
+  "Poké Bowl": ["Poké"],
+  "California Roll": ["California"],
+  "Special Roll": ["Special"],
+  "Makito Fry": ["Makito"],
+  "Crispy Roll": ["Crispy"],
+  "Crunchy Roll": ["Crunchy Fry", "Crunchy"],
 };
 
 describe("getDisplayProductName", () => {
@@ -62,6 +81,43 @@ describe("getDisplayProductName", () => {
     expect(display("Bento Veggie", "Bentos")).toBe("Veggie");
   });
 
+  it("catégories de deux mots : retire le préfixe court", () => {
+    expect(display("Poké Saumon", "Poké Bowl")).toBe("Saumon");
+    expect(display("Poké Thon", "Poké Bowl")).toBe("Thon");
+    expect(display("California Classic", "California Roll")).toBe("Classic");
+    expect(display("Special Spider Roll", "Special Roll")).toBe("Spider Roll");
+    expect(display("Special Mango Tango", "Special Roll")).toBe("Mango Tango");
+    expect(display("Makito Crabe", "Makito Fry")).toBe("Crabe");
+    expect(display("Crispy Sakura", "Crispy Roll")).toBe("Sakura");
+    expect(display("Crunchy Osaka", "Crunchy Roll")).toBe("Osaka");
+    expect(display("Crunchy Fry Eby Fry", "Crunchy Roll")).toBe("Eby Fry");
+    expect(display("Crunchy Fry Salmon Fry", "Crunchy Roll")).toBe("Salmon Fry");
+    expect(display("Crunchy Eby Tempura", "Crunchy Roll")).toBe("Eby Tempura");
+    // « Crunchy Fry » seul : « Fry » reste lisible.
+    expect(display("Crunchy Fry", "Crunchy Roll")).toBe("Fry");
+    expect(display("California Saumon (4 pcs)", "California Roll")).toBe("Saumon (4 pcs)");
+    // Catégorie complète en tête : elle est retirée en entier.
+    expect(display("Crispy Roll Saumon", "Crispy Roll")).toBe("Saumon");
+    // Préfixe court seul ou suivi d'une quantité : intact.
+    expect(display("California 4 pcs", "California Roll")).toBe("California 4 pcs");
+  });
+
+  it("le préfixe court ne vaut que pour sa catégorie", () => {
+    const unchanged: [string, string][] = [
+      ["Crispy Sakura", "Crispy Rice"],
+      ["Special Spider Roll", "Premium"],
+      ["Poké Saumon", "Poké Bowls"],
+      ["california Classic", "California Roll"],
+      ["Californias Classic", "California Roll"],
+      ["Eby Salmon", "California Roll"],
+      ["Fresh Mango", "California Roll"],
+      ["Shake Saumon", "California Roll"],
+      ["Sushi Burger", "Sushi Fusion"],
+    ];
+    for (const [name, category] of unchanged) expect(display(name, category)).toBe(name);
+    expect(display("Crispy Rice Ebi Avocat 2 pcs", "Crispy Rice")).toBe("Ebi Avocat 2 pcs");
+  });
+
   it("préserve quantités, accents et casse du reste du nom", () => {
     expect(display("Tataki Saumon (4 pcs)", "Tataki")).toBe("Saumon (4 pcs)");
     expect(display("Yakitori Bœuf Fromage 2 pcs", "Yakitori")).toBe("Bœuf Fromage 2 pcs");
@@ -76,20 +132,13 @@ describe("getDisplayProductName", () => {
       ["Soupé Royale", "Soupes"],
       ["Soup Royale", "Soupes"],
       ["Souperie Royale", "Soupes"],
-      // Seul le premier mot d'une catégorie de plusieurs mots : pas un préfixe de catégorie.
-      ["California Classic", "California Roll"],
-      ["Special Spider Roll", "Special Roll"],
-      ["Crispy Sakura", "Crispy Roll"],
-      ["Crunchy Osaka", "Crunchy Roll"],
-      ["Makito Crabe", "Makito Fry"],
-      ["Poké Saumon", "Poké Bowl"],
+      // Premier mot d'une catégorie de plusieurs mots sans préfixe court prévu : intact.
       ["Sushi Burger", "Sushi Fusion"],
       ["tartare Tropical", "Tartare"],
       ["Tártare Tropical", "Tartare"],
       ["Makito Fry Saumon", "Maki"],
       ["Tartares Tropical", "Tartare"],
       ["Saumon Tartare", "Tartare"],
-      ["California Saumon", "California Roll"],
       ["Tartare Tropical", ""],
       ["Tartare Tropical", "Chirashi"],
     ];
@@ -112,17 +161,18 @@ describe("getDisplayProductName", () => {
 describe("audit du menu actuel", () => {
   const shortened = YUMLO_MENU.filter((it) => getDisplayProductName(it, it.category) !== it.name);
 
-  it("82 plats raccourcis, tous dans les catégories qui répètent leur nom", () => {
-    expect(shortened).toHaveLength(82);
+  it("132 plats raccourcis, tous dans les catégories qui répètent leur nom", () => {
+    expect(shortened).toHaveLength(132);
     const byCategory: Record<string, number> = {};
     for (const it of shortened) byCategory[it.category] = (byCategory[it.category] ?? 0) + 1;
     expect(byCategory).toEqual(PREFIXED_CATEGORIES);
   });
 
-  it("chaque nom raccourci = nom réel sans « Catégorie » (ou son singulier) en tête, rien d'autre", () => {
+  it("chaque nom raccourci = nom réel sans « Catégorie » (singulier, préfixe court) en tête, rien d'autre", () => {
     for (const it of shortened) {
       const short = getDisplayProductName(it, it.category);
-      expect([`${it.category} ${short}`, `${it.category.replace(/s$/, "")} ${short}`]).toContain(it.name);
+      const prefixes = [it.category, it.category.replace(/s$/, ""), ...(SHORT_PREFIXES[it.category] ?? [])];
+      expect(prefixes.map((p) => `${p} ${short}`)).toContain(it.name);
     }
   });
 });
@@ -150,6 +200,15 @@ describe("page menu (statique)", () => {
     expect(dishTitles).not.toContain("Soupe Royale");
     expect(dishTitles).not.toContain("Salade Tropicale");
     expect(dishTitles).not.toContain("Tartare Tropical");
+    expect(dishTitles).toContain("Classic");
+    expect(dishTitles).toContain("Spider Roll");
+    expect(dishTitles).toContain("Eby Salmon");
+    expect(dishTitles).toContain("Sushi Burger");
+    expect(dishTitles).not.toContain("California Classic");
+    expect(dishTitles).toContain("Eby Fry");
+    expect(dishTitles).toContain("Salmon Fry");
+    expect(dishTitles).not.toContain("Fry Eby Fry");
+    expect(dishTitles).not.toContain("Fry Salmon Fry");
     expect(html).toContain('aria-label="Ajouter Tropical au panier"');
   });
 });
