@@ -262,16 +262,19 @@ export function MenuPage() {
         id="contenu-principal"
         className="mx-auto max-w-5xl px-3 pb-12 pt-4 sm:px-6"
       >
-        {/* Mot d'accueil : bandeau vert sobre, filets or, texte crème (contenu HTML conservé pour le SEO). */}
-        <div className="mx-auto mb-5 max-w-2xl rounded-lg bg-kaytori-greenDark px-5 py-3.5 text-center sm:px-10 sm:py-4">
-          <span aria-hidden className="mx-auto block h-px w-10 bg-kaytori-gold/70" />
-          <p className="mx-auto my-2.5 max-w-[34rem] text-balance font-display text-[0.9rem] leading-relaxed text-kaytori-cream/90 sm:text-[0.98rem]">
-            Bienvenue chez <span className="text-kaytori-gold">{SITE.nameAccent} Sushi</span> à {SITE.city}.{" "}
+        {/*
+          Mot d'accueil éditorial : sans fond ni cadre, filets or, texte HTML conservé pour le SEO.
+          Or profond (#876815) pour le texte : l'or de la marque est trop clair sur le fond crème.
+        */}
+        <div className="mx-auto mb-4 max-w-[680px] px-4 py-5 text-center sm:py-8">
+          <span aria-hidden className="mx-auto block h-px w-10 bg-kaytori-gold" />
+          <p className="mx-auto my-4 max-w-[520px] text-balance font-display text-[0.92rem] leading-[1.75] text-kaytori-black/85 sm:text-[1.02rem]">
+            Bienvenue chez <span className="font-semibold text-[#876815]">{SITE.nameAccent} Sushi</span>.{" "}
             <span className="whitespace-nowrap">Laissez-vous</span> tenter par une expérience culinaire unique, où{" "}
-            <em className="text-kaytori-goldLight">fraîcheur, créativité et raffinement</em> se rencontrent pour
-            éveiller vos papilles.
+            <em className="text-[#876815]">fraîcheur, créativité et raffinement</em> se rencontrent pour éveiller vos
+            papilles.
           </p>
-          <span aria-hidden className="mx-auto block h-px w-10 bg-kaytori-gold/70" />
+          <span aria-hidden className="mx-auto block h-px w-10 bg-kaytori-gold" />
         </div>
         <div className="space-y-8">
           {sections.map(({ category, items, groups }) => (
