@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AdminLink } from "../components/AdminLink";
+import { PhotoLightbox } from "../components/PhotoLightbox";
 import { Field, PriceInput, Section, fieldError } from "../components/formControls";
 import { ErrorState, LoadingState, PageHeader, StatusBadge, inputClass } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
@@ -99,12 +100,14 @@ export function ProductPhotoField({
     <div>
       <div className="relative">
         {shown ? (
-          <img src={shown} alt="" className="aspect-square w-full rounded-lg bg-[#0f1815] object-cover" />
+          <PhotoLightbox src={shown} label="Agrandir la photo">
+            <img src={shown} alt="" className="aspect-square w-full rounded-lg bg-[#0f1815] object-cover" />
+          </PhotoLightbox>
         ) : (
           <div className="aspect-square w-full rounded-lg bg-stone-100" />
         )}
         {selection ? (
-          <span className="absolute left-2 top-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900 ring-1 ring-amber-300">
+          <span className="pointer-events-none absolute left-2 top-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900 ring-1 ring-amber-300">
             Nouvelle photo — non enregistrée
           </span>
         ) : null}
