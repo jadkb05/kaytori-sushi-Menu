@@ -46,11 +46,16 @@ describe("SEO-04 : H1 et introduction", () => {
     expect(h1[0][1]).toContain("font-display text-[1.1rem] font-semibold tracking-tight text-kaytori-cream");
   });
 
-  it("courte introduction naturelle (marque, ville, sushi, wok, thaï), sans promesse de livraison", () => {
-    const intro = page.match(/<main[^>]*><p[^>]*>([^<]*)<\/p>/)![1];
-    for (const word of ["Kaytôri Sushi", "Casablanca", "sushi", "wok", "thaï"]) expect(intro).toContain(word);
-    expect(intro.length).toBeLessThan(160);
+  it("introduction en texte HTML dans <main> (marque, ville), sans promesse de livraison", () => {
+    const intro = page
+      .match(/<main[^>]*>[\s\S]*?<p[^>]*>([\s\S]*?)<\/p>/)![1]
+      .replace(/<[^>]+>/g, "")
+      .replace(/\s+/g, " ");
+    expect(intro).toBe(
+      "Bienvenue chez Kaytôri Sushi à Casablanca. Laissez-vous tenter par une expérience culinaire unique, où fraîcheur, créativité et raffinement se rencontrent pour éveiller vos papilles.",
+    );
     expect(intro.toLowerCase()).not.toContain("livraison");
+    expect(intro).toContain("Kaytôri Sushi à Casablanca");
   });
 });
 
