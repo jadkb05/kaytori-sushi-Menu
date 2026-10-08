@@ -37,7 +37,6 @@ const WOK_SAUCES: ProductOptionGroup = {
     { id: "teriyaki", label: "Teriyaki", description: "Sucrée" },
     { id: "oyster", label: "Oyster", description: "Salée" },
     { id: "sweet-chili", label: "Sweet Chili", description: "Sucrée, un peu piquante" },
-    { id: "aigre-doux", label: "Aigre Doux" },
   ],
 };
 

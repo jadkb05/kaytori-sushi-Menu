@@ -29,17 +29,16 @@ describe("configuration", () => {
     ]);
   });
 
-  it("section « Choix de Sauces » : 4 sauces avec leur description, sans prix", () => {
+  it("section « Choix de Sauces » : 3 sauces avec leur description, sans prix", () => {
     expect(custom.variantTitle).toBe("Wok");
     expect(custom.groups).toHaveLength(1);
     const [sauces] = custom.groups;
     expect(sauces.title).toBe("Choix de Sauces");
-    expect(sauces.options.map((o) => o.label)).toEqual(["Teriyaki", "Oyster", "Sweet Chili", "Aigre Doux"]);
+    expect(sauces.options.map((o) => o.label)).toEqual(["Teriyaki", "Oyster", "Sweet Chili"]);
     expect(sauces.options.map((o) => o.description)).toEqual([
       "Sucrée",
       "Salée",
       "Sucrée, un peu piquante",
-      undefined,
     ]);
     expect(sauces.options.every((o) => !("priceMAD" in o))).toBe(true);
   });
@@ -57,7 +56,7 @@ describe("ligne panier", () => {
 
   it("deux sauces différentes → deux lignes distinctes", () => {
     const a = customizedCartLine(wok, variant("boeuf"), custom, { sauce: "oyster" });
-    const b = customizedCartLine(wok, variant("boeuf"), custom, { sauce: "aigre-doux" });
+    const b = customizedCartLine(wok, variant("boeuf"), custom, { sauce: "sweet-chili" });
     expect(a.id).not.toBe(b.id);
   });
 
