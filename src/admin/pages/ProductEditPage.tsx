@@ -1,7 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AdminLink } from "../components/AdminLink";
-import { PhotoLightbox } from "../components/PhotoLightbox";
+import { PhotoCropEditor } from "../components/PhotoCropEditor";
 import { Field, PriceInput, Section, fieldError } from "../components/formControls";
 import { ErrorState, LoadingState, PageHeader, StatusBadge, inputClass } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
@@ -79,6 +79,8 @@ export function PositionField({
 /**
  * Photo : aperçu actuel, « Changer la photo » (aperçu local immédiat, rien n'est téléversé),
  * « Annuler la sélection ». Le téléversement a lieu uniquement à l'enregistrement.
+ * « Recadrer la photo » (si `onCrop`) : éditeur de cadrage de la photo enregistrée ;
+ * `cropBlockedReason` le désactive tant que d'autres modifications sont en attente.
  */
 export function ProductPhotoField({
   currentUrl,
@@ -87,6 +89,8 @@ export function ProductPhotoField({
   disabled,
   onSelect,
   onClear,
+  onCrop,
+  cropBlockedReason = null,
 }: {
   currentUrl: string | null;
   selection: PhotoSelection | null;
@@ -94,20 +98,21 @@ export function ProductPhotoField({
   disabled?: boolean;
   onSelect: (file: File | null) => void;
   onClear: () => void;
+  onCrop?: () => void;
+  cropBlockedReason?: string | null;
 }) {
+  const canCrop = Boolean(onCrop && currentUrl && !selection);
   const shown = selection?.previewUrl ?? currentUrl;
   return (
     <div>
       <div className="relative">
         {shown ? (
-          <PhotoLightbox src={shown} label="Agrandir la photo">
-            <img src={shown} alt="" className="aspect-square w-full rounded-lg bg-[#0f1815] object-cover" />
-          </PhotoLightbox>
+          <img src={shown} alt="" className="aspect-square w-full rounded-lg bg-[#0f1815] object-cover" />
         ) : (
           <div className="aspect-square w-full rounded-lg bg-stone-100" />
         )}
         {selection ? (
-          <span className="pointer-events-none absolute left-2 top-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900 ring-1 ring-amber-300">
+          <span className="absolute left-2 top-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900 ring-1 ring-amber-300">
             Nouvelle photo — non enregistrée
           </span>
         ) : null}
@@ -130,6 +135,17 @@ export function ProductPhotoField({
             }}
           />
         </label>
+        {canCrop ? (
+          <button
+            type="button"
+            onClick={onCrop}
+            disabled={disabled || cropBlockedReason !== null}
+            title={cropBlockedReason ?? undefined}
+            className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Recadrer la photo
+          </button>
+        ) : null}
         {selection ? (
           <button
             type="button"
@@ -147,6 +163,7 @@ export function ProductPhotoField({
         </p>
       ) : (
         <p className="mt-2 text-xs text-stone-500">
+          {canCrop && cropBlockedReason ? <span className="mb-1 block text-amber-800">{cropBlockedReason}</span> : null}
           {selection ? `${selection.file.name} · envoyée à l'enregistrement.` : "JPEG, PNG ou WebP · 5 Mo maximum · format carré conseillé · redimensionnée (1254 px) et compressée automatiquement."}
         </p>
       )}
@@ -316,6 +333,7 @@ function ProductEditForm({
   const [errors, setErrors] = useState<CatalogErrors>({ variants: {} });
   const [saveError, setSaveError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
+  const [cropOpen, setCropOpen] = useState(false);
   const dirty = isCatalogDirty(data.form, form, photo);
   const category = data.categories.find((c) => c.id === form.categoryId);
   const hasVariants = form.variants.length > 0;
@@ -360,6 +378,21 @@ function ProductEditForm({
     const invalid = validatePhotoFile(file);
     setPhotoError(invalid);
     if (!invalid) setPhoto({ file, previewUrl: URL.createObjectURL(file) });
+  };
+
+  /**
+   * Photo recadrée : enregistrée seule, tout de suite, par le circuit habituel (optimisation,
+   * nouveau fichier Storage, admin_save_product avec image_url uniquement — formulaire d'origine).
+   */
+  const saveCroppedPhoto = async (file: File): Promise<string | null> => {
+    const result = await saveCatalogProduct(client, data, data.form, file, uploadProductPhoto);
+    if (!result.ok) {
+      if (result.uploadedPath) console.warn(`[admin] Photo téléversée mais non enregistrée : ${result.uploadedPath}`);
+      return result.error;
+    }
+    setCropOpen(false);
+    onSaved({ success: `Photo recadrée de « ${result.name} » enregistrée.` });
+    return null;
   };
 
   const submit = async (e: FormEvent) => {
@@ -484,7 +517,12 @@ function ProductEditForm({
                   setPhoto(null);
                   setPhotoError(null);
                 }}
+                onCrop={() => setCropOpen(true)}
+                cropBlockedReason={dirty ? "Enregistrez ou annulez d'abord vos autres modifications pour recadrer la photo." : null}
               />
+              {cropOpen && data.product.image_url ? (
+                <PhotoCropEditor src={data.product.image_url} onCancel={() => setCropOpen(false)} onSave={saveCroppedPhoto} />
+              ) : null}
             </Section>
             <Section title="Référence interne">
               <p className="break-all font-mono text-sm text-stone-700">{data.product.id}</p>
