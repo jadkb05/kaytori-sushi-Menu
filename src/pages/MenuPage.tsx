@@ -263,19 +263,16 @@ export function MenuPage() {
         className="mx-auto max-w-5xl px-3 pb-12 pt-4 sm:px-6"
       >
         {/*
-          Mot d'accueil éditorial : sans fond ni cadre, filets or, texte HTML conservé pour le SEO.
-          Or profond (#876815) pour le texte : l'or de la marque est trop clair sur le fond crème.
+          Mot d'accueil : petite phrase manuscrite (Parisienne), sans fond, cadre ni filet ; texte HTML
+          conservé pour le SEO. Or profond (#876815) : l'or de la marque est trop clair sur le fond crème.
+          Pas de gras ni d'italique : la police script n'en a pas (ils seraient simulés).
         */}
-        <div className="mx-auto mb-4 max-w-[680px] px-4 py-5 text-center sm:py-8">
-          <span aria-hidden className="mx-auto block h-px w-10 bg-kaytori-gold" />
-          <p className="mx-auto my-4 max-w-[520px] text-balance font-display text-[0.92rem] leading-[1.75] text-kaytori-black/85 sm:text-[1.02rem]">
-            Bienvenue chez <span className="font-semibold text-[#876815]">{SITE.nameAccent} Sushi</span>.{" "}
-            <span className="whitespace-nowrap">Laissez-vous</span> tenter par une expérience culinaire unique, où{" "}
-            <em className="text-[#876815]">fraîcheur, créativité et raffinement</em> se rencontrent pour éveiller vos
-            papilles.
-          </p>
-          <span aria-hidden className="mx-auto block h-px w-10 bg-kaytori-gold" />
-        </div>
+        <p className="mx-auto mb-4 max-w-[520px] text-balance px-4 pb-1 pt-2 text-center font-script text-[18px] leading-[1.6] text-kaytori-black/85 sm:mb-5 sm:text-[21px]">
+          Bienvenue chez <span className="text-[#876815]">{SITE.nameAccent} Sushi</span>.{" "}
+          <span className="whitespace-nowrap">Laissez-vous</span> tenter par une expérience culinaire unique, où{" "}
+          <em className="not-italic text-[#876815]">fraîcheur, créativité et raffinement</em> se rencontrent pour
+          éveiller vos papilles.
+        </p>
         <div className="space-y-8">
           {sections.map(({ category, items, groups }) => (
             <section
