@@ -6,15 +6,13 @@ import { PRODUCT_CUSTOMIZATIONS, customizedCartLine } from "../data/productOptio
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { formatPriceDH, getDisplayProductName } from "./menuDisplay";
 
-/** Quantité maximale choisie dans la modale d'un plat personnalisé. */
-const MAX_QUANTITY = 20;
-
 /**
  * Logique d'ajout au panier d'un plat :
  * - sans variante → ajout direct ;
- * - avec variantes → modale de choix, ligne panier `platId:variantId` / « Nom — Variante » ;
- * - plat personnalisé (PRODUCT_CUSTOMIZATIONS) → variante + options requises, sans présélection,
- *   quantité et bouton « Ajouter N pour X DH » ; ligne « Nom — Variante — Sauce : X ».
+ * - avec variantes → modale de choix avec prix final par variante, quantité (− 1 +, minimum 1) et
+ *   bouton « Ajouter N pour X DH » ; ligne panier `platId:variantId` / « Nom — Variante » ;
+ * - plat personnalisé (PRODUCT_CUSTOMIZATIONS) → en plus, options requises et aucune
+ *   présélection ; ligne « Nom — Variante — Sauce : X ».
  */
 export function useDishAdd(item: YumloMenuItem) {
   const { addItem } = useCart();
@@ -123,17 +121,22 @@ export function useDishAdd(item: YumloMenuItem) {
       setPickerOpen(false);
       return;
     }
-    addItem(
-      `${item.id}:${selectedInModal.id}`,
-      `${item.name} — ${selectedInModal.label}`,
-      selectedInModal.priceMAD,
-    );
+    for (let i = 0; i < quantity; i += 1) {
+      addItem(`${item.id}:${selectedInModal.id}`, `${item.name} — ${selectedInModal.label}`, selectedInModal.priceMAD);
+    }
     setPickerOpen(false);
   };
 
-  /** Plat personnalisé : prix de base (variante la moins chère), suppléments et total. */
-  const basePriceDh = variants?.length ? Math.min(...variants.map((v) => Number.parseFloat(v.priceMAD))) : 0;
-  const unitPriceDh = selectedInModal ? Number.parseFloat(selectedInModal.priceMAD) : basePriceDh;
+  /**
+   * Prix unitaire du bouton : celui de la variante choisie (prix final enregistré), sinon le plus bas
+   * tant qu'aucune variante n'est choisie (plat personnalisé, bouton alors désactivé).
+   */
+  const unitPriceDh = selectedInModal
+    ? Number.parseFloat(selectedInModal.priceMAD)
+    : variants?.length
+      ? Math.min(...variants.map((v) => Number.parseFloat(v.priceMAD)))
+      : 0;
+  const canAdd = custom ? customReady : Boolean(selectedInModal);
 
   /** Section à choix unique et obligatoire (« Requis »), sans présélection. */
   const requiredSection = (
@@ -201,45 +204,45 @@ export function useDishAdd(item: YumloMenuItem) {
         {requiredSection(
           "variant",
           custom.variantTitle,
-          variants.map((v) => {
-            const extraDh = Number.parseFloat(v.priceMAD) - basePriceDh;
-            return {
-              id: v.id,
-              label: `${custom.variantTitle} ${v.label}`,
-              extra: extraDh > 0 ? `+${formatDhAmount(extraDh)} DH` : undefined,
-            };
-          }),
+          variants.map((v) => ({
+            id: v.id,
+            label: `${custom.variantTitle} ${v.label}`,
+            extra: `${formatPriceDH(v.priceMAD)} DH`,
+          })),
           modalVariantId || undefined,
           setModalVariantId,
         )}
         {custom.groups.map((g) =>
           requiredSection(g.id, g.title, g.options, chosen[g.id], (id) => setChosen((c) => ({ ...c, [g.id]: id }))),
         )}
-        <div className="flex items-center justify-center gap-5 px-4 py-5 sm:px-5">
-          <button
-            type="button"
-            onClick={() => setQuantity((q) => Math.max(1, q - 1))}
-            disabled={quantity <= 1}
-            className={qtyButton}
-            aria-label="Retirer une unité"
-          >
-            −
-          </button>
-          <span className="min-w-6 text-center font-sans text-base font-semibold tabular-nums" aria-live="polite">
-            {quantity}
-          </span>
-          <button
-            type="button"
-            onClick={() => setQuantity((q) => Math.min(MAX_QUANTITY, q + 1))}
-            disabled={quantity >= MAX_QUANTITY}
-            className={qtyButton}
-            aria-label="Ajouter une unité"
-          >
-            +
-          </button>
-        </div>
       </>
     ) : null;
+
+  /** Quantité commune à tous les plats à variantes : − 1 +, minimum 1. */
+  const quantityRow = (
+    <div className="flex items-center justify-center gap-5 px-4 py-5 sm:px-5">
+      <button
+        type="button"
+        onClick={() => setQuantity((q) => Math.max(1, q - 1))}
+        disabled={quantity <= 1}
+        className={qtyButton}
+        aria-label="Retirer une unité"
+      >
+        −
+      </button>
+      <span className="min-w-6 text-center font-sans text-base font-semibold tabular-nums" aria-live="polite">
+        {quantity}
+      </span>
+      <button
+        type="button"
+        onClick={() => setQuantity((q) => q + 1)}
+        className={qtyButton}
+        aria-label="Ajouter une unité"
+      >
+        +
+      </button>
+    </div>
+  );
 
   const variantModal =
     pickerOpen &&
@@ -272,11 +275,12 @@ export function useDishAdd(item: YumloMenuItem) {
                 </p>
               </div>
               {custom ? customBody : (
-                <fieldset className="border-0 px-4 py-4 sm:px-5">
-                  <legend className="mb-3 w-full text-center font-sans text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-kaytori-black/70">
+                <fieldset className="border-0 px-4 pt-5 sm:px-5">
+                  {/* Légende flottante, comme les sections du Wok : pas d'espacement propre aux <legend>. */}
+                  <legend className="float-left w-full text-center font-sans text-[0.72rem] font-semibold uppercase tracking-[0.12em] text-kaytori-black/70">
                     Votre choix
                   </legend>
-                  <div className="flex flex-col gap-2">
+                  <div className="clear-both flex flex-col gap-2 pt-3">
                     {variants.map((v) => {
                       const checked = v.id === modalVariantId;
                       return (
@@ -308,25 +312,16 @@ export function useDishAdd(item: YumloMenuItem) {
                   </div>
                 </fieldset>
               )}
+              {quantityRow}
               <div className="flex flex-col gap-2 border-t border-kaytori-black/[0.06] bg-[#f2ebe3]/90 px-4 py-4 sm:flex-row-reverse sm:px-5">
-                {custom ? (
-                  <button
-                    type="button"
-                    onClick={confirmVariantAdd}
-                    disabled={!customReady}
-                    className="btn-shine min-h-[48px] flex-1 rounded-xl bg-gold-shine px-4 py-3 text-sm font-semibold tabular-nums text-kaytori-black shadow-card transition-all enabled:hover:-translate-y-0.5 enabled:hover:shadow-gold disabled:cursor-not-allowed disabled:opacity-45"
-                  >
-                    Ajouter {quantity} pour {formatDhAmount(unitPriceDh * quantity)} DH
-                  </button>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={confirmVariantAdd}
-                    className="btn-shine min-h-[48px] flex-1 rounded-xl bg-gold-shine px-4 py-3 text-sm font-semibold text-kaytori-black shadow-card transition-all hover:-translate-y-0.5 hover:shadow-gold"
-                  >
-                    Ajouter au panier
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={confirmVariantAdd}
+                  disabled={!canAdd}
+                  className="btn-shine min-h-[48px] flex-1 rounded-xl bg-gold-shine px-4 py-3 text-sm font-semibold tabular-nums text-kaytori-black shadow-card transition-all enabled:hover:-translate-y-0.5 enabled:hover:shadow-gold disabled:cursor-not-allowed disabled:opacity-45"
+                >
+                  Ajouter {quantity} pour {formatDhAmount(unitPriceDh * quantity)} DH
+                </button>
                 <button
                   type="button"
                   onClick={() => setPickerOpen(false)}
