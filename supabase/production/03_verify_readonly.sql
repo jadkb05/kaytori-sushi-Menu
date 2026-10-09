@@ -52,10 +52,10 @@ checks(n, controle, ok, detail) as (
            and not exists (select 1 from public.product_variants where not is_active),
          null
   union all
-  select 4, 'display_mode : plats-thai = plats_thai_sorted, assortiments = assortiments_by_pcs, 29 en list',
-         (select display_mode from public.categories where id = 'plats-thai') = 'plats_thai_sorted'
+  select 4, 'display_mode : assortiments = assortiments_by_pcs, 30 en list (plats-thai compris)',
+         (select display_mode from public.categories where id = 'plats-thai') = 'list'
            and (select display_mode from public.categories where id = 'assortiments') = 'assortiments_by_pcs'
-           and (select count(*) from public.categories where display_mode = 'list') = 29,
+           and (select count(*) from public.categories where display_mode = 'list') = 30,
          (select string_agg(id || '=' || display_mode, ', ') from public.categories where display_mode <> 'list')
   union all
   select 5, 'aucun prix négatif, aucun produit sans image ni catégorie',

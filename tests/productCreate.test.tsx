@@ -89,7 +89,7 @@ describe("route et outils", () => {
 
   it("catégorie normale (N produits → positions 1…N+1) et catégorie automatique", () => {
     expect(categoryInsertInfo(rows, "salades")).toEqual({ count: 8, automatic: false });
-    expect(categoryInsertInfo(rows, "plats-thai")).toMatchObject({ automatic: true });
+    expect(categoryInsertInfo(rows, "assortiments")).toMatchObject({ automatic: true });
     expect(categoryInsertInfo(rows, "inexistante")).toBeNull();
     const empty = emptyNewProductForm(rows.categories, rows);
     expect(empty).toMatchObject({ categoryId: "starters", position: "14", isActive: true, variants: [] });
@@ -119,7 +119,7 @@ describe("validation", () => {
     expect(validateNewProduct(form({ position: "0" }), rows, photo).position).toBe("La position minimum est 1.");
     expect(validateNewProduct(form({ position: "10" }), rows, photo).position).toBe("La position maximum est 9 (fin de la catégorie).");
     expect(validateNewProduct(form({ position: "1.5" }), rows, photo).position).toMatch(/^Position invalide/);
-    expect(validateNewProduct(form({ categoryId: "plats-thai", position: "0" }), rows, photo).position).toBeUndefined();
+    expect(validateNewProduct(form({ categoryId: "assortiments", position: "0" }), rows, photo).position).toBeUndefined();
   });
 
   it("variantes : libellé, doublons, prix ; prix parent ignoré", () => {
@@ -147,7 +147,7 @@ describe("données envoyées à admin_create_product", () => {
     );
     expect(withVariants.p_product).not.toHaveProperty("price");
     expect(withVariants.p_variants).toEqual([{ id: "fruits-de-mer", label: "Fruits de mer", price: 79, sort_order: 1, is_active: false }]);
-    expect(buildCreatePayload(form({ categoryId: "plats-thai" }), rows, NEW_ID, "u").p_position).toBeNull();
+    expect(buildCreatePayload(form({ categoryId: "assortiments" }), rows, NEW_ID, "u").p_position).toBeNull();
   });
 });
 

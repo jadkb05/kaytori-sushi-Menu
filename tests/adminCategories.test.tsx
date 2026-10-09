@@ -156,12 +156,12 @@ describe("créer", () => {
 
 describe("modifier : renommer, masquer / afficher, déplacer", () => {
   it("renommer : identifiant, produits et mode d'affichage conservés ; journal before/after", async () => {
-    const res = await updateCategory(admin(), "plats-thai", { name: " Wok Thaï " });
-    expect(res).toMatchObject({ ok: true, category: { id: "plats-thai", name: "Wok Thaï", display_mode: "plats_thai_sorted" } });
+    const res = await updateCategory(admin(), "assortiments", { name: " Plateaux " });
+    expect(res).toMatchObject({ ok: true, category: { id: "assortiments", name: "Plateaux", display_mode: "assortiments_by_pcs" } });
     const rows = await adminRows();
-    expect(categoryProductCount(rows, "plats-thai")).toBe(11);
+    expect(categoryProductCount(rows, "assortiments")).toBe(21);
     const [log] = await audit("category.update");
-    expect(log.payload).toMatchObject({ before: { name: "Plats Thaï" }, after: { name: "Wok Thaï" }, shifted: [] });
+    expect(log.payload).toMatchObject({ before: { name: "Assortiments" }, after: { name: "Plateaux" }, shifted: [] });
   });
 
   it("Plats Thaï / Assortiments renommés : même tri et mêmes sous-sections sur le menu public", async () => {
@@ -180,14 +180,15 @@ describe("modifier : renommer, masquer / afficher, déplacer", () => {
     expect(plateaux.map((g) => g.title)).toContain("Assortiments 24 pcs");
   });
 
-  it("nouvelle catégorie nommée « Plats Thaï » après renommage : simple liste (pas de tri spécial)", async () => {
-    await updateCategory(admin(), "plats-thai", { name: "Wok Thaï" });
-    expect((await createCategory(admin(), await adminRows(), { name: "Plats Thaï", isActive: true, position: null })).ok).toBe(true);
+  it("nouvelle catégorie nommée « Assortiments » après renommage : simple liste (pas de tri spécial)", async () => {
+    await updateCategory(admin(), "assortiments", { name: "Plateaux" });
+    expect((await createCategory(admin(), await adminRows(), { name: "Assortiments", isActive: true, position: null })).ok).toBe(true);
     const menu = await publicMenu();
-    expect(menuCategoryDisplayMode(menu, "Plats Thaï")).toBe("list");
-    expect(menuCategoryDisplayMode(menu, "Wok Thaï")).toBe("plats_thai_sorted");
-    // Menu statique (repli) : règle par nom, inchangée.
-    expect(menuCategoryDisplayMode(getStaticMenu(), "Plats Thaï")).toBe("plats_thai_sorted");
+    expect(menuCategoryDisplayMode(menu, "Assortiments")).toBe("list");
+    expect(menuCategoryDisplayMode(menu, "Plateaux")).toBe("assortiments_by_pcs");
+    // Menu statique (repli) : règle par nom ; Plats Thaï en ordre manuel (ordre du fichier).
+    expect(menuCategoryDisplayMode(getStaticMenu(), "Assortiments")).toBe("assortiments_by_pcs");
+    expect(menuCategoryDisplayMode(getStaticMenu(), "Plats Thaï")).toBe("list");
   });
 
   it("WhatsApp : la commande affiche le nouveau nom de la catégorie", async () => {

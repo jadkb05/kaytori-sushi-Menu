@@ -78,9 +78,9 @@ describe("migration + seed (PostgreSQL en mémoire)", () => {
     expect(rows.categories.map((c) => c.name)).toEqual([...YUMLO_CATEGORIES]);
     expect(rows.categories.map((c) => c.id)).toEqual(YUMLO_CATEGORIES.map(categorySlug));
     const modes = Object.fromEntries(rows.categories.map((c) => [c.name, c.display_mode]));
-    expect(modes["Plats Thaï"]).toBe("plats_thai_sorted");
+    expect(modes["Plats Thaï"]).toBe("list");
     expect(modes["Assortiments"]).toBe("assortiments_by_pcs");
-    expect(Object.values(modes).filter((m) => m === "list")).toHaveLength(29);
+    expect(Object.values(modes).filter((m) => m === "list")).toHaveLength(30);
   });
 
   it("prix, descriptions, images et vignettes conservés champ par champ", () => {

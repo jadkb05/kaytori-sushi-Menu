@@ -42,7 +42,7 @@ const USER = { id: "22222222-2222-2222-2222-222222222222", email: "client@kaytor
 const RIZ = YUMLO_MENU.find((it) => it.name === "Riz Cantonais")!;
 const SALADES = YUMLO_MENU.filter((it) => it.category === "Salades").map((it) => it.id);
 const CALIFORNIA = YUMLO_MENU.filter((it) => it.category === "California Roll").map((it) => it.id);
-const THAI = YUMLO_MENU.find((it) => it.category === "Plats Thaï")!;
+const ASSORT = YUMLO_MENU.find((it) => it.category === "Assortiments")!;
 const jpeg = () => new File(["nouvelle-photo"], "photo.jpg", { type: "image/jpeg" });
 
 let db: PGlite;
@@ -80,7 +80,7 @@ describe("positions humaines", () => {
     const rows = await adminRows();
     expect(categorySlots(rows, "salades", SALADES[0])).toEqual({ max: 8, hidden: 0, automatic: false });
     expect(categorySlots(rows, "california-roll", SALADES[0])).toEqual({ max: 15, hidden: 0, automatic: false });
-    expect(categorySlots(rows, "plats-thai", SALADES[0])?.automatic).toBe(true);
+    expect(categorySlots(rows, "assortiments", SALADES[0])?.automatic).toBe(true);
     await db.exec(`update public.products set is_active = false where id = '${SALADES[5]}'`);
     expect(categorySlots(await adminRows(), "salades", SALADES[0])?.hidden).toBe(1);
   });
@@ -168,7 +168,7 @@ describe("données envoyées et détection des modifications", () => {
       p_product: { category_id: "california-roll" },
       p_position: 3,
     });
-    expect(buildSaveRequest(s, { ...s.form, categoryId: "plats-thai" }).p_position).toBeNull();
+    expect(buildSaveRequest(s, { ...s.form, categoryId: "assortiments" }).p_position).toBeNull();
   });
 });
 
@@ -280,7 +280,7 @@ describe("rendu de la page d'édition", () => {
   });
 
   it("catégorie automatique : « Position automatique » sans champ", () => {
-    const html = render(THAI.id);
+    const html = render(ASSORT.id);
     expect(html).toContain("Position automatique");
     expect(html).not.toContain('id="p-position"');
   });

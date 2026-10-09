@@ -1,6 +1,6 @@
 -- =============================================================================
 -- PRODUCTION — 02 : catalogue (31 catégories, 214 produits, 67 variantes)
--- GÉNÉRÉ depuis supabase/seed.sql (sha256:0d1d64030751234a) — ne pas éditer à la main.
+-- GÉNÉRÉ depuis supabase/seed.sql (sha256:39a31c8542b401be) — ne pas éditer à la main.
 --
 -- IDs produits / variantes, prix, descriptions, ordre, images (chemins /public servis par Vercel)
 -- et display_mode identiques au menu statique. Une transaction ; s'arrête si les tables ne sont
@@ -57,7 +57,7 @@ insert into public.categories (id, name, sort_order, is_active, display_mode) va
   ('crunchy-roll', 'Crunchy Roll', 23, true, 'list'),
   ('wok-thai', 'Wok & Thaï', 24, true, 'list'),
   ('bentos', 'Bentos', 25, true, 'list'),
-  ('plats-thai', 'Plats Thaï', 26, true, 'plats_thai_sorted'),
+  ('plats-thai', 'Plats Thaï', 26, true, 'list'),
   ('assortiments', 'Assortiments', 27, true, 'assortiments_by_pcs'),
   ('desserts', 'Desserts', 28, true, 'list'),
   ('jus', 'Jus', 29, true, 'list'),
@@ -246,9 +246,9 @@ insert into public.products (id, category_id, name, description, price, currency
   ('9443eb67b5', 'plats-thai', 'Saté', 'servi avec du riz', '69.00', 'MAD', '/menu-hd-onglet26/sate.jpg', '/menu-thumbs/menu-hd-onglet26/sate-224.webp', '/menu-thumbs/menu-hd-onglet26/sate-336.webp', 174, true),
   ('a8016335cd', 'plats-thai', 'Basilic Thaï', 'Basilic, poivrons, brocolis, carottes, gingembre, échalotes, champignons frais, sauce huîtres.', '69.00', 'MAD', '/menu-hd-onglet26/basilic-thai.jpg', '/menu-thumbs/menu-hd-onglet26/basilic-thai-224.webp', '/menu-thumbs/menu-hd-onglet26/basilic-thai-336.webp', 175, true),
   ('4afcd30489', 'plats-thai', 'Champignon & Bambou', 'Champignons de Paris, pousses de bambou, champignon noir, échalotes, sauce huîtres.', '69.00', 'MAD', '/menu-hd-onglet26/champignon-bambou.jpg', '/menu-thumbs/menu-hd-onglet26/champignon-bambou-224.webp', '/menu-thumbs/menu-hd-onglet26/champignon-bambou-336.webp', 176, true),
-  ('9e1d2c99ca', 'plats-thai', 'Chop Suey', 'Brocolis, haricots verts, courgettes, carottes, germes de soja, épis de maïs, mix poivrons, gingembre, champignons de Paris, chou, ail.', '69.00', 'MAD', '/menu-hd-onglet26/chop-suey.jpg', '/menu-thumbs/menu-hd-onglet26/chop-suey-224.webp', '/menu-thumbs/menu-hd-onglet26/chop-suey-336.webp', 177, true),
-  ('55088e9b04', 'plats-thai', 'Pavé de Saumon', 'Pavé de saumon à la sauce ail citron gingembre ou à la sauce teriyaki accompagné de riz et légumes.', '89.00', 'MAD', '/menu-hd-onglet26/pave-de-saumon.jpg', '/menu-thumbs/menu-hd-onglet26/pave-de-saumon-224.webp', '/menu-thumbs/menu-hd-onglet26/pave-de-saumon-336.webp', 178, true),
-  ('18b0c7ab53', 'plats-thai', 'Chicken Katsu', 'Poulet crunchy accompagné de légumes et riz et sauce katsu.', '74.00', 'MAD', '/menu-hd-onglet26/chicken-katsu.jpg', '/menu-thumbs/menu-hd-onglet26/chicken-katsu-224.webp', '/menu-thumbs/menu-hd-onglet26/chicken-katsu-336.webp', 179, true),
+  ('18b0c7ab53', 'plats-thai', 'Chicken Katsu', 'Poulet crunchy accompagné de légumes et riz et sauce katsu.', '74.00', 'MAD', '/menu-hd-onglet26/chicken-katsu.jpg', '/menu-thumbs/menu-hd-onglet26/chicken-katsu-224.webp', '/menu-thumbs/menu-hd-onglet26/chicken-katsu-336.webp', 177, true),
+  ('9e1d2c99ca', 'plats-thai', 'Chop Suey', 'Brocolis, haricots verts, courgettes, carottes, germes de soja, épis de maïs, mix poivrons, gingembre, champignons de Paris, chou, ail.', '69.00', 'MAD', '/menu-hd-onglet26/chop-suey.jpg', '/menu-thumbs/menu-hd-onglet26/chop-suey-224.webp', '/menu-thumbs/menu-hd-onglet26/chop-suey-336.webp', 178, true),
+  ('55088e9b04', 'plats-thai', 'Pavé de Saumon', 'Pavé de saumon à la sauce ail citron gingembre ou à la sauce teriyaki accompagné de riz et légumes.', '89.00', 'MAD', '/menu-hd-onglet26/pave-de-saumon.jpg', '/menu-thumbs/menu-hd-onglet26/pave-de-saumon-224.webp', '/menu-thumbs/menu-hd-onglet26/pave-de-saumon-336.webp', 179, true),
   ('1568a2e365', 'plats-thai', 'Teppanyaki', 'Grillé à la sauce teriyaki accompagné de légumes et riz.', '69.00', 'MAD', '/menu-hd-onglet26/teppanyaki.jpg', '/menu-thumbs/menu-hd-onglet26/teppanyaki-224.webp', '/menu-thumbs/menu-hd-onglet26/teppanyaki-336.webp', 180, true),
   ('d99671dda4', 'assortiments', 'Prime Box 16 pcs', '6 aromaki saumon, 4 cream cheese, 6 maki saumon.', '119.00', 'MAD', '/menu-hd-onglet27/assort16-prime-box.png', '/menu-thumbs/menu-hd-onglet27/assort16-prime-box-224.webp', '/menu-thumbs/menu-hd-onglet27/assort16-prime-box-336.webp', 181, true),
   ('f7e59011ae', 'assortiments', 'Funny 16 pcs', '4 cream cheese, 4 eby fry, 6 maki saumon, 2 nigiri saumon.', '119.00', 'MAD', '/menu-hd-onglet27/assort16-funny.png', '/menu-thumbs/menu-hd-onglet27/assort16-funny-224.webp', '/menu-thumbs/menu-hd-onglet27/assort16-funny-336.webp', 182, true),

@@ -33,7 +33,7 @@ import { MENU_REFERENCE_FILE } from "./referenceCases";
 const ADMIN = { id: "11111111-1111-1111-1111-111111111111", email: "admin@kaytori.test" };
 const SALADES = YUMLO_MENU.filter((it) => it.category === "Salades");
 const FOURTH = SALADES[3]; // « Salade Exotic Chicken », actuellement 4e sur 8
-const PLATS_THAI = YUMLO_MENU.find((it) => it.category === "Plats Thaï")!;
+const ASSORT = YUMLO_MENU.find((it) => it.category === "Assortiments")!;
 
 const noPhoto = {
   uploadPhoto: async () => ({ ok: false as const, error: "inutilisé" }),
@@ -68,8 +68,8 @@ describe("position affichée", () => {
     expect(e.form.position).toBe("4");
   });
 
-  it("catégorie à ordre automatique (Plats Thaï) : position non éditable", async () => {
-    const e = await edit(PLATS_THAI.id);
+  it("catégorie à ordre automatique (Assortiments) : position non éditable", async () => {
+    const e = await edit(ASSORT.id);
     expect(e.position.automatic).toBe(true);
     expect(validateProductForm({ ...e.form, position: "0" }, e).position).toBeUndefined();
     expect(buildEditPlan(e, { ...e.form, position: "1" })).toEqual({ payload: { product: {}, variants: [] }, siblingSortOrders: [] });
@@ -212,7 +212,7 @@ describe("sauvegarde 4 → 1 via la RPC (base réelle, RLS)", () => {
 });
 
 describe("rendu (sans navigateur)", () => {
-  it("champ numérique 1…N pour un ordre manuel ; « Position automatique » sans champ pour Plats Thaï", async () => {
+  it("champ numérique 1…N pour un ordre manuel ; « Position automatique » sans champ pour Assortiments", async () => {
     const rows = await fetchMenuRows(admin());
     const render = (id: string) =>
       renderToStaticMarkup(
@@ -225,7 +225,7 @@ describe("rendu (sans navigateur)", () => {
     expect(manual).toMatch(/id="p-position" type="number"[^>]*min="1" max="8"[^>]*value="4"/);
     expect(manual).toContain("1 = premier produit affiché, 2 = deuxième, 3 = troisième…");
     expect(manual).not.toContain("prochaine étape");
-    const automatic = render(PLATS_THAI.id);
+    const automatic = render(ASSORT.id);
     expect(automatic).toContain("Position automatique");
     expect(automatic).toContain("Cette catégorie utilise un ordre automatique.");
     expect(automatic).not.toContain('id="p-position"');

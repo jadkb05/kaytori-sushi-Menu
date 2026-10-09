@@ -1713,6 +1713,15 @@ export const YUMLO_MENU = [
     ]
   },
   {
+    "id": "18b0c7ab53",
+    "category": "Plats Thaï",
+    "name": "Chicken Katsu",
+    "description": "Poulet crunchy accompagné de légumes et riz et sauce katsu.",
+    "priceMAD": "74.00",
+    "currency": "MAD",
+    "image": "/menu-hd-onglet26/chicken-katsu.jpg"
+  },
+  {
     "id": "9e1d2c99ca",
     "category": "Plats Thaï",
     "name": "Chop Suey",
@@ -1735,15 +1744,6 @@ export const YUMLO_MENU = [
     "priceMAD": "89.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet26/pave-de-saumon.jpg"
-  },
-  {
-    "id": "18b0c7ab53",
-    "category": "Plats Thaï",
-    "name": "Chicken Katsu",
-    "description": "Poulet crunchy accompagné de légumes et riz et sauce katsu.",
-    "priceMAD": "74.00",
-    "currency": "MAD",
-    "image": "/menu-hd-onglet26/chicken-katsu.jpg"
   },
   {
     "id": "1568a2e365",

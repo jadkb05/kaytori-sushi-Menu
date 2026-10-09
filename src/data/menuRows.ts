@@ -63,9 +63,10 @@ export function categorySlug(name: string): string {
 /**
  * Mode d'affichage d'après le NOM : uniquement pour le menu statique (yumloMenu.ts) et le seed.
  * Le menu Supabase utilise categories.display_mode (voir menuCategoryDisplayMode).
+ * Plats Thaï est en ordre manuel (« list », ordre du fichier) depuis la migration
+ * 20261012000000_plats_thai_manual_order ; « plats_thai_sorted » ne sert plus qu'au retour arrière.
  */
 export function categoryDisplayMode(name: string): CategoryDisplayMode {
-  if (name === "Plats Thaï") return "plats_thai_sorted";
   if (name === "Assortiments") return "assortiments_by_pcs";
   return "list";
 }

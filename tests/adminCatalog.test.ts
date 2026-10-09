@@ -15,7 +15,7 @@ const USER = { id: "22222222-2222-2222-2222-222222222222", email: "client@kaytor
 const SALADES = YUMLO_MENU.filter((it) => it.category === "Salades").map((it) => it.id); // 8, sort_order 41…48
 const CALIFORNIA = YUMLO_MENU.filter((it) => it.category === "California Roll").map((it) => it.id); // 14
 const RIZ = YUMLO_MENU.find((it) => it.name === "Riz Cantonais")!; // 5 variantes, prix parent statique 49
-const THAI = YUMLO_MENU.filter((it) => it.category === "Plats Thaï").map((it) => it.id);
+const ASSORT = YUMLO_MENU.filter((it) => it.category === "Assortiments").map((it) => it.id);
 
 let db: PGlite;
 let admin: SupabaseClient;
@@ -91,11 +91,11 @@ describe("suppression d'un produit", () => {
     expect(log.payload.before.variants).toHaveLength(RIZ.variants!.length);
   });
 
-  it("catégorie automatique (Plats Thaï) : aucun décalage", async () => {
+  it("catégorie automatique (Assortiments) : aucun décalage", async () => {
     const before = await rows();
-    expect((await del(admin, THAI[0])).error).toBeNull();
+    expect((await del(admin, ASSORT[0])).error).toBeNull();
     const after = await rows();
-    for (const p of order(after, "plats-thai")) expect(p.sort_order).toBe(product(before, p.id).sort_order);
+    for (const p of order(after, "assortiments")) expect(p.sort_order).toBe(product(before, p.id).sort_order);
   });
 
   it("non-admin, visiteur, produit introuvable, échec du journal → rien n'est supprimé", async () => {
@@ -213,8 +213,8 @@ describe("position dans la catégorie (atomique)", () => {
 
   it("catégorie automatique : position ignorée", async () => {
     const before = await rows();
-    expect((await save(admin, THAI[3], {}, null, 1)).error).toBeNull();
-    expect(order(await rows(), "plats-thai").map((p) => p.sort_order)).toEqual(order(before, "plats-thai").map((p) => p.sort_order));
+    expect((await save(admin, ASSORT[3], {}, null, 1)).error).toBeNull();
+    expect(order(await rows(), "assortiments").map((p) => p.sort_order)).toEqual(order(before, "assortiments").map((p) => p.sort_order));
   });
 
   it("valeurs en double : ordre final déterministe, sans doublon", async () => {
@@ -252,10 +252,10 @@ describe("changement de catégorie avec position", () => {
     expect(ids(await rows(), "california-roll").at(-1)).toBe(SALADES[0]);
     await runSeed(db);
     const before = await rows();
-    await save(admin, SALADES[0], { category_id: "plats-thai" }, null, 1);
+    await save(admin, SALADES[0], { category_id: "assortiments" }, null, 1);
     const after = await rows();
-    expect(ids(after, "plats-thai").at(-1)).toBe(SALADES[0]);
-    for (const id of THAI) expect(product(after, id).sort_order).toBe(product(before, id).sort_order);
+    expect(ids(after, "assortiments").at(-1)).toBe(SALADES[0]);
+    for (const id of ASSORT) expect(product(after, id).sort_order).toBe(product(before, id).sort_order);
   });
 
   it("position hors limites dans la nouvelle catégorie → rollback complet (ancienne catégorie intacte)", async () => {

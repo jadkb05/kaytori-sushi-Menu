@@ -102,13 +102,13 @@ describe("création réussie", () => {
     ]);
   });
 
-  it("catégorie à ordre automatique (Plats Thaï) : position ignorée, ajout en fin", async () => {
+  it("catégorie à ordre automatique (Assortiments) : position ignorée, ajout en fin", async () => {
     const before = await readMenuRows(db);
-    const res = await create(admin, base({ category_id: "plats-thai" }), [], 1);
+    const res = await create(admin, base({ category_id: "assortiments" }), [], 1);
     expect(res.error).toBeNull();
     const after = await readMenuRows(db);
-    const maxThai = Math.max(...before.products.filter((p) => p.category_id === "plats-thai").map((p) => p.sort_order));
-    expect(after.products.find((p) => p.id === NEW_ID)!.sort_order).toBe(maxThai + 1);
+    const maxAssort = Math.max(...before.products.filter((p) => p.category_id === "assortiments").map((p) => p.sort_order));
+    expect(after.products.find((p) => p.id === NEW_ID)!.sort_order).toBe(maxAssort + 1);
     expect(after.products.filter((p) => p.id !== NEW_ID)).toEqual(before.products);
   });
 

@@ -190,7 +190,7 @@ describe("données de l'admin (lues depuis la base)", () => {
     expect(categories.find((c) => c.name === "Plats Thaï")).toMatchObject({
       productCount: 11,
       visibleProductCount: 11,
-      displayMode: "plats_thai_sorted",
+      displayMode: "list",
       isActive: true,
     });
   });
