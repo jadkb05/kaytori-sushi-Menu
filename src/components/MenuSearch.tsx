@@ -13,8 +13,8 @@ type Props = {
   menu: { categories: readonly string[]; items: readonly YumloMenuItem[] };
   /** Hauteur du header fixe : le panneau s'ouvre juste dessous. */
   headerHeight: () => number;
-  /** Choix d'une suggestion ; `matches` = toutes les suggestions de la requête (navigation entre plats). */
-  onSelect: (match: SearchMatch, matches: SearchMatch[], query: string) => void;
+  /** Choix d'une suggestion (section ou plat). */
+  onSelect: (match: SearchMatch) => void;
 };
 
 function SearchIcon({ className }: { className?: string }) {
@@ -71,7 +71,7 @@ export function MenuSearch({ menu, headerHeight, onSelect }: Props) {
   };
   const choose = (match: SearchMatch) => {
     close(false);
-    onSelect(match, matches, query);
+    onSelect(match);
   };
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {

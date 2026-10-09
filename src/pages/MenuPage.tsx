@@ -18,8 +18,6 @@ import { dishAnchorId, type SearchMatch } from "../menu/menuSearch";
 
 /** Durée de la mise en évidence d'un plat trouvé par la recherche (ms). */
 const HIGHLIGHT_MS = 2400;
-/** Place réservée sous les onglets à la pastille « ‹ 2/9 › » : le plat trouvé n'est pas caché dessous. */
-const SEARCH_NAV_SPACE = 56;
 
 /** Sections dans l'ordre client (catégories du menu), catégories vides ignorées. */
 function toSections(menu: MenuSnapshot) {
@@ -55,8 +53,6 @@ export function MenuPage() {
   /** Plat mis en évidence après une recherche. */
   const [highlightId, setHighlightId] = useState<string | null>(null);
   const highlightTimer = useRef<number | null>(null);
-  /** Plats trouvés par la dernière recherche, pour passer de l'un à l'autre (‹ ›). */
-  const [searchNav, setSearchNav] = useState<{ query: string; ids: string[]; index: number } | null>(null);
 
   /** Hauteur des barres fixes une fois la page défilée : header + sommaire. */
   const stickyOffset = useCallback(
@@ -161,12 +157,9 @@ export function MenuPage() {
     nav.scrollTo({ left, behavior: reducedMotion ? "instant" : "smooth" });
   }, [active, reducedMotion]);
 
-  /**
-   * Défile jusqu'à `el` sous les barres fixes (+ `extra` px) ; `category` reste l'onglet actif
-   * pendant le défilement.
-   */
-  const scrollToElement = (el: HTMLElement, category: string, extra = 0) => {
-    const top = Math.max(0, el.getBoundingClientRect().top + window.scrollY - stickyOffset() - extra);
+  /** Défile jusqu'à `el` sous les barres fixes ; `category` reste l'onglet actif pendant le défilement. */
+  const scrollToElement = (el: HTMLElement, category: string) => {
+    const top = Math.max(0, el.getBoundingClientRect().top + window.scrollY - stickyOffset());
     setActive(category);
     clicked.current = { category, locked: true, target: top, at: performance.now() };
     // Si la page est déjà à la bonne position, aucun scroll n'aura lieu : on vérifie quand même.
@@ -180,15 +173,12 @@ export function MenuPage() {
     if (el) scrollToElement(el, category);
   };
 
-  /**
-   * Plat trouvé par la recherche : défilement jusqu'à sa carte (sous la pastille de navigation si
-   * elle est affichée), puis brève mise en évidence.
-   */
-  const goToDish = (id: string, withNavigator: boolean) => {
+  /** Plat trouvé par la recherche : défilement jusqu'à sa carte, puis brève mise en évidence. */
+  const goToDish = (id: string) => {
     const el = document.getElementById(dishAnchorId(id));
     const item = menu.items.find((it) => it.id === id);
     if (!el || !item) return;
-    scrollToElement(el, item.category, withNavigator ? SEARCH_NAV_SPACE : 0);
+    scrollToElement(el, item.category);
     setHighlightId(id);
     if (highlightTimer.current !== null) window.clearTimeout(highlightTimer.current);
     highlightTimer.current = window.setTimeout(() => setHighlightId(null), HIGHLIGHT_MS);
@@ -198,23 +188,11 @@ export function MenuPage() {
   }, []);
 
   /** Choix d'une suggestion : section (catégorie) ou plat ; navigation après la fermeture du panneau. */
-  const onSearchSelect = (match: SearchMatch, matches: SearchMatch[], query: string) => {
-    const ids = matches.flatMap((m) => (m.kind === "product" ? [m.item.id] : []));
+  const onSearchSelect = (match: SearchMatch) => {
     requestAnimationFrame(() => {
-      if (match.kind === "category") {
-        setSearchNav(null);
-        goTo(match.category);
-        return;
-      }
-      setSearchNav(ids.length > 1 ? { query: query.trim(), ids, index: ids.indexOf(match.item.id) } : null);
-      goToDish(match.item.id, ids.length > 1);
+      if (match.kind === "category") goTo(match.category);
+      else goToDish(match.item.id);
     });
-  };
-  const stepSearch = (delta: number) => {
-    if (!searchNav) return;
-    const index = (searchNav.index + delta + searchNav.ids.length) % searchNav.ids.length;
-    setSearchNav({ ...searchNav, index });
-    goToDish(searchNav.ids[index], true);
   };
   const headerHeight = useCallback(() => headerRef.current?.offsetHeight ?? 56, []);
 
@@ -321,30 +299,6 @@ export function MenuPage() {
             ) : null}
           </ul>
         </nav>
-        {/* Navigation entre les plats trouvés : flotte sous les onglets, hors du flux (aucun décalage). */}
-        {searchNav ? (
-          <div className="pointer-events-none absolute inset-x-0 top-full flex justify-center px-3 pt-2">
-            <div
-              className="pointer-events-auto flex items-center gap-1 rounded-full bg-[#0c1712] py-1 pl-3.5 pr-1 font-sans text-[0.75rem] text-kaytori-cream shadow-lift"
-              role="group"
-              aria-label="Résultats de la recherche"
-            >
-              <span className="max-w-[9.5rem] truncate">« {searchNav.query} »</span>
-              <span className="tabular-nums text-kaytori-goldLight" aria-live="polite">
-                {searchNav.index + 1}/{searchNav.ids.length}
-              </span>
-              <button type="button" onClick={() => stepSearch(-1)} aria-label="Plat précédent" className="grid h-9 w-9 place-items-center rounded-full text-lg leading-none hover:bg-white/10">
-                ‹
-              </button>
-              <button type="button" onClick={() => stepSearch(1)} aria-label="Plat suivant" className="grid h-9 w-9 place-items-center rounded-full text-lg leading-none hover:bg-white/10">
-                ›
-              </button>
-              <button type="button" onClick={() => setSearchNav(null)} aria-label="Fermer les résultats" className="grid h-9 w-9 place-items-center rounded-full text-base leading-none text-kaytori-cream/70 hover:bg-white/10">
-                ×
-              </button>
-            </div>
-          </div>
-        ) : null}
       </div>
 
       <main
