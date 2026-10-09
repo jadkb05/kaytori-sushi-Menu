@@ -8,7 +8,11 @@ export type AdminMenuDataState =
   | { status: "ready"; rows: MenuRows; error: null }
   | { status: "error"; rows: null; error: string };
 
-type AdminMenuDataValue = AdminMenuDataState & { reload: () => void };
+type AdminMenuDataValue = AdminMenuDataState & {
+  reload: () => void;
+  /** Relit la base sans passer par l'état « chargement » (la page reste affichée) ; false si la lecture échoue. */
+  refresh: () => Promise<boolean>;
+};
 
 export const AdminMenuDataContext = createContext<AdminMenuDataValue | null>(null);
 
@@ -36,8 +40,17 @@ export function AdminMenuDataProvider({ client, children }: { client: SupabaseCl
   }, [client, version]);
 
   const reload = useCallback(() => setVersion((v) => v + 1), []);
+  const refresh = useCallback(async () => {
+    try {
+      const rows = await fetchMenuRows(client);
+      setState({ status: "ready", rows, error: null });
+      return true;
+    } catch {
+      return false;
+    }
+  }, [client]);
 
-  return <AdminMenuDataContext.Provider value={{ ...state, reload }}>{children}</AdminMenuDataContext.Provider>;
+  return <AdminMenuDataContext.Provider value={{ ...state, reload, refresh }}>{children}</AdminMenuDataContext.Provider>;
 }
 
 export function useAdminMenuData(): AdminMenuDataValue {

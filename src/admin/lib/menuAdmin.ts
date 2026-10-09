@@ -32,6 +32,11 @@ export type AdminProduct = {
   visible: boolean;
   variantCount: number;
   variantLabels: string[];
+  /** Position dans SA catégorie (1…categoryTotal, produits masqués compris), quel que soit le filtre affiché. */
+  position: number;
+  categoryTotal: number;
+  /** Ordre manuel (display_mode « list » chargé de la base) : flèches ↑ / ↓ ; sinon « Ordre automatique ». */
+  manualOrder: boolean;
 };
 
 export type AdminCategory = {
@@ -81,10 +86,16 @@ export function buildProductList(rows: MenuRows): AdminProduct[] {
     variantsByProduct.set(v.product_id, list);
   }
   const catOrder = (id: string) => categories.get(id)?.sort_order ?? Number.MAX_SAFE_INTEGER;
+  const totals = new Map<string, number>();
+  for (const p of rows.products) totals.set(p.category_id, (totals.get(p.category_id) ?? 0) + 1);
+  // Rang dans la catégorie : même ordre que l'éditeur et que la RPC (sort_order, puis id).
+  const seen = new Map<string, number>();
 
   return [...rows.products]
     .sort((a, b) => catOrder(a.category_id) - catOrder(b.category_id) || a.sort_order - b.sort_order || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
     .map((p) => {
+      const position = (seen.get(p.category_id) ?? 0) + 1;
+      seen.set(p.category_id, position);
       const cat = categories.get(p.category_id);
       const variants = [...(variantsByProduct.get(p.id) ?? [])].sort((a, b) => a.sort_order - b.sort_order);
       const activePrices = variants.filter((v) => v.is_active).map((v) => Number(v.price));
@@ -102,6 +113,9 @@ export function buildProductList(rows: MenuRows): AdminProduct[] {
         visible: p.is_active && categoryActive,
         variantCount: variants.length,
         variantLabels: variants.map((v) => v.label),
+        position,
+        categoryTotal: totals.get(p.category_id)!,
+        manualOrder: cat?.display_mode === "list",
       };
     });
 }

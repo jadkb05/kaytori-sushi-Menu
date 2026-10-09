@@ -79,7 +79,7 @@ export default function AdminApp() {
         <AdminMenuDataProvider client={client!}>
           <AdminLayout current={decision.page} email={access.status === "admin" ? access.email : ""} onSignOut={signOut}>
             {decision.page === "dashboard" ? <DashboardPage /> : null}
-            {decision.page === "products" ? <ProductsPage /> : null}
+            {decision.page === "products" ? <ProductsPage client={client!} /> : null}
             {decision.page === "categories" ? <CategoriesPage client={client!} /> : null}
             {decision.page === "productCreate" ? <ProductCreatePage client={client!} /> : null}
             {decision.page === "productEdit" && decision.productId ? (

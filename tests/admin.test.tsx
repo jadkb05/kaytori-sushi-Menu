@@ -212,7 +212,7 @@ describe("rendu des pages (sans navigateur)", () => {
     const dashboard = withData(<DashboardPage />);
     expect(dashboard).toContain("Catégories actives");
     expect(dashboard).toContain(">214<");
-    const products = withData(<ProductsPage />);
+    const products = withData(<ProductsPage client={createPgliteSupabase(db, ADMIN)} />);
     expect(products).toContain("214 produits");
     expect(products).toContain("Red Curry Thaï");
     expect((products.match(/<tr/g) ?? []).length).toBe(215);
