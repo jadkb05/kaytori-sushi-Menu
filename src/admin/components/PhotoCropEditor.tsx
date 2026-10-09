@@ -1,6 +1,7 @@
 /**
- * Éditeur de cadrage carré d'une photo produit : zoom (slider, molette), déplacement (souris,
- * doigt, flèches du clavier), Réinitialiser / Annuler / Enregistrer la photo.
+ * Éditeur de cadrage carré d'une photo produit : zoom (slider, molette, pincement à deux doigts
+ * autour de leur milieu), déplacement (souris, un doigt, flèches du clavier),
+ * Réinitialiser / Annuler / Enregistrer la photo.
  *
  * L'aperçu est dessiné sur un canvas avec exactement la même opération que le fichier enregistré
  * (même zone source) : ce qui est vu est ce qui est enregistré.
@@ -15,6 +16,7 @@ import {
   loadPhotoForCrop,
   maxCropZoom,
   panCrop,
+  zoomCropAt,
   renderCroppedPhoto,
   type Crop,
 } from "../lib/photoCrop";
@@ -42,7 +44,8 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
   const dialogRef = useRef<HTMLDivElement>(null);
   const frameRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const drag = useRef<{ id: number; x: number; y: number } | null>(null);
+  /** Pointeurs posés sur le cadre, par identifiant (souris : 1 ; doigts : 1 = déplacer, 2 = pincer). */
+  const pointers = useRef(new Map<number, { x: number; y: number }>());
   const savingRef = useRef(false);
   savingRef.current = saving;
   /** Annuler le plus récent, sans relancer l'effet de la fenêtre à chaque rendu du parent. */
@@ -145,21 +148,43 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
   const onPointerDown = (e: ReactPointerEvent<HTMLDivElement>) => {
     if (!image || saving) return;
     e.currentTarget.setPointerCapture(e.pointerId);
-    drag.current = { id: e.pointerId, x: e.clientX, y: e.clientY };
+    pointers.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
     setDragging(true);
   };
   const onPointerMove = (e: ReactPointerEvent<HTMLDivElement>) => {
-    const d = drag.current;
-    if (!d || d.id !== e.pointerId || !image) return;
-    const dx = e.clientX - d.x;
-    const dy = e.clientY - d.y;
-    drag.current = { ...d, x: e.clientX, y: e.clientY };
-    setCrop((c) => c && panCrop(c, dx, dy, viewport, image.width, image.height));
+    const active = pointers.current;
+    const prev = active.get(e.pointerId);
+    if (!prev || !image) return;
+    const next = { x: e.clientX, y: e.clientY };
+    // Deux doigts : le pincement ne concerne que les deux premiers pointeurs posés.
+    const pair = [...active.keys()].slice(0, 2);
+    if (pair.length === 2 && pair.includes(e.pointerId)) {
+      const other = active.get(pair[0] === e.pointerId ? pair[1] : pair[0])!;
+      active.set(e.pointerId, next);
+      const frame = frameRef.current?.getBoundingClientRect();
+      if (!frame || frame.width === 0) return;
+      const dist = (a: { x: number; y: number }) => Math.hypot(a.x - other.x, a.y - other.y);
+      const before = { x: (prev.x + other.x) / 2, y: (prev.y + other.y) / 2, d: dist(prev) };
+      const after = { x: (next.x + other.x) / 2, y: (next.y + other.y) / 2, d: dist(next) };
+      setCrop((c) => {
+        if (!c) return c;
+        // Zoom selon l'écart des doigts, autour de leur milieu ; puis déplacement du milieu.
+        const zoom = before.d > 0 ? (c.zoom * after.d) / before.d : c.zoom;
+        const fx = (before.x - frame.left) / frame.width;
+        const fy = (before.y - frame.top) / frame.height;
+        const zoomed = zoomCropAt(c, zoom, fx, fy, image.width, image.height);
+        return panCrop(zoomed, after.x - before.x, after.y - before.y, viewport, image.width, image.height);
+      });
+      return;
+    }
+    if (active.size > 1) return; // 3e doigt ou plus : ignoré
+    active.set(e.pointerId, next);
+    setCrop((c) => c && panCrop(c, next.x - prev.x, next.y - prev.y, viewport, image.width, image.height));
   };
-  const endDrag = (e: ReactPointerEvent<HTMLDivElement>) => {
-    if (drag.current?.id !== e.pointerId) return;
-    drag.current = null;
-    setDragging(false);
+  /** Doigt levé : le doigt restant reprend le déplacement depuis sa position, sans saut. */
+  const endPointer = (e: ReactPointerEvent<HTMLDivElement>) => {
+    if (!pointers.current.delete(e.pointerId)) return;
+    if (pointers.current.size === 0) setDragging(false);
   };
   const onFrameKey = (e: ReactKeyboardEvent<HTMLDivElement>) => {
     if (!image) return;
@@ -213,18 +238,18 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
         <h3 id="crop-title" className="text-lg font-semibold text-stone-900">
           Recadrer la photo
         </h3>
-        <p className="mt-1 text-sm text-stone-500">Zoomez, puis faites glisser la photo pour choisir la partie visible dans le carré.</p>
+        <p className="mt-1 text-sm text-stone-500">Zoomez (slider ou deux doigts), puis faites glisser la photo pour choisir la partie visible dans le carré.</p>
 
         <div
           ref={frameRef}
           tabIndex={0}
           data-autofocus
           role="group"
-          aria-label="Cadrage : faites glisser ou utilisez les flèches du clavier, + et − pour zoomer"
+          aria-label="Cadrage : faites glisser, pincez à deux doigts pour zoomer, ou utilisez les flèches du clavier, + et −"
           onPointerDown={onPointerDown}
           onPointerMove={onPointerMove}
-          onPointerUp={endDrag}
-          onPointerCancel={endDrag}
+          onPointerUp={endPointer}
+          onPointerCancel={endPointer}
           onKeyDown={onFrameKey}
           className={`relative mt-4 aspect-square w-full touch-none select-none overflow-hidden rounded-lg bg-stone-900 outline-none focus-visible:ring-2 focus-visible:ring-stone-900/40 focus-visible:ring-offset-2 ${
             image ? (dragging ? "cursor-grabbing" : "cursor-grab") : ""

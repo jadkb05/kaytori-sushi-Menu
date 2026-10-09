@@ -13,6 +13,7 @@ import {
   initialCrop,
   maxCropZoom,
   panCrop,
+  zoomCropAt,
 } from "../src/admin/lib/photoCrop";
 import { PHOTO_MAX_DIMENSION } from "../src/admin/lib/photoOptimize";
 import { uploadProductPhoto } from "../src/admin/lib/productPhoto";
@@ -49,6 +50,27 @@ describe("cadrage", () => {
     expect(moved.centerX).toBeCloseTo(627 - 62.7);
     expect(moved.centerY).toBeCloseTo(627 + 31.35);
     expect(panCrop(initialCrop(1254, 1254), 100, 100, 300, 1254, 1254)).toEqual(initialCrop(1254, 1254));
+  });
+
+  it("pincement : zoom autour du milieu des doigts, le point sous les doigts ne bouge pas", () => {
+    const start = initialCrop(1254, 1254);
+    // Doigts au quart supérieur gauche du cadre : point source (313,5 ; 313,5) au zoom 1.
+    const zoomed = zoomCropAt(start, 2, 0.25, 0.25, 1254, 1254);
+    const r = cropRect(zoomed, 1254, 1254);
+    expect(zoomed.zoom).toBe(2);
+    expect(r.x + 0.25 * r.side).toBeCloseTo(313.5);
+    expect(r.y + 0.25 * r.side).toBeCloseTo(313.5);
+    // Dézoom jusqu'au minimum : retour au plus grand carré.
+    expect(cropRect(zoomCropAt(zoomed, 0.5, 0.5, 0.5, 1254, 1254), 1254, 1254)).toEqual({ x: 0, y: 0, side: 1254 });
+  });
+
+  it("pincement : bornes du slider (zoom max, carré dans la photo)", () => {
+    const z = zoomCropAt(initialCrop(1254, 1254), 99, 0, 0, 1254, 1254);
+    expect(z.zoom).toBeCloseTo(1254 / CROP_MIN_SOURCE_SIDE);
+    const r = cropRect(z, 1254, 1254);
+    expect(r.x).toBeGreaterThanOrEqual(0);
+    expect(r.y).toBeGreaterThanOrEqual(0);
+    expect(r.x + r.side).toBeLessThanOrEqual(1254);
   });
 
   it("taille du fichier : celle de la zone source, jamais agrandie, 1254 px au plus", () => {

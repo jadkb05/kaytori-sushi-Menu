@@ -57,6 +57,20 @@ export function panCrop(crop: Crop, dx: number, dy: number, viewport: number, wi
 }
 
 /**
+ * Zoom autour d'un point du cadre (pincement à deux doigts, centré sur leur milieu) : le point de la
+ * photo situé sous (fx, fy) — fractions 0…1 du cadre affiché — reste sous les doigts. Mêmes bornes
+ * que le slider (clampCrop : zoom 1…maxCropZoom, carré toujours dans la photo).
+ */
+export function zoomCropAt(crop: Crop, zoom: number, fx: number, fy: number, width: number, height: number): Crop {
+  const before = cropRect(crop, width, height);
+  const px = before.x + fx * before.side;
+  const py = before.y + fy * before.side;
+  const z = clampCrop({ ...crop, zoom }, width, height).zoom;
+  const side = Math.min(width, height) / z;
+  return clampCrop({ zoom: z, centerX: px - fx * side + side / 2, centerY: py - fy * side + side / 2 }, width, height);
+}
+
+/**
  * Rendu du recadrage : les pixels de la zone source dessinés dans un carré, encodés presque sans
  * perte (WebP 0,95, JPEG 0,95 si le navigateur n'encode pas le WebP). L'optimisation habituelle
  * (≤ 250 Ko, qualité ≥ 0,70) s'applique ensuite au téléversement.
