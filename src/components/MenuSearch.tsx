@@ -34,7 +34,8 @@ export function MenuSearch({ menu, headerHeight, onSelect }: Props) {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const listRef = useRef<HTMLUListElement>(null);
-  const restoreFocus = useRef(true);
+  /** Rendre le focus à la loupe à la prochaine fermeture (fermeture au clavier uniquement). */
+  const restoreFocus = useRef(false);
   const listId = useId();
   const matches = useMemo(() => searchMenu(menu, query), [menu, query]);
 
@@ -54,9 +55,14 @@ export function MenuSearch({ menu, headerHeight, onSelect }: Props) {
     };
   }, [open, headerHeight]);
 
-  // Fermeture sans choix : le focus revient à la loupe.
+  /**
+   * Fermeture au clavier sans choix : le focus revient à la loupe. Jamais au chargement ni après
+   * une fermeture au doigt / à la souris : un focus donné par programme y afficherait l'anneau de
+   * focus du navigateur (cercle bleu sur iPhone) jusqu'au toucher suivant.
+   */
   useEffect(() => {
     if (open || !restoreFocus.current) return;
+    restoreFocus.current = false;
     buttonRef.current?.focus({ preventScroll: true });
   }, [open]);
 
@@ -65,7 +71,7 @@ export function MenuSearch({ menu, headerHeight, onSelect }: Props) {
     listRef.current?.querySelector<HTMLElement>(`[data-index="${active}"]`)?.scrollIntoView({ block: "nearest" });
   }, [active]);
 
-  const close = (focusButton = true) => {
+  const close = (focusButton: boolean) => {
     restoreFocus.current = focusButton;
     setOpen(false);
   };
@@ -77,7 +83,7 @@ export function MenuSearch({ menu, headerHeight, onSelect }: Props) {
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Escape") {
       e.preventDefault();
-      close();
+      close(true);
     } else if (e.key === "ArrowDown" && matches.length > 0) {
       e.preventDefault();
       setActive((i) => (i + 1) % matches.length);
@@ -98,21 +104,18 @@ export function MenuSearch({ menu, headerHeight, onSelect }: Props) {
       <button
         ref={buttonRef}
         type="button"
-        onClick={() => {
-          restoreFocus.current = true;
-          setOpen(true);
-        }}
+        onClick={() => setOpen(true)}
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-label="Rechercher un plat ou une catégorie"
-        className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-kaytori-gold/40 text-kaytori-goldLight transition-colors hover:border-kaytori-gold/70 active:bg-white/10 sm:h-10 sm:w-10"
+        className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-kaytori-gold/40 text-kaytori-goldLight outline-none transition-colors hover:border-kaytori-gold/70 focus-visible:ring-2 focus-visible:ring-kaytori-gold/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c1712] active:bg-white/10 sm:h-10 sm:w-10"
       >
         <SearchIcon className="h-[1.15rem] w-[1.15rem]" />
       </button>
       {open
         ? createPortal(
             <div className="fixed inset-x-0 bottom-0 z-50" style={{ top }} role="presentation">
-              <div className="absolute inset-0 bg-kaytori-black/45 backdrop-blur-[1px]" onClick={() => close()} aria-hidden />
+              <div className="absolute inset-0 bg-kaytori-black/45 backdrop-blur-[1px]" onClick={() => close(false)} aria-hidden />
               <div
                 role="dialog"
                 aria-modal="true"
@@ -141,7 +144,8 @@ export function MenuSearch({ menu, headerHeight, onSelect }: Props) {
                   />
                   <button
                     type="button"
-                    onClick={() => close()}
+                    // detail 0 : activé au clavier (Entrée / Espace) → le focus revient à la loupe.
+                    onClick={(e) => close(e.detail === 0)}
                     className="min-h-[44px] shrink-0 rounded-full px-3 font-sans text-[0.8rem] font-semibold text-kaytori-green hover:bg-kaytori-green/[0.06]"
                   >
                     Fermer
