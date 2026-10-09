@@ -243,8 +243,8 @@ export function MenuPage() {
       */}
       <div className="relative aspect-[2/1] max-h-[13.5rem] w-full overflow-hidden bg-[#0f1815] md:aspect-auto md:h-52 md:max-h-none lg:h-[26rem]">
         <img
-          src="/banner/kaytori-makis-hd-960.webp"
-          srcSet="/banner/kaytori-makis-hd-640.webp 640w, /banner/kaytori-makis-hd-960.webp 960w, /banner/kaytori-makis-hd-1280.webp 1280w"
+          src="/banner/kaytori-makis-960.webp"
+          srcSet="/banner/kaytori-makis-640.webp 640w, /banner/kaytori-makis-960.webp 960w, /banner/kaytori-makis-1280.webp 1280w"
           sizes="100vw"
           width={1280}
           height={852}
