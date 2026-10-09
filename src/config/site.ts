@@ -24,8 +24,8 @@ export const SITE = {
 
   instagram: "https://www.instagram.com/kaytorisushi/",
 
-  /** Logo officiel nettoyé et centré (fond extérieur transparent) */
-  logoUrl: "/kaytori-logo-clean.png",
+  /** Logo officiel (badge rond 256 px, glyphe centré, coins transparents) : header, footer, chargement, Admin. */
+  logoUrl: "/kaytori-logo-2026.webp",
 
   /** Fiche Google Maps (lien fourni par le restaurant). */
   mapsUrl: "https://maps.app.goo.gl/HPD8cTM8YA4h7HZP8",

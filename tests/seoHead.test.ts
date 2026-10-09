@@ -52,10 +52,11 @@ describe("<head> : title, description, canonical", () => {
     expect(canonicals).toEqual([{ rel: "canonical", href: SITE_URL }]);
   });
 
-  it("lang, viewport et favicon inchangés", () => {
+  it("lang, viewport et favicon (nouveau logo)", () => {
     expect(html).toContain('<html lang="fr">');
     expect(meta("name", "viewport")).toContain("width=device-width");
-    expect(tags("link").some((l) => l.rel === "icon" && l.href === "/kaytori-logo-clean.png")).toBe(true);
+    expect(tags("link").some((l) => l.rel === "icon" && l.href === "/kaytori-logo-2026-64.png")).toBe(true);
+    expect(tags("link").some((l) => l.rel === "apple-touch-icon" && l.href === "/kaytori-logo-2026-180.png")).toBe(true);
   });
 });
 
