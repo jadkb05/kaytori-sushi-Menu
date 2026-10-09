@@ -20,8 +20,11 @@ const smallButton =
   "rounded-md border border-stone-300 bg-white px-2.5 py-1 text-xs font-semibold text-stone-700 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40";
 /** Téléphone et tablette (< 1024 px) : boutons des lignes plus grands (cible tactile ≥ 40 px). */
 const touchButton = "max-lg:min-h-[40px] max-lg:min-w-[40px] max-lg:px-3 max-lg:text-sm";
-/** Modifier / Masquer / Supprimer sur téléphone : même hauteur tactile, texte et padding un peu réduits (une seule ligne dès 320 px). */
-const actionTouchButton = "max-lg:min-h-[40px] max-lg:px-2.5 max-lg:text-[0.8125rem]";
+/**
+ * Modifier / Masquer / Supprimer sur téléphone, à droite des flèches : largeur partagée à parts égales
+ * (≤ 6 rem chacun), même hauteur tactile, texte réduit — une seule ligne dès 320 px.
+ */
+const actionTouchButton = "max-lg:min-h-[40px] max-lg:min-w-0 max-lg:max-w-[6rem] max-lg:flex-1 max-lg:px-1 max-lg:text-xs";
 const greenButton =
   "rounded-lg bg-kaytori-green px-4 py-2 text-sm font-semibold text-white hover:bg-kaytori-greenDark disabled:cursor-not-allowed disabled:opacity-60";
 
@@ -267,7 +270,7 @@ export function CategoriesPage({ client }: { client: SupabaseClient }) {
         <div className="space-y-6">
           {/*
             Téléphone et tablette (< 1024 px) : chaque catégorie en carte (même balisage, en-têtes masqués) — ordre ↑ / position / ↓
-            en colonne à gauche, nom et statut, produits et affichage, puis les actions sur toute la largeur.
+            en colonne à gauche ; à droite : nom et statut, produits et affichage, puis les actions sur la ligne de ↓.
           */}
           <div className="overflow-x-auto rounded-xl border border-stone-200 bg-white">
             <table className="min-w-full text-left text-sm max-lg:block">
@@ -286,8 +289,9 @@ export function CategoriesPage({ client }: { client: SupabaseClient }) {
               {categories.map((c) => (
                 <tbody key={c.id} className="border-t border-stone-100 first:border-t-0 max-lg:block">
                   <tr className="max-lg:grid max-lg:grid-cols-[auto_minmax(0,1fr)_auto] max-lg:items-start max-lg:gap-x-3 max-lg:gap-y-1 max-lg:px-3 max-lg:py-3">
-                    <td className="py-2.5 pl-4 pr-3 max-lg:col-start-1 max-lg:row-span-3 max-lg:row-start-1 max-lg:p-0">
-                      <div className="flex items-center gap-1.5 max-lg:flex-col max-lg:gap-1">
+                    <td className="py-2.5 pl-4 pr-3 max-lg:col-start-1 max-lg:row-span-3 max-lg:row-start-1 max-lg:self-stretch max-lg:p-0">
+                      {/* Téléphone : ↑ en haut, ↓ en bas de la carte (aligné sur la rangée des actions). */}
+                      <div className="flex items-center gap-1.5 max-lg:h-full max-lg:flex-col max-lg:justify-between max-lg:gap-1">
                         <span className="w-6 tabular-nums text-stone-500 max-lg:order-2 max-lg:w-auto max-lg:text-center max-lg:font-semibold">
                           {c.position}
                         </span>
@@ -310,8 +314,8 @@ export function CategoriesPage({ client }: { client: SupabaseClient }) {
                     <td className="px-3 py-2.5 max-lg:col-start-3 max-lg:row-start-1 max-lg:justify-self-end max-lg:p-0 max-lg:pt-1">
                       <StatusBadge active={c.isActive} />
                     </td>
-                    <td className="py-2.5 pl-3 pr-4 max-lg:col-span-3 max-lg:col-start-1 max-lg:row-start-4 max-lg:p-0 max-lg:pt-1">
-                      <div className="flex flex-wrap justify-end gap-1.5 max-lg:justify-start max-lg:gap-2 xl:flex-nowrap xl:whitespace-nowrap">
+                    <td className="py-2.5 pl-3 pr-4 max-lg:col-span-2 max-lg:col-start-2 max-lg:row-start-3 max-lg:self-end max-lg:p-0 max-lg:pt-1">
+                      <div className="flex flex-wrap justify-end gap-1.5 max-lg:flex-nowrap max-lg:justify-start xl:flex-nowrap xl:whitespace-nowrap">
                         <button type="button" className={`${smallButton} ${actionTouchButton}`} disabled={busy} onClick={() => setEditing(editing === c.id ? null : c.id)}>
                           Modifier
                         </button>
