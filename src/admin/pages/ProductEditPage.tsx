@@ -428,9 +428,15 @@ function ProductEditForm({
           </p>
         ) : null}
 
+        {/*
+          Bureau (≥ lg) : formulaire à gauche, Photo + Référence interne à droite (inchangé).
+          Téléphone / tablette : les deux colonnes s'effacent (contents) et les cartes deviennent
+          des éléments de la grille, réordonnés : Photo, Produit, Variantes, Référence interne.
+          Un seul exemplaire de chaque carte (même champ photo, mêmes états).
+        */}
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <div className="space-y-5">
-            <Section title="Produit">
+          <div className="max-lg:contents lg:space-y-5">
+            <Section title="Produit" className="max-lg:order-2">
               <div className="space-y-4">
                 <Field label="Nom" htmlFor="p-name" error={errors.name}>
                   <input id="p-name" value={form.name} onChange={(e) => set("name", e.target.value)} className={fieldError(inputClass, errors.name)} />
@@ -478,7 +484,7 @@ function ProductEditForm({
               </div>
             </Section>
 
-            <Section title={`Variantes (${form.variants.length})`}>
+            <Section title={`Variantes (${form.variants.length})`} className="max-lg:order-3">
               {form.variants.length === 0 ? (
                 <p className="mb-3 text-sm text-stone-500">Aucune variante. Ajoutez-en si le prix dépend du choix du client (ex. Poulet, Bœuf).</p>
               ) : null}
@@ -505,8 +511,8 @@ function ProductEditForm({
             </Section>
           </div>
 
-          <aside className="space-y-5">
-            <Section title="Photo">
+          <aside className="max-lg:contents lg:space-y-5">
+            <Section title="Photo" className="max-lg:order-1">
               <ProductPhotoField
                 currentUrl={data.product.image_url}
                 selection={photo}
@@ -524,7 +530,7 @@ function ProductEditForm({
                 <PhotoCropEditor src={data.product.image_url} onCancel={() => setCropOpen(false)} onSave={saveCroppedPhoto} />
               ) : null}
             </Section>
-            <Section title="Référence interne">
+            <Section title="Référence interne" className="max-lg:order-4">
               <p className="break-all font-mono text-sm text-stone-700">{data.product.id}</p>
               <p className="mt-1 text-xs text-stone-500">Non modifiable (utilisée par le panier et les commandes).</p>
             </Section>

@@ -37,9 +37,9 @@ export function PriceInput({ id, value, onChange, error }: { id: string; value: 
   );
 }
 
-export function Section({ title, children }: { title: string; children: ReactNode }) {
+export function Section({ title, children, className = "" }: { title: string; children: ReactNode; className?: string }) {
   return (
-    <section className="rounded-xl border border-stone-200 bg-white p-5">
+    <section className={`rounded-xl border border-stone-200 bg-white p-5${className ? ` ${className}` : ""}`}>
       <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-stone-500">{title}</h2>
       {children}
     </section>

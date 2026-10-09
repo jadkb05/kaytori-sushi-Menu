@@ -269,6 +269,24 @@ describe("rendu de la page d'édition", () => {
       </AdminMenuDataContext.Provider>,
     );
 
+  it("mobile : Photo d'abord, puis Produit, Variantes, Référence interne ; bureau : deux colonnes inchangées ; un seul champ photo", () => {
+    const html = render(RIZ.id);
+    const section = (title: string) => html.match(new RegExp(`<section class="([^"]*)"><h2[^>]*>${title}`))?.[1] ?? "";
+    expect(section("Photo")).toContain("max-lg:order-1");
+    expect(section("Produit")).toContain("max-lg:order-2");
+    expect(section("Variantes")).toContain("max-lg:order-3");
+    expect(section("Référence interne")).toContain("max-lg:order-4");
+    // Bureau : grille formulaire | 280 px ; les colonnes ne s'effacent (contents) que sous lg.
+    expect(html).toContain('class="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]"');
+    expect(html).toContain('<div class="max-lg:contents lg:space-y-5"><section');
+    expect(html).toContain('<aside class="max-lg:contents lg:space-y-5"><section');
+    // Ordre du DOM inchangé (formulaire, puis photo) : un seul exemplaire du champ et des boutons.
+    expect(html.indexOf(">Produit<")).toBeLessThan(html.indexOf(">Photo<"));
+    expect(html.match(/type="file"/g)).toHaveLength(1);
+    expect(html.match(/Changer la photo/g)).toHaveLength(1);
+    expect(html.match(/Recadrer la photo/g)).toHaveLength(1);
+  });
+
   it("variantes en positions 1…N, ajout, suppression du produit (sans dialogue ouvert), aucun terme technique", () => {
     const html = render(RIZ.id);
     for (let i = 1; i <= 5; i++) expect(html).toMatch(new RegExp(`id="v-[a-z-]+-position"[^>]*max="5"[^>]*value="${i}"`));
