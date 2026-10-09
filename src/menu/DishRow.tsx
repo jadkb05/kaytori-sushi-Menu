@@ -2,6 +2,7 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "../cart/CartContext";
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { dishImage, dishThumbs, formatPriceDH, getDisplayProductName, lowestPriceMAD } from "./menuDisplay";
+import { dishAnchorId } from "./menuSearch";
 import { useDishAdd } from "./useDishAdd";
 
 /** Description compacte (2 lignes). « Voir plus » seulement si le texte dépasse. */
@@ -58,8 +59,11 @@ function DishDescription({ text }: { text: string }) {
   );
 }
 
-/** Carte plat compacte pour /menu — vignette, nom, description, prix, bouton +. */
-export function DishRow({ item }: { item: YumloMenuItem }) {
+/**
+ * Carte plat compacte pour /menu — vignette, nom, description, prix, bouton +.
+ * `highlighted` : brève mise en évidence quand la recherche mène à ce plat.
+ */
+export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; highlighted?: boolean }) {
   const { hasVariants, pickerOpen, openPicker, handleAdd, variantModal } = useDishAdd(item);
   const { lines } = useCart();
   /** Nom affiché sous le titre de catégorie (le panier garde le nom complet). */
@@ -173,8 +177,12 @@ export function DishRow({ item }: { item: YumloMenuItem }) {
     "grid min-h-[44px] place-items-center bg-[#fffcf9] text-2xl font-light leading-none text-kaytori-green";
 
   return (
-    <li className="touch-manipulation">
-      <article className="flex items-stretch overflow-hidden rounded-2xl border border-kaytori-black/[0.06] bg-white shadow-[0_1px_2px_rgba(10,15,13,0.04),0_6px_18px_-12px_rgba(10,15,13,0.1)]">
+    <li id={dishAnchorId(item.id)} className="touch-manipulation">
+      <article
+        className={`flex items-stretch overflow-hidden rounded-2xl border bg-white shadow-[0_1px_2px_rgba(10,15,13,0.04),0_6px_18px_-12px_rgba(10,15,13,0.1)] transition-[box-shadow,border-color] duration-500 motion-reduce:transition-none ${
+          highlighted ? "border-kaytori-gold ring-2 ring-kaytori-gold/70" : "border-kaytori-black/[0.06]"
+        }`}
+      >
         <div className="flex min-w-0 flex-1 items-center p-2.5">{body}</div>
 
         {hasVariants ? (
