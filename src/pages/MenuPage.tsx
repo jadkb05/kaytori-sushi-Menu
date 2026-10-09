@@ -254,7 +254,7 @@ export function MenuPage() {
           className="h-full w-full object-cover object-[50%_62%] saturate-[.88] md:object-[50%_40%] lg:object-[50%_58%]"
         />
         <div
-          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0c1712]/40 via-[#0c1712]/15 to-[#0c1712]/35"
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0c1712]/20 via-transparent to-[#0c1712]/20"
           aria-hidden
         />
       </div>
