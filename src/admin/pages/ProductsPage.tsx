@@ -6,43 +6,50 @@ import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { buildCategoryList, buildProductList, filterProducts, type AdminProduct } from "../lib/menuAdmin";
 import { ADMIN_ROUTES, productEditPath } from "../lib/routes";
 
+/**
+ * Une ligne du tableau. Sous lg (téléphone, tablette < 1024 px), la même ligne s'affiche en carte (grille) :
+ * photo à gauche ; nom, catégorie, prix + statut, variantes ; « Modifier » à droite.
+ * Mêmes données et mêmes liens qu'au bureau, où le tableau reste inchangé.
+ */
 function ProductRow({ p }: { p: AdminProduct }) {
   return (
-    <tr className="align-middle">
-      <td className="py-2.5 pl-4 pr-3">
+    <tr className="align-middle max-lg:grid max-lg:grid-cols-[3rem_minmax(0,1fr)_auto] max-lg:items-center max-lg:gap-x-3 max-lg:gap-y-1 max-lg:px-3 max-lg:py-3">
+      <td className="py-2.5 pl-4 pr-3 max-lg:col-start-1 max-lg:row-span-4 max-lg:row-start-1 max-lg:self-start max-lg:p-0">
         {p.imageUrl ? (
           <img src={p.imageUrl} alt="" width={48} height={48} loading="lazy" className="h-12 w-12 rounded-lg bg-[#0f1815] object-cover" />
         ) : (
           <span className="block h-12 w-12 rounded-lg bg-stone-200" aria-hidden />
         )}
       </td>
-      <td className="px-3 py-2.5">
+      <td className="px-3 py-2.5 max-lg:col-start-2 max-lg:row-start-1 max-lg:min-w-0 max-lg:break-words max-lg:p-0">
         <AdminLink href={productEditPath(p.id)} className="font-medium text-stone-900 hover:text-kaytori-green hover:underline">
           {p.name}
         </AdminLink>
-        <p className="text-xs text-stone-400">{p.id}</p>
+        <p className="text-xs text-stone-400 max-lg:hidden">{p.id}</p>
       </td>
-      <td className="px-3 py-2.5 text-stone-600">{p.categoryName}</td>
-      <td className="whitespace-nowrap px-3 py-2.5 tabular-nums text-stone-900">
+      <td className="px-3 py-2.5 text-stone-600 max-lg:col-start-2 max-lg:row-start-2 max-lg:min-w-0 max-lg:break-words max-lg:p-0 max-lg:text-xs">{p.categoryName}</td>
+      <td className="whitespace-nowrap px-3 py-2.5 tabular-nums text-stone-900 max-lg:col-start-2 max-lg:row-start-3 max-lg:p-0">
         {p.variantCount > 0 ? <span className="text-stone-500">dès </span> : null}
         {p.displayPrice} DH
       </td>
-      <td className="px-3 py-2.5 text-stone-600">
+      <td className={`px-3 py-2.5 text-stone-600 max-lg:col-span-2 max-lg:col-start-2 max-lg:row-start-4 max-lg:min-w-0 max-lg:p-0 max-lg:text-xs ${p.variantCount > 0 ? "" : "max-lg:hidden"}`}>
         {p.variantCount > 0 ? (
           <span title={p.variantLabels.join(", ")}>
             {p.variantCount} variante{p.variantCount > 1 ? "s" : ""}
+            {/* Téléphone : pas de survol pour lire le title → libellés affichés. */}
+            <span className="lg:hidden"> : {p.variantLabels.join(", ")}</span>
           </span>
         ) : (
           <span className="text-stone-400">—</span>
         )}
       </td>
-      <td className="px-3 py-2.5">
+      <td className="px-3 py-2.5 max-lg:col-start-3 max-lg:row-start-3 max-lg:justify-self-end max-lg:p-0">
         <StatusBadge active={p.visible} activeLabel="Visible" inactiveLabel={p.isActive ? "Catégorie masquée" : "Masqué"} />
       </td>
-      <td className="py-2.5 pl-3 pr-4 text-right">
+      <td className="py-2.5 pl-3 pr-4 text-right max-lg:col-start-3 max-lg:row-span-2 max-lg:row-start-1 max-lg:self-start max-lg:p-0">
         <AdminLink
           href={productEditPath(p.id)}
-          className="rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:bg-stone-50"
+          className="rounded-lg border border-stone-300 px-3 py-1.5 text-xs font-semibold text-stone-700 hover:bg-stone-50 max-lg:inline-flex max-lg:min-h-[40px] max-lg:items-center max-lg:px-3.5"
           aria-label={`Modifier ${p.name}`}
         >
           Modifier
@@ -110,8 +117,9 @@ export function ProductsPage() {
             </p>
           </div>
           <div className="overflow-x-auto rounded-xl border border-stone-200 bg-white">
-            <table className="min-w-full text-left text-sm">
-              <thead className="border-b border-stone-200 bg-stone-50 text-xs font-medium uppercase tracking-wide text-stone-500">
+            {/* Téléphone et tablette (< 1024 px) : tableau affiché en liste de cartes (même balisage, en-têtes masqués). */}
+            <table className="min-w-full text-left text-sm max-lg:block">
+              <thead className="border-b border-stone-200 bg-stone-50 text-xs font-medium uppercase tracking-wide text-stone-500 max-lg:hidden">
                 <tr>
                   <th scope="col" className="py-2.5 pl-4 pr-3">Photo</th>
                   <th scope="col" className="px-3 py-2.5">Nom</th>
@@ -124,7 +132,7 @@ export function ProductsPage() {
                   </th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-stone-100">
+              <tbody className="divide-y divide-stone-100 max-lg:block">
                 {shown.map((p) => (
                   <ProductRow key={p.id} p={p} />
                 ))}

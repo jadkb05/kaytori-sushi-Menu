@@ -29,7 +29,7 @@ export function AdminLayout({
         key={item.page}
         href={item.href}
         aria-current={active ? "page" : undefined}
-        className={`block whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium ${
+        className={`block whitespace-nowrap rounded-lg px-3 py-2 text-sm font-medium max-[359px]:px-2.5 ${
           active ? "bg-kaytori-green/10 text-kaytori-green" : "text-stone-600 hover:bg-stone-100 hover:text-stone-900"
         }`}
       >
@@ -48,7 +48,8 @@ export function AdminLayout({
             <p className="text-xs text-stone-500">Gestion du menu</p>
           </div>
         </div>
-        <nav aria-label="Administration" className="flex gap-1 overflow-x-auto px-3 pb-3 md:flex-1 md:flex-col md:overflow-visible md:pb-0">
+        {/* Moins de 360 px : marges un peu réduites pour que les trois onglets tiennent sans être coupés. */}
+        <nav aria-label="Administration" className="flex gap-1 overflow-x-auto px-3 pb-3 max-[359px]:gap-0.5 max-[359px]:px-2 md:flex-1 md:flex-col md:overflow-visible md:pb-0">
           {NAV.map(navLink)}
         </nav>
         <div className="hidden border-t border-stone-200 px-4 py-4 md:block">

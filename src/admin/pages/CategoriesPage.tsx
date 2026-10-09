@@ -18,6 +18,8 @@ type Notice = { success?: string; error?: string };
 
 const smallButton =
   "rounded-md border border-stone-300 bg-white px-2.5 py-1 text-xs font-semibold text-stone-700 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40";
+/** Téléphone et tablette (< 1024 px) : boutons des lignes plus grands (cible tactile ≥ 40 px). */
+const touchButton = "max-lg:min-h-[40px] max-lg:min-w-[40px] max-lg:px-3 max-lg:text-sm";
 const greenButton =
   "rounded-lg bg-kaytori-green px-4 py-2 text-sm font-semibold text-white hover:bg-kaytori-greenDark disabled:cursor-not-allowed disabled:opacity-60";
 
@@ -261,9 +263,13 @@ export function CategoriesPage({ client }: { client: SupabaseClient }) {
       {data.status === "error" ? <ErrorState message={data.error} onRetry={data.reload} /> : null}
       {data.status === "ready" && rows ? (
         <div className="space-y-6">
+          {/*
+            Téléphone et tablette (< 1024 px) : chaque catégorie en carte (même balisage, en-têtes masqués) — ordre ↑ / position / ↓
+            en colonne à gauche, nom et statut, produits et affichage, puis les actions sur toute la largeur.
+          */}
           <div className="overflow-x-auto rounded-xl border border-stone-200 bg-white">
-            <table className="min-w-full text-left text-sm">
-              <thead className="border-b border-stone-200 bg-stone-50 text-xs font-medium uppercase tracking-wide text-stone-500">
+            <table className="min-w-full text-left text-sm max-lg:block">
+              <thead className="border-b border-stone-200 bg-stone-50 text-xs font-medium uppercase tracking-wide text-stone-500 max-lg:hidden">
                 <tr>
                   <th scope="col" className="py-2.5 pl-4 pr-3">Ordre</th>
                   <th scope="col" className="px-3 py-2.5">Nom</th>
@@ -276,44 +282,49 @@ export function CategoriesPage({ client }: { client: SupabaseClient }) {
                 </tr>
               </thead>
               {categories.map((c) => (
-                <tbody key={c.id} className="border-t border-stone-100 first:border-t-0">
-                  <tr>
-                    <td className="py-2.5 pl-4 pr-3">
-                      <div className="flex items-center gap-1.5">
-                        <span className="w-6 tabular-nums text-stone-500">{c.position}</span>
-                        <button type="button" className={smallButton} disabled={busy || c.position === 1} onClick={() => move(c, c.position - 1)} aria-label={`Monter ${c.name}`}>
+                <tbody key={c.id} className="border-t border-stone-100 first:border-t-0 max-lg:block">
+                  <tr className="max-lg:grid max-lg:grid-cols-[auto_minmax(0,1fr)_auto] max-lg:items-start max-lg:gap-x-3 max-lg:gap-y-1 max-lg:px-3 max-lg:py-3">
+                    <td className="py-2.5 pl-4 pr-3 max-lg:col-start-1 max-lg:row-span-3 max-lg:row-start-1 max-lg:p-0">
+                      <div className="flex items-center gap-1.5 max-lg:flex-col max-lg:gap-1">
+                        <span className="w-6 tabular-nums text-stone-500 max-lg:order-2 max-lg:w-auto max-lg:text-center max-lg:font-semibold">
+                          {c.position}
+                        </span>
+                        <button type="button" className={`${smallButton} ${touchButton} max-lg:order-1`} disabled={busy || c.position === 1} onClick={() => move(c, c.position - 1)} aria-label={`Monter ${c.name}`}>
                           ↑
                         </button>
-                        <button type="button" className={smallButton} disabled={busy || c.position === categories.length} onClick={() => move(c, c.position + 1)} aria-label={`Descendre ${c.name}`}>
+                        <button type="button" className={`${smallButton} ${touchButton} max-lg:order-3`} disabled={busy || c.position === categories.length} onClick={() => move(c, c.position + 1)} aria-label={`Descendre ${c.name}`}>
                           ↓
                         </button>
                       </div>
                     </td>
-                    <td className="px-3 py-2.5 font-medium text-stone-900">{c.name}</td>
-                    <td className="px-3 py-2.5 tabular-nums text-stone-600">
-                      {c.visibleProductCount === c.productCount ? c.productCount : `${c.visibleProductCount} visibles / ${c.productCount}`}
+                    <td className="px-3 py-2.5 font-medium text-stone-900 max-lg:col-start-2 max-lg:row-start-1 max-lg:min-w-0 max-lg:break-words max-lg:p-0 max-lg:pt-1 max-lg:text-[0.95rem]">
+                      {c.name}
                     </td>
-                    <td className="px-3 py-2.5 text-stone-600">{DISPLAY_MODE_LABELS[c.displayMode]}</td>
-                    <td className="px-3 py-2.5">
+                    <td className="px-3 py-2.5 tabular-nums text-stone-600 max-lg:col-start-2 max-lg:row-start-2 max-lg:p-0 max-lg:text-xs">
+                      {c.visibleProductCount === c.productCount ? c.productCount : `${c.visibleProductCount} visibles / ${c.productCount}`}
+                      <span className="lg:hidden"> produit{c.productCount > 1 ? "s" : ""} · {DISPLAY_MODE_LABELS[c.displayMode]}</span>
+                    </td>
+                    <td className="px-3 py-2.5 text-stone-600 max-lg:hidden">{DISPLAY_MODE_LABELS[c.displayMode]}</td>
+                    <td className="px-3 py-2.5 max-lg:col-start-3 max-lg:row-start-1 max-lg:justify-self-end max-lg:p-0 max-lg:pt-1">
                       <StatusBadge active={c.isActive} />
                     </td>
-                    <td className="py-2.5 pl-3 pr-4">
-                      <div className="flex justify-end gap-1.5 whitespace-nowrap">
-                        <button type="button" className={smallButton} disabled={busy} onClick={() => setEditing(editing === c.id ? null : c.id)}>
+                    <td className="py-2.5 pl-3 pr-4 max-lg:col-span-2 max-lg:col-start-2 max-lg:row-start-3 max-lg:p-0 max-lg:pt-1">
+                      <div className="flex flex-wrap justify-end gap-1.5 max-lg:justify-start max-lg:gap-2 xl:flex-nowrap xl:whitespace-nowrap">
+                        <button type="button" className={`${smallButton} ${touchButton}`} disabled={busy} onClick={() => setEditing(editing === c.id ? null : c.id)}>
                           Modifier
                         </button>
-                        <button type="button" className={smallButton} disabled={busy} onClick={() => toggle(c)}>
+                        <button type="button" className={`${smallButton} ${touchButton}`} disabled={busy} onClick={() => toggle(c)}>
                           {c.isActive ? "Masquer" : "Afficher"}
                         </button>
-                        <button type="button" className={`${smallButton} text-red-700`} disabled={busy} onClick={() => askDelete(c)}>
+                        <button type="button" className={`${smallButton} ${touchButton} text-red-700`} disabled={busy} onClick={() => askDelete(c)}>
                           Supprimer
                         </button>
                       </div>
                     </td>
                   </tr>
                   {editing === c.id ? (
-                    <tr>
-                      <td colSpan={6} className="p-0">
+                    <tr className="max-lg:block">
+                      <td colSpan={6} className="p-0 max-lg:block">
                         <EditCategoryPanel
                           category={c}
                           total={categories.length}
