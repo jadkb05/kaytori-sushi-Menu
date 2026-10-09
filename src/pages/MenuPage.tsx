@@ -259,8 +259,11 @@ export function MenuPage() {
 
       <ReassuranceBand />
 
-      {/* Bannière photo (décorative) : courte, sans texte ni overlay. */}
-      <div className="aspect-[2/1] max-h-[13.5rem] w-full overflow-hidden bg-[#0f1815] md:aspect-auto md:h-52 md:max-h-none lg:h-[26rem]">
+      {/*
+        Bannière photo (décorative) : courte, sans texte. Photo légèrement désaturée et voilée de vert
+        très foncé (identité Kaytôri) pour rester appétissante sans écraser la page.
+      */}
+      <div className="relative aspect-[2/1] max-h-[13.5rem] w-full overflow-hidden bg-[#0f1815] md:aspect-auto md:h-52 md:max-h-none lg:h-[26rem]">
         <img
           src="/banner/kaytori-makis-960.webp"
           srcSet="/banner/kaytori-makis-640.webp 640w, /banner/kaytori-makis-960.webp 960w, /banner/kaytori-makis-1280.webp 1280w"
@@ -270,7 +273,11 @@ export function MenuPage() {
           alt=""
           fetchPriority="high"
           decoding="async"
-          className="h-full w-full object-cover object-[50%_62%] md:object-[50%_40%] lg:object-[50%_58%]"
+          className="h-full w-full object-cover object-[50%_62%] saturate-[.88] md:object-[50%_40%] lg:object-[50%_58%]"
+        />
+        <div
+          className="pointer-events-none absolute inset-0 bg-gradient-to-b from-[#0c1712]/40 via-[#0c1712]/15 to-[#0c1712]/35"
+          aria-hidden
         />
       </div>
 
