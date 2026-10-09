@@ -20,6 +20,8 @@ const smallButton =
   "rounded-md border border-stone-300 bg-white px-2.5 py-1 text-xs font-semibold text-stone-700 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-40";
 /** Téléphone et tablette (< 1024 px) : boutons des lignes plus grands (cible tactile ≥ 40 px). */
 const touchButton = "max-lg:min-h-[40px] max-lg:min-w-[40px] max-lg:px-3 max-lg:text-sm";
+/** Modifier / Masquer / Supprimer sur téléphone : même hauteur tactile, texte et padding un peu réduits (une seule ligne dès 320 px). */
+const actionTouchButton = "max-lg:min-h-[40px] max-lg:px-2.5 max-lg:text-[0.8125rem]";
 const greenButton =
   "rounded-lg bg-kaytori-green px-4 py-2 text-sm font-semibold text-white hover:bg-kaytori-greenDark disabled:cursor-not-allowed disabled:opacity-60";
 
@@ -308,15 +310,15 @@ export function CategoriesPage({ client }: { client: SupabaseClient }) {
                     <td className="px-3 py-2.5 max-lg:col-start-3 max-lg:row-start-1 max-lg:justify-self-end max-lg:p-0 max-lg:pt-1">
                       <StatusBadge active={c.isActive} />
                     </td>
-                    <td className="py-2.5 pl-3 pr-4 max-lg:col-span-2 max-lg:col-start-2 max-lg:row-start-3 max-lg:p-0 max-lg:pt-1">
+                    <td className="py-2.5 pl-3 pr-4 max-lg:col-span-3 max-lg:col-start-1 max-lg:row-start-4 max-lg:p-0 max-lg:pt-1">
                       <div className="flex flex-wrap justify-end gap-1.5 max-lg:justify-start max-lg:gap-2 xl:flex-nowrap xl:whitespace-nowrap">
-                        <button type="button" className={`${smallButton} ${touchButton}`} disabled={busy} onClick={() => setEditing(editing === c.id ? null : c.id)}>
+                        <button type="button" className={`${smallButton} ${actionTouchButton}`} disabled={busy} onClick={() => setEditing(editing === c.id ? null : c.id)}>
                           Modifier
                         </button>
-                        <button type="button" className={`${smallButton} ${touchButton}`} disabled={busy} onClick={() => toggle(c)}>
+                        <button type="button" className={`${smallButton} ${actionTouchButton}`} disabled={busy} onClick={() => toggle(c)}>
                           {c.isActive ? "Masquer" : "Afficher"}
                         </button>
-                        <button type="button" className={`${smallButton} ${touchButton} text-red-700`} disabled={busy} onClick={() => askDelete(c)}>
+                        <button type="button" className={`${smallButton} ${actionTouchButton} text-red-700`} disabled={busy} onClick={() => askDelete(c)}>
                           Supprimer
                         </button>
                       </div>
