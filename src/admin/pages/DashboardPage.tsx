@@ -74,6 +74,11 @@ export function DashboardPage() {
   return (
     <>
       <PageHeader
+        eyebrow={
+          <>
+            Bonjour, M. Saad <span aria-hidden>👋</span>
+          </>
+        }
         title="Tableau de bord"
         description="Vue d'ensemble du menu Kaytôri Sushi : ce que voient vos clients et ce qui est masqué."
         actions={<p className="hidden rounded-full border border-admin-line bg-white px-3 py-1 text-[13px] font-medium text-admin-soft sm:block">{today}</p>}

@@ -129,13 +129,18 @@ function normalize(s: string): string {
     .trim();
 }
 
-export type ProductFilter = { query: string; categoryId: string | null };
+/** `categoryQuery` : recherche dans le nom de la catégorie (partielle, sans accents ni majuscules). */
+export type ProductFilter = { query: string; categoryId: string | null; categoryQuery?: string };
 
-/** Recherche (nom, sans accents) et filtre par catégorie. */
-export function filterProducts(list: AdminProduct[], { query, categoryId }: ProductFilter): AdminProduct[] {
+/** Recherche (nom, sans accents), filtre par catégorie et recherche par nom de catégorie, cumulables. */
+export function filterProducts(list: AdminProduct[], { query, categoryId, categoryQuery = "" }: ProductFilter): AdminProduct[] {
   const q = normalize(query);
+  const cq = normalize(categoryQuery);
   return list.filter(
-    (p) => (!categoryId || p.categoryId === categoryId) && (q === "" || normalize(p.name).includes(q)),
+    (p) =>
+      (!categoryId || p.categoryId === categoryId) &&
+      (q === "" || normalize(p.name).includes(q)) &&
+      (cq === "" || normalize(p.categoryName).includes(cq)),
   );
 }
 

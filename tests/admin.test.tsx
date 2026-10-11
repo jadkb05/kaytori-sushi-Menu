@@ -183,6 +183,20 @@ describe("données de l'admin (lues depuis la base)", () => {
     expect(filterProducts(products, { query: "introuvable", categoryId: null })).toHaveLength(0);
   });
 
+  it("recherche par catégorie : partielle, sans accents ni majuscules, cumulable avec la recherche par nom", async () => {
+    const products = buildProductList(await fetchMenuRows(createPgliteSupabase(db, ADMIN)));
+    const yakitori = filterProducts(products, { query: "", categoryId: null, categoryQuery: "yakit" });
+    expect(yakitori.length).toBeGreaterThan(0);
+    expect(new Set(yakitori.map((p) => p.categoryName))).toEqual(new Set(["Yakitori"]));
+    expect(filterProducts(products, { query: "", categoryId: null, categoryQuery: "PLATS THAI" })).toEqual(
+      filterProducts(products, { query: "", categoryId: "plats-thai" }),
+    );
+    expect(filterProducts(products, { query: "saumon", categoryId: null, categoryQuery: "thaï" }).map((p) => p.name)).toEqual([
+      "Pavé de Saumon",
+    ]);
+    expect(filterProducts(products, { query: "", categoryId: null, categoryQuery: "  " })).toHaveLength(products.length);
+  });
+
   it("catégories : 31, dans l'ordre, avec nombre de produits et mode d'affichage", async () => {
     const categories = buildCategoryList(await fetchMenuRows(createPgliteSupabase(db, ADMIN)));
     expect(categories.map((c) => c.name)).toEqual([...YUMLO_CATEGORIES]);

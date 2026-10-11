@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useMemo, useState } from "react";
 import { takeFlash } from "../lib/flash";
 import { AdminLink } from "../components/AdminLink";
-import { ArrowDownIcon, ArrowUpIcon, PencilIcon, PlusIcon, SearchIcon } from "../components/icons";
+import { ArrowDownIcon, ArrowUpIcon, CategoriesIcon, CloseIcon, PencilIcon, PlusIcon, SearchIcon } from "../components/icons";
 import { ErrorState, LoadingState, PageHeader, StatusBadge, Toast, buttonClass, cardClass, focusRing, inputClass, orderButton, touchButton, type ToastNotice } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { buildCategoryList, buildProductList, filterProducts, type AdminProduct } from "../lib/menuAdmin";
@@ -145,10 +145,15 @@ export function ProductsPage({ client }: { client: SupabaseClient }) {
   const [moved, setMoved] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [categoryId, setCategoryId] = useState<string | null>(null);
+  /** Recherche par nom de catégorie (indépendante de la recherche par nom de produit). */
+  const [categoryQuery, setCategoryQuery] = useState("");
 
   const products = useMemo(() => (data.rows ? buildProductList(data.rows) : []), [data.rows]);
   const categories = useMemo(() => (data.rows ? buildCategoryList(data.rows) : []), [data.rows]);
-  const shown = useMemo(() => filterProducts(products, { query, categoryId }), [products, query, categoryId]);
+  const shown = useMemo(
+    () => filterProducts(products, { query, categoryId, categoryQuery }),
+    [products, query, categoryId, categoryQuery],
+  );
 
   useEffect(() => {
     if (!moved) return;
@@ -183,8 +188,8 @@ export function ProductsPage({ client }: { client: SupabaseClient }) {
       {data.status === "error" ? <ErrorState message={data.error} onRetry={data.reload} /> : null}
       {data.status === "ready" ? (
         <>
-          <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <div className="relative sm:w-72">
+          <div className="mb-4 grid items-center gap-3 sm:grid-cols-2 xl:grid-cols-[18rem_16rem_16rem_minmax(0,1fr)]">
+            <div className="relative">
               <SearchIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-admin-muted" />
               <input
                 type="search"
@@ -195,11 +200,36 @@ export function ProductsPage({ client }: { client: SupabaseClient }) {
                 className={`${inputClass} h-10 pl-9`}
               />
             </div>
+            <div className="relative">
+              <CategoriesIcon className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-admin-muted" />
+              <input
+                type="search"
+                value={categoryQuery}
+                onChange={(e) => setCategoryQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Escape") setCategoryQuery("");
+                }}
+                placeholder="Rechercher une catégorie…"
+                aria-label="Rechercher par catégorie"
+                className={`${inputClass} h-10 pl-9 ${categoryQuery ? "pr-10" : ""} [&::-webkit-search-cancel-button]:appearance-none`}
+              />
+              {categoryQuery ? (
+                <button
+                  type="button"
+                  onClick={() => setCategoryQuery("")}
+                  aria-label="Effacer la recherche par catégorie"
+                  title="Effacer"
+                  className={`absolute right-1.5 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-md text-admin-muted transition-colors hover:bg-admin-canvas hover:text-admin-ink ${focusRing}`}
+                >
+                  <CloseIcon className="h-4 w-4" />
+                </button>
+              ) : null}
+            </div>
             <select
               value={categoryId ?? ""}
               onChange={(e) => setCategoryId(e.target.value || null)}
               aria-label="Filtrer par catégorie"
-              className={`${inputClass} h-10 sm:w-64`}
+              className={`${inputClass} h-10`}
             >
               <option value="">Toutes les catégories</option>
               {categories.map((c) => (
@@ -208,7 +238,7 @@ export function ProductsPage({ client }: { client: SupabaseClient }) {
                 </option>
               ))}
             </select>
-            <p className="text-sm font-medium text-admin-soft sm:ml-auto" aria-live="polite">
+            <p className="text-sm font-medium text-admin-soft sm:text-right" aria-live="polite">
               {shown.length} produit{shown.length > 1 ? "s" : ""}
             </p>
           </div>

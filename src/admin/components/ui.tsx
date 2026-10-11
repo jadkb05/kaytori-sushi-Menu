@@ -56,6 +56,7 @@ export function PageHeader({
   actions,
   back,
   meta,
+  eyebrow,
 }: {
   title: string;
   description?: string;
@@ -64,6 +65,8 @@ export function PageHeader({
   back?: { href: string; label: string };
   /** Contenu discret à droite du titre (badge, date…). */
   meta?: ReactNode;
+  /** Courte ligne au-dessus du titre (ex. message d'accueil). */
+  eyebrow?: ReactNode;
 }) {
   return (
     <header className="mb-6 lg:mb-8">
@@ -78,6 +81,7 @@ export function PageHeader({
       ) : null}
       <div className="flex flex-wrap items-end justify-between gap-x-4 gap-y-3">
         <div className="min-w-0">
+          {eyebrow ? <p className="mb-1.5 text-[0.9375rem] font-medium text-kaytori-green">{eyebrow}</p> : null}
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
             <h1 className="break-words text-[1.625rem] font-semibold leading-tight tracking-[-0.015em] text-admin-ink lg:text-[1.875rem]">{title}</h1>
             {meta}

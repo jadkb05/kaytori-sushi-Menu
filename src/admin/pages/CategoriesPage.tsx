@@ -269,6 +269,13 @@ export function CategoriesPage({ client }: { client: SupabaseClient }) {
       {data.status === "error" ? <ErrorState message={data.error} onRetry={data.reload} /> : null}
       {data.status === "ready" && rows ? (
         <div className="space-y-6">
+          <NewCategoryForm
+            total={categories.length}
+            busy={busy}
+            pending={pending?.kind === "create"}
+            validate={(name) => categoryNameError(name, rows)}
+            onCreate={(input) => run(() => createCategory(client, rows, input), `Catégorie « ${input.name.trim()} » créée.`, { id: "", kind: "create" })}
+          />
           {/*
             Téléphone et tablette (< 1024 px) : chaque catégorie en carte (même balisage, en-têtes masqués) — ordre ↑ / position / ↓
             en colonne à gauche ; à droite : nom et statut, produits et affichage, puis les actions sur la ligne de ↓.
@@ -369,13 +376,6 @@ export function CategoriesPage({ client }: { client: SupabaseClient }) {
               ))}
             </table>
           </div>
-          <NewCategoryForm
-            total={categories.length}
-            busy={busy}
-            pending={pending?.kind === "create"}
-            validate={(name) => categoryNameError(name, rows)}
-            onCreate={(input) => run(() => createCategory(client, rows, input), `Catégorie « ${input.name.trim()} » créée.`, { id: "", kind: "create" })}
-          />
         </div>
       ) : null}
       {deleting ? (
