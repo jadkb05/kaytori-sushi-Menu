@@ -1,9 +1,23 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
-import { AdminLink } from "../components/AdminLink";
 import { PhotoCropEditor } from "../components/PhotoCropEditor";
-import { Field, PriceInput, Section, fieldError } from "../components/formControls";
-import { ErrorState, LoadingState, PageHeader, StatusBadge, inputClass } from "../components/ui";
+import { AddVariantButton, Field, FormActionBar, PriceInput, Section, StaticField, VariantFrame, fieldError } from "../components/formControls";
+import { CropIcon, ImageIcon, TrashIcon, UploadIcon } from "../components/icons";
+import {
+  ConfirmDialog,
+  ErrorState,
+  LoadingState,
+  Notice,
+  PageHeader,
+  Spinner,
+  StatusBadge,
+  Switch,
+  Toast,
+  buttonClass,
+  cardClass,
+  inputClass,
+  type ToastNotice,
+} from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { navigate } from "../hooks/useAdminPath";
 import { setFlash } from "../lib/flash";
@@ -43,14 +57,7 @@ export function PositionField({
 }) {
   const slots = categorySlots(data.rows, form.categoryId, data.product.id);
   if (!slots || slots.automatic) {
-    return (
-      <div>
-        <p className="mb-1 text-sm font-medium text-stone-700">Position automatique</p>
-        <p className="rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-sm text-stone-600">
-          Cette catégorie utilise un ordre automatique.
-        </p>
-      </div>
-    );
+    return <StaticField label="Position automatique">Cette catégorie utilise un ordre automatique.</StaticField>;
   }
   const moving = form.categoryId !== data.product.category_id;
   const hidden = slots.hidden > 0 ? ` Les produits masqués comptent (${slots.hidden}).` : "";
@@ -107,22 +114,28 @@ export function ProductPhotoField({
     <div>
       <div className="relative">
         {shown ? (
-          <img src={shown} alt="" className="aspect-square w-full rounded-lg bg-[#0f1815] object-cover" />
+          <img src={shown} alt="" className="aspect-square w-full rounded-lg bg-[#0f1815] object-cover ring-1 ring-black/5" />
         ) : (
-          <div className="aspect-square w-full rounded-lg bg-stone-100" />
+          <div className="grid aspect-square w-full place-items-center rounded-lg border border-dashed border-admin-lineStrong bg-admin-subtle text-admin-muted">
+            <span className="flex flex-col items-center gap-2 text-xs font-medium">
+              <ImageIcon className="h-7 w-7" />
+              Aucune photo
+            </span>
+          </div>
         )}
         {selection ? (
-          <span className="absolute left-2 top-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-medium text-amber-900 ring-1 ring-amber-300">
+          <span className="absolute left-2 top-2 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-medium text-amber-900 shadow-admin-sm ring-1 ring-amber-300">
             Nouvelle photo — non enregistrée
           </span>
         ) : null}
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
         <label
-          className={`inline-flex cursor-pointer items-center rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-50 ${
+          className={`${buttonClass("secondary", "sm")} cursor-pointer focus-within:ring-2 focus-within:ring-kaytori-green/35 focus-within:ring-offset-2 ${
             disabled ? "pointer-events-none opacity-50" : ""
           }`}
         >
+          <UploadIcon className="h-3.5 w-3.5" />
           Changer la photo
           <input
             type="file"
@@ -141,8 +154,9 @@ export function ProductPhotoField({
             onClick={onCrop}
             disabled={disabled || cropBlockedReason !== null}
             title={cropBlockedReason ?? undefined}
-            className="rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-sm font-semibold text-stone-700 hover:bg-stone-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className={buttonClass("secondary", "sm")}
           >
+            <CropIcon className="h-3.5 w-3.5" />
             Recadrer la photo
           </button>
         ) : null}
@@ -151,19 +165,19 @@ export function ProductPhotoField({
             type="button"
             onClick={onClear}
             disabled={disabled}
-            className="rounded-lg px-3 py-1.5 text-sm font-medium text-stone-600 hover:bg-stone-100 disabled:opacity-50"
+            className={buttonClass("ghost", "sm")}
           >
             Annuler la sélection
           </button>
         ) : null}
       </div>
       {error ? (
-        <p className="mt-2 text-sm text-red-600" role="alert">
+        <p className="mt-2.5 text-[13px] text-red-700" role="alert">
           {error}
         </p>
       ) : (
-        <p className="mt-2 text-xs text-stone-500">
-          {canCrop && cropBlockedReason ? <span className="mb-1 block text-amber-800">{cropBlockedReason}</span> : null}
+        <p className="mt-2.5 text-xs leading-relaxed text-admin-muted">
+          {canCrop && cropBlockedReason ? <span className="mb-1.5 block rounded-md bg-amber-50 px-2 py-1.5 text-amber-900">{cropBlockedReason}</span> : null}
           {selection ? `${selection.file.name} · envoyée à l'enregistrement.` : "JPEG, PNG ou WebP · 5 Mo maximum · format carré conseillé · redimensionnée (1254 px) et compressée automatiquement."}
         </p>
       )}
@@ -192,42 +206,31 @@ function VariantCard({
   const [confirming, setConfirming] = useState(false);
   const base = v.existingId ? `v-${v.existingId}` : `v-new-${v.key}`;
   return (
-    <div className="rounded-lg border border-stone-200 p-4">
-      <div className="mb-3 flex items-center justify-between gap-3">
-        <p className="text-xs font-medium text-stone-500">
-          Variante {index + 1}
-          {v.existingId ? null : <span className="ml-2 rounded bg-emerald-50 px-1.5 py-0.5 text-emerald-700">nouvelle</span>}
-        </p>
-        <div className="flex items-center gap-3">
-          <StatusBadge active={v.isActive} />
-          {confirming ? null : (
-            <button
-              type="button"
-              onClick={() => (v.existingId ? setConfirming(true) : onRemove())}
-              className="text-xs font-semibold text-red-700 hover:underline"
-            >
-              Supprimer
-            </button>
-          )}
-        </div>
-      </div>
+    <VariantFrame
+      index={index}
+      isNew={!v.existingId}
+      active={v.isActive}
+      onRemove={confirming ? null : () => (v.existingId ? setConfirming(true) : onRemove())}
+    >
       {confirming ? (
-        <div className="mb-3 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
+        <div className="mb-4 rounded-lg border border-red-200 bg-red-50/80 px-3.5 py-3 text-sm text-red-900 motion-safe:animate-admin-in" role="alert">
           Retirer cette variante ? Elle sera supprimée à l'enregistrement.
-          <div className="mt-2 flex gap-2">
-            <button type="button" onClick={() => setConfirming(false)} className="rounded-md border border-stone-300 bg-white px-2.5 py-1 text-xs font-semibold text-stone-700">
+          <div className="mt-2.5 flex gap-2">
+            <button type="button" onClick={() => setConfirming(false)} className={buttonClass("secondary", "sm")}>
               Annuler
             </button>
-            <button type="button" onClick={onRemove} className="rounded-md bg-red-700 px-2.5 py-1 text-xs font-semibold text-white">
+            <button type="button" onClick={onRemove} className={buttonClass("danger", "sm")}>
               Retirer la variante
             </button>
           </div>
         </div>
       ) : null}
-      <div className="grid gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]">
-        <Field label="Libellé" htmlFor={`${base}-label`} error={errors.label}>
-          <input id={`${base}-label`} value={v.label} onChange={(e) => onChange({ label: e.target.value })} className={fieldError(inputClass, errors.label)} />
-        </Field>
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]">
+        <div className="col-span-2 sm:col-span-1">
+          <Field label="Libellé" htmlFor={`${base}-label`} error={errors.label}>
+            <input id={`${base}-label`} value={v.label} onChange={(e) => onChange({ label: e.target.value })} className={fieldError(inputClass, errors.label)} />
+          </Field>
+        </div>
         <Field label="Prix" htmlFor={`${base}-price`} error={errors.price}>
           <PriceInput id={`${base}-price`} value={v.price} onChange={(val) => onChange({ price: val })} error={errors.price} />
         </Field>
@@ -245,11 +248,10 @@ function VariantCard({
           />
         </Field>
       </div>
-      <label className="mt-3 flex items-center gap-2.5 text-sm text-stone-700">
-        <input type="checkbox" checked={v.isActive} onChange={(e) => onChange({ isActive: e.target.checked })} className="h-4 w-4 accent-kaytori-green" />
-        Variante active
-      </label>
-    </div>
+      <div className="mt-4">
+        <Switch checked={v.isActive} onChange={(isActive) => onChange({ isActive })} label="Variante active" />
+      </div>
+    </VariantFrame>
   );
 }
 
@@ -259,6 +261,7 @@ function DeleteProductSection({ name, onDelete }: { name: string; onDelete: () =
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const confirm = async () => {
+    if (pending) return;
     setPending(true);
     setError(null);
     const message = await onDelete();
@@ -266,54 +269,32 @@ function DeleteProductSection({ name, onDelete }: { name: string; onDelete: () =
     if (message) setError(message);
   };
   return (
-    <section className="rounded-xl border border-red-200 bg-white p-5">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-red-700">Supprimer le produit</h2>
-      <p className="mt-1 text-sm text-stone-600">Retire définitivement « {name} » du menu.</p>
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="mt-3 rounded-lg border border-red-300 bg-white px-4 py-2 text-sm font-semibold text-red-700 hover:bg-red-50"
-      >
+    <section className={`${cardClass} flex flex-col gap-4 border-red-200/80 p-5 sm:flex-row sm:items-center sm:justify-between`}>
+      <div className="min-w-0">
+        <h2 className="text-[0.9375rem] font-semibold text-red-800">Supprimer le produit</h2>
+        <p className="mt-1 text-sm text-admin-soft">Retire définitivement « {name} » du menu, avec ses variantes.</p>
+      </div>
+      <button type="button" onClick={() => setOpen(true)} className={`${buttonClass("dangerOutline")} shrink-0`}>
+        <TrashIcon className="h-4 w-4" />
         Supprimer le produit
       </button>
       {open ? (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-stone-900/40 px-4" role="presentation">
-          <div role="dialog" aria-modal="true" aria-labelledby="delete-title" className="w-full max-w-sm rounded-xl bg-white p-6 shadow-lg">
-            <h3 id="delete-title" className="text-lg font-semibold text-stone-900">
-              Supprimer ce produit ?
-            </h3>
-            <p className="mt-2 text-sm text-stone-600">Cette action supprimera définitivement le produit et ses variantes.</p>
-            {error ? (
-              <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
-                {error}
-              </p>
-            ) : null}
-            <div className="mt-5 flex justify-end gap-2">
-              <button
-                type="button"
-                onClick={() => setOpen(false)}
-                disabled={pending}
-                className="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-50"
-              >
-                Annuler
-              </button>
-              <button
-                type="button"
-                onClick={confirm}
-                disabled={pending}
-                className="rounded-lg bg-red-700 px-4 py-2 text-sm font-semibold text-white hover:bg-red-800 disabled:opacity-60"
-              >
-                {pending ? "Suppression…" : "Supprimer définitivement"}
-              </button>
-            </div>
-          </div>
-        </div>
+        <ConfirmDialog
+          title="Supprimer ce produit ?"
+          description="Cette action supprimera définitivement le produit et ses variantes."
+          confirmLabel="Supprimer définitivement"
+          pendingLabel="Suppression…"
+          busy={pending}
+          error={error}
+          onConfirm={confirm}
+          onClose={() => setOpen(false)}
+        />
       ) : null}
     </section>
   );
 }
 
-type Notice = { success?: string; error?: string };
+type SaveNotice = { success?: string; error?: string };
 
 function ProductEditForm({
   data,
@@ -323,7 +304,8 @@ function ProductEditForm({
 }: {
   data: CatalogEditData;
   client: SupabaseClient;
-  onSaved: (notice: Notice) => void;
+  /** Relit les données puis affiche le message ; résolue une fois l'écran à jour. */
+  onSaved: (notice: SaveNotice) => Promise<void>;
   onDeleted: (name: string) => void;
 }) {
   /** originalData = data.form · currentData = form · selectedNewImage = photo. */
@@ -390,13 +372,14 @@ function ProductEditForm({
       if (result.uploadedPath) console.warn(`[admin] Photo téléversée mais non enregistrée : ${result.uploadedPath}`);
       return result.error;
     }
+    await onSaved({ success: `Photo recadrée de « ${result.name} » enregistrée.` });
     setCropOpen(false);
-    onSaved({ success: `Photo recadrée de « ${result.name} » enregistrée.` });
     return null;
   };
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
+    if (pending) return; // pas de second envoi (touche Entrée) pendant l'enregistrement
     setSaveError(null);
     const found = validateCatalogForm(form, data);
     setErrors(found);
@@ -410,24 +393,20 @@ function ProductEditForm({
     }
     setPending(true);
     const result = await saveCatalogProduct(client, data, form, photo?.file ?? null, uploadProductPhoto);
-    setPending(false);
     if (!result.ok) {
+      setPending(false);
       if (result.uploadedPath) console.warn(`[admin] Photo téléversée mais non enregistrée : ${result.uploadedPath}`);
       setSaveError(result.error);
       return;
     }
-    onSaved({ success: `« ${result.name} » a été enregistré${photo ? " avec la nouvelle photo" : ""}.` });
+    // « Enregistrement… » reste affiché jusqu'à la relecture des données (aucun second envoi possible entre-temps).
+    await onSaved({ success: `« ${result.name} » a été enregistré${photo ? " avec la nouvelle photo" : ""}.` });
+    setPending(false);
   };
 
   return (
     <>
       <form onSubmit={submit} noValidate className="space-y-5">
-        {saveError ? (
-          <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
-            {saveError}
-          </p>
-        ) : null}
-
         {/*
           Bureau (≥ lg) : formulaire à gauche, Photo + Référence interne à droite (inchangé).
           Téléphone / tablette : les deux colonnes s'effacent (contents) et les cartes deviennent
@@ -437,14 +416,14 @@ function ProductEditForm({
         <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
           <div className="max-lg:contents lg:space-y-5">
             <Section title="Produit" className="max-lg:order-2">
-              <div className="space-y-4">
+              <div className="space-y-5">
                 <Field label="Nom" htmlFor="p-name" error={errors.name}>
                   <input id="p-name" value={form.name} onChange={(e) => set("name", e.target.value)} className={fieldError(inputClass, errors.name)} />
                 </Field>
                 <Field label="Description" htmlFor="p-description" hint="Facultative.">
-                  <textarea id="p-description" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} className={inputClass} />
+                  <textarea id="p-description" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} className={`${inputClass} resize-y`} />
                 </Field>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-5 sm:grid-cols-2">
                   <Field label="Catégorie" htmlFor="p-category" error={errors.categoryId}>
                     <select id="p-category" value={form.categoryId} onChange={(e) => changeCategory(e.target.value)} className={fieldError(inputClass, errors.categoryId)}>
                       {data.categories.map((c) => (
@@ -456,28 +435,22 @@ function ProductEditForm({
                     </select>
                   </Field>
                   {hasVariants ? (
-                    <div>
-                      <p className="mb-1 text-sm font-medium text-stone-700">Prix</p>
-                      <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-                        Produit à variantes → gérer les prix au niveau des variantes.
-                      </p>
-                    </div>
+                    <StaticField label="Prix" tone="warning">
+                      Produit à variantes → gérer les prix au niveau des variantes.
+                    </StaticField>
                   ) : (
                     <Field label="Prix" htmlFor="p-price" error={errors.price}>
                       <PriceInput id="p-price" value={form.price} onChange={(v) => set("price", v)} error={errors.price} />
                     </Field>
                   )}
                 </div>
-                <div className="grid gap-4 sm:grid-cols-2">
+                <div className="grid gap-5 sm:grid-cols-2">
                   <PositionField data={data} form={form} error={errors.position} onChange={(v) => set("position", v)} />
-                  <div>
-                    <p className="mb-1 text-sm font-medium text-stone-700">Statut</p>
-                    <label className="flex items-center gap-2.5 rounded-lg border border-stone-300 px-3 py-2 text-sm">
-                      <input type="checkbox" checked={form.isActive} onChange={(e) => set("isActive", e.target.checked)} className="h-4 w-4 accent-kaytori-green" />
-                      Actif (visible sur le menu)
-                    </label>
+                  <div className="min-w-0">
+                    <p className="mb-1.5 text-[13px] font-medium text-admin-ink">Statut</p>
+                    <Switch bordered checked={form.isActive} onChange={(v) => set("isActive", v)} label="Actif (visible sur le menu)" />
                     {form.isActive && category && !category.is_active ? (
-                      <p className="mt-1 text-xs text-amber-700">La catégorie est masquée : le produit restera invisible.</p>
+                      <p className="mt-1.5 text-xs text-amber-800">La catégorie est masquée : le produit restera invisible.</p>
                     ) : null}
                   </div>
                 </div>
@@ -486,7 +459,7 @@ function ProductEditForm({
 
             <Section title={`Variantes (${form.variants.length})`} className="max-lg:order-3">
               {form.variants.length === 0 ? (
-                <p className="mb-3 text-sm text-stone-500">Aucune variante. Ajoutez-en si le prix dépend du choix du client (ex. Poulet, Bœuf).</p>
+                <p className="text-sm text-admin-soft">Aucune variante. Ajoutez-en si le prix dépend du choix du client (ex. Poulet, Bœuf).</p>
               ) : null}
               <div className="space-y-3">
                 {form.variants.map((v, i) => (
@@ -501,13 +474,7 @@ function ProductEditForm({
                   />
                 ))}
               </div>
-              <button
-                type="button"
-                onClick={addVariant}
-                className="mt-3 rounded-lg border border-dashed border-stone-300 px-3 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-50"
-              >
-                + Ajouter une variante
-              </button>
+              <AddVariantButton onClick={addVariant} />
             </Section>
           </div>
 
@@ -531,28 +498,35 @@ function ProductEditForm({
               ) : null}
             </Section>
             <Section title="Référence interne" className="max-lg:order-4">
-              <p className="break-all font-mono text-sm text-stone-700">{data.product.id}</p>
-              <p className="mt-1 text-xs text-stone-500">Non modifiable (utilisée par le panier et les commandes).</p>
+              <p className="break-all rounded-md bg-admin-subtle px-2.5 py-1.5 font-mono text-[13px] text-admin-ink ring-1 ring-inset ring-admin-line">{data.product.id}</p>
+              <p className="mt-2 text-xs leading-snug text-admin-muted">Non modifiable (utilisée par le panier et les commandes).</p>
             </Section>
           </aside>
         </div>
 
-        <div className="flex flex-col-reverse gap-3 border-t border-stone-200 pt-5 sm:flex-row sm:justify-end">
-          <button
-            type="button"
-            onClick={() => navigate(ADMIN_ROUTES.products)}
-            className="rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm font-semibold text-stone-700 hover:bg-stone-50"
-          >
+        <FormActionBar
+          error={saveError}
+          status={
+            pending ? (
+              "Enregistrement en cours…"
+            ) : dirty ? (
+              <span className="inline-flex items-center gap-2 font-medium text-amber-800">
+                <span className="h-2 w-2 rounded-full bg-amber-500" aria-hidden />
+                Modifications non enregistrées
+              </span>
+            ) : (
+              "Aucune modification"
+            )
+          }
+        >
+          <button type="button" onClick={() => navigate(ADMIN_ROUTES.products)} className={buttonClass("secondary")}>
             Annuler
           </button>
-          <button
-            type="submit"
-            disabled={pending || !dirty}
-            className="rounded-lg bg-kaytori-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-kaytori-greenDark disabled:cursor-not-allowed disabled:opacity-50"
-          >
+          <button type="submit" disabled={pending || !dirty} className={`${buttonClass("primary")} sm:min-w-[9rem]`}>
+            {pending ? <Spinner /> : null}
             {pending ? "Enregistrement…" : "Enregistrer"}
           </button>
-        </div>
+        </FormActionBar>
       </form>
 
       <div className="mt-8">
@@ -573,13 +547,14 @@ function ProductEditForm({
 /** /admin/products/:id — édition complète d'un produit existant. */
 export function ProductEditPage({ productId, client }: { productId: string; client: SupabaseClient }) {
   const data = useAdminMenuData();
-  const [notice, setNotice] = useState<Notice | null>(null);
+  const [toast, setToast] = useState<ToastNotice>(null);
   const edit = useMemo(() => (data.rows ? loadCatalogEdit(data.rows, productId) : null), [data.rows, productId]);
+  const category = edit ? edit.categories.find((c) => c.id === edit.product.category_id) : undefined;
 
-  const onSaved = (n: Notice) => {
-    setNotice(n);
-    // Rechargement depuis Supabase : le formulaire repart des valeurs enregistrées.
-    data.reload();
+  const onSaved = async (n: SaveNotice) => {
+    // Relecture depuis Supabase (sans écran de chargement) : le formulaire repart des valeurs enregistrées.
+    if (!(await data.refresh())) data.reload();
+    setToast(n.error ? { tone: "error", message: n.error } : n.success ? { tone: "success", message: n.success } : null);
   };
   const onDeleted = (name: string) => {
     setFlash(`Produit « ${name} » supprimé.`);
@@ -589,25 +564,15 @@ export function ProductEditPage({ productId, client }: { productId: string; clie
 
   return (
     <>
-      <AdminLink href={ADMIN_ROUTES.products} className="mb-3 inline-block text-sm font-medium text-kaytori-green hover:underline">
-        ← Produits
-      </AdminLink>
-      <PageHeader title={edit ? edit.product.name : "Modifier le produit"} description="Modifier un produit existant." />
-      {notice?.success ? (
-        <p className="mb-5 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-800" role="status">
-          {notice.success}
-        </p>
-      ) : null}
-      {notice?.error ? (
-        <p className="mb-5 rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
-          {notice.error}
-        </p>
-      ) : null}
+      <PageHeader
+        back={{ href: ADMIN_ROUTES.products, label: "Produits" }}
+        title={edit ? edit.product.name : "Modifier le produit"}
+        meta={edit ? <StatusBadge active={edit.product.is_active && category?.is_active !== false} activeLabel="Visible" inactiveLabel={edit.product.is_active ? "Catégorie masquée" : "Masqué"} /> : null}
+        description={category ? `Catégorie « ${category.name} » · modifier un produit existant.` : "Modifier un produit existant."}
+      />
       {data.status === "loading" ? <LoadingState /> : null}
       {data.status === "error" ? <ErrorState message={data.error} onRetry={data.reload} /> : null}
-      {data.status === "ready" && !edit ? (
-        <p className="rounded-xl border border-stone-200 bg-white p-6 text-sm text-stone-600">Produit introuvable : {productId}</p>
-      ) : null}
+      {data.status === "ready" && !edit ? <Notice tone="info">Produit introuvable : {productId}</Notice> : null}
       {edit ? (
         <ProductEditForm
           key={JSON.stringify([edit.form, edit.product.image_url, edit.product.sort_order])}
@@ -617,6 +582,7 @@ export function ProductEditPage({ productId, client }: { productId: string; clie
           onDeleted={onDeleted}
         />
       ) : null}
+      <Toast notice={toast} onDismiss={() => setToast(null)} />
     </>
   );
 }

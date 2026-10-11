@@ -1,8 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { AdminLink } from "../components/AdminLink";
-import { Field, PriceInput, Section, fieldError } from "../components/formControls";
-import { ErrorState, LoadingState, PageHeader, inputClass } from "../components/ui";
+import { AddVariantButton, Field, FormActionBar, PriceInput, Section, StaticField, VariantFrame, fieldError } from "../components/formControls";
+import { CheckIcon, PencilIcon, PlusIcon } from "../components/icons";
+import { ErrorState, LoadingState, PageHeader, Spinner, Switch, buttonClass, cardClass, inputClass } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { navigate } from "../hooks/useAdminPath";
 import type { MenuRows } from "../../data/menuRows";
@@ -72,6 +73,7 @@ export function ProductCreateForm({
 
   const submit = async (e: FormEvent) => {
     e.preventDefault();
+    if (pending) return; // pas de second envoi (touche Entrée) pendant la création
     setSaveError(null);
     const found = validateNewProduct(form, rows, photo?.file ?? null);
     setErrors(found);
@@ -92,23 +94,18 @@ export function ProductCreateForm({
 
   return (
     <form onSubmit={submit} noValidate className="space-y-5">
-      {saveError ? (
-        <p className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800" role="alert">
-          {saveError}
-        </p>
-      ) : null}
 
       <div className="grid gap-5 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="space-y-5">
           <Section title="Produit">
-            <div className="space-y-4">
+            <div className="space-y-5">
               <Field label="Nom" htmlFor="n-name" error={errors.name}>
                 <input id="n-name" value={form.name} onChange={(e) => set("name", e.target.value)} className={fieldError(inputClass, errors.name)} />
               </Field>
               <Field label="Description" htmlFor="n-description" hint="Facultative.">
-                <textarea id="n-description" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} className={inputClass} />
+                <textarea id="n-description" rows={3} value={form.description} onChange={(e) => set("description", e.target.value)} className={`${inputClass} resize-y`} />
               </Field>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-5 sm:grid-cols-2">
                 <Field label="Catégorie" htmlFor="n-category" error={errors.categoryId}>
                   <select id="n-category" value={form.categoryId} onChange={(e) => changeCategory(e.target.value)} className={fieldError(inputClass, errors.categoryId)}>
                     {categories.map((c) => (
@@ -120,26 +117,18 @@ export function ProductCreateForm({
                   </select>
                 </Field>
                 {hasVariants ? (
-                  <div>
-                    <p className="mb-1 text-sm font-medium text-stone-700">Prix</p>
-                    <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900">
-                      Produit à variantes → gérer les prix au niveau des variantes.
-                    </p>
-                  </div>
+                  <StaticField label="Prix" tone="warning">
+                    Produit à variantes → gérer les prix au niveau des variantes.
+                  </StaticField>
                 ) : (
                   <Field label="Prix" htmlFor="n-price" error={errors.price}>
                     <PriceInput id="n-price" value={form.price} onChange={(v) => set("price", v)} error={errors.price} />
                   </Field>
                 )}
               </div>
-              <div className="grid gap-4 sm:grid-cols-2">
+              <div className="grid gap-5 sm:grid-cols-2">
                 {info?.automatic ? (
-                  <div>
-                    <p className="mb-1 text-sm font-medium text-stone-700">Position automatique</p>
-                    <p className="rounded-lg border border-stone-200 bg-stone-50 px-3 py-2 text-sm text-stone-600">
-                      Cette catégorie utilise un ordre automatique.
-                    </p>
-                  </div>
+                  <StaticField label="Position automatique">Cette catégorie utilise un ordre automatique.</StaticField>
                 ) : (
                   <Field
                     label="Position dans la catégorie"
@@ -160,12 +149,9 @@ export function ProductCreateForm({
                     />
                   </Field>
                 )}
-                <div>
-                  <p className="mb-1 text-sm font-medium text-stone-700">Statut</p>
-                  <label className="flex items-center gap-2.5 rounded-lg border border-stone-300 px-3 py-2 text-sm">
-                    <input type="checkbox" checked={form.isActive} onChange={(e) => set("isActive", e.target.checked)} className="h-4 w-4 accent-kaytori-green" />
-                    Actif (visible sur le menu)
-                  </label>
+                <div className="min-w-0">
+                  <p className="mb-1.5 text-[13px] font-medium text-admin-ink">Statut</p>
+                  <Switch bordered checked={form.isActive} onChange={(v) => set("isActive", v)} label="Actif (visible sur le menu)" />
                 </div>
               </div>
             </div>
@@ -173,23 +159,19 @@ export function ProductCreateForm({
 
           <Section title={`Variantes (${form.variants.length})`}>
             {form.variants.length === 0 ? (
-              <p className="mb-3 text-sm text-stone-500">Facultatif : ajoutez des variantes (ex. Poulet, Bœuf) si le prix dépend du choix du client.</p>
+              <p className="text-sm text-admin-soft">Facultatif : ajoutez des variantes (ex. Poulet, Bœuf) si le prix dépend du choix du client.</p>
             ) : null}
             <div className="space-y-3">
               {form.variants.map((v, i) => {
                 const ve = errors.variants[v.key] ?? {};
                 return (
-                  <div key={v.key} className="rounded-lg border border-stone-200 p-4">
-                    <div className="mb-3 flex items-center justify-between gap-3">
-                      <p className="text-xs font-medium text-stone-500">Variante {i + 1}</p>
-                      <button type="button" onClick={() => removeVariant(v.key)} className="text-xs font-semibold text-red-700 hover:underline">
-                        Supprimer
-                      </button>
-                    </div>
-                    <div className="grid gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]">
-                      <Field label="Libellé" htmlFor={`nv-${v.key}-label`} error={ve.label}>
-                        <input id={`nv-${v.key}-label`} value={v.label} onChange={(e) => setVariant(v.key, { label: e.target.value })} className={fieldError(inputClass, ve.label)} />
-                      </Field>
+                  <VariantFrame key={v.key} index={i} isNew={false} onRemove={() => removeVariant(v.key)}>
+                    <div className="grid grid-cols-2 gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_minmax(0,1fr)]">
+                      <div className="col-span-2 sm:col-span-1">
+                        <Field label="Libellé" htmlFor={`nv-${v.key}-label`} error={ve.label}>
+                          <input id={`nv-${v.key}-label`} value={v.label} onChange={(e) => setVariant(v.key, { label: e.target.value })} className={fieldError(inputClass, ve.label)} />
+                        </Field>
+                      </div>
                       <Field label="Prix" htmlFor={`nv-${v.key}-price`} error={ve.price}>
                         <PriceInput id={`nv-${v.key}-price`} value={v.price} onChange={(val) => setVariant(v.key, { price: val })} error={ve.price} />
                       </Field>
@@ -203,21 +185,14 @@ export function ProductCreateForm({
                         />
                       </Field>
                     </div>
-                    <label className="mt-3 flex items-center gap-2.5 text-sm text-stone-700">
-                      <input type="checkbox" checked={v.isActive} onChange={(e) => setVariant(v.key, { isActive: e.target.checked })} className="h-4 w-4 accent-kaytori-green" />
-                      Variante active
-                    </label>
-                  </div>
+                    <div className="mt-4">
+                      <Switch checked={v.isActive} onChange={(isActive) => setVariant(v.key, { isActive })} label="Variante active" />
+                    </div>
+                  </VariantFrame>
                 );
               })}
             </div>
-            <button
-              type="button"
-              onClick={addVariant}
-              className="mt-3 rounded-lg border border-dashed border-stone-300 px-3 py-2 text-sm font-semibold text-stone-700 hover:bg-stone-50"
-            >
-              + Ajouter une variante
-            </button>
+            <AddVariantButton onClick={addVariant} />
           </Section>
         </div>
 
@@ -235,23 +210,18 @@ export function ProductCreateForm({
         </aside>
       </div>
 
-      <div className="flex flex-col-reverse gap-3 border-t border-stone-200 pt-5 sm:flex-row sm:items-center sm:justify-end">
-        {!photo ? <p className="text-sm text-stone-500 sm:mr-auto">Ajoutez une photo pour pouvoir créer le produit.</p> : null}
-        <button
-          type="button"
-          onClick={() => navigate(ADMIN_ROUTES.products)}
-          className="rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm font-semibold text-stone-700 hover:bg-stone-50"
-        >
+      <FormActionBar
+        error={saveError}
+        status={pending ? "Création en cours…" : !photo ? "Ajoutez une photo pour pouvoir créer le produit." : "Prêt à être créé."}
+      >
+        <button type="button" onClick={() => navigate(ADMIN_ROUTES.products)} className={buttonClass("secondary")}>
           Annuler
         </button>
-        <button
-          type="submit"
-          disabled={pending || !photo}
-          className="rounded-lg bg-kaytori-green px-5 py-2.5 text-sm font-semibold text-white hover:bg-kaytori-greenDark disabled:cursor-not-allowed disabled:opacity-50"
-        >
+        <button type="submit" disabled={pending || !photo} className={`${buttonClass("primary")} sm:min-w-[10rem]`}>
+          {pending ? <Spinner /> : null}
           {pending ? "Création…" : "Créer le produit"}
         </button>
-      </div>
+      </FormActionBar>
     </form>
   );
 }
@@ -268,18 +238,21 @@ export function ProductCreatePage({ client }: { client: SupabaseClient }) {
 
   return (
     <>
-      <AdminLink href={ADMIN_ROUTES.products} className="mb-3 inline-block text-sm font-medium text-kaytori-green hover:underline">
-        ← Produits
-      </AdminLink>
-      <PageHeader title="Nouveau produit" description="La photo est obligatoire." />
+      <PageHeader back={{ href: ADMIN_ROUTES.products, label: "Produits" }} title="Nouveau produit" description="La photo est obligatoire." />
       {created ? (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5" role="status">
-          <p className="text-sm font-medium text-emerald-900">Produit créé avec succès : « {created.name} ».</p>
-          <div className="mt-3 flex flex-wrap gap-2">
-            <AdminLink href={productEditPath(created.productId)} className="rounded-lg bg-kaytori-green px-4 py-2 text-sm font-semibold text-white">
+        <div className={`${cardClass} mx-auto max-w-xl p-6 text-center motion-safe:animate-admin-pop sm:p-8`} role="status">
+          <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-emerald-50 text-emerald-700 ring-8 ring-emerald-50/50">
+            <CheckIcon className="h-6 w-6" />
+          </span>
+          <p className="mt-4 text-lg font-semibold text-admin-ink">Produit créé avec succès</p>
+          <p className="mt-1 text-sm text-admin-soft">« {created.name} » a été ajouté au menu.</p>
+          <div className="mt-6 flex flex-col justify-center gap-2 sm:flex-row">
+            <AdminLink href={productEditPath(created.productId)} className={buttonClass("primary")}>
+              <PencilIcon className="h-4 w-4" />
               Voir / modifier le produit
             </AdminLink>
-            <button type="button" onClick={() => setCreated(null)} className="rounded-lg border border-stone-300 bg-white px-4 py-2 text-sm font-semibold text-stone-700">
+            <button type="button" onClick={() => setCreated(null)} className={buttonClass("secondary")}>
+              <PlusIcon className="h-4 w-4" />
               Créer un autre produit
             </button>
           </div>

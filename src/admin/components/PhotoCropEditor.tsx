@@ -20,6 +20,7 @@ import {
   renderCroppedPhoto,
   type Crop,
 } from "../lib/photoCrop";
+import { Spinner, buttonClass } from "./ui";
 
 /** Pas de déplacement au clavier (pixels d'écran) et de zoom (molette, touches + / −). */
 const KEY_PAN = 12;
@@ -224,21 +225,20 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
 
   const maxZoom = image ? maxCropZoom(image.width, image.height) : 1;
   const outputSide = image && crop ? cropOutputSide(cropRect(crop, image.width, image.height)) : null;
-  const buttonClass = "rounded-lg px-4 py-2 text-sm font-semibold disabled:opacity-50";
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-end justify-center bg-stone-900/50 sm:items-center sm:p-4" role="presentation">
+    <div className="fixed inset-0 z-50 flex items-end justify-center bg-admin-ink/50 font-sans motion-safe:animate-admin-fade sm:items-center sm:p-4" role="presentation">
       <div
         ref={dialogRef}
         role="dialog"
         aria-modal="true"
         aria-labelledby="crop-title"
-        className="max-h-full w-full max-w-md overflow-y-auto rounded-t-xl bg-white p-5 shadow-lg sm:rounded-xl sm:p-6"
+        className="max-h-full w-full max-w-md overflow-y-auto rounded-t-2xl bg-white p-5 pb-[calc(1.25rem+env(safe-area-inset-bottom))] shadow-admin-lg motion-safe:animate-admin-pop sm:rounded-2xl sm:p-6"
       >
-        <h3 id="crop-title" className="text-lg font-semibold text-stone-900">
+        <h3 id="crop-title" className="text-lg font-semibold text-admin-ink">
           Recadrer la photo
         </h3>
-        <p className="mt-1 text-sm text-stone-500">Zoomez (slider ou deux doigts), puis faites glisser la photo pour choisir la partie visible dans le carré.</p>
+        <p className="mt-1 text-sm leading-relaxed text-admin-soft">Zoomez (slider ou deux doigts), puis faites glisser la photo pour choisir la partie visible dans le carré.</p>
 
         <div
           ref={frameRef}
@@ -251,7 +251,7 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
           onPointerUp={endPointer}
           onPointerCancel={endPointer}
           onKeyDown={onFrameKey}
-          className={`relative mt-4 aspect-square w-full touch-none select-none overflow-hidden rounded-lg bg-stone-900 outline-none focus-visible:ring-2 focus-visible:ring-stone-900/40 focus-visible:ring-offset-2 ${
+          className={`relative mt-4 aspect-square w-full touch-none select-none overflow-hidden rounded-xl bg-[#0f1815] outline-none ring-1 ring-black/5 focus-visible:ring-2 focus-visible:ring-kaytori-green/40 focus-visible:ring-offset-2 ${
             image ? (dragging ? "cursor-grabbing" : "cursor-grab") : ""
           }`}
         >
@@ -271,7 +271,7 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
         </div>
 
         <div className="mt-4 flex items-center gap-3">
-          <label htmlFor="crop-zoom" className="text-sm font-medium text-stone-700">
+          <label htmlFor="crop-zoom" className="text-[13px] font-medium text-admin-ink">
             Zoom
           </label>
           <input
@@ -285,14 +285,14 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
             onChange={(e) => update((c) => ({ ...c, zoom: Number(e.target.value) }))}
             className="h-2 flex-1 cursor-pointer accent-kaytori-green"
           />
-          <span className="w-12 text-right text-sm tabular-nums text-stone-500">{(crop?.zoom ?? 1).toFixed(1)}×</span>
+          <span className="w-12 text-right text-[13px] font-medium tabular-nums text-admin-soft">{(crop?.zoom ?? 1).toFixed(1)}×</span>
         </div>
-        <p className="mt-2 text-xs text-stone-500">
+        <p className="mt-2 text-xs text-admin-muted">
           {outputSide ? `Photo enregistrée : ${outputSide} × ${outputSide} px, carrée, puis compressée automatiquement.` : " "}
         </p>
 
         {saveError ? (
-          <p className="mt-3 rounded-lg bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
+          <p className="mt-3 rounded-lg border border-red-200 bg-red-50/80 px-3 py-2 text-sm text-red-900" role="alert">
             {saveError}
           </p>
         ) : null}
@@ -302,7 +302,7 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
             type="button"
             onClick={() => image && setCrop(initialCrop(image.width, image.height))}
             disabled={!image || saving}
-            className={`${buttonClass} text-stone-600 hover:bg-stone-100`}
+            className={buttonClass("ghost")}
           >
             Réinitialiser
           </button>
@@ -311,7 +311,7 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
               type="button"
               onClick={onCancel}
               disabled={saving}
-              className={`${buttonClass} border border-stone-300 bg-white text-stone-700 hover:bg-stone-50`}
+              className={buttonClass("secondary")}
             >
               Annuler
             </button>
@@ -319,8 +319,9 @@ export function PhotoCropEditor({ src, onCancel, onSave }: Props) {
               type="button"
               onClick={save}
               disabled={!image || saving}
-              className={`${buttonClass} bg-kaytori-green text-white hover:bg-kaytori-greenDark`}
+              className={buttonClass("primary")}
             >
+              {saving ? <Spinner /> : null}
               {saving ? "Enregistrement…" : "Enregistrer la photo"}
             </button>
           </div>
