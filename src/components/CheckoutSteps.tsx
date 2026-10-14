@@ -2,7 +2,9 @@ import { useRef, useState, type ReactNode } from "react";
 import { lineSubtotalDh, type CartLine } from "../cart/buildOrderMessage";
 import {
   DELIVERY_FEE_LABEL,
+  PAYMENT_METHODS,
   mapsUrlFromCoords,
+  paymentMethod,
   type CheckoutDetails,
   type CheckoutErrors,
   type CheckoutField,
@@ -79,6 +81,53 @@ function Field({
 function SectionTitle({ children }: { children: ReactNode }) {
   return (
     <h3 className="font-sans text-[0.68rem] font-semibold uppercase tracking-[0.14em] text-kaytori-green/80">{children}</h3>
+  );
+}
+
+/** Option à choix unique (radio masqué) : grande zone tactile, état sélectionné vert. */
+function ChoiceCard({
+  name,
+  value,
+  id,
+  title,
+  text,
+  checked,
+  invalid,
+  onSelect,
+}: {
+  name: string;
+  value: string;
+  id?: string;
+  title: string;
+  text: string;
+  checked: boolean;
+  invalid?: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <label
+      className={`relative flex min-h-[64px] cursor-pointer flex-col justify-center rounded-xl border px-3.5 py-2.5 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-kaytori-green/30 ${
+        checked
+          ? "border-kaytori-green bg-kaytori-green/[0.06]"
+          : invalid
+            ? "border-red-600/70 bg-white"
+            : "border-kaytori-green/20 bg-white"
+      }`}
+    >
+      <input id={id} type="radio" name={name} value={value} checked={checked} onChange={onSelect} className="sr-only" />
+      <span className="flex items-center gap-2 font-sans text-[0.92rem] font-semibold text-kaytori-black">
+        <span
+          className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 ${
+            checked ? "border-kaytori-green" : "border-kaytori-green/35"
+          }`}
+          aria-hidden
+        >
+          {checked ? <span className="h-1.5 w-1.5 rounded-full bg-kaytori-green" /> : null}
+        </span>
+        {title}
+      </span>
+      <span className="mt-0.5 pl-6 font-sans text-[0.74rem] text-kaytori-muted">{text}</span>
+    </label>
   );
 }
 
@@ -184,38 +233,17 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
           <SectionTitle>Mode de commande</SectionTitle>
         </legend>
         <div className="grid grid-cols-2 gap-2.5">
-          {MODES.map((m) => {
-            const checked = value.mode === m.id;
-            return (
-              <label
-                key={m.id}
-                className={`relative flex min-h-[64px] cursor-pointer flex-col justify-center rounded-xl border px-3.5 py-2.5 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-kaytori-green/30 ${
-                  checked ? "border-kaytori-green bg-kaytori-green/[0.06]" : "border-kaytori-green/20 bg-white"
-                }`}
-              >
-                <input
-                  type="radio"
-                  name="checkout-mode"
-                  value={m.id}
-                  checked={checked}
-                  onChange={() => onChange({ ...value, mode: m.id })}
-                  className="sr-only"
-                />
-                <span className="flex items-center gap-2 font-sans text-[0.92rem] font-semibold text-kaytori-black">
-                  <span
-                    className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 ${
-                      checked ? "border-kaytori-green" : "border-kaytori-green/35"
-                    }`}
-                    aria-hidden
-                  >
-                    {checked ? <span className="h-1.5 w-1.5 rounded-full bg-kaytori-green" /> : null}
-                  </span>
-                  {m.title}
-                </span>
-                <span className="mt-0.5 pl-6 font-sans text-[0.74rem] text-kaytori-muted">{m.text}</span>
-              </label>
-            );
-          })}
+          {MODES.map((m) => (
+            <ChoiceCard
+              key={m.id}
+              name="checkout-mode"
+              value={m.id}
+              title={m.title}
+              text={m.text}
+              checked={value.mode === m.id}
+              onSelect={() => onChange({ ...value, mode: m.id })}
+            />
+          ))}
         </div>
       </fieldset>
 
@@ -299,6 +327,38 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
           Commande à retirer au restaurant. Le restaurant vous confirmera l'heure de retrait sur WhatsApp.
         </p>
       )}
+
+      <fieldset aria-describedby={errors.payment ? "checkout-payment-error" : undefined}>
+        <legend className="mb-3">
+          <SectionTitle>
+            Mode de paiement
+            <span className="text-kaytori-green" aria-hidden>
+              {" "}
+              *
+            </span>
+          </SectionTitle>
+        </legend>
+        <div className="grid grid-cols-1 gap-2.5">
+          {PAYMENT_METHODS.map((p, i) => (
+            <ChoiceCard
+              key={p.id}
+              id={i === 0 ? "checkout-payment" : undefined}
+              name="checkout-payment"
+              value={p.id}
+              title={p.label}
+              text={p.text}
+              checked={value.payment === p.id}
+              invalid={Boolean(errors.payment)}
+              onSelect={() => onChange({ ...value, payment: p.id })}
+            />
+          ))}
+        </div>
+        {errors.payment ? (
+          <p id="checkout-payment-error" className="mt-1.5 font-sans text-[0.78rem] font-medium text-red-700">
+            {errors.payment}
+          </p>
+        ) : null}
+      </fieldset>
 
       <p className="font-sans text-[0.74rem] text-kaytori-muted">
         <span className="text-kaytori-green" aria-hidden>
@@ -395,6 +455,25 @@ export function OrderRecap({ lines, totalDh, details, onEditDetails, onEditCart 
           ) : null}
         </dl>
       </section>
+
+      {details.payment ? (
+        <section className={card} aria-labelledby="recap-payment">
+          <div className="mb-1.5 flex items-center justify-between gap-2">
+            <h3 id="recap-payment" className="font-display text-[1.02rem] font-semibold text-kaytori-black">
+              Paiement
+            </h3>
+            <EditButton onClick={onEditDetails} label="Modifier le mode de paiement">
+              Modifier
+            </EditButton>
+          </div>
+          <dl>
+            <Row label="Mode">{paymentMethod(details.payment).label}</Row>
+          </dl>
+          <p className="mt-1 font-sans text-[0.76rem] text-kaytori-muted">
+            À régler {delivery ? "à la livraison" : "au retrait"}.
+          </p>
+        </section>
+      ) : null}
 
       <section className={card} aria-labelledby="recap-order">
         <div className="mb-1 flex items-center justify-between gap-2">

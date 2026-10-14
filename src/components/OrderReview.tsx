@@ -27,7 +27,16 @@ const STEPS: { id: Step; title: string; label: string }[] = [
   { id: "details", title: "Vos coordonnées", label: "Coordonnées" },
   { id: "recap", title: "Récapitulatif", label: "Récapitulatif" },
 ];
-const FIELD_ORDER: CheckoutField[] = ["firstName", "lastName", "address", "neighborhood", "instructions", "locationUrl"];
+/** Ordre d'affichage dans le formulaire : le focus va à la première erreur. */
+const FIELD_ORDER: (CheckoutField | "payment")[] = [
+  "firstName",
+  "lastName",
+  "address",
+  "neighborhood",
+  "instructions",
+  "locationUrl",
+  "payment",
+];
 const FORM_ID = "checkout-form";
 
 function Svg({ children, className = "h-5 w-5" }: { children: ReactNode; className?: string }) {

@@ -5,8 +5,30 @@
 
 export type FulfillmentMode = "delivery" | "pickup";
 
+/**
+ * Préférence de paiement, réglée à la livraison ou au retrait : aucun paiement en ligne, aucune
+ * donnée de carte, aucun frais.
+ */
+export type PaymentMethod = "cash" | "card";
+
+export const PAYMENT_METHODS: readonly { id: PaymentMethod; label: string; text: string; emoji: string }[] = [
+  { id: "cash", label: "Espèces", text: "Paiement en espèces à la livraison ou au retrait.", emoji: "💵" },
+  {
+    id: "card",
+    label: "Carte bancaire (TPE)",
+    text: "Paiement par carte au terminal lors de la livraison ou du retrait.",
+    emoji: "💳",
+  },
+];
+
+export function paymentMethod(id: PaymentMethod) {
+  return PAYMENT_METHODS.find((m) => m.id === id)!;
+}
+
 export type CheckoutInfo = {
   mode: FulfillmentMode;
+  /** Aucun choix par défaut : le client doit choisir explicitement. */
+  payment: PaymentMethod | "";
   firstName: string;
   lastName: string;
   /** Livraison uniquement. */
@@ -16,11 +38,13 @@ export type CheckoutInfo = {
   locationUrl: string;
 };
 
-export type CheckoutField = Exclude<keyof CheckoutInfo, "mode">;
-export type CheckoutErrors = Partial<Record<CheckoutField, string>>;
+/** Champs texte du formulaire. */
+export type CheckoutField = Exclude<keyof CheckoutInfo, "mode" | "payment">;
+export type CheckoutErrors = Partial<Record<CheckoutField | "payment", string>>;
 
 export const EMPTY_CHECKOUT: CheckoutInfo = {
   mode: "delivery",
+  payment: "",
   firstName: "",
   lastName: "",
   address: "",
@@ -32,6 +56,7 @@ export const EMPTY_CHECKOUT: CheckoutInfo = {
 /** Coordonnées nettoyées pour le récapitulatif et le message : champs vides et hors mode retirés. */
 export type CheckoutDetails = {
   mode: FulfillmentMode;
+  payment?: PaymentMethod;
   firstName: string;
   lastName: string;
   address?: string;
@@ -65,6 +90,7 @@ export function validateCheckout(info: CheckoutInfo): CheckoutErrors {
   const errors: CheckoutErrors = {};
   if (!clean(info.firstName)) errors.firstName = "Veuillez indiquer votre prénom.";
   if (!clean(info.lastName)) errors.lastName = "Veuillez indiquer votre nom.";
+  if (!info.payment) errors.payment = "Veuillez choisir un mode de paiement.";
   if (info.mode === "delivery") {
     if (!clean(info.address)) errors.address = "Veuillez indiquer l'adresse de livraison.";
     if (!clean(info.neighborhood)) errors.neighborhood = "Veuillez indiquer votre quartier.";
@@ -76,7 +102,12 @@ export function validateCheckout(info: CheckoutInfo): CheckoutErrors {
 }
 
 export function checkoutDetails(info: CheckoutInfo): CheckoutDetails {
-  const base = { mode: info.mode, firstName: clean(info.firstName), lastName: clean(info.lastName) };
+  const base: CheckoutDetails = {
+    mode: info.mode,
+    ...(info.payment ? { payment: info.payment } : {}),
+    firstName: clean(info.firstName),
+    lastName: clean(info.lastName),
+  };
   if (info.mode === "pickup") return base;
   return {
     ...base,

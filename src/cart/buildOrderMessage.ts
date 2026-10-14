@@ -1,6 +1,6 @@
 import { SITE } from "../config/site";
 import { YUMLO_MENU } from "../data/yumloMenu";
-import { DELIVERY_FEE_LABEL, type CheckoutDetails } from "./checkout";
+import { DELIVERY_FEE_LABEL, paymentMethod, type CheckoutDetails } from "./checkout";
 import { formatDhAmount } from "./formatDh";
 
 /** Catégorie de chaque plat, par id de plat. */
@@ -53,6 +53,7 @@ function checkoutBlock(c: CheckoutDetails): string[] {
           ...field("Instructions", c.instructions),
           ...field("Localisation", c.locationUrl),
         ];
+  const payment = c.payment ? paymentMethod(c.payment) : null;
   return [
     "👤 CLIENT",
     ...field("Prénom", c.firstName),
@@ -60,6 +61,7 @@ function checkoutBlock(c: CheckoutDetails): string[] {
     "",
     ...fulfillment,
     "",
+    ...(payment ? [`${payment.emoji} MODE DE PAIEMENT`, `Paiement : ${payment.label}`, ""] : []),
     "🛍️ COMMANDE",
     "",
   ];

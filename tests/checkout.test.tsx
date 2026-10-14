@@ -25,6 +25,7 @@ const total = cartTotalDh(lines);
 
 const delivery: CheckoutInfo = {
   mode: "delivery",
+  payment: "card",
   firstName: "  Yasmine ",
   lastName: "El   Amrani",
   address: "12 rue des Lilas, imm. 4, 2e étage",
@@ -36,18 +37,18 @@ const pickup: CheckoutInfo = { ...delivery, mode: "pickup" };
 
 describe("validation des coordonnées", () => {
   it("prénom et nom obligatoires (y compris espaces seuls)", () => {
-    const e = validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", firstName: "   " });
+    const e = validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "cash", firstName: "   " });
     expect(e).toEqual({ firstName: "Veuillez indiquer votre prénom.", lastName: "Veuillez indiquer votre nom." });
   });
 
   it("livraison : adresse et quartier obligatoires ; instructions et localisation facultatives", () => {
-    const e = validateCheckout({ ...EMPTY_CHECKOUT, firstName: "A", lastName: "B" });
+    const e = validateCheckout({ ...EMPTY_CHECKOUT, payment: "cash", firstName: "A", lastName: "B" });
     expect(Object.keys(e).sort()).toEqual(["address", "neighborhood"]);
     expect(validateCheckout({ ...delivery, instructions: "", locationUrl: "" })).toEqual({});
   });
 
   it("à emporter : adresse et quartier non requis, même vides", () => {
-    expect(validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", firstName: "A", lastName: "B" })).toEqual({});
+    expect(validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "card", firstName: "A", lastName: "B" })).toEqual({});
   });
 
   it("localisation : lien web accepté (schéma ajouté), texte libre refusé", () => {
@@ -66,10 +67,47 @@ describe("validation des coordonnées", () => {
   });
 });
 
+describe("mode de paiement", () => {
+  const filled = { ...delivery, payment: "" as const };
+
+  it("obligatoire, aucun choix par défaut, en livraison comme à emporter", () => {
+    expect(EMPTY_CHECKOUT.payment).toBe("");
+    expect(validateCheckout(filled)).toEqual({ payment: "Veuillez choisir un mode de paiement." });
+    expect(validateCheckout({ ...filled, mode: "pickup" })).toEqual({ payment: "Veuillez choisir un mode de paiement." });
+  });
+
+  it.each([
+    ["cash", "💵 MODE DE PAIEMENT\nPaiement : Espèces\n"],
+    ["card", "💳 MODE DE PAIEMENT\nPaiement : Carte bancaire (TPE)\n"],
+  ] as const)("%s : accepté pour les deux modes, dans le message avant la commande", (payment, block) => {
+    for (const mode of ["delivery", "pickup"] as const) {
+      const info = { ...delivery, mode, payment };
+      expect(validateCheckout(info)).toEqual({});
+      const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails(info));
+      expect(msg).toContain(`\n\n${block}\n🛍️ COMMANDE\n`);
+      expect(msg).toContain("Total : 514,00 DH");
+      expect(msg).not.toMatch(/payé|réglé/i);
+    }
+  });
+
+  it("formulaire : deux options, aucune cochée par défaut, l'option choisie cochée", () => {
+    const form = (payment: CheckoutInfo["payment"], errors = {}) =>
+      renderToStaticMarkup(<CheckoutForm formId="f" value={{ ...delivery, payment }} onChange={() => {}} errors={errors} onSubmit={() => {}} />);
+    const radios = (html: string) => html.match(/<input[^>]*name="checkout-payment"[^>]*>/g) ?? [];
+    expect(radios(form(""))).toHaveLength(2);
+    expect(radios(form("")).filter((r) => r.includes("checked"))).toHaveLength(0);
+    expect(radios(form("cash")).find((r) => r.includes("checked"))).toContain('value="cash"');
+    expect(radios(form("card")).find((r) => r.includes("checked"))).toContain('value="card"');
+    expect(form("", { payment: "Veuillez choisir un mode de paiement." })).toContain('id="checkout-payment-error"');
+    expect(form("")).not.toMatch(/numéro de carte|cvv|expiration/i);
+  });
+});
+
 describe("coordonnées nettoyées (récapitulatif et message)", () => {
   it("livraison : espaces normalisés, lien normalisé", () => {
     expect(checkoutDetails(delivery)).toEqual({
       mode: "delivery",
+      payment: "card",
       firstName: "Yasmine",
       lastName: "El Amrani",
       address: "12 rue des Lilas, imm. 4, 2e étage",
@@ -80,7 +118,7 @@ describe("coordonnées nettoyées (récapitulatif et message)", () => {
   });
 
   it("à emporter : champs de livraison retirés même s'ils avaient été saisis", () => {
-    expect(checkoutDetails(pickup)).toEqual({ mode: "pickup", firstName: "Yasmine", lastName: "El Amrani" });
+    expect(checkoutDetails(pickup)).toEqual({ mode: "pickup", payment: "card", firstName: "Yasmine", lastName: "El Amrani" });
   });
 });
 
@@ -107,6 +145,9 @@ describe("message WhatsApp", () => {
         "Quartier : Californie",
         "Instructions : Sonner à l'interphone B",
         "Localisation : https://maps.app.goo.gl/abc123",
+        "",
+        "💳 MODE DE PAIEMENT",
+        "Paiement : Carte bancaire (TPE)",
         "",
         "🛍️ COMMANDE",
         "",
@@ -155,17 +196,21 @@ describe("récapitulatif", () => {
     expect(html).toContain("Offerte");
     expect(html).toContain("12 rue des Lilas");
     expect(html).toContain('href="https://maps.app.goo.gl/abc123"');
+    expect(html).toContain("Carte bancaire (TPE)");
+    expect(html).toContain("À régler à la livraison.");
   });
 
   it("à emporter : pas d'adresse ni de ligne livraison", () => {
     const html = recap(pickup);
     expect(html).toContain("À emporter (retrait au restaurant)");
     expect(html).not.toMatch(/12 rue des Lilas|Offerte|Quartier/);
+    expect(html).toContain("À régler au retrait.");
   });
 
   it("boutons modifier coordonnées et panier présents", () => {
     const html = recap(delivery);
     expect(html).toContain('aria-label="Modifier mes informations"');
     expect(html).toContain('aria-label="Modifier le panier"');
+    expect(html).toContain('aria-label="Modifier le mode de paiement"');
   });
 });
