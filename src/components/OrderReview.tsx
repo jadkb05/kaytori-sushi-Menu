@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { lineSubtotalDh } from "../cart/buildOrderMessage";
 import { useCart } from "../cart/CartContext";
@@ -87,8 +87,8 @@ function LineThumb({ item }: { item: YumloMenuItem | undefined }) {
 
 /**
  * Parcours de commande plein écran, en 3 étapes : panier (photo, catégorie, variante, prix,
- * quantité) → coordonnées (nom, livraison ou à emporter) → récapitulatif. Seule la confirmation
- * du récapitulatif ouvre WhatsApp (message existant + coordonnées) puis vide le panier.
+ * quantité) → coordonnées (livraison ou à emporter, paiement) → récapitulatif. Seule la
+ * confirmation du récapitulatif ouvre WhatsApp (message existant + coordonnées) puis vide le panier.
  */
 export function OrderReview({ onClose }: Props) {
   const { lines, totalDh, whatsappOrderUrlWith, increment, decrement, removeLine, clear, checkout, setCheckout } =
@@ -124,13 +124,43 @@ export function OrderReview({ onClose }: Props) {
 
   /** Changement d'étape : retour en haut et focus sur le titre (lu par les lecteurs d'écran). */
   const firstRender = useRef(true);
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (firstRender.current) {
       firstRender.current = false;
       return;
     }
     scrollRef.current?.scrollTo({ top: 0 });
+    // Sur iOS, le bouton pied de page réutilisé (Continuer → submit lié au formulaire) ou la
+    // restauration de focus peut aboutir sur le textarea adresse et ouvrir le clavier. On force
+    // le focus sur le titre et on retire tout focus texte (le focus après erreur de validation
+    // reste géré dans toRecap, hors changement d'étape).
+    const clearTextFieldFocus = () => {
+      const active = document.activeElement;
+      if (
+        (active instanceof HTMLTextAreaElement ||
+          (active instanceof HTMLInputElement && active.type !== "radio" && active.type !== "checkbox" && active.type !== "submit" && active.type !== "button")) &&
+        active.id.startsWith("checkout-")
+      ) {
+        active.blur();
+      }
+    };
+    clearTextFieldFocus();
     titleRef.current?.focus({ preventScroll: true });
+    if (step === "details") {
+      clearTextFieldFocus();
+      requestAnimationFrame(() => {
+        clearTextFieldFocus();
+        if (
+          document.activeElement instanceof HTMLTextAreaElement ||
+          (document.activeElement instanceof HTMLInputElement &&
+            document.activeElement.type !== "radio" &&
+            document.activeElement.type !== "checkbox")
+        ) {
+          document.activeElement.blur();
+          titleRef.current?.focus({ preventScroll: true });
+        }
+      });
+    }
   }, [step]);
 
   const back = useCallback(() => {
@@ -373,17 +403,17 @@ export function OrderReview({ onClose }: Props) {
             </p>
           </div>
           {step === "cart" ? (
-            <button type="button" onClick={() => setStep("details")} className={primaryButton}>
+            <button key="checkout-primary-cart" type="button" onClick={() => setStep("details")} className={primaryButton}>
               <span className="truncate">Continuer</span>
               <span aria-hidden>→</span>
             </button>
           ) : step === "details" ? (
-            <button type="submit" form={FORM_ID} className={primaryButton}>
+            <button key="checkout-primary-details" type="submit" form={FORM_ID} className={primaryButton}>
               <span className="truncate">Voir le récapitulatif</span>
               <span aria-hidden>→</span>
             </button>
           ) : (
-            <button type="button" onClick={confirm} disabled={sending} className={`${primaryButton} disabled:opacity-70`}>
+            <button key="checkout-primary-recap" type="button" onClick={confirm} disabled={sending} className={`${primaryButton} disabled:opacity-70`}>
               <span className="truncate">{sending ? "Ouverture de WhatsApp…" : "Confirmer sur WhatsApp"}</span>
             </button>
           )}

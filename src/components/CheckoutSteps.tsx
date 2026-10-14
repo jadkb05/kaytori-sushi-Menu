@@ -140,7 +140,7 @@ type FormProps = {
   onSubmit: () => void;
 };
 
-/** Étape « Vos coordonnées » : nom, mode (livraison / à emporter) et adresse si livraison. */
+/** Étape « Vos coordonnées » : mode (livraison / à emporter), adresse si livraison, paiement. */
 export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: FormProps) {
   const [locating, setLocating] = useState(false);
   const [locateStatus, setLocateStatus] = useState<{ ok: boolean; text: string } | null>(null);

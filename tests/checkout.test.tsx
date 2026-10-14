@@ -58,6 +58,14 @@ describe("validation des coordonnées", () => {
     expect(html).not.toMatch(/Prénom|Quartier|Instructions de livraison|checkout-firstName|checkout-lastName|checkout-neighborhood|checkout-instructions/);
     expect(html).not.toMatch(/>Nom</);
   });
+
+  it("adresse : pas d'autoFocus (évite l'ouverture du clavier iOS à l'arrivée sur Coordonnées)", () => {
+    const html = renderToStaticMarkup(
+      <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
+    );
+    expect(html).toContain('id="checkout-address"');
+    expect(html).not.toMatch(/id="checkout-address"[^>]*autoFocus|autoFocus[^>]*id="checkout-address"/i);
+  });
 });
 
 describe("mode de paiement", () => {
