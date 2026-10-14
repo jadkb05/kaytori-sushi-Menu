@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { lineSubtotalDh, type CartLine } from "../cart/buildOrderMessage";
 import {
   DELIVERY_FEE_LABEL,
@@ -10,6 +10,7 @@ import {
   type FulfillmentMode,
 } from "../cart/checkout";
 import { formatDhAmount } from "../cart/formatDh";
+import { geoFailureMessage, requestCurrentPosition } from "../cart/geolocation";
 
 /** « Nems — Crevettes » → produit « Nems », variante « Crevettes » (affichage uniquement). */
 export function splitName(name: string): { product: string; variant: string | null } {
@@ -86,11 +87,17 @@ type FormProps = {
 /** Étape « Vos coordonnées » : nom, mode (livraison / à emporter) et adresse si livraison. */
 export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: FormProps) {
   const [locating, setLocating] = useState(false);
-  const [locateError, setLocateError] = useState<string | null>(null);
-  const canLocate = typeof navigator !== "undefined" && "geolocation" in navigator;
+  const [locateStatus, setLocateStatus] = useState<{ ok: boolean; text: string } | null>(null);
+  /** Garde synchrone contre le double tap (`disabled` n'agit qu'au rendu suivant). */
+  const locatingRef = useRef(false);
+  /** Dernière valeur du formulaire : la position arrive après coup, sans écraser une saisie faite entre-temps. */
+  const latest = useRef(value);
+  latest.current = value;
 
-  const set = (field: CheckoutField) => (e: { target: { value: string } }) =>
+  const set = (field: CheckoutField) => (e: { target: { value: string } }) => {
+    if (field === "locationUrl") setLocateStatus(null);
     onChange({ ...value, [field]: e.target.value });
+  };
 
   const a11y = (id: CheckoutField, hint = false) => ({
     id: `checkout-${id}`,
@@ -101,22 +108,27 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
 
   /** Position GPS à la demande (autorisation demandée par le navigateur au clic uniquement). */
   const locate = () => {
-    setLocateError(null);
+    if (locatingRef.current) return;
+    locatingRef.current = true;
     setLocating(true);
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        setLocating(false);
-        onChange({ ...value, locationUrl: mapsUrlFromCoords(pos.coords.latitude, pos.coords.longitude) });
+    setLocateStatus(null);
+    const done = () => {
+      locatingRef.current = false;
+      setLocating(false);
+    };
+    requestCurrentPosition(
+      { geolocation: navigator.geolocation, isSecureContext: window.isSecureContext },
+      ({ latitude, longitude }) => {
+        done();
+        latest.current = { ...latest.current, locationUrl: mapsUrlFromCoords(latitude, longitude) };
+        onChange(latest.current);
+        setLocateStatus({ ok: true, text: "Position ajoutée au champ Localisation." });
       },
-      (err) => {
-        setLocating(false);
-        setLocateError(
-          err.code === err.PERMISSION_DENIED
-            ? "Localisation refusée. Vous pouvez coller un lien Google Maps à la place."
-            : "Position introuvable. Vous pouvez coller un lien Google Maps à la place.",
-        );
+      (failure, detail) => {
+        done();
+        console.warn("[Kaytôri] géolocalisation :", failure, detail ?? "");
+        setLocateStatus({ ok: false, text: geoFailureMessage(failure) });
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 60000 },
     );
   };
 
@@ -232,7 +244,7 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
           <Field
             id="checkout-locationUrl"
             label="Localisation"
-            hint={locateError ?? "Lien Google Maps ou votre position actuelle."}
+            hint="Lien Google Maps ou votre position actuelle."
             error={errors.locationUrl}
           >
             <input
@@ -244,20 +256,28 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
               value={value.locationUrl}
               onChange={set("locationUrl")}
             />
-            {canLocate ? (
-              <button
-                type="button"
-                onClick={locate}
-                disabled={locating}
-                className="mt-2 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-kaytori-green/30 bg-white px-4 font-sans text-[0.84rem] font-semibold text-kaytori-green transition-colors hover:bg-kaytori-green/[0.06] disabled:opacity-60"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden focusable="false">
-                  <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" />
-                  <circle cx="12" cy="10" r="2.3" />
-                </svg>
-                {locating ? "Localisation…" : "Utiliser ma position actuelle"}
-              </button>
-            ) : null}
+            <button
+              type="button"
+              onClick={locate}
+              disabled={locating}
+              aria-busy={locating}
+              className="mt-2 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-kaytori-green/30 bg-white px-4 font-sans text-[0.84rem] font-semibold text-kaytori-green transition-colors hover:bg-kaytori-green/[0.06] disabled:opacity-60"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden focusable="false">
+                <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" />
+                <circle cx="12" cy="10" r="2.3" />
+              </svg>
+              {locating ? "Localisation…" : "Utiliser ma position actuelle"}
+            </button>
+            <p
+              role="status"
+              aria-live="polite"
+              className={`font-sans text-[0.78rem] font-medium ${locateStatus ? "mt-1.5" : ""} ${
+                locateStatus?.ok ? "text-kaytori-green" : "text-red-700"
+              }`}
+            >
+              {locateStatus ? `${locateStatus.ok ? "✓ " : ""}${locateStatus.text}` : null}
+            </p>
           </Field>
         </fieldset>
       ) : (
