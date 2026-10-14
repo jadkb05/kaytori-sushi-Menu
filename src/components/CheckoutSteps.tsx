@@ -10,7 +10,14 @@ import {
   type FulfillmentMode,
 } from "../cart/checkout";
 import { formatDhAmount } from "../cart/formatDh";
-import { geoFailureMessage, requestCurrentPosition } from "../cart/geolocation";
+import {
+  approximateFixMessage,
+  formatAccuracy,
+  geoFailureMessage,
+  isPreciseFix,
+  preciseFixMessage,
+  requestCurrentPosition,
+} from "../cart/geolocation";
 
 /** « Nems — Crevettes » → produit « Nems », variante « Crevettes » (affichage uniquement). */
 export function splitName(name: string): { product: string; variant: string | null } {
@@ -118,11 +125,18 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
     };
     requestCurrentPosition(
       { geolocation: navigator.geolocation, isSecureContext: window.isSecureContext },
-      ({ latitude, longitude }) => {
+      (fix) => {
         done();
-        latest.current = { ...latest.current, locationUrl: mapsUrlFromCoords(latitude, longitude) };
+        // Diagnostic : précision seulement, jamais les coordonnées.
+        console.info("[Kaytôri] géolocalisation : précision", formatAccuracy(fix.accuracy));
+        // Position approximative : non ajoutée, pour ne pas la présenter comme exacte au restaurant.
+        if (!isPreciseFix(fix)) {
+          setLocateStatus({ ok: false, text: approximateFixMessage(fix) });
+          return;
+        }
+        latest.current = { ...latest.current, locationUrl: mapsUrlFromCoords(fix.latitude, fix.longitude) };
         onChange(latest.current);
-        setLocateStatus({ ok: true, text: "Position ajoutée au champ Localisation." });
+        setLocateStatus({ ok: true, text: preciseFixMessage(fix) });
       },
       (failure, detail) => {
         done();
