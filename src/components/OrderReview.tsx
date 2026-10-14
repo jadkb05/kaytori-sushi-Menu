@@ -1,11 +1,13 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { createPortal } from "react-dom";
 import { lineSubtotalDh } from "../cart/buildOrderMessage";
 import { useCart } from "../cart/CartContext";
+import { checkoutDetails, validateCheckout, type CheckoutField } from "../cart/checkout";
 import { formatDhAmount } from "../cart/formatDh";
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { useMenu } from "../menu/MenuProvider";
 import { dishImage, dishThumbs } from "../menu/menuDisplay";
+import { CheckoutForm, OrderRecap, splitName } from "./CheckoutSteps";
 
 type Props = {
   /** Retour au menu (flèche, Échap, « Ajouter des articles »). */
@@ -18,11 +20,15 @@ function dishOf(dishById: ReadonlyMap<string, YumloMenuItem>, cartLineId: string
   return dishById.get(sep >= 0 ? cartLineId.slice(0, sep) : cartLineId);
 }
 
-/** « Nems — Crevettes » → produit « Nems », variante « Crevettes » (affichage uniquement). */
-function splitName(name: string): { product: string; variant: string | null } {
-  const i = name.indexOf(" — ");
-  return i < 0 ? { product: name, variant: null } : { product: name.slice(0, i), variant: name.slice(i + 3) };
-}
+/** Étapes du parcours de commande, dans l'ordre. */
+type Step = "cart" | "details" | "recap";
+const STEPS: { id: Step; title: string; label: string }[] = [
+  { id: "cart", title: "Votre panier", label: "Panier" },
+  { id: "details", title: "Vos coordonnées", label: "Coordonnées" },
+  { id: "recap", title: "Récapitulatif", label: "Récapitulatif" },
+];
+const FIELD_ORDER: CheckoutField[] = ["firstName", "lastName", "address", "neighborhood", "instructions", "locationUrl"];
+const FORM_ID = "checkout-form";
 
 function Svg({ children, className = "h-5 w-5" }: { children: ReactNode; className?: string }) {
   return (
@@ -75,12 +81,21 @@ function LineThumb({ item }: { item: YumloMenuItem | undefined }) {
 }
 
 /**
- * Panier plein écran (étape avant WhatsApp) : articles avec photo, catégorie, variante, prix et
- * quantité ; total et « Commander » en bas. Commander ouvre WhatsApp avec le message
- * existant puis vide le panier.
+ * Parcours de commande plein écran, en 3 étapes : panier (photo, catégorie, variante, prix,
+ * quantité) → coordonnées (nom, livraison ou à emporter) → récapitulatif. Seule la confirmation
+ * du récapitulatif ouvre WhatsApp (message existant + coordonnées) puis vide le panier.
  */
 export function OrderReview({ onClose }: Props) {
-  const { lines, totalDh, whatsappOrderUrl, increment, decrement, removeLine, clear } = useCart();
+  const { lines, totalDh, whatsappOrderUrlWith, increment, decrement, removeLine, clear, checkout, setCheckout } =
+    useCart();
+  const [step, setStep] = useState<Step>("cart");
+  /** Erreurs affichées seulement après une première tentative de passage au récapitulatif. */
+  const [showErrors, setShowErrors] = useState(false);
+  const errors = useMemo(() => (showErrors ? validateCheckout(checkout) : {}), [showErrors, checkout]);
+  /** Évite un double envoi (double tap) : une seule ouverture de WhatsApp par commande. */
+  const sentRef = useRef(false);
+  const [sending, setSending] = useState(false);
+  const scrollRef = useRef<HTMLDivElement>(null);
   const menu = useMenu();
   const dishById = useMemo(() => new Map(menu.items.map((it) => [it.id, it])), [menu]);
   const [confirmClear, setConfirmClear] = useState(false);
@@ -102,13 +117,42 @@ export function OrderReview({ onClose }: Props) {
     if (confirmClear) cancelClearRef.current?.focus();
   }, [confirmClear]);
 
+  /** Changement d'étape : retour en haut et focus sur le titre (lu par les lecteurs d'écran). */
+  const firstRender = useRef(true);
+  useEffect(() => {
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    scrollRef.current?.scrollTo({ top: 0 });
+    titleRef.current?.focus({ preventScroll: true });
+  }, [step]);
+
+  const back = useCallback(() => {
+    if (step === "recap") setStep("details");
+    else if (step === "details") setStep("cart");
+    else onClose();
+  }, [step, onClose]);
+
+  const toRecap = () => {
+    const found = validateCheckout(checkout);
+    const first = FIELD_ORDER.find((f) => found[f]);
+    if (first) {
+      setShowErrors(true);
+      document.getElementById(`checkout-${first}`)?.focus();
+      return;
+    }
+    setShowErrors(false);
+    setStep("recap");
+  };
+
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         if (confirmClear) {
           setConfirmClear(false);
           clearButtonRef.current?.focus();
-        } else onClose();
+        } else back();
         return;
       }
       if (e.key !== "Tab") return;
@@ -116,9 +160,9 @@ export function OrderReview({ onClose }: Props) {
       const scope = confirmClear
         ? dialogRef.current?.querySelector<HTMLElement>("[role=alertdialog]")
         : dialogRef.current;
-      const items = Array.from(scope?.querySelectorAll<HTMLElement>("button") ?? []).filter(
-        (b) => confirmClear || !b.closest("[role=alertdialog]"),
-      );
+      const items = Array.from(
+        scope?.querySelectorAll<HTMLElement>("button:not([disabled]), input, textarea, a[href]") ?? [],
+      ).filter((b) => confirmClear || !b.closest("[role=alertdialog]"));
       if (items.length === 0) return;
       const first = items[0];
       const last = items[items.length - 1];
@@ -133,16 +177,27 @@ export function OrderReview({ onClose }: Props) {
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [confirmClear, onClose]);
+  }, [confirmClear, back]);
 
   const confirm = () => {
-    const url = whatsappOrderUrl; // message généré avant de vider le panier
+    if (sentRef.current) return;
+    if (Object.keys(validateCheckout(checkout)).length > 0) {
+      setStep("details");
+      return;
+    }
+    sentRef.current = true;
+    setSending(true);
+    const url = whatsappOrderUrlWith(checkoutDetails(checkout)); // message généré avant de vider le panier
     const win = window.open(url, "_blank");
     if (win) win.opener = null;
     else window.location.href = url;
     clear();
   };
 
+  const stepIndex = STEPS.findIndex((s) => s.id === step);
+
+  const primaryButton =
+    "btn-shine inline-flex min-h-[52px] min-w-0 flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold-shine px-3 text-[0.9rem] font-bold text-kaytori-black shadow-card transition-all hover:shadow-gold active:scale-[0.99]";
   const qtyButton =
     "grid h-9 w-9 place-items-center rounded-full text-kaytori-green transition-colors hover:bg-kaytori-green/[0.08] active:bg-kaytori-green/[0.14]";
 
@@ -158,9 +213,9 @@ export function OrderReview({ onClose }: Props) {
         <div className="mx-auto flex h-14 max-w-lg items-center gap-1 px-1.5 sm:px-3">
           <button
             type="button"
-            onClick={onClose}
+            onClick={back}
             className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-kaytori-cream transition-colors hover:bg-white/10 active:bg-white/15"
-            aria-label="Retour au menu"
+            aria-label={step === "cart" ? "Retour au menu" : step === "details" ? "Retour au panier" : "Retour aux coordonnées"}
           >
             <Svg>
               <path d="M15 5l-7 7 7 7" />
@@ -172,8 +227,13 @@ export function OrderReview({ onClose }: Props) {
             tabIndex={-1}
             className="min-w-0 flex-1 font-display text-[1.15rem] font-semibold leading-tight text-kaytori-cream outline-none"
           >
-            Votre panier
+            {STEPS[stepIndex].title}
+            <span className="sr-only">
+              {" "}
+              — étape {stepIndex + 1} sur {STEPS.length}
+            </span>
           </h2>
+          {step === "cart" ? (
           <button
             ref={clearButtonRef}
             type="button"
@@ -184,11 +244,43 @@ export function OrderReview({ onClose }: Props) {
           >
             <TrashIcon className="h-5 w-5" />
           </button>
+          ) : (
+            <span className="h-11 w-11 shrink-0" aria-hidden />
+          )}
         </div>
+        <ol className="mx-auto flex max-w-lg items-center gap-2 px-4 pb-2.5 sm:px-6" aria-hidden>
+          {STEPS.map((s, i) => (
+            <li key={s.id} className="flex min-w-0 flex-1 flex-col gap-1">
+              <span className={`h-[3px] rounded-full ${i <= stepIndex ? "bg-kaytori-gold" : "bg-white/15"}`} />
+              <span
+                className={`truncate font-sans text-[0.62rem] font-semibold uppercase tracking-[0.1em] ${
+                  i === stepIndex ? "text-kaytori-goldLight" : "text-kaytori-cream/50"
+                }`}
+              >
+                {s.label}
+              </span>
+            </li>
+          ))}
+        </ol>
         <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-kaytori-gold/55 to-transparent" aria-hidden />
       </header>
 
-      <div className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+      <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
+        {step === "details" ? (
+          <div className="mx-auto max-w-lg px-4 pb-8 pt-5 sm:px-6">
+            <CheckoutForm formId={FORM_ID} value={checkout} onChange={setCheckout} errors={errors} onSubmit={toRecap} />
+          </div>
+        ) : step === "recap" ? (
+          <div className="mx-auto max-w-lg px-4 pb-8 pt-4 sm:px-6">
+            <OrderRecap
+              lines={lines}
+              totalDh={totalDh}
+              details={checkoutDetails(checkout)}
+              onEditDetails={() => setStep("details")}
+              onEditCart={() => setStep("cart")}
+            />
+          </div>
+        ) : (
         <div className="mx-auto max-w-lg px-4 pb-6 pt-2 sm:px-6">
           <ul className="divide-y divide-kaytori-green/10">
             {lines.map((l) => {
@@ -264,6 +356,7 @@ export function OrderReview({ onClose }: Props) {
             La commande sera envoyée au restaurant via WhatsApp.
           </p>
         </div>
+        )}
       </div>
 
       <div className="shrink-0 border-t border-kaytori-green/10 bg-white pb-[max(0.75rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_24px_-14px_rgba(10,15,13,0.25)]">
@@ -274,14 +367,21 @@ export function OrderReview({ onClose }: Props) {
               {formatDhAmount(totalDh)} DH
             </p>
           </div>
-          <button
-            type="button"
-            onClick={confirm}
-            className="btn-shine inline-flex min-h-[52px] min-w-0 flex-1 items-center justify-center gap-1.5 rounded-xl bg-gold-shine px-3 text-[0.9rem] font-bold text-kaytori-black shadow-card transition-all hover:shadow-gold active:scale-[0.99]"
-          >
-            <span className="truncate">Commander</span>
-            <span aria-hidden>→</span>
-          </button>
+          {step === "cart" ? (
+            <button type="button" onClick={() => setStep("details")} className={primaryButton}>
+              <span className="truncate">Continuer</span>
+              <span aria-hidden>→</span>
+            </button>
+          ) : step === "details" ? (
+            <button type="submit" form={FORM_ID} className={primaryButton}>
+              <span className="truncate">Voir le récapitulatif</span>
+              <span aria-hidden>→</span>
+            </button>
+          ) : (
+            <button type="button" onClick={confirm} disabled={sending} className={`${primaryButton} disabled:opacity-70`}>
+              <span className="truncate">{sending ? "Ouverture de WhatsApp…" : "Confirmer sur WhatsApp"}</span>
+            </button>
+          )}
         </div>
       </div>
 

@@ -9,6 +9,7 @@ import {
 import { whatsappHref } from "../config/site";
 import { useOptionalMenu } from "../menu/MenuProvider";
 import { buildWhatsappOrderMessage, categoryLookupFromMenu, type CartLine } from "./buildOrderMessage";
+import { EMPTY_CHECKOUT, type CheckoutDetails, type CheckoutInfo } from "./checkout";
 
 function parseUnitPriceDh(priceMAD: string): number {
   const n = Number.parseFloat(priceMAD.replace(",", "."));
@@ -25,6 +26,11 @@ type CartContextValue = {
   removeLine: (id: string) => void;
   clear: () => void;
   whatsappOrderUrl: string;
+  /** Lien WhatsApp du même message, complété des coordonnées client (récapitulatif final). */
+  whatsappOrderUrlWith: (checkout: CheckoutDetails) => string;
+  /** Coordonnées saisies : conservées en mémoire entre les étapes et les ouvertures du panier. */
+  checkout: CheckoutInfo;
+  setCheckout: (next: CheckoutInfo) => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -32,6 +38,8 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   /** Panier en mémoire uniquement : un rechargement de la page repart d'un panier vide. */
   const [lines, setLines] = useState<CartLine[]>([]);
+  /** Coordonnées en mémoire uniquement (aucun stockage navigateur ni serveur). */
+  const [checkout, setCheckout] = useState<CheckoutInfo>(EMPTY_CHECKOUT);
 
   const addItem = useCallback((id: string, name: string, priceMAD: string) => {
     const unit = parseUnitPriceDh(priceMAD);
@@ -78,6 +86,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return { itemCount, totalDh, whatsappOrderUrl };
   }, [lines, categories]);
 
+  const whatsappOrderUrlWith = useCallback(
+    (details: CheckoutDetails) => whatsappHref(buildWhatsappOrderMessage(lines, totalDh, categories, details)),
+    [lines, totalDh, categories],
+  );
+
   const value = useMemo<CartContextValue>(
     () => ({
       lines,
@@ -89,8 +102,11 @@ export function CartProvider({ children }: { children: ReactNode }) {
       removeLine,
       clear,
       whatsappOrderUrl,
+      whatsappOrderUrlWith,
+      checkout,
+      setCheckout,
     }),
-    [lines, itemCount, totalDh, addItem, increment, decrement, removeLine, clear, whatsappOrderUrl],
+    [lines, itemCount, totalDh, addItem, increment, decrement, removeLine, clear, whatsappOrderUrl, whatsappOrderUrlWith, checkout],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

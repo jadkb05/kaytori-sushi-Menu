@@ -1,5 +1,6 @@
 import { SITE } from "../config/site";
 import { YUMLO_MENU } from "../data/yumloMenu";
+import { DELIVERY_FEE_LABEL, type CheckoutDetails } from "./checkout";
 import { formatDhAmount } from "./formatDh";
 
 /** Catégorie de chaque plat, par id de plat. */
@@ -38,11 +39,43 @@ export function lineSubtotalDh(line: CartLine): number {
   return line.unitPriceDh * line.quantity;
 }
 
+/** Bloc client + livraison/retrait (lignes vides omises), inséré avant le détail de la commande. */
+function checkoutBlock(c: CheckoutDetails): string[] {
+  const field = (label: string, value?: string) => (value ? [`${label} : ${value}`] : []);
+  const fulfillment =
+    c.mode === "pickup"
+      ? ["🏪 RETRAIT", "Mode : À emporter (retrait au restaurant)"]
+      : [
+          "📍 LIVRAISON",
+          "Mode : Livraison",
+          ...field("Adresse", c.address),
+          ...field("Quartier", c.neighborhood),
+          ...field("Instructions", c.instructions),
+          ...field("Localisation", c.locationUrl),
+        ];
+  return [
+    "👤 CLIENT",
+    ...field("Prénom", c.firstName),
+    ...field("Nom", c.lastName),
+    "",
+    ...fulfillment,
+    "",
+    "🛍️ COMMANDE",
+    "",
+  ];
+}
+
 /**
  * Message WhatsApp de la commande. Seule la SOURCE de la catégorie est paramétrable
- * (`categories` : menu chargé) ; le texte et le format sont inchangés.
+ * (`categories` : menu chargé). Sans `checkout`, le message est strictement celui de référence ;
+ * avec, les blocs client et livraison/retrait s'ajoutent sans toucher aux lignes ni au total.
  */
-export function buildWhatsappOrderMessage(lines: CartLine[], totalDh: number, categories?: CategoryLookup): string {
+export function buildWhatsappOrderMessage(
+  lines: CartLine[],
+  totalDh: number,
+  categories?: CategoryLookup,
+  checkout?: CheckoutDetails,
+): string {
   const detail = lines
     .map((l) => {
       const sub = lineSubtotalDh(l);
@@ -59,9 +92,11 @@ export function buildWhatsappOrderMessage(lines: CartLine[], totalDh: number, ca
     "",
     "Nouvelle commande depuis le site :",
     "",
+    ...(checkout ? checkoutBlock(checkout) : []),
     detail,
     "",
     separator,
+    ...(checkout?.mode === "delivery" ? [`Livraison : ${DELIVERY_FEE_LABEL}`] : []),
     `Total : ${formatDhAmount(totalDh)} DH`,
     separator,
     "",
