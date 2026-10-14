@@ -39,7 +39,7 @@ export function lineSubtotalDh(line: CartLine): number {
   return line.unitPriceDh * line.quantity;
 }
 
-/** Bloc client + livraison/retrait (lignes vides omises), inséré avant le détail de la commande. */
+/** Bloc livraison/retrait + paiement (lignes vides omises), inséré avant le détail de la commande. */
 function checkoutBlock(c: CheckoutDetails): string[] {
   const field = (label: string, value?: string) => (value ? [`${label} : ${value}`] : []);
   const fulfillment =
@@ -49,16 +49,10 @@ function checkoutBlock(c: CheckoutDetails): string[] {
           "📍 LIVRAISON",
           "Mode : Livraison",
           ...field("Adresse", c.address),
-          ...field("Quartier", c.neighborhood),
-          ...field("Instructions", c.instructions),
           ...field("Localisation", c.locationUrl),
         ];
   const payment = c.payment ? paymentMethod(c.payment) : null;
   return [
-    "👤 CLIENT",
-    ...field("Prénom", c.firstName),
-    ...field("Nom", c.lastName),
-    "",
     ...fulfillment,
     "",
     ...(payment ? [`${payment.emoji} MODE DE PAIEMENT`, `Paiement : ${payment.label}`, ""] : []),
@@ -70,7 +64,7 @@ function checkoutBlock(c: CheckoutDetails): string[] {
 /**
  * Message WhatsApp de la commande. Seule la SOURCE de la catégorie est paramétrable
  * (`categories` : menu chargé). Sans `checkout`, le message est strictement celui de référence ;
- * avec, les blocs client et livraison/retrait s'ajoutent sans toucher aux lignes ni au total.
+ * avec, les blocs livraison/retrait et paiement s'ajoutent sans toucher aux lignes ni au total.
  */
 export function buildWhatsappOrderMessage(
   lines: CartLine[],

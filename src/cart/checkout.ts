@@ -29,12 +29,8 @@ export type CheckoutInfo = {
   mode: FulfillmentMode;
   /** Aucun choix par défaut : le client doit choisir explicitement. */
   payment: PaymentMethod | "";
-  firstName: string;
-  lastName: string;
   /** Livraison uniquement. */
   address: string;
-  neighborhood: string;
-  instructions: string;
   locationUrl: string;
 };
 
@@ -45,11 +41,7 @@ export type CheckoutErrors = Partial<Record<CheckoutField | "payment", string>>;
 export const EMPTY_CHECKOUT: CheckoutInfo = {
   mode: "delivery",
   payment: "",
-  firstName: "",
-  lastName: "",
   address: "",
-  neighborhood: "",
-  instructions: "",
   locationUrl: "",
 };
 
@@ -57,11 +49,7 @@ export const EMPTY_CHECKOUT: CheckoutInfo = {
 export type CheckoutDetails = {
   mode: FulfillmentMode;
   payment?: PaymentMethod;
-  firstName: string;
-  lastName: string;
   address?: string;
-  neighborhood?: string;
-  instructions?: string;
   locationUrl?: string;
 };
 
@@ -88,12 +76,9 @@ export function mapsUrlFromCoords(latitude: number, longitude: number): string {
 
 export function validateCheckout(info: CheckoutInfo): CheckoutErrors {
   const errors: CheckoutErrors = {};
-  if (!clean(info.firstName)) errors.firstName = "Veuillez indiquer votre prénom.";
-  if (!clean(info.lastName)) errors.lastName = "Veuillez indiquer votre nom.";
   if (!info.payment) errors.payment = "Veuillez choisir un mode de paiement.";
   if (info.mode === "delivery") {
     if (!clean(info.address)) errors.address = "Veuillez indiquer l'adresse de livraison.";
-    if (!clean(info.neighborhood)) errors.neighborhood = "Veuillez indiquer votre quartier.";
     if (info.locationUrl.trim() && !normalizeLocationUrl(info.locationUrl)) {
       errors.locationUrl = "Ce lien n'est pas valide (ex. https://maps.app.goo.gl/…).";
     }
@@ -105,15 +90,11 @@ export function checkoutDetails(info: CheckoutInfo): CheckoutDetails {
   const base: CheckoutDetails = {
     mode: info.mode,
     ...(info.payment ? { payment: info.payment } : {}),
-    firstName: clean(info.firstName),
-    lastName: clean(info.lastName),
   };
   if (info.mode === "pickup") return base;
   return {
     ...base,
     address: optional(info.address),
-    neighborhood: optional(info.neighborhood),
-    instructions: info.instructions.trim() || undefined,
     locationUrl: normalizeLocationUrl(info.locationUrl) ?? undefined,
   };
 }

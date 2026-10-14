@@ -29,11 +29,7 @@ const STEPS: { id: Step; title: string; label: string }[] = [
 ];
 /** Ordre d'affichage dans le formulaire : le focus va à la première erreur. */
 const FIELD_ORDER: (CheckoutField | "payment")[] = [
-  "firstName",
-  "lastName",
   "address",
-  "neighborhood",
-  "instructions",
   "locationUrl",
   "payment",
 ];

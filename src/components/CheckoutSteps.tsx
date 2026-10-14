@@ -200,34 +200,6 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
         e.preventDefault();
         onSubmit();
       }} className="space-y-6">
-      <fieldset className="space-y-4">
-        <legend className="mb-3">
-          <SectionTitle>Vos informations</SectionTitle>
-        </legend>
-        <div className="grid grid-cols-1 gap-4 min-[380px]:grid-cols-2 min-[380px]:gap-3">
-          <Field id="checkout-firstName" label="Prénom" required error={errors.firstName}>
-            <input
-              {...a11y("firstName")}
-              type="text"
-              autoComplete="given-name"
-              autoCapitalize="words"
-              value={value.firstName}
-              onChange={set("firstName")}
-            />
-          </Field>
-          <Field id="checkout-lastName" label="Nom" required error={errors.lastName}>
-            <input
-              {...a11y("lastName")}
-              type="text"
-              autoComplete="family-name"
-              autoCapitalize="words"
-              value={value.lastName}
-              onChange={set("lastName")}
-            />
-          </Field>
-        </div>
-      </fieldset>
-
       <fieldset>
         <legend className="mb-3">
           <SectionTitle>Mode de commande</SectionTitle>
@@ -261,26 +233,6 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
               value={value.address}
               onChange={set("address")}
               className={`${a11y("address").className} resize-none`}
-            />
-          </Field>
-          <Field id="checkout-neighborhood" label="Quartier" required error={errors.neighborhood}>
-            <input
-              {...a11y("neighborhood")}
-              type="text"
-              autoComplete="address-level3"
-              placeholder="Ex. Californie, Maârif…"
-              value={value.neighborhood}
-              onChange={set("neighborhood")}
-            />
-          </Field>
-          <Field id="checkout-instructions" label="Instructions de livraison">
-            <textarea
-              {...a11y("instructions")}
-              rows={2}
-              placeholder="Code d'accès, point de repère…"
-              value={value.instructions}
-              onChange={set("instructions")}
-              className={`${a11y("instructions").className} resize-none`}
             />
           </Field>
           <Field
@@ -408,21 +360,6 @@ export function OrderRecap({ lines, totalDh, details, onEditDetails, onEditCart 
   const delivery = details.mode === "delivery";
   return (
     <div className="space-y-3.5">
-      <section className={card} aria-labelledby="recap-client">
-        <div className="mb-1.5 flex items-center justify-between gap-2">
-          <h3 id="recap-client" className="font-display text-[1.02rem] font-semibold text-kaytori-black">
-            Client
-          </h3>
-          <EditButton onClick={onEditDetails} label="Modifier mes informations">
-            Modifier
-          </EditButton>
-        </div>
-        <dl>
-          <Row label="Prénom">{details.firstName}</Row>
-          <Row label="Nom">{details.lastName}</Row>
-        </dl>
-      </section>
-
       <section className={card} aria-labelledby="recap-fulfillment">
         <div className="mb-1.5 flex items-center justify-between gap-2">
           <h3 id="recap-fulfillment" className="font-display text-[1.02rem] font-semibold text-kaytori-black">
@@ -435,12 +372,6 @@ export function OrderRecap({ lines, totalDh, details, onEditDetails, onEditCart 
         <dl>
           <Row label="Mode">{delivery ? "Livraison" : "À emporter (retrait au restaurant)"}</Row>
           {details.address ? <Row label="Adresse">{details.address}</Row> : null}
-          {details.neighborhood ? <Row label="Quartier">{details.neighborhood}</Row> : null}
-          {details.instructions ? (
-            <Row label="Instructions">
-              <span className="whitespace-pre-line">{details.instructions}</span>
-            </Row>
-          ) : null}
           {details.locationUrl ? (
             <Row label="Localisation">
               <a

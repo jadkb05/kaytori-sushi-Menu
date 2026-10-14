@@ -1,6 +1,6 @@
 /**
- * Parcours de commande : coordonnées client (livraison / à emporter), récapitulatif et message
- * WhatsApp. Sans coordonnées, le message reste strictement celui de référence.
+ * Parcours de commande : mode livraison / à emporter, récapitulatif et message WhatsApp.
+ * Sans coordonnées, le message reste strictement celui de référence.
  */
 import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -26,29 +26,20 @@ const total = cartTotalDh(lines);
 const delivery: CheckoutInfo = {
   mode: "delivery",
   payment: "card",
-  firstName: "  Yasmine ",
-  lastName: "El   Amrani",
   address: "12 rue des Lilas, imm. 4, 2e étage",
-  neighborhood: "Californie",
-  instructions: "Sonner à l'interphone B",
   locationUrl: "maps.app.goo.gl/abc123",
 };
 const pickup: CheckoutInfo = { ...delivery, mode: "pickup" };
 
 describe("validation des coordonnées", () => {
-  it("prénom et nom obligatoires (y compris espaces seuls)", () => {
-    const e = validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "cash", firstName: "   " });
-    expect(e).toEqual({ firstName: "Veuillez indiquer votre prénom.", lastName: "Veuillez indiquer votre nom." });
+  it("livraison : adresse obligatoire ; localisation facultative", () => {
+    const e = validateCheckout({ ...EMPTY_CHECKOUT, payment: "cash" });
+    expect(Object.keys(e).sort()).toEqual(["address"]);
+    expect(validateCheckout({ ...delivery, locationUrl: "" })).toEqual({});
   });
 
-  it("livraison : adresse et quartier obligatoires ; instructions et localisation facultatives", () => {
-    const e = validateCheckout({ ...EMPTY_CHECKOUT, payment: "cash", firstName: "A", lastName: "B" });
-    expect(Object.keys(e).sort()).toEqual(["address", "neighborhood"]);
-    expect(validateCheckout({ ...delivery, instructions: "", locationUrl: "" })).toEqual({});
-  });
-
-  it("à emporter : adresse et quartier non requis, même vides", () => {
-    expect(validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "card", firstName: "A", lastName: "B" })).toEqual({});
+  it("à emporter : adresse non requise, même vide", () => {
+    expect(validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "card" })).toEqual({});
   });
 
   it("localisation : lien web accepté (schéma ajouté), texte libre refusé", () => {
@@ -59,11 +50,13 @@ describe("validation des coordonnées", () => {
     expect(mapsUrlFromCoords(33.528081, -7.6155)).toBe("https://www.google.com/maps?q=33.52808,-7.61550");
   });
 
-  it("aucun champ téléphone dans le formulaire", () => {
+  it("aucun champ téléphone, prénom, nom, quartier ni instructions dans le formulaire", () => {
     const html = renderToStaticMarkup(
       <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
     );
     expect(html).not.toMatch(/type="tel"|téléphone\b(?! demandé)/i);
+    expect(html).not.toMatch(/Prénom|Quartier|Instructions de livraison|checkout-firstName|checkout-lastName|checkout-neighborhood|checkout-instructions/);
+    expect(html).not.toMatch(/>Nom</);
   });
 });
 
@@ -108,17 +101,13 @@ describe("coordonnées nettoyées (récapitulatif et message)", () => {
     expect(checkoutDetails(delivery)).toEqual({
       mode: "delivery",
       payment: "card",
-      firstName: "Yasmine",
-      lastName: "El Amrani",
       address: "12 rue des Lilas, imm. 4, 2e étage",
-      neighborhood: "Californie",
-      instructions: "Sonner à l'interphone B",
       locationUrl: "https://maps.app.goo.gl/abc123",
     });
   });
 
   it("à emporter : champs de livraison retirés même s'ils avaient été saisis", () => {
-    expect(checkoutDetails(pickup)).toEqual({ mode: "pickup", payment: "card", firstName: "Yasmine", lastName: "El Amrani" });
+    expect(checkoutDetails(pickup)).toEqual({ mode: "pickup", payment: "card" });
   });
 });
 
@@ -128,22 +117,16 @@ describe("message WhatsApp", () => {
     expect(buildWhatsappOrderMessage(lines, total, undefined, undefined)).toBe(reference);
   });
 
-  it("livraison : blocs client + livraison, lignes et total de référence inchangés", () => {
+  it("livraison : blocs livraison + paiement, lignes et total de référence inchangés", () => {
     const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails(delivery));
     const refLines = reference.split("\n");
     const detailStart = refLines.findIndex((l) => l.startsWith("• "));
     expect(msg).toBe(
       [
         ...refLines.slice(0, detailStart),
-        "👤 CLIENT",
-        "Prénom : Yasmine",
-        "Nom : El Amrani",
-        "",
         "📍 LIVRAISON",
         "Mode : Livraison",
         "Adresse : 12 rue des Lilas, imm. 4, 2e étage",
-        "Quartier : Californie",
-        "Instructions : Sonner à l'interphone B",
         "Localisation : https://maps.app.goo.gl/abc123",
         "",
         "💳 MODE DE PAIEMENT",
@@ -156,12 +139,13 @@ describe("message WhatsApp", () => {
         ...refLines.slice(refLines.indexOf("Total : 514,00 DH")),
       ].join("\n"),
     );
+    expect(msg).not.toMatch(/CLIENT|Prénom|Nom :|Quartier|Instructions/);
   });
 
-  it("champs facultatifs vides omis", () => {
-    const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails({ ...delivery, instructions: " ", locationUrl: "" }));
-    expect(msg).not.toMatch(/Instructions|Localisation/);
-    expect(msg).toContain("Quartier : Californie");
+  it("localisation vide omise", () => {
+    const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails({ ...delivery, locationUrl: "" }));
+    expect(msg).not.toMatch(/Localisation/);
+    expect(msg).toContain("Adresse : 12 rue des Lilas, imm. 4, 2e étage");
   });
 
   it("à emporter : mode retrait, ni adresse ni ligne livraison ; total inchangé", () => {
@@ -198,6 +182,7 @@ describe("récapitulatif", () => {
     expect(html).toContain('href="https://maps.app.goo.gl/abc123"');
     expect(html).toContain("Carte bancaire (TPE)");
     expect(html).toContain("À régler à la livraison.");
+    expect(html).not.toMatch(/Prénom|Quartier|Instructions|recap-client/);
   });
 
   it("à emporter : pas d'adresse ni de ligne livraison", () => {
@@ -207,10 +192,11 @@ describe("récapitulatif", () => {
     expect(html).toContain("À régler au retrait.");
   });
 
-  it("boutons modifier coordonnées et panier présents", () => {
+  it("boutons modifier livraison/retrait, paiement et panier présents", () => {
     const html = recap(delivery);
-    expect(html).toContain('aria-label="Modifier mes informations"');
+    expect(html).toContain('aria-label="Modifier la livraison"');
     expect(html).toContain('aria-label="Modifier le panier"');
     expect(html).toContain('aria-label="Modifier le mode de paiement"');
+    expect(html).not.toContain('aria-label="Modifier mes informations"');
   });
 });
