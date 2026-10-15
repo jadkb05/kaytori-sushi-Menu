@@ -32,13 +32,13 @@ const delivery: CheckoutInfo = {
   payment: "card",
   fullName: "  Yasmine  El   Amrani ",
   address: "12 rue des Lilas, imm. 4, 2e étage",
-  neighborhood: "Polo / Bachkou / Californie",
+  neighborhood: "Polo / Bachkou / Oasis",
   locationUrl: "maps.app.goo.gl/abc123",
 };
 const pickup: CheckoutInfo = { ...delivery, mode: "pickup" };
 
 describe("quartiers (liste client)", () => {
-  it("contient exactement les 19 options fournies, dans l'ordre", () => {
+  it("contient exactement les 17 options fournies, dans l'ordre", () => {
     expect([...NEIGHBORHOODS]).toEqual([
       "Bourgogne",
       "Ain Diab",
@@ -47,33 +47,32 @@ describe("quartiers (liste client)", () => {
       "Val Fleuri / Derb Ghallef",
       "CFC / El Hana / CIL",
       "Oulfa / Hay Hassani / Laymoune",
-      "Belvédère / Roche Noire / Ain Sbaa",
+      "Belvédère / Roche Noire",
       "Centre Ville",
       "Ain Chok / Inara",
       "Mers Sultan / Q. Hopitaux",
-      "Polo / Bachkou / Californie",
-      "Oasis",
+      "Polo / Bachkou / Oasis",
+      "Californie",
       "Bouskoura",
       "Almaz / Lissasfa / Errahma",
-      "Dar Bouazza",
       "Bernoussi / Anassi / Sidi Moumen",
       "La Ville Verte",
-      "Zenata",
     ]);
-    expect(NEIGHBORHOODS).toHaveLength(19);
+    expect(NEIGHBORHOODS).toHaveLength(17);
   });
 
   it("recherche insensible à la casse et aux accents", () => {
     expect(foldSearch("Belvédère")).toBe(foldSearch("belvedere"));
-    expect(filterNeighborhoods("belve").map(String)).toContain("Belvédère / Roche Noire / Ain Sbaa");
-    expect(filterNeighborhoods("CALIFORNIE").map(String)).toEqual(["Polo / Bachkou / Californie"]);
+    expect(filterNeighborhoods("belve").map(String)).toContain("Belvédère / Roche Noire");
+    expect(filterNeighborhoods("CALIFORNIE").map(String)).toEqual(["Californie"]);
     expect(filterNeighborhoods("maarif").map(String)).toEqual(["Maarif / Palmier", "Maarif ext"]);
     expect(filterNeighborhoods("xyz-inconnu")).toEqual([]);
   });
 
   it("n'accepte qu'une valeur exacte de la liste", () => {
-    expect(isValidNeighborhood("Polo / Bachkou / Californie")).toBe(true);
-    expect(isValidNeighborhood("Californie")).toBe(false);
+    expect(isValidNeighborhood("Polo / Bachkou / Oasis")).toBe(true);
+    expect(isValidNeighborhood("Californie")).toBe(true);
+    expect(isValidNeighborhood("Oasis")).toBe(false);
     expect(isValidNeighborhood("")).toBe(false);
   });
 });
@@ -95,7 +94,7 @@ describe("validation des coordonnées", () => {
   });
 
   it("livraison : quartier hors liste refusé", () => {
-    expect(validateCheckout({ ...delivery, neighborhood: "Californie" }).neighborhood).toMatch(/liste/i);
+    expect(validateCheckout({ ...delivery, neighborhood: "Dar Bouazza" }).neighborhood).toMatch(/liste/i);
   });
 
   it("à emporter : adresse et quartier non requis", () => {
@@ -156,7 +155,7 @@ describe("mode de paiement", () => {
     const html = renderToStaticMarkup(
       <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
     );
-    expect(html).toContain("Carte bancaire (TPE)");
+    expect(html).toContain("Carte bancaire");
     expect(html).toContain("Paiement par carte");
     expect(html).toContain("Paiement en espèces");
     expect(html).not.toContain("à la livraison ou au retrait");
@@ -164,7 +163,7 @@ describe("mode de paiement", () => {
 
   it.each([
     ["cash", "💵 MODE DE PAIEMENT\nPaiement : Espèces\n"],
-    ["card", "💳 MODE DE PAIEMENT\nPaiement : Carte bancaire (TPE)\n"],
+    ["card", "💳 MODE DE PAIEMENT\nPaiement : Carte bancaire\n"],
   ] as const)("%s : accepté pour les deux modes, dans le message avant la commande", (payment, block) => {
     for (const mode of ["delivery", "pickup"] as const) {
       const info = { ...delivery, mode, payment };
@@ -196,7 +195,7 @@ describe("coordonnées nettoyées (récapitulatif et message)", () => {
       payment: "card",
       fullName: "Yasmine El Amrani",
       address: "12 rue des Lilas, imm. 4, 2e étage",
-      neighborhood: "Polo / Bachkou / Californie",
+      neighborhood: "Polo / Bachkou / Oasis",
       locationUrl: "https://maps.app.goo.gl/abc123",
     });
   });
@@ -229,11 +228,11 @@ describe("message WhatsApp", () => {
         "📍 LIVRAISON",
         "Mode : Livraison",
         "Adresse : 12 rue des Lilas, imm. 4, 2e étage",
-        "Quartier : Polo / Bachkou / Californie",
+        "Quartier : Polo / Bachkou / Oasis",
         "Localisation : https://maps.app.goo.gl/abc123",
         "",
         "💳 MODE DE PAIEMENT",
-        "Paiement : Carte bancaire (TPE)",
+        "Paiement : Carte bancaire",
         "",
         "🛍️ COMMANDE",
         "",
@@ -247,7 +246,7 @@ describe("message WhatsApp", () => {
   it("localisation vide omise", () => {
     const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails({ ...delivery, locationUrl: "" }));
     expect(msg).not.toMatch(/Localisation/);
-    expect(msg).toContain("Quartier : Polo / Bachkou / Californie");
+    expect(msg).toContain("Quartier : Polo / Bachkou / Oasis");
   });
 
   it("à emporter : mode retrait, ni adresse ni ligne livraison ; total inchangé", () => {
@@ -290,8 +289,8 @@ describe("récapitulatif", () => {
       prev = i;
     }
     expect(html).toContain("Yasmine El Amrani");
-    expect(html).toContain("Polo / Bachkou / Californie");
-    expect(html).toContain("Carte bancaire (TPE)");
+    expect(html).toContain("Polo / Bachkou / Oasis");
+    expect(html).toContain("Carte bancaire");
   });
 
   it("données réelles du panier : produit, variante, quantité × prix unitaire, total", () => {

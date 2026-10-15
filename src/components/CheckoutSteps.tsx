@@ -221,7 +221,7 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
       </fieldset>
 
       <fieldset className="space-y-4">
-        <legend className="mb-3">
+        <legend className="mb-1.5">
           <SectionTitle>Vos informations</SectionTitle>
         </legend>
         <Field id="checkout-fullName" label="Nom et prénom" required error={errors.fullName}>
@@ -239,18 +239,14 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
 
       {value.mode === "delivery" ? (
         <fieldset className="space-y-4">
-          <legend className="mb-3">
-            <SectionTitle>Adresse de livraison</SectionTitle>
-          </legend>
           <Field id="checkout-address" label="Adresse complète" required error={errors.address}>
-            <textarea
+            <input
               {...a11y("address")}
-              rows={2}
+              type="text"
               autoComplete="street-address"
               placeholder="Rue, numéro, immeuble, étage…"
               value={value.address}
               onChange={set("address")}
-              className={`${a11y("address").className} resize-none`}
             />
           </Field>
           <Field id="checkout-neighborhood" label="Quartier" required error={errors.neighborhood}>

@@ -15,7 +15,7 @@ export const PAYMENT_METHODS: readonly { id: PaymentMethod; label: string; text:
   { id: "cash", label: "Espèces", text: "Paiement en espèces", emoji: "💵" },
   {
     id: "card",
-    label: "Carte bancaire (TPE)",
+    label: "Carte bancaire",
     text: "Paiement par carte",
     emoji: "💳",
   },
@@ -34,18 +34,16 @@ export const NEIGHBORHOODS = [
   "Val Fleuri / Derb Ghallef",
   "CFC / El Hana / CIL",
   "Oulfa / Hay Hassani / Laymoune",
-  "Belvédère / Roche Noire / Ain Sbaa",
+  "Belvédère / Roche Noire",
   "Centre Ville",
   "Ain Chok / Inara",
   "Mers Sultan / Q. Hopitaux",
-  "Polo / Bachkou / Californie",
-  "Oasis",
+  "Polo / Bachkou / Oasis",
+  "Californie",
   "Bouskoura",
   "Almaz / Lissasfa / Errahma",
-  "Dar Bouazza",
   "Bernoussi / Anassi / Sidi Moumen",
   "La Ville Verte",
-  "Zenata",
 ] as const;
 
 export type Neighborhood = (typeof NEIGHBORHOODS)[number];
