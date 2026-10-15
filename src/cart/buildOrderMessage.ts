@@ -39,7 +39,7 @@ export function lineSubtotalDh(line: CartLine): number {
   return line.unitPriceDh * line.quantity;
 }
 
-/** Bloc livraison/retrait + paiement (lignes vides omises), inséré avant le détail de la commande. */
+/** Bloc client + livraison/retrait + paiement (lignes vides omises), inséré avant le détail. */
 function checkoutBlock(c: CheckoutDetails): string[] {
   const field = (label: string, value?: string) => (value ? [`${label} : ${value}`] : []);
   const fulfillment =
@@ -49,10 +49,14 @@ function checkoutBlock(c: CheckoutDetails): string[] {
           "📍 LIVRAISON",
           "Mode : Livraison",
           ...field("Adresse", c.address),
+          ...field("Quartier", c.neighborhood),
           ...field("Localisation", c.locationUrl),
         ];
   const payment = c.payment ? paymentMethod(c.payment) : null;
   return [
+    "👤 CLIENT",
+    ...field("Nom et prénom", c.fullName),
+    "",
     ...fulfillment,
     "",
     ...(payment ? [`${payment.emoji} MODE DE PAIEMENT`, `Paiement : ${payment.label}`, ""] : []),

@@ -20,6 +20,7 @@ import {
   preciseFixMessage,
   requestCurrentPosition,
 } from "../cart/geolocation";
+import { NeighborhoodSelect } from "./NeighborhoodSelect";
 
 /** « Nems — Crevettes » → produit « Nems », variante « Crevettes » (affichage uniquement). */
 export function splitName(name: string): { product: string; variant: string | null } {
@@ -140,7 +141,7 @@ type FormProps = {
   onSubmit: () => void;
 };
 
-/** Étape « Vos coordonnées » : mode (livraison / à emporter), adresse si livraison, paiement. */
+/** Étape « Vos coordonnées » : mode, identité, adresse/quartier si livraison, localisation, paiement. */
 export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: FormProps) {
   const [locating, setLocating] = useState(false);
   const [locateStatus, setLocateStatus] = useState<{ ok: boolean; text: string } | null>(null);
@@ -202,7 +203,7 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
       }} className="space-y-6">
       <fieldset>
         <legend className="mb-3">
-          <SectionTitle>Mode de commande</SectionTitle>
+          <SectionTitle>Livraison ou à emporter</SectionTitle>
         </legend>
         <div className="grid grid-cols-2 gap-2.5">
           {MODES.map((m) => (
@@ -216,6 +217,34 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
               onSelect={() => onChange({ ...value, mode: m.id })}
             />
           ))}
+        </div>
+      </fieldset>
+
+      <fieldset className="space-y-4">
+        <legend className="mb-3">
+          <SectionTitle>Vos informations</SectionTitle>
+        </legend>
+        <div className="grid grid-cols-1 gap-4 min-[380px]:grid-cols-2 min-[380px]:gap-3">
+          <Field id="checkout-firstName" label="Prénom" required error={errors.firstName}>
+            <input
+              {...a11y("firstName")}
+              type="text"
+              autoComplete="given-name"
+              autoCapitalize="words"
+              value={value.firstName}
+              onChange={set("firstName")}
+            />
+          </Field>
+          <Field id="checkout-lastName" label="Nom" required error={errors.lastName}>
+            <input
+              {...a11y("lastName")}
+              type="text"
+              autoComplete="family-name"
+              autoCapitalize="words"
+              value={value.lastName}
+              onChange={set("lastName")}
+            />
+          </Field>
         </div>
       </fieldset>
 
@@ -233,6 +262,15 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
               value={value.address}
               onChange={set("address")}
               className={`${a11y("address").className} resize-none`}
+            />
+          </Field>
+          <Field id="checkout-neighborhood" label="Quartier" required error={errors.neighborhood}>
+            <NeighborhoodSelect
+              id="checkout-neighborhood"
+              value={value.neighborhood}
+              onChange={(neighborhood) => onChange({ ...value, neighborhood })}
+              invalid={Boolean(errors.neighborhood)}
+              describedBy={errors.neighborhood ? "checkout-neighborhood-error" : undefined}
             />
           </Field>
           <Field
@@ -337,9 +375,9 @@ function EditButton({ onClick, label, children }: { onClick: () => void; label: 
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
-    <div className="grid grid-cols-[6.25rem_minmax(0,1fr)] gap-2 py-1">
-      <dt className="font-sans text-[0.8rem] text-kaytori-muted">{label}</dt>
-      <dd className="break-words font-sans text-[0.86rem] font-medium text-kaytori-black [overflow-wrap:anywhere]">
+    <div className="grid grid-cols-[minmax(6.75rem,8.25rem)_minmax(0,1fr)] gap-2 py-1.5">
+      <dt className="font-sans text-[0.78rem] leading-snug text-kaytori-muted">{label}</dt>
+      <dd className="break-words font-sans text-[0.86rem] font-medium leading-snug text-kaytori-black [overflow-wrap:anywhere]">
         {children}
       </dd>
     </div>
@@ -360,18 +398,22 @@ export function OrderRecap({ lines, totalDh, details, onEditDetails, onEditCart 
   const delivery = details.mode === "delivery";
   return (
     <div className="space-y-3.5">
-      <section className={card} aria-labelledby="recap-fulfillment">
+      <section className={card} aria-labelledby="recap-details">
         <div className="mb-1.5 flex items-center justify-between gap-2">
-          <h3 id="recap-fulfillment" className="font-display text-[1.02rem] font-semibold text-kaytori-black">
-            {delivery ? "Livraison" : "Retrait"}
+          <h3 id="recap-details" className="font-display text-[1.02rem] font-semibold text-kaytori-black">
+            Vos informations
           </h3>
-          <EditButton onClick={onEditDetails} label={delivery ? "Modifier la livraison" : "Modifier le mode de commande"}>
+          <EditButton onClick={onEditDetails} label="Modifier mes informations">
             Modifier
           </EditButton>
         </div>
         <dl>
-          <Row label="Mode">{delivery ? "Livraison" : "À emporter (retrait au restaurant)"}</Row>
-          {details.address ? <Row label="Adresse">{details.address}</Row> : null}
+          <Row label="Livraison ou à emporter">
+            {delivery ? "Livraison" : "À emporter (retrait au restaurant)"}
+          </Row>
+          <Row label="Nom et prénom">{details.fullName}</Row>
+          {details.address ? <Row label="Adresse complète">{details.address}</Row> : null}
+          {details.neighborhood ? <Row label="Quartier">{details.neighborhood}</Row> : null}
           {details.locationUrl ? (
             <Row label="Localisation">
               <a
@@ -384,27 +426,14 @@ export function OrderRecap({ lines, totalDh, details, onEditDetails, onEditCart 
               </a>
             </Row>
           ) : null}
+          {details.payment ? <Row label="Mode de paiement">{paymentMethod(details.payment).label}</Row> : null}
         </dl>
-      </section>
-
-      {details.payment ? (
-        <section className={card} aria-labelledby="recap-payment">
-          <div className="mb-1.5 flex items-center justify-between gap-2">
-            <h3 id="recap-payment" className="font-display text-[1.02rem] font-semibold text-kaytori-black">
-              Paiement
-            </h3>
-            <EditButton onClick={onEditDetails} label="Modifier le mode de paiement">
-              Modifier
-            </EditButton>
-          </div>
-          <dl>
-            <Row label="Mode">{paymentMethod(details.payment).label}</Row>
-          </dl>
-          <p className="mt-1 font-sans text-[0.76rem] text-kaytori-muted">
+        {details.payment ? (
+          <p className="mt-1.5 font-sans text-[0.76rem] text-kaytori-muted">
             À régler {delivery ? "à la livraison" : "au retrait"}.
           </p>
-        </section>
-      ) : null}
+        ) : null}
+      </section>
 
       <section className={card} aria-labelledby="recap-order">
         <div className="mb-1 flex items-center justify-between gap-2">

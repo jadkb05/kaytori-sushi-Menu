@@ -16,7 +16,7 @@ export const PAYMENT_METHODS: readonly { id: PaymentMethod; label: string; text:
   {
     id: "card",
     label: "Carte bancaire (TPE)",
-    text: "Paiement par carte au terminal lors de la livraison ou du retrait.",
+    text: "Paiement par carte à la livraison ou au retrait.",
     emoji: "💳",
   },
 ];
@@ -25,12 +25,62 @@ export function paymentMethod(id: PaymentMethod) {
   return PAYMENT_METHODS.find((m) => m.id === id)!;
 }
 
+/** Quartiers Casablanca (libellés exacts client — ne pas renommer ni enrichir). */
+export const NEIGHBORHOODS = [
+  "Bourgogne",
+  "Ain Diab",
+  "Maarif / Palmier",
+  "Maarif ext",
+  "Val Fleuri / Derb Ghallef",
+  "CFC / El Hana / CIL",
+  "Oulfa / Hay Hassani / Laymoune",
+  "Belvédère / Roche Noire / Ain Sbaa",
+  "Centre Ville",
+  "Ain Chok / Inara",
+  "Mers Sultan / Q. Hopitaux",
+  "Polo / Bachkou / Californie",
+  "Oasis",
+  "Bouskoura",
+  "Almaz / Lissasfa / Errahma",
+  "Dar Bouazza",
+  "Bernoussi / Anassi / Sidi Moumen",
+  "La Ville Verte",
+  "Zenata",
+] as const;
+
+export type Neighborhood = (typeof NEIGHBORHOODS)[number];
+
+/** Normalisation pour recherche : minuscules, sans accents, espaces compressés. */
+export function foldSearch(s: string): string {
+  return s
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+export function isValidNeighborhood(value: string): value is Neighborhood {
+  return (NEIGHBORHOODS as readonly string[]).includes(value);
+}
+
+/** Filtre la liste des quartiers (insensible à la casse et aux accents). */
+export function filterNeighborhoods(query: string): readonly Neighborhood[] {
+  const q = foldSearch(query);
+  if (!q) return NEIGHBORHOODS;
+  return NEIGHBORHOODS.filter((n) => foldSearch(n).includes(q));
+}
+
 export type CheckoutInfo = {
   mode: FulfillmentMode;
   /** Aucun choix par défaut : le client doit choisir explicitement. */
   payment: PaymentMethod | "";
+  firstName: string;
+  lastName: string;
   /** Livraison uniquement. */
   address: string;
+  /** Livraison uniquement — doit être une entrée exacte de NEIGHBORHOODS. */
+  neighborhood: string;
   locationUrl: string;
 };
 
@@ -41,7 +91,10 @@ export type CheckoutErrors = Partial<Record<CheckoutField | "payment", string>>;
 export const EMPTY_CHECKOUT: CheckoutInfo = {
   mode: "delivery",
   payment: "",
+  firstName: "",
+  lastName: "",
   address: "",
+  neighborhood: "",
   locationUrl: "",
 };
 
@@ -49,7 +102,12 @@ export const EMPTY_CHECKOUT: CheckoutInfo = {
 export type CheckoutDetails = {
   mode: FulfillmentMode;
   payment?: PaymentMethod;
+  firstName: string;
+  lastName: string;
+  /** « Prénom Nom » pour le récap et WhatsApp. */
+  fullName: string;
   address?: string;
+  neighborhood?: string;
   locationUrl?: string;
 };
 
@@ -76,9 +134,16 @@ export function mapsUrlFromCoords(latitude: number, longitude: number): string {
 
 export function validateCheckout(info: CheckoutInfo): CheckoutErrors {
   const errors: CheckoutErrors = {};
+  if (!clean(info.firstName)) errors.firstName = "Veuillez indiquer votre prénom.";
+  if (!clean(info.lastName)) errors.lastName = "Veuillez indiquer votre nom.";
   if (!info.payment) errors.payment = "Veuillez choisir un mode de paiement.";
   if (info.mode === "delivery") {
     if (!clean(info.address)) errors.address = "Veuillez indiquer l'adresse de livraison.";
+    if (!clean(info.neighborhood)) {
+      errors.neighborhood = "Veuillez choisir votre quartier.";
+    } else if (!isValidNeighborhood(info.neighborhood)) {
+      errors.neighborhood = "Veuillez sélectionner un quartier dans la liste.";
+    }
     if (info.locationUrl.trim() && !normalizeLocationUrl(info.locationUrl)) {
       errors.locationUrl = "Ce lien n'est pas valide (ex. https://maps.app.goo.gl/…).";
     }
@@ -87,14 +152,21 @@ export function validateCheckout(info: CheckoutInfo): CheckoutErrors {
 }
 
 export function checkoutDetails(info: CheckoutInfo): CheckoutDetails {
+  const firstName = clean(info.firstName);
+  const lastName = clean(info.lastName);
+  const fullName = [firstName, lastName].filter(Boolean).join(" ");
   const base: CheckoutDetails = {
     mode: info.mode,
     ...(info.payment ? { payment: info.payment } : {}),
+    firstName,
+    lastName,
+    fullName,
   };
   if (info.mode === "pickup") return base;
   return {
     ...base,
     address: optional(info.address),
+    neighborhood: isValidNeighborhood(info.neighborhood) ? info.neighborhood : optional(info.neighborhood),
     locationUrl: normalizeLocationUrl(info.locationUrl) ?? undefined,
   };
 }

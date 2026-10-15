@@ -1,6 +1,6 @@
 /**
- * Parcours de commande : mode livraison / à emporter, récapitulatif et message WhatsApp.
- * Sans coordonnées, le message reste strictement celui de référence.
+ * Parcours de commande : mode livraison / à emporter, identité, quartier searchable,
+ * récapitulatif et message WhatsApp. Sans coordonnées, le message reste celui de référence.
  */
 import { readFileSync } from "node:fs";
 import { renderToStaticMarkup } from "react-dom/server";
@@ -8,7 +8,11 @@ import { describe, expect, it } from "vitest";
 import { buildWhatsappOrderMessage, type CartLine } from "../src/cart/buildOrderMessage";
 import {
   EMPTY_CHECKOUT,
+  NEIGHBORHOODS,
   checkoutDetails,
+  filterNeighborhoods,
+  foldSearch,
+  isValidNeighborhood,
   mapsUrlFromCoords,
   normalizeLocationUrl,
   validateCheckout,
@@ -26,20 +30,87 @@ const total = cartTotalDh(lines);
 const delivery: CheckoutInfo = {
   mode: "delivery",
   payment: "card",
+  firstName: "  Yasmine ",
+  lastName: "El   Amrani",
   address: "12 rue des Lilas, imm. 4, 2e étage",
+  neighborhood: "Polo / Bachkou / Californie",
   locationUrl: "maps.app.goo.gl/abc123",
 };
 const pickup: CheckoutInfo = { ...delivery, mode: "pickup" };
 
+describe("quartiers (liste client)", () => {
+  it("contient exactement les 19 options fournies, dans l'ordre", () => {
+    expect([...NEIGHBORHOODS]).toEqual([
+      "Bourgogne",
+      "Ain Diab",
+      "Maarif / Palmier",
+      "Maarif ext",
+      "Val Fleuri / Derb Ghallef",
+      "CFC / El Hana / CIL",
+      "Oulfa / Hay Hassani / Laymoune",
+      "Belvédère / Roche Noire / Ain Sbaa",
+      "Centre Ville",
+      "Ain Chok / Inara",
+      "Mers Sultan / Q. Hopitaux",
+      "Polo / Bachkou / Californie",
+      "Oasis",
+      "Bouskoura",
+      "Almaz / Lissasfa / Errahma",
+      "Dar Bouazza",
+      "Bernoussi / Anassi / Sidi Moumen",
+      "La Ville Verte",
+      "Zenata",
+    ]);
+    expect(NEIGHBORHOODS).toHaveLength(19);
+  });
+
+  it("recherche insensible à la casse et aux accents", () => {
+    expect(foldSearch("Belvédère")).toBe(foldSearch("belvedere"));
+    expect(filterNeighborhoods("belve").map(String)).toContain("Belvédère / Roche Noire / Ain Sbaa");
+    expect(filterNeighborhoods("CALIFORNIE").map(String)).toEqual(["Polo / Bachkou / Californie"]);
+    expect(filterNeighborhoods("maarif").map(String)).toEqual(["Maarif / Palmier", "Maarif ext"]);
+    expect(filterNeighborhoods("xyz-inconnu")).toEqual([]);
+  });
+
+  it("n'accepte qu'une valeur exacte de la liste", () => {
+    expect(isValidNeighborhood("Polo / Bachkou / Californie")).toBe(true);
+    expect(isValidNeighborhood("Californie")).toBe(false);
+    expect(isValidNeighborhood("")).toBe(false);
+  });
+});
+
 describe("validation des coordonnées", () => {
-  it("livraison : adresse obligatoire ; localisation facultative", () => {
-    const e = validateCheckout({ ...EMPTY_CHECKOUT, payment: "cash" });
-    expect(Object.keys(e).sort()).toEqual(["address"]);
+  it("prénom et nom obligatoires", () => {
+    const e = validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "cash", firstName: "   " });
+    expect(e.firstName).toMatch(/prénom/i);
+    expect(e.lastName).toMatch(/nom/i);
+  });
+
+  it("livraison : adresse et quartier obligatoires ; localisation facultative", () => {
+    const e = validateCheckout({
+      ...EMPTY_CHECKOUT,
+      payment: "cash",
+      firstName: "A",
+      lastName: "B",
+    });
+    expect(Object.keys(e).sort()).toEqual(["address", "neighborhood"]);
     expect(validateCheckout({ ...delivery, locationUrl: "" })).toEqual({});
   });
 
-  it("à emporter : adresse non requise, même vide", () => {
-    expect(validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "card" })).toEqual({});
+  it("livraison : quartier hors liste refusé", () => {
+    expect(validateCheckout({ ...delivery, neighborhood: "Californie" }).neighborhood).toMatch(/liste/i);
+  });
+
+  it("à emporter : adresse et quartier non requis", () => {
+    expect(
+      validateCheckout({
+        ...EMPTY_CHECKOUT,
+        mode: "pickup",
+        payment: "card",
+        firstName: "A",
+        lastName: "B",
+      }),
+    ).toEqual({});
   });
 
   it("localisation : lien web accepté (schéma ajouté), texte libre refusé", () => {
@@ -50,21 +121,27 @@ describe("validation des coordonnées", () => {
     expect(mapsUrlFromCoords(33.528081, -7.6155)).toBe("https://www.google.com/maps?q=33.52808,-7.61550");
   });
 
-  it("aucun champ téléphone, prénom, nom, quartier ni instructions dans le formulaire", () => {
+  it("formulaire : prénom, nom, quartier searchable ; pas de téléphone ni instructions", () => {
     const html = renderToStaticMarkup(
       <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
     );
+    expect(html).toContain("Prénom");
+    expect(html).toContain("Nom");
+    expect(html).toContain("Quartier");
+    expect(html).toContain('role="combobox"');
+    expect(html).toContain('id="checkout-address"');
     expect(html).not.toMatch(/type="tel"|téléphone\b(?! demandé)/i);
-    expect(html).not.toMatch(/Prénom|Quartier|Instructions de livraison|checkout-firstName|checkout-lastName|checkout-neighborhood|checkout-instructions/);
-    expect(html).not.toMatch(/>Nom</);
+    expect(html).not.toMatch(/Instructions de livraison/);
+    expect(html).not.toMatch(/id="checkout-address"[^>]*autoFocus|autoFocus[^>]*id="checkout-address"/i);
   });
 
-  it("adresse : pas d'autoFocus (évite l'ouverture du clavier iOS à l'arrivée sur Coordonnées)", () => {
+  it("à emporter : champs adresse et quartier absents du formulaire", () => {
     const html = renderToStaticMarkup(
-      <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
+      <CheckoutForm formId="f" value={pickup} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
     );
-    expect(html).toContain('id="checkout-address"');
-    expect(html).not.toMatch(/id="checkout-address"[^>]*autoFocus|autoFocus[^>]*id="checkout-address"/i);
+    expect(html).not.toContain('id="checkout-address"');
+    expect(html).not.toContain('id="checkout-neighborhood"');
+    expect(html).toContain("retirer au restaurant");
   });
 });
 
@@ -75,6 +152,15 @@ describe("mode de paiement", () => {
     expect(EMPTY_CHECKOUT.payment).toBe("");
     expect(validateCheckout(filled)).toEqual({ payment: "Veuillez choisir un mode de paiement." });
     expect(validateCheckout({ ...filled, mode: "pickup" })).toEqual({ payment: "Veuillez choisir un mode de paiement." });
+  });
+
+  it("libellé TPE exact", () => {
+    const html = renderToStaticMarkup(
+      <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
+    );
+    expect(html).toContain("Carte bancaire (TPE)");
+    expect(html).toContain("Paiement par carte à la livraison ou au retrait.");
+    expect(html).not.toContain("Paiement par carte au terminal lors de la livraison ou du retrait.");
   });
 
   it.each([
@@ -105,17 +191,27 @@ describe("mode de paiement", () => {
 });
 
 describe("coordonnées nettoyées (récapitulatif et message)", () => {
-  it("livraison : espaces normalisés, lien normalisé", () => {
+  it("livraison : espaces normalisés, lien normalisé, nom complet", () => {
     expect(checkoutDetails(delivery)).toEqual({
       mode: "delivery",
       payment: "card",
+      firstName: "Yasmine",
+      lastName: "El Amrani",
+      fullName: "Yasmine El Amrani",
       address: "12 rue des Lilas, imm. 4, 2e étage",
+      neighborhood: "Polo / Bachkou / Californie",
       locationUrl: "https://maps.app.goo.gl/abc123",
     });
   });
 
   it("à emporter : champs de livraison retirés même s'ils avaient été saisis", () => {
-    expect(checkoutDetails(pickup)).toEqual({ mode: "pickup", payment: "card" });
+    expect(checkoutDetails(pickup)).toEqual({
+      mode: "pickup",
+      payment: "card",
+      firstName: "Yasmine",
+      lastName: "El Amrani",
+      fullName: "Yasmine El Amrani",
+    });
   });
 });
 
@@ -125,16 +221,20 @@ describe("message WhatsApp", () => {
     expect(buildWhatsappOrderMessage(lines, total, undefined, undefined)).toBe(reference);
   });
 
-  it("livraison : blocs livraison + paiement, lignes et total de référence inchangés", () => {
+  it("livraison : client, adresse, quartier, localisation, paiement", () => {
     const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails(delivery));
     const refLines = reference.split("\n");
     const detailStart = refLines.findIndex((l) => l.startsWith("• "));
     expect(msg).toBe(
       [
         ...refLines.slice(0, detailStart),
+        "👤 CLIENT",
+        "Nom et prénom : Yasmine El Amrani",
+        "",
         "📍 LIVRAISON",
         "Mode : Livraison",
         "Adresse : 12 rue des Lilas, imm. 4, 2e étage",
+        "Quartier : Polo / Bachkou / Californie",
         "Localisation : https://maps.app.goo.gl/abc123",
         "",
         "💳 MODE DE PAIEMENT",
@@ -147,18 +247,18 @@ describe("message WhatsApp", () => {
         ...refLines.slice(refLines.indexOf("Total : 514,00 DH")),
       ].join("\n"),
     );
-    expect(msg).not.toMatch(/CLIENT|Prénom|Nom :|Quartier|Instructions/);
   });
 
   it("localisation vide omise", () => {
     const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails({ ...delivery, locationUrl: "" }));
     expect(msg).not.toMatch(/Localisation/);
-    expect(msg).toContain("Adresse : 12 rue des Lilas, imm. 4, 2e étage");
+    expect(msg).toContain("Quartier : Polo / Bachkou / Californie");
   });
 
   it("à emporter : mode retrait, ni adresse ni ligne livraison ; total inchangé", () => {
     const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails(pickup));
     expect(msg).toContain("🏪 RETRAIT\nMode : À emporter (retrait au restaurant)");
+    expect(msg).toContain("Nom et prénom : Yasmine El Amrani");
     expect(msg).not.toMatch(/Adresse|Quartier|Livraison/);
     expect(msg).toContain("Total : 514,00 DH");
     for (const l of reference.split("\n").filter((x) => x.startsWith("• "))) expect(msg).toContain(l);
@@ -178,33 +278,51 @@ describe("récapitulatif", () => {
       <OrderRecap lines={cart} totalDh={cartTotalDh([...cart])} details={checkoutDetails(info)} onEditDetails={() => {}} onEditCart={() => {}} />,
     );
 
-  it("données réelles du panier : produit, variante, quantité × prix unitaire, total de ligne et total", () => {
+  it("ordre demandé : mode, nom, adresse, quartier, localisation, paiement", () => {
+    const html = recap(delivery);
+    const order = [
+      "Livraison ou à emporter",
+      "Nom et prénom",
+      "Adresse complète",
+      "Quartier",
+      "Localisation",
+      "Mode de paiement",
+    ];
+    let prev = -1;
+    for (const label of order) {
+      const i = html.indexOf(label);
+      expect(i, label).toBeGreaterThan(prev);
+      prev = i;
+    }
+    expect(html).toContain("Yasmine El Amrani");
+    expect(html).toContain("Polo / Bachkou / Californie");
+    expect(html).toContain("Carte bancaire (TPE)");
+  });
+
+  it("données réelles du panier : produit, variante, quantité × prix unitaire, total", () => {
     const html = recap(delivery);
     expect(html).toContain("Teppanyaki");
     expect(html).toContain("Saumon");
     expect(html).toContain("2 × 89,00 DH");
     expect(html).toContain("178,00 DH");
-    expect(html.match(/514,00 DH/g)).toHaveLength(2); // sous-total + total
+    expect(html.match(/514,00 DH/g)).toHaveLength(2);
     expect(html).toContain("Offerte");
     expect(html).toContain("12 rue des Lilas");
     expect(html).toContain('href="https://maps.app.goo.gl/abc123"');
-    expect(html).toContain("Carte bancaire (TPE)");
     expect(html).toContain("À régler à la livraison.");
-    expect(html).not.toMatch(/Prénom|Quartier|Instructions|recap-client/);
   });
 
   it("à emporter : pas d'adresse ni de ligne livraison", () => {
     const html = recap(pickup);
     expect(html).toContain("À emporter (retrait au restaurant)");
-    expect(html).not.toMatch(/12 rue des Lilas|Offerte|Quartier/);
+    expect(html).toContain("Yasmine El Amrani");
+    expect(html).not.toMatch(/12 rue des Lilas|Offerte|Polo \/ Bachkou/);
     expect(html).toContain("À régler au retrait.");
   });
 
-  it("boutons modifier livraison/retrait, paiement et panier présents", () => {
+  it("boutons modifier informations et panier présents", () => {
     const html = recap(delivery);
-    expect(html).toContain('aria-label="Modifier la livraison"');
+    expect(html).toContain('aria-label="Modifier mes informations"');
     expect(html).toContain('aria-label="Modifier le panier"');
-    expect(html).toContain('aria-label="Modifier le mode de paiement"');
-    expect(html).not.toContain('aria-label="Modifier mes informations"');
   });
 });
