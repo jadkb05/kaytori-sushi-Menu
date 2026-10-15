@@ -30,8 +30,7 @@ const total = cartTotalDh(lines);
 const delivery: CheckoutInfo = {
   mode: "delivery",
   payment: "card",
-  firstName: "  Yasmine ",
-  lastName: "El   Amrani",
+  fullName: "  Yasmine  El   Amrani ",
   address: "12 rue des Lilas, imm. 4, 2e étage",
   neighborhood: "Polo / Bachkou / Californie",
   locationUrl: "maps.app.goo.gl/abc123",
@@ -80,18 +79,16 @@ describe("quartiers (liste client)", () => {
 });
 
 describe("validation des coordonnées", () => {
-  it("prénom et nom obligatoires", () => {
-    const e = validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "cash", firstName: "   " });
-    expect(e.firstName).toMatch(/prénom/i);
-    expect(e.lastName).toMatch(/nom/i);
+  it("nom et prénom obligatoires", () => {
+    const e = validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "cash", fullName: "   " });
+    expect(e.fullName).toMatch(/nom et prénom/i);
   });
 
   it("livraison : adresse et quartier obligatoires ; localisation facultative", () => {
     const e = validateCheckout({
       ...EMPTY_CHECKOUT,
       payment: "cash",
-      firstName: "A",
-      lastName: "B",
+      fullName: "A B",
     });
     expect(Object.keys(e).sort()).toEqual(["address", "neighborhood"]);
     expect(validateCheckout({ ...delivery, locationUrl: "" })).toEqual({});
@@ -107,8 +104,7 @@ describe("validation des coordonnées", () => {
         ...EMPTY_CHECKOUT,
         mode: "pickup",
         payment: "card",
-        firstName: "A",
-        lastName: "B",
+        fullName: "A B",
       }),
     ).toEqual({});
   });
@@ -121,12 +117,14 @@ describe("validation des coordonnées", () => {
     expect(mapsUrlFromCoords(33.528081, -7.6155)).toBe("https://www.google.com/maps?q=33.52808,-7.61550");
   });
 
-  it("formulaire : prénom, nom, quartier searchable ; pas de téléphone ni instructions", () => {
+  it("formulaire : nom et prénom regroupés, quartier searchable ; pas de téléphone ni instructions", () => {
     const html = renderToStaticMarkup(
       <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
     );
-    expect(html).toContain("Prénom");
-    expect(html).toContain("Nom");
+    expect(html).toContain("Nom et prénom");
+    expect(html).toContain('id="checkout-fullName"');
+    expect(html).not.toContain('id="checkout-firstName"');
+    expect(html).not.toContain('id="checkout-lastName"');
     expect(html).toContain("Quartier");
     expect(html).toContain('role="combobox"');
     expect(html).toContain('id="checkout-address"');
@@ -159,8 +157,9 @@ describe("mode de paiement", () => {
       <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
     );
     expect(html).toContain("Carte bancaire (TPE)");
-    expect(html).toContain("Paiement par carte à la livraison ou au retrait.");
-    expect(html).not.toContain("Paiement par carte au terminal lors de la livraison ou du retrait.");
+    expect(html).toContain("Paiement par carte");
+    expect(html).toContain("Paiement en espèces");
+    expect(html).not.toContain("à la livraison ou au retrait");
   });
 
   it.each([
@@ -195,8 +194,6 @@ describe("coordonnées nettoyées (récapitulatif et message)", () => {
     expect(checkoutDetails(delivery)).toEqual({
       mode: "delivery",
       payment: "card",
-      firstName: "Yasmine",
-      lastName: "El Amrani",
       fullName: "Yasmine El Amrani",
       address: "12 rue des Lilas, imm. 4, 2e étage",
       neighborhood: "Polo / Bachkou / Californie",
@@ -208,8 +205,6 @@ describe("coordonnées nettoyées (récapitulatif et message)", () => {
     expect(checkoutDetails(pickup)).toEqual({
       mode: "pickup",
       payment: "card",
-      firstName: "Yasmine",
-      lastName: "El Amrani",
       fullName: "Yasmine El Amrani",
     });
   });

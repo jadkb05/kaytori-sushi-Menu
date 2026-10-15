@@ -12,11 +12,11 @@ export type FulfillmentMode = "delivery" | "pickup";
 export type PaymentMethod = "cash" | "card";
 
 export const PAYMENT_METHODS: readonly { id: PaymentMethod; label: string; text: string; emoji: string }[] = [
-  { id: "cash", label: "Espèces", text: "Paiement en espèces à la livraison ou au retrait.", emoji: "💵" },
+  { id: "cash", label: "Espèces", text: "Paiement en espèces", emoji: "💵" },
   {
     id: "card",
     label: "Carte bancaire (TPE)",
-    text: "Paiement par carte à la livraison ou au retrait.",
+    text: "Paiement par carte",
     emoji: "💳",
   },
 ];
@@ -75,8 +75,8 @@ export type CheckoutInfo = {
   mode: FulfillmentMode;
   /** Aucun choix par défaut : le client doit choisir explicitement. */
   payment: PaymentMethod | "";
-  firstName: string;
-  lastName: string;
+  /** Nom et prénom (un seul champ). */
+  fullName: string;
   /** Livraison uniquement. */
   address: string;
   /** Livraison uniquement — doit être une entrée exacte de NEIGHBORHOODS. */
@@ -91,8 +91,7 @@ export type CheckoutErrors = Partial<Record<CheckoutField | "payment", string>>;
 export const EMPTY_CHECKOUT: CheckoutInfo = {
   mode: "delivery",
   payment: "",
-  firstName: "",
-  lastName: "",
+  fullName: "",
   address: "",
   neighborhood: "",
   locationUrl: "",
@@ -102,9 +101,6 @@ export const EMPTY_CHECKOUT: CheckoutInfo = {
 export type CheckoutDetails = {
   mode: FulfillmentMode;
   payment?: PaymentMethod;
-  firstName: string;
-  lastName: string;
-  /** « Prénom Nom » pour le récap et WhatsApp. */
   fullName: string;
   address?: string;
   neighborhood?: string;
@@ -134,8 +130,7 @@ export function mapsUrlFromCoords(latitude: number, longitude: number): string {
 
 export function validateCheckout(info: CheckoutInfo): CheckoutErrors {
   const errors: CheckoutErrors = {};
-  if (!clean(info.firstName)) errors.firstName = "Veuillez indiquer votre prénom.";
-  if (!clean(info.lastName)) errors.lastName = "Veuillez indiquer votre nom.";
+  if (!clean(info.fullName)) errors.fullName = "Veuillez indiquer votre nom et prénom.";
   if (!info.payment) errors.payment = "Veuillez choisir un mode de paiement.";
   if (info.mode === "delivery") {
     if (!clean(info.address)) errors.address = "Veuillez indiquer l'adresse de livraison.";
@@ -152,15 +147,10 @@ export function validateCheckout(info: CheckoutInfo): CheckoutErrors {
 }
 
 export function checkoutDetails(info: CheckoutInfo): CheckoutDetails {
-  const firstName = clean(info.firstName);
-  const lastName = clean(info.lastName);
-  const fullName = [firstName, lastName].filter(Boolean).join(" ");
   const base: CheckoutDetails = {
     mode: info.mode,
     ...(info.payment ? { payment: info.payment } : {}),
-    firstName,
-    lastName,
-    fullName,
+    fullName: clean(info.fullName),
   };
   if (info.mode === "pickup") return base;
   return {

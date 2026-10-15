@@ -224,28 +224,17 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
         <legend className="mb-3">
           <SectionTitle>Vos informations</SectionTitle>
         </legend>
-        <div className="grid grid-cols-1 gap-4 min-[380px]:grid-cols-2 min-[380px]:gap-3">
-          <Field id="checkout-firstName" label="Prénom" required error={errors.firstName}>
-            <input
-              {...a11y("firstName")}
-              type="text"
-              autoComplete="given-name"
-              autoCapitalize="words"
-              value={value.firstName}
-              onChange={set("firstName")}
-            />
-          </Field>
-          <Field id="checkout-lastName" label="Nom" required error={errors.lastName}>
-            <input
-              {...a11y("lastName")}
-              type="text"
-              autoComplete="family-name"
-              autoCapitalize="words"
-              value={value.lastName}
-              onChange={set("lastName")}
-            />
-          </Field>
-        </div>
+        <Field id="checkout-fullName" label="Nom et prénom" required error={errors.fullName}>
+          <input
+            {...a11y("fullName")}
+            type="text"
+            autoComplete="name"
+            autoCapitalize="words"
+            placeholder="Prénom et nom"
+            value={value.fullName}
+            onChange={set("fullName")}
+          />
+        </Field>
       </fieldset>
 
       {value.mode === "delivery" ? (
@@ -328,7 +317,7 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
             </span>
           </SectionTitle>
         </legend>
-        <div className="grid grid-cols-1 gap-2.5">
+        <div className="grid grid-cols-2 gap-2.5">
           {PAYMENT_METHODS.map((p, i) => (
             <ChoiceCard
               key={p.id}
