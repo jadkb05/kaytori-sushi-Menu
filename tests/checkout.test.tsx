@@ -38,27 +38,25 @@ const delivery: CheckoutInfo = {
 const pickup: CheckoutInfo = { ...delivery, mode: "pickup" };
 
 describe("quartiers (liste client)", () => {
-  it("contient exactement les 17 options fournies, dans l'ordre", () => {
+  it("contient exactement les 15 options fournies, dans l'ordre", () => {
     expect([...NEIGHBORHOODS]).toEqual([
       "Bourgogne",
       "Ain Diab",
       "Maarif / Palmier",
       "Maarif ext",
-      "Val Fleuri / Derb Ghallef",
-      "CFC / El Hana / CIL",
+      "Val Fleuri / Derb Ghallef / Anoual",
+      "CFC / El Hana / CIL / Ghandi",
       "Oulfa / Hay Hassani / Laymoune",
       "Belvédère / Roche Noire",
       "Centre Ville",
       "Ain Chok / Inara",
-      "Mers Sultan / Q. Hopitaux",
+      "Mers Sultan / Q. Hopitaux / 2 Mars",
       "Polo / Bachkou / Oasis",
       "Californie",
-      "Bouskoura",
-      "Almaz / Lissasfa / Errahma",
-      "Bernoussi / Anassi / Sidi Moumen",
-      "La Ville Verte",
+      "Bouskoura - Ville Verte",
+      "Almaz",
     ]);
-    expect(NEIGHBORHOODS).toHaveLength(17);
+    expect(NEIGHBORHOODS).toHaveLength(15);
   });
 
   it("recherche insensible à la casse et aux accents", () => {
