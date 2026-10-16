@@ -115,7 +115,7 @@ describe("acquisition", () => {
 
 describe("échecs", () => {
   it.each([
-    [1, "denied", /refusé.*Réglages/],
+    [1, "denied", /bloqué pour ce site.*Safari/],
     [2, "unavailable", /indisponible/],
     [3, "timeout", /à temps/],
     [99, "error", /a échoué/],

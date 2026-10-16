@@ -45,7 +45,9 @@ const PRECISE_HINT =
 export function geoFailureMessage(failure: GeoFailure): string {
   switch (failure) {
     case "denied":
-      return `Accès à la position refusé. Sur iPhone : Réglages › Confidentialité et sécurité › Service de localisation › Sites web Safari › « Lorsque l'app est active », puis réessayez. ${MANUAL}`;
+      // Code 1 avec le Service de localisation actif : refus mémorisé par Safari pour ce site,
+      // ou page ouverte dans le navigateur intégré d'une app (autorisation de l'app, pas de Safari).
+      return `Accès à la position bloqué pour ce site. Dans Safari : Réglages du site web › Position › Autoriser (ou Réglages › Apps › Safari › Position). Depuis WhatsApp, Instagram ou Facebook, ouvrez d'abord la page dans Safari. Puis réessayez. ${MANUAL}`;
     case "unavailable":
       return `Position indisponible (GPS ou réseau). Vérifiez que le Service de localisation est activé. ${MANUAL}`;
     case "timeout":
