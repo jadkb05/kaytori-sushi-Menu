@@ -238,7 +238,8 @@ export function MenuPage() {
       <ReassuranceBand />
 
       {/* Bannière photo (décorative) : courte, sans texte ni overlay, photo d'origine sans filtre. */}
-      <div className="aspect-[2/1] max-h-[13.5rem] w-full overflow-hidden bg-[#0f1815] md:aspect-auto md:h-52 md:max-h-none lg:h-[26rem]">
+      {/* Mobile inchangé ; desktop : object-contain pour afficher l'assiette entière sans zoom excessif. */}
+      <div className="aspect-[2/1] max-h-[13.5rem] w-full overflow-hidden bg-[#0f1815] md:aspect-auto md:h-64 md:max-h-none lg:h-80">
         <img
           src="/banner/kaytori-makis-960.webp"
           srcSet="/banner/kaytori-makis-640.webp 640w, /banner/kaytori-makis-960.webp 960w, /banner/kaytori-makis-1280.webp 1280w"
@@ -248,7 +249,7 @@ export function MenuPage() {
           alt=""
           fetchPriority="high"
           decoding="async"
-          className="h-full w-full object-cover object-[50%_62%] md:object-[50%_40%] lg:object-[50%_58%]"
+          className="h-full w-full object-cover object-[50%_62%] md:object-contain md:object-center"
         />
       </div>
 
