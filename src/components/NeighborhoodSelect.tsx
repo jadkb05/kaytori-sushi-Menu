@@ -21,6 +21,8 @@ export function NeighborhoodSelect({ id, value, onChange, describedBy, invalid }
   const listId = useId();
   const rootRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  /** Évite que onFocus restaure l'ancienne valeur juste après un tap sur × (bug mobile fréquent). */
+  const skipFocusSyncRef = useRef(false);
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState(value);
   const [highlight, setHighlight] = useState(0);
@@ -110,24 +112,35 @@ export function NeighborhoodSelect({ id, value, onChange, describedBy, invalid }
           if (e.target.value !== value) onChange("");
         }}
         onFocus={() => {
+          if (skipFocusSyncRef.current) {
+            skipFocusSyncRef.current = false;
+            setQuery("");
+            setOpen(true);
+            return;
+          }
           setQuery(value);
           setOpen(true);
         }}
         onKeyDown={onKeyDown}
-        className={`${inputClass} ${invalid ? "border-red-600/70" : "border-kaytori-green/20"}`}
+        className={`${inputClass} ${value ? "pr-11" : ""} ${invalid ? "border-red-600/70" : "border-kaytori-green/20"}`}
       />
-      {value ? (
+      {value || (open && query) ? (
         <button
           type="button"
           tabIndex={-1}
           aria-label="Effacer le quartier"
+          onPointerDown={(e) => {
+            // Empêche le blur de l'input avant le click (sinon le × ne vide pas sur mobile).
+            e.preventDefault();
+          }}
           onClick={() => {
+            skipFocusSyncRef.current = true;
             onChange("");
             setQuery("");
             setOpen(true);
             inputRef.current?.focus();
           }}
-          className="absolute right-2.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-kaytori-muted hover:bg-kaytori-green/[0.06] hover:text-kaytori-green"
+          className="absolute right-2.5 top-1/2 grid h-9 w-9 -translate-y-1/2 place-items-center rounded-full text-kaytori-muted touch-manipulation hover:bg-kaytori-green/[0.06] hover:text-kaytori-green"
         >
           <span aria-hidden className="text-lg leading-none">
             ×

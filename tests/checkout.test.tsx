@@ -35,44 +35,58 @@ const delivery: CheckoutInfo = {
   payment: "card",
   fullName: "  Yasmine  El   Amrani ",
   address: "12 rue des Lilas, imm. 4, 2e étage",
-  neighborhood: "Polo / Bachkou / Oasis",
+  neighborhood: "Oasis / Bachkou / Polo",
   locationUrl: "maps.app.goo.gl/abc123",
 };
 const pickup: CheckoutInfo = { ...delivery, mode: "pickup" };
 
 describe("quartiers (liste client)", () => {
-  it("contient exactement les 15 options fournies, dans l'ordre", () => {
+  it("contient exactement les 29 options fournies, dans l'ordre", () => {
     expect([...NEIGHBORHOODS]).toEqual([
-      "Bourgogne",
-      "Ain Diab",
-      "Maarif / Anfa / Palmier",
-      "Maarif ext",
-      "Val Fleuri / Derb Ghallef / Anoual",
-      "CFC / El Hana / CIL / Ghandi",
-      "Oulfa / Hay Hassani / Laymoune",
-      "Belvédère / Roche Noire",
+      "Casa Finance City (CFC)",
+      "CIL",
+      "Bourgogne / Anfa",
+      "Gauthier / Moulay youssef",
+      "Maârif",
+      "Maârif Extension",
+      "Ghandi",
+      "Oasis / Bachkou / Polo",
+      "2 Mars",
+      "Quartier des Hopitaux",
+      "Mers Sultan",
       "Centre Ville",
-      "Ain Chok / Inara",
-      "Mers Sultan / Q. Hopitaux / 2 Mars",
-      "Polo / Bachkou / Oasis",
-      "Californie",
-      "Bouskoura - Ville Verte",
-      "Almaz",
+      "Abdelmoumen",
+      "Derb Ghallef",
+      "Palmier",
+      "Val Fleuri",
+      "Beausejour",
+      "Yacoub El Mansour",
+      "Belvédère / La Gironde",
+      "Sbata",
+      "Al Fida / Korea",
+      "Aïn Chock / Inara",
+      "Californie / Taddart / Bd Kods",
+      "Bouskoura Ville Verte",
+      "Mandarona",
+      "Sidi Maârouf",
+      "La Coline / Florida",
+      "Laimoune",
+      "Oulfa / Hay Hassani",
     ]);
-    expect(NEIGHBORHOODS).toHaveLength(15);
+    expect(NEIGHBORHOODS).toHaveLength(29);
   });
 
   it("recherche insensible à la casse et aux accents", () => {
     expect(foldSearch("Belvédère")).toBe(foldSearch("belvedere"));
-    expect(filterNeighborhoods("belve").map(String)).toContain("Belvédère / Roche Noire");
-    expect(filterNeighborhoods("CALIFORNIE").map(String)).toEqual(["Californie"]);
-    expect(filterNeighborhoods("maarif").map(String)).toEqual(["Maarif / Anfa / Palmier", "Maarif ext"]);
+    expect(filterNeighborhoods("belve").map(String)).toContain("Belvédère / La Gironde");
+    expect(filterNeighborhoods("CALIFORNIE").map(String)).toEqual(["Californie / Taddart / Bd Kods"]);
+    expect(filterNeighborhoods("maarif").map(String)).toEqual(["Maârif", "Maârif Extension"]);
     expect(filterNeighborhoods("xyz-inconnu")).toEqual([]);
   });
 
   it("n'accepte qu'une valeur exacte de la liste", () => {
-    expect(isValidNeighborhood("Polo / Bachkou / Oasis")).toBe(true);
-    expect(isValidNeighborhood("Californie")).toBe(true);
+    expect(isValidNeighborhood("Oasis / Bachkou / Polo")).toBe(true);
+    expect(isValidNeighborhood("Californie / Taddart / Bd Kods")).toBe(true);
     expect(isValidNeighborhood("Oasis")).toBe(false);
     expect(isValidNeighborhood("")).toBe(false);
   });
@@ -196,7 +210,7 @@ describe("coordonnées nettoyées (récapitulatif et message)", () => {
       payment: "card",
       fullName: "Yasmine El Amrani",
       address: "12 rue des Lilas, imm. 4, 2e étage",
-      neighborhood: "Polo / Bachkou / Oasis",
+      neighborhood: "Oasis / Bachkou / Polo",
       locationUrl: "https://maps.app.goo.gl/abc123",
     });
   });
@@ -229,7 +243,7 @@ describe("message WhatsApp", () => {
         "📍 LIVRAISON",
         "Mode : Livraison",
         "Adresse : 12 rue des Lilas, imm. 4, 2e étage",
-        "Quartier : Polo / Bachkou / Oasis",
+        "Quartier : Oasis / Bachkou / Polo",
         "Localisation : https://maps.app.goo.gl/abc123",
         "",
         "💳 MODE DE PAIEMENT",
@@ -247,7 +261,7 @@ describe("message WhatsApp", () => {
   it("localisation vide omise", () => {
     const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails({ ...delivery, locationUrl: "" }));
     expect(msg).not.toMatch(/Localisation/);
-    expect(msg).toContain("Quartier : Polo / Bachkou / Oasis");
+    expect(msg).toContain("Quartier : Oasis / Bachkou / Polo");
   });
 
   it("à emporter : mode retrait, ni adresse ni ligne livraison ; total inchangé", () => {
@@ -290,7 +304,7 @@ describe("récapitulatif", () => {
       prev = i;
     }
     expect(html).toContain("Yasmine El Amrani");
-    expect(html).toContain("Polo / Bachkou / Oasis");
+    expect(html).toContain("Oasis / Bachkou / Polo");
     expect(html).toContain("Carte bancaire");
   });
 
