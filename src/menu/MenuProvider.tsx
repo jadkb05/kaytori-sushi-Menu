@@ -41,8 +41,10 @@ export function MenuProvider({
   useEffect(() => {
     if (menu) return;
     let cancelled = false;
-    void loadMenu(source).then((result) => {
-      if (!cancelled) setMenu(result.menu);
+    void loadMenu(source).then(async (result) => {
+      if (cancelled) return;
+      const { promoteFormulesCategory } = await import("../data/formulesMenu");
+      if (!cancelled) setMenu(promoteFormulesCategory(result.menu));
     });
     return () => {
       cancelled = true;
@@ -52,10 +54,15 @@ export function MenuProvider({
   const waitingForMenu = menu === null;
   useEffect(() => {
     let cancelled = false;
-    void import("../data/formulesMenu").then(({ fetchPublishedFormules, replaceFormules }) =>
+    void import("../data/formulesMenu").then(({ fetchPublishedFormules, replaceFormules, promoteFormulesCategory }) =>
       fetchPublishedFormules().then((items) => {
-        if (cancelled || items === null) return;
-        setMenu((current) => (current ? replaceFormules(current, items) : current));
+        if (cancelled) return;
+        setMenu((current) => {
+          if (!current) return current;
+          // null = catégorie absente côté anon → garder le menu (déjà promu si besoin).
+          if (items === null) return promoteFormulesCategory(current);
+          return replaceFormules(current, items);
+        });
       }),
     );
     return () => {

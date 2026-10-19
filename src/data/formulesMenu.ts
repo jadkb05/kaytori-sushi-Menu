@@ -33,18 +33,34 @@ export function publishedFormules(
     }));
 }
 
-/** Remplace uniquement les formules. Les autres plats, leur ordre et leurs champs restent intacts. */
+/**
+ * Remplace uniquement les formules et place toujours la catégorie en tête du menu public.
+ * (En source Supabase, sort_order 1000 la mettrait sinon en fin de liste.)
+ * Les autres plats, leur ordre relatif et leurs champs restent intacts.
+ */
 export function replaceFormules(menu: MenuSnapshot, items: readonly YumloMenuItem[]): MenuSnapshot {
   const rest = menu.items.filter((it) => it.category !== FORMULES_PROMOS_CATEGORY);
-  const categories = menu.categories.includes(FORMULES_PROMOS_CATEGORY)
-    ? menu.categories
-    : [FORMULES_PROMOS_CATEGORY, ...menu.categories];
+  const otherCategories = menu.categories.filter((c) => c !== FORMULES_PROMOS_CATEGORY);
   return {
     ...menu,
-    categories,
+    categories:
+      items.length > 0 ? [FORMULES_PROMOS_CATEGORY, ...otherCategories] : otherCategories,
     items: [
       ...items.map((it) => ({ ...it, category: FORMULES_PROMOS_CATEGORY })),
       ...rest,
+    ],
+  };
+}
+
+/** Remonte « Formules & Promos » en première catégorie si elle est déjà dans le menu. */
+export function promoteFormulesCategory(menu: MenuSnapshot): MenuSnapshot {
+  if (!menu.categories.includes(FORMULES_PROMOS_CATEGORY)) return menu;
+  if (menu.categories[0] === FORMULES_PROMOS_CATEGORY) return menu;
+  return {
+    ...menu,
+    categories: [
+      FORMULES_PROMOS_CATEGORY,
+      ...menu.categories.filter((c) => c !== FORMULES_PROMOS_CATEGORY),
     ],
   };
 }

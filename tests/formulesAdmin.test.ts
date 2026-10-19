@@ -74,6 +74,21 @@ describe("formules : menu public", () => {
     expect(next.items.find((it) => it.id === "formule-duo")?.priceMAD).toBe("280.00");
     const classic = menu.items.filter((it) => it.category !== FORMULES_PROMOS_CATEGORY);
     expect(next.items.filter((it) => it.category !== FORMULES_PROMOS_CATEGORY)).toEqual(classic);
+    expect(next.categories[0]).toBe(FORMULES_PROMOS_CATEGORY);
+  });
+
+  it("remonte Formules en tête même si la catégorie était en fin de menu (source Supabase)", async () => {
+    const { promoteFormulesCategory } = await import("../src/data/formulesMenu");
+    const menu = getStaticMenu();
+    const atEnd = {
+      ...menu,
+      categories: [...menu.categories.filter((c) => c !== FORMULES_PROMOS_CATEGORY), FORMULES_PROMOS_CATEGORY],
+    };
+    expect(atEnd.categories.at(-1)).toBe(FORMULES_PROMOS_CATEGORY);
+    expect(promoteFormulesCategory(atEnd).categories[0]).toBe(FORMULES_PROMOS_CATEGORY);
+    const replaced = replaceFormules(atEnd, menu.items.filter((it) => it.category === FORMULES_PROMOS_CATEGORY));
+    expect(replaced.categories[0]).toBe(FORMULES_PROMOS_CATEGORY);
+    expect(replaced.categories.filter((c) => c === FORMULES_PROMOS_CATEGORY)).toHaveLength(1);
   });
 
   it("une formule désactivée n'est pas publiée ; une catégorie absente laisse le statique", () => {
