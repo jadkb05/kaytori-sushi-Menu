@@ -24,6 +24,13 @@ function Svg({ className = "h-4 w-4", children }: IconProps & { children: ReactN
   );
 }
 
+export const FormulesIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="4" y="3.5" width="16" height="17" rx="2" />
+    <path d="M8 8h8M8 12h8M8 16h5" />
+  </Svg>
+);
+
 export const DashboardIcon = (p: IconProps) => (
   <Svg {...p}>
     <rect x="3.5" y="3.5" width="7" height="8" rx="1.5" />

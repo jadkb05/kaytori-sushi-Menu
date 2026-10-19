@@ -42,8 +42,8 @@ checks(n, controle, ok, detail) as (
   from pg_class c join pg_namespace s on s.oid = c.relnamespace
   where s.nspname = 'public' and c.relname in ('categories', 'products', 'product_variants', 'admin_users', 'audit_log')
   union all
-  select 2, 'catalogue : 31 catégories / 214 produits / 67 variantes',
-         (select count(*) from public.categories) = 31 and (select count(*) from public.products) = 214
+  select 2, 'catalogue : 32 catégories / 226 produits / 67 variantes (après 07_formules_promos.sql)',
+         (select count(*) from public.categories) = 32 and (select count(*) from public.products) = 226
            and (select count(*) from public.product_variants) = 67,
          (select count(*) from public.categories) || ' / ' || (select count(*) from public.products) || ' / ' || (select count(*) from public.product_variants)
   union all
@@ -52,10 +52,10 @@ checks(n, controle, ok, detail) as (
            and not exists (select 1 from public.product_variants where not is_active),
          null
   union all
-  select 4, 'display_mode : assortiments = assortiments_by_pcs, 30 en list (plats-thai compris)',
+  select 4, 'display_mode : assortiments = assortiments_by_pcs, 31 en list (plats-thai et formules compris)',
          (select display_mode from public.categories where id = 'plats-thai') = 'list'
            and (select display_mode from public.categories where id = 'assortiments') = 'assortiments_by_pcs'
-           and (select count(*) from public.categories where display_mode = 'list') = 30,
+           and (select count(*) from public.categories where display_mode = 'list') = 31,
          (select string_agg(id || '=' || display_mode, ', ') from public.categories where display_mode <> 'list')
   union all
   select 5, 'aucun prix négatif, aucun produit sans image ni catégorie',

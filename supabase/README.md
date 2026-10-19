@@ -6,7 +6,7 @@
 | Fichier | Rôle |
 |---|---|
 | `migrations/20261006000000_menu_schema.sql` | Tables `categories`, `products`, `product_variants`, `admin_users`, `audit_log` ; RLS ; bucket Storage `menu-images` |
-| `seed.sql` | Menu actuel (31 catégories, 214 produits, 67 variantes), **généré** — ne pas éditer |
+| `seed.sql` | Menu actuel (32 catégories, 226 produits, 67 variantes), **généré** — ne pas éditer |
 | `tests/rls_check.sql` | Vérification RLS/Storage à lancer dans le SQL Editor (16 contrôles, rien n'est conservé) |
 
 ## Commandes

@@ -1,8 +1,26 @@
 {
   "categories": [
     {
-      "name": "Starters",
+      "name": "Formules & Promos",
       "position": 0,
+      "productIds": [
+        "formule-duo",
+        "formule-family",
+        "formule-zen-box",
+        "formule-yaki-box",
+        "formule-fry-box",
+        "formule-spring-box",
+        "formule-kyoto-box",
+        "formule-nara-box",
+        "formule-crispy-box",
+        "formule-party-box",
+        "formule-fusion-box",
+        "formule-master-box"
+      ]
+    },
+    {
+      "name": "Starters",
+      "position": 1,
       "productIds": [
         "b6fe11da37",
         "2a41bacc9f",
@@ -21,7 +39,7 @@
     },
     {
       "name": "Nems & Gyoza & Rouleaux de printemps",
-      "position": 1,
+      "position": 2,
       "productIds": [
         "a1aee64eaf",
         "a720b7b300",
@@ -31,7 +49,7 @@
     },
     {
       "name": "Sushi Fusion",
-      "position": 2,
+      "position": 3,
       "productIds": [
         "1842edff6e",
         "da6c1fe793",
@@ -44,7 +62,7 @@
     },
     {
       "name": "Yakitori",
-      "position": 3,
+      "position": 4,
       "productIds": [
         "a043965b0e",
         "99671b537e",
@@ -54,7 +72,7 @@
     },
     {
       "name": "Soupes",
-      "position": 4,
+      "position": 5,
       "productIds": [
         "261985956b",
         "fb33c65f0c",
@@ -65,7 +83,7 @@
     },
     {
       "name": "Salades",
-      "position": 5,
+      "position": 6,
       "productIds": [
         "4240ad621c",
         "2c80cdd361",
@@ -79,7 +97,7 @@
     },
     {
       "name": "Poké Bowl",
-      "position": 6,
+      "position": 7,
       "productIds": [
         "743455af94",
         "bd77948103",
@@ -88,7 +106,7 @@
     },
     {
       "name": "Tartare",
-      "position": 7,
+      "position": 8,
       "productIds": [
         "d4d9f53292",
         "1eef119afb"
@@ -96,28 +114,28 @@
     },
     {
       "name": "Chirashi",
-      "position": 8,
+      "position": 9,
       "productIds": [
         "a2118c7dd7"
       ]
     },
     {
       "name": "Sashimi",
-      "position": 9,
+      "position": 10,
       "productIds": [
         "dbca86e5a4"
       ]
     },
     {
       "name": "Carpaccio",
-      "position": 10,
+      "position": 11,
       "productIds": [
         "5206f52f84"
       ]
     },
     {
       "name": "Tacos",
-      "position": 11,
+      "position": 12,
       "productIds": [
         "2505b93cd8",
         "8101c52f8c",
@@ -127,7 +145,7 @@
     },
     {
       "name": "Crispy Rice",
-      "position": 12,
+      "position": 13,
       "productIds": [
         "f1773a150f",
         "e624eac353",
@@ -137,7 +155,7 @@
     },
     {
       "name": "Nigiri",
-      "position": 13,
+      "position": 14,
       "productIds": [
         "4cac8d8b4e",
         "0055351351",
@@ -146,7 +164,7 @@
     },
     {
       "name": "Maki",
-      "position": 14,
+      "position": 15,
       "productIds": [
         "a134dbcb8f",
         "07f5e99819",
@@ -157,7 +175,7 @@
     },
     {
       "name": "Futomaki",
-      "position": 15,
+      "position": 16,
       "productIds": [
         "48d9b28c3c",
         "f5de1461f2",
@@ -168,7 +186,7 @@
     },
     {
       "name": "California Roll",
-      "position": 16,
+      "position": 17,
       "productIds": [
         "c0a1b2c3d4",
         "d1e2f3a4b5",
@@ -188,7 +206,7 @@
     },
     {
       "name": "Special Roll",
-      "position": 17,
+      "position": 18,
       "productIds": [
         "5ee8246804",
         "7412fc4ec3",
@@ -208,7 +226,7 @@
     },
     {
       "name": "Aromaki",
-      "position": 18,
+      "position": 19,
       "productIds": [
         "11b8f36cb5",
         "4da542fb7e",
@@ -228,7 +246,7 @@
     },
     {
       "name": "Blossom",
-      "position": 19,
+      "position": 20,
       "productIds": [
         "e41a8a69ca",
         "5347977dbc",
@@ -248,7 +266,7 @@
     },
     {
       "name": "Premium",
-      "position": 20,
+      "position": 21,
       "productIds": [
         "cec5e70b6a",
         "6c2ba70a6f",
@@ -264,7 +282,7 @@
     },
     {
       "name": "Makito Fry",
-      "position": 21,
+      "position": 22,
       "productIds": [
         "df7dc34617",
         "e6820a6ec3",
@@ -275,7 +293,7 @@
     },
     {
       "name": "Crispy Roll",
-      "position": 22,
+      "position": 23,
       "productIds": [
         "df8e4b755c",
         "007985588c",
@@ -289,7 +307,7 @@
     },
     {
       "name": "Crunchy Roll",
-      "position": 23,
+      "position": 24,
       "productIds": [
         "5ec25676a2",
         "fc97991608",
@@ -304,7 +322,7 @@
     },
     {
       "name": "Wok & Thaï",
-      "position": 24,
+      "position": 25,
       "productIds": [
         "083ac320dd",
         "0c48c8093e",
@@ -314,7 +332,7 @@
     },
     {
       "name": "Bentos",
-      "position": 25,
+      "position": 26,
       "productIds": [
         "f9047d3930",
         "bd099ce53c",
@@ -328,7 +346,7 @@
     },
     {
       "name": "Plats Thaï",
-      "position": 26,
+      "position": 27,
       "productIds": [
         "cd6fcbb51e",
         "36987b1e67",
@@ -345,7 +363,7 @@
     },
     {
       "name": "Assortiments",
-      "position": 27,
+      "position": 28,
       "productIds": [
         "6515d6b542",
         "5e0ccaac41",
@@ -372,7 +390,7 @@
     },
     {
       "name": "Desserts",
-      "position": 28,
+      "position": 29,
       "productIds": [
         "5c15472d24",
         "6bfd43d617"
@@ -380,7 +398,7 @@
     },
     {
       "name": "Jus",
-      "position": 29,
+      "position": 30,
       "productIds": [
         "787c236c7b",
         "fde993538f",
@@ -391,7 +409,7 @@
     },
     {
       "name": "Boissons",
-      "position": 30,
+      "position": 31,
       "productIds": [
         "0229f0431e",
         "8e12069c86",
@@ -402,6 +420,186 @@
     }
   ],
   "products": [
+    {
+      "id": "formule-duo",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 0,
+      "name": "Formule Duo",
+      "description": "Pour deux personnes",
+      "priceMAD": "279.00",
+      "displayedPriceMAD": "279.00",
+      "currency": "MAD",
+      "image": "/formules/formule-duo.jpeg",
+      "displayedImage": "/formules/formule-duo.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-family",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 1,
+      "name": "Formule Family",
+      "description": "Pour quatre personnes",
+      "priceMAD": "539.00",
+      "displayedPriceMAD": "539.00",
+      "currency": "MAD",
+      "image": "/formules/formule-family.jpeg",
+      "displayedImage": "/formules/formule-family.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-zen-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 2,
+      "name": "Zen Box",
+      "description": "16 pièces",
+      "priceMAD": "109.00",
+      "displayedPriceMAD": "109.00",
+      "currency": "MAD",
+      "image": "/formules/zen-box.jpeg",
+      "displayedImage": "/formules/zen-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-yaki-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 3,
+      "name": "Yaki Box",
+      "description": "16 pièces",
+      "priceMAD": "129.00",
+      "displayedPriceMAD": "129.00",
+      "currency": "MAD",
+      "image": "/formules/yaki-box.jpeg",
+      "displayedImage": "/formules/yaki-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-fry-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 4,
+      "name": "Fry Box",
+      "description": "26 pièces",
+      "priceMAD": "139.00",
+      "displayedPriceMAD": "139.00",
+      "currency": "MAD",
+      "image": "/formules/fry-box.jpeg",
+      "displayedImage": "/formules/fry-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-spring-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 5,
+      "name": "Spring Box",
+      "description": "34 pièces",
+      "priceMAD": "156.00",
+      "displayedPriceMAD": "156.00",
+      "currency": "MAD",
+      "image": "/formules/spring-box.jpeg",
+      "displayedImage": "/formules/spring-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-kyoto-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 6,
+      "name": "Kyoto Box",
+      "description": "28 pièces",
+      "priceMAD": "159.00",
+      "displayedPriceMAD": "159.00",
+      "currency": "MAD",
+      "image": "/formules/kyoto-box.jpeg",
+      "displayedImage": "/formules/kyoto-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-nara-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 7,
+      "name": "Nara Box",
+      "description": "30 pièces",
+      "priceMAD": "189.00",
+      "displayedPriceMAD": "189.00",
+      "currency": "MAD",
+      "image": "/formules/nara-box.jpeg",
+      "displayedImage": "/formules/nara-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-crispy-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 8,
+      "name": "Crispy Box",
+      "description": "42 pièces",
+      "priceMAD": "229.00",
+      "displayedPriceMAD": "229.00",
+      "currency": "MAD",
+      "image": "/formules/crispy-box.jpeg",
+      "displayedImage": "/formules/crispy-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-party-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 9,
+      "name": "Party Box",
+      "description": "50 pièces",
+      "priceMAD": "329.00",
+      "displayedPriceMAD": "329.00",
+      "currency": "MAD",
+      "image": "/formules/party-box.jpeg",
+      "displayedImage": "/formules/party-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-fusion-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 10,
+      "name": "Fusion Box",
+      "description": "60 pièces",
+      "priceMAD": "369.00",
+      "displayedPriceMAD": "369.00",
+      "currency": "MAD",
+      "image": "/formules/fusion-box.jpeg",
+      "displayedImage": "/formules/fusion-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
+    {
+      "id": "formule-master-box",
+      "category": "Formules & Promos",
+      "section": "",
+      "position": 11,
+      "name": "Master Box",
+      "description": "60 pièces",
+      "priceMAD": "369.00",
+      "displayedPriceMAD": "369.00",
+      "currency": "MAD",
+      "image": "/formules/master-box.jpeg",
+      "displayedImage": "/formules/master-box.jpeg",
+      "thumbs": null,
+      "variants": []
+    },
     {
       "id": "b6fe11da37",
       "category": "Starters",

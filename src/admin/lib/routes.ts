@@ -10,6 +10,8 @@ export const ADMIN_ROUTES = {
   products: "/admin/products",
   categories: "/admin/categories",
   productNew: "/admin/products/new",
+  formules: "/admin/formules",
+  formuleNew: "/admin/formules/new",
 } as const;
 
 /** /admin/products/:id — édition d'un produit existant. */
@@ -17,7 +19,19 @@ export function productEditPath(productId: string): string {
   return `${ADMIN_ROUTES.products}/${encodeURIComponent(productId)}`;
 }
 
-export type AdminContentPage = "dashboard" | "products" | "categories" | "productEdit" | "productCreate";
+export function formuleEditPath(formuleId: string): string {
+  return `${ADMIN_ROUTES.formules}/${encodeURIComponent(formuleId)}`;
+}
+
+export type AdminContentPage =
+  | "dashboard"
+  | "products"
+  | "categories"
+  | "formules"
+  | "productEdit"
+  | "productCreate"
+  | "formuleEdit"
+  | "formuleCreate";
 export type AdminPage = AdminContentPage | "login" | "denied" | "unconfigured" | "error";
 
 export type AdminRouteDecision =
@@ -42,6 +56,8 @@ const CONTENT_PAGES: Record<string, AdminContentPage> = {
   [ADMIN_ROUTES.categories]: "categories",
   // Avant /admin/products/:id : « new » n'est jamais un ID produit (10 caractères hexadécimaux).
   [ADMIN_ROUTES.productNew]: "productCreate",
+  [ADMIN_ROUTES.formules]: "formules",
+  [ADMIN_ROUTES.formuleNew]: "formuleCreate",
 };
 
 /** « /admin/products/743455af94 » → « 743455af94 » (un seul segment), sinon null. */
@@ -81,6 +97,17 @@ export function resolveAdminRoute(pathname: string, access: AdminAccess): AdminR
     case "admin": {
       const page = CONTENT_PAGES[path];
       if (page) return { kind: "page", page };
+      const formulePrefix = `${ADMIN_ROUTES.formules}/`;
+      if (path.startsWith(formulePrefix)) {
+        const segment = path.slice(formulePrefix.length);
+        if (segment !== "" && !segment.includes("/")) {
+          try {
+            return { kind: "page", page: "formuleEdit", productId: decodeURIComponent(segment) };
+          } catch {
+            return { kind: "redirect", to: ADMIN_ROUTES.formules };
+          }
+        }
+      }
       const productId = productIdFromPath(path);
       if (productId) return { kind: "page", page: "productEdit", productId };
       return { kind: "redirect", to: ADMIN_ROUTES.dashboard };

@@ -142,8 +142,8 @@ describe("créer", () => {
     expect(await errors({ p_id: "x", p_name: "x".repeat(61) })).toBe("Nom trop long (60 caractères maximum).");
     expect(await errors({ p_id: "Bad Id", p_name: "Nouveau" })).toBe("Identifiant de catégorie invalide.");
     expect(await errors({ p_id: "salades", p_name: "Nouveau" })).toBe("Identifiant de catégorie déjà utilisé : salades.");
-    expect(await errors({ p_id: "nouveau", p_name: "Nouveau", p_position: 33 })).toBe("Position invalide : entre 1 et 32.");
-    expect(await errors({ p_id: "nouveau", p_name: "Nouveau", p_position: 0 })).toBe("Position invalide : entre 1 et 32.");
+    expect(await errors({ p_id: "nouveau", p_name: "Nouveau", p_position: 34 })).toBe("Position invalide : entre 1 et 33.");
+    expect(await errors({ p_id: "nouveau", p_name: "Nouveau", p_position: 0 })).toBe("Position invalide : entre 1 et 33.");
     expect(JSON.stringify(await readMenuRows(db))).toBe(seedDump);
   });
 
@@ -222,14 +222,14 @@ describe("modifier : renommer, masquer / afficher, déplacer", () => {
     expect(after.categories.map((c) => c.sort_order).sort((a, b) => a - b)).toEqual(before.categories.map((c) => c.sort_order).sort((a, b) => a - b));
     expect((await publicMenu()).categories[0]).toBe(YUMLO_CATEGORIES.at(-1));
     const [log] = await audit("category.update");
-    expect((log.payload.shifted as unknown[]).length).toBe(30);
-    expect((await updateCategory(admin(), last, { position: 31 })).ok).toBe(true);
+    expect((log.payload.shifted as unknown[]).length).toBe(31);
+    expect((await updateCategory(admin(), last, { position: 32 })).ok).toBe(true);
     expect(JSON.stringify(await readMenuRows(db))).toBe(seedDump);
   });
 
   it("nom + position en un seul appel atomique ; une erreur n'applique rien", async () => {
     const res = await updateCategory(admin(), "salades", { name: "Bowls", position: 99 });
-    expect(res).toEqual({ ok: false, error: "Position invalide : entre 1 et 31." });
+    expect(res).toEqual({ ok: false, error: "Position invalide : entre 1 et 32." });
     expect(JSON.stringify(await readMenuRows(db))).toBe(seedDump);
   });
 
@@ -273,7 +273,7 @@ describe("supprimer (uniquement si vide)", () => {
     expect(JSON.stringify(await readMenuRows(db))).toBe(seedDump);
     const [log] = await audit("category.delete");
     expect(log).toMatchObject({ entity_id: "ephemere", payload: { before: { name: "Éphémère" } } });
-    expect((log.payload.shifted as unknown[]).length).toBe(31);
+    expect((log.payload.shifted as unknown[]).length).toBe(32);
   });
 });
 
@@ -320,21 +320,21 @@ describe("sécurité", () => {
 });
 
 describe("page /admin/categories (rendu)", () => {
-  it("positions 1…31, actions par ligne, ↑ désactivé en tête et ↓ en fin, formulaire de création", async () => {
+  it("positions 1…32, actions par ligne, ↑ désactivé en tête et ↓ en fin, formulaire de création", async () => {
     const rows = await adminRows();
     const html = renderToStaticMarkup(
       <AdminMenuDataContext.Provider value={{ status: "ready", rows, error: null, reload: () => {} }}>
         <CategoriesPage client={admin()} />
       </AdminMenuDataContext.Provider>,
     );
-    expect((html.match(/>Modifier</g) ?? []).length).toBe(31);
-    expect((html.match(/>Masquer</g) ?? []).length).toBe(31);
-    expect((html.match(/>Supprimer</g) ?? []).length).toBe(31);
-    expect(html).toMatch(/disabled="" aria-label="Monter Starters"/);
+    expect((html.match(/>Modifier</g) ?? []).length).toBe(32);
+    expect((html.match(/>Masquer</g) ?? []).length).toBe(32);
+    expect((html.match(/>Supprimer</g) ?? []).length).toBe(32);
+    expect(html).toMatch(/disabled="" aria-label="Monter Formules/);
     expect(html).toMatch(/disabled="" aria-label="Descendre Boissons"/);
     expect(html).not.toMatch(/disabled="" aria-label="Monter Salades"/);
     expect(html).toContain("Nouvelle catégorie");
-    expect(html).toContain('placeholder="32"');
+    expect(html).toContain('placeholder="33"');
     expect(html).not.toContain("Lecture seule");
   });
 });

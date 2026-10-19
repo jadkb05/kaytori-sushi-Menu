@@ -52,9 +52,9 @@ describe("migration + seed (PostgreSQL en mémoire)", () => {
     expect(bucket.rows).toEqual([{ id: "menu-images", public: true }]);
   });
 
-  it("seed : 31 catégories, 214 produits, 67 variantes", () => {
-    expect(rows.categories).toHaveLength(31);
-    expect(rows.products).toHaveLength(214);
+  it("seed : 32 catégories, 226 produits, 67 variantes", () => {
+    expect(rows.categories).toHaveLength(32);
+    expect(rows.products).toHaveLength(226);
     expect(rows.variants).toHaveLength(67);
   });
 
@@ -80,7 +80,7 @@ describe("migration + seed (PostgreSQL en mémoire)", () => {
     const modes = Object.fromEntries(rows.categories.map((c) => [c.name, c.display_mode]));
     expect(modes["Plats Thaï"]).toBe("list");
     expect(modes["Assortiments"]).toBe("assortiments_by_pcs");
-    expect(Object.values(modes).filter((m) => m === "list")).toHaveLength(30);
+    expect(Object.values(modes).filter((m) => m === "list")).toHaveLength(31);
   });
 
   it("prix, descriptions, images et vignettes conservés champ par champ", () => {

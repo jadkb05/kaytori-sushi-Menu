@@ -1,6 +1,6 @@
 -- =============================================================================
--- PRODUCTION — 02 : catalogue (31 catégories, 214 produits, 67 variantes)
--- GÉNÉRÉ depuis supabase/seed.sql (sha256:39a31c8542b401be) — ne pas éditer à la main.
+-- PRODUCTION — 02 : catalogue (32 catégories, 226 produits, 67 variantes)
+-- GÉNÉRÉ depuis supabase/seed.sql (sha256:7c1c06ae5bed7d44) — ne pas éditer à la main.
 --
 -- IDs produits / variantes, prix, descriptions, ordre, images (chemins /public servis par Vercel)
 -- et display_mode identiques au menu statique. Une transaction ; s'arrête si les tables ne sont
@@ -10,7 +10,7 @@
 -- Seed du menu Kaytôri — GÉNÉRÉ par `npm run supabase:seed` depuis src/data/yumloMenu.ts.
 -- Ne pas éditer à la main.
 --
--- 31 catégories, 214 produits, 67 variantes.
+-- 32 catégories, 226 produits, 67 variantes.
 -- Idempotent : relançable sans doublon (upsert par clé primaire, aucune suppression).
 -- Attention : un nouveau passage remet les lignes concernées à l'état du fichier statique.
 -- =============================================================================
@@ -31,37 +31,38 @@ end
 $guard$;
 
 insert into public.categories (id, name, sort_order, is_active, display_mode) values
-  ('starters', 'Starters', 0, true, 'list'),
-  ('nems-gyoza-rouleaux-de-printemps', 'Nems & Gyoza & Rouleaux de printemps', 1, true, 'list'),
-  ('sushi-fusion', 'Sushi Fusion', 2, true, 'list'),
-  ('yakitori', 'Yakitori', 3, true, 'list'),
-  ('soupes', 'Soupes', 4, true, 'list'),
-  ('salades', 'Salades', 5, true, 'list'),
-  ('poke-bowl', 'Poké Bowl', 6, true, 'list'),
-  ('tartare', 'Tartare', 7, true, 'list'),
-  ('chirashi', 'Chirashi', 8, true, 'list'),
-  ('sashimi', 'Sashimi', 9, true, 'list'),
-  ('carpaccio', 'Carpaccio', 10, true, 'list'),
-  ('tacos', 'Tacos', 11, true, 'list'),
-  ('crispy-rice', 'Crispy Rice', 12, true, 'list'),
-  ('nigiri', 'Nigiri', 13, true, 'list'),
-  ('maki', 'Maki', 14, true, 'list'),
-  ('futomaki', 'Futomaki', 15, true, 'list'),
-  ('california-roll', 'California Roll', 16, true, 'list'),
-  ('special-roll', 'Special Roll', 17, true, 'list'),
-  ('aromaki', 'Aromaki', 18, true, 'list'),
-  ('blossom', 'Blossom', 19, true, 'list'),
-  ('premium', 'Premium', 20, true, 'list'),
-  ('makito-fry', 'Makito Fry', 21, true, 'list'),
-  ('crispy-roll', 'Crispy Roll', 22, true, 'list'),
-  ('crunchy-roll', 'Crunchy Roll', 23, true, 'list'),
-  ('wok-thai', 'Wok & Thaï', 24, true, 'list'),
-  ('bentos', 'Bentos', 25, true, 'list'),
-  ('plats-thai', 'Plats Thaï', 26, true, 'list'),
-  ('assortiments', 'Assortiments', 27, true, 'assortiments_by_pcs'),
-  ('desserts', 'Desserts', 28, true, 'list'),
-  ('jus', 'Jus', 29, true, 'list'),
-  ('boissons', 'Boissons', 30, true, 'list')
+  ('formules-promos', 'Formules & Promos', 0, true, 'list'),
+  ('starters', 'Starters', 1, true, 'list'),
+  ('nems-gyoza-rouleaux-de-printemps', 'Nems & Gyoza & Rouleaux de printemps', 2, true, 'list'),
+  ('sushi-fusion', 'Sushi Fusion', 3, true, 'list'),
+  ('yakitori', 'Yakitori', 4, true, 'list'),
+  ('soupes', 'Soupes', 5, true, 'list'),
+  ('salades', 'Salades', 6, true, 'list'),
+  ('poke-bowl', 'Poké Bowl', 7, true, 'list'),
+  ('tartare', 'Tartare', 8, true, 'list'),
+  ('chirashi', 'Chirashi', 9, true, 'list'),
+  ('sashimi', 'Sashimi', 10, true, 'list'),
+  ('carpaccio', 'Carpaccio', 11, true, 'list'),
+  ('tacos', 'Tacos', 12, true, 'list'),
+  ('crispy-rice', 'Crispy Rice', 13, true, 'list'),
+  ('nigiri', 'Nigiri', 14, true, 'list'),
+  ('maki', 'Maki', 15, true, 'list'),
+  ('futomaki', 'Futomaki', 16, true, 'list'),
+  ('california-roll', 'California Roll', 17, true, 'list'),
+  ('special-roll', 'Special Roll', 18, true, 'list'),
+  ('aromaki', 'Aromaki', 19, true, 'list'),
+  ('blossom', 'Blossom', 20, true, 'list'),
+  ('premium', 'Premium', 21, true, 'list'),
+  ('makito-fry', 'Makito Fry', 22, true, 'list'),
+  ('crispy-roll', 'Crispy Roll', 23, true, 'list'),
+  ('crunchy-roll', 'Crunchy Roll', 24, true, 'list'),
+  ('wok-thai', 'Wok & Thaï', 25, true, 'list'),
+  ('bentos', 'Bentos', 26, true, 'list'),
+  ('plats-thai', 'Plats Thaï', 27, true, 'list'),
+  ('assortiments', 'Assortiments', 28, true, 'assortiments_by_pcs'),
+  ('desserts', 'Desserts', 29, true, 'list'),
+  ('jus', 'Jus', 30, true, 'list'),
+  ('boissons', 'Boissons', 31, true, 'list')
 on conflict (id) do update set
   name = excluded.name,
   sort_order = excluded.sort_order,
@@ -282,7 +283,19 @@ insert into public.products (id, category_id, name, description, price, currency
   ('8e12069c86', 'boissons', 'Coca Cola Zéro', '33 cl', '15.00', 'MAD', '/menu-hd-onglet35/boisson-coca-cola-zero.png', '/menu-thumbs/menu-hd-onglet35/boisson-coca-cola-zero-224.webp', '/menu-thumbs/menu-hd-onglet35/boisson-coca-cola-zero-336.webp', 210, true),
   ('4750e9d01c', 'boissons', 'Sprite', '33 cl', '15.00', 'MAD', '/menu-hd-onglet35/boisson-sprite.png', '/menu-thumbs/menu-hd-onglet35/boisson-sprite-224.webp', '/menu-thumbs/menu-hd-onglet35/boisson-sprite-336.webp', 211, true),
   ('cf01bd2066', 'boissons', 'Hawai', '33 cl', '15.00', 'MAD', '/menu-hd-onglet35/boisson-hawai.png', '/menu-thumbs/menu-hd-onglet35/boisson-hawai-224.webp', '/menu-thumbs/menu-hd-onglet35/boisson-hawai-336.webp', 212, true),
-  ('5b62bf8e93', 'boissons', 'Poms', '33 cl', '15.00', 'MAD', '/menu-hd-onglet35/boisson-poms.png', '/menu-thumbs/menu-hd-onglet35/boisson-poms-224.webp', '/menu-thumbs/menu-hd-onglet35/boisson-poms-336.webp', 213, true)
+  ('5b62bf8e93', 'boissons', 'Poms', '33 cl', '15.00', 'MAD', '/menu-hd-onglet35/boisson-poms.png', '/menu-thumbs/menu-hd-onglet35/boisson-poms-224.webp', '/menu-thumbs/menu-hd-onglet35/boisson-poms-336.webp', 213, true),
+  ('formule-duo', 'formules-promos', 'Formule Duo', 'Pour deux personnes', '279.00', 'MAD', '/formules/formule-duo.jpeg', null, null, 214, true),
+  ('formule-family', 'formules-promos', 'Formule Family', 'Pour quatre personnes', '539.00', 'MAD', '/formules/formule-family.jpeg', null, null, 215, true),
+  ('formule-zen-box', 'formules-promos', 'Zen Box', '16 pièces', '109.00', 'MAD', '/formules/zen-box.jpeg', null, null, 216, true),
+  ('formule-yaki-box', 'formules-promos', 'Yaki Box', '16 pièces', '129.00', 'MAD', '/formules/yaki-box.jpeg', null, null, 217, true),
+  ('formule-fry-box', 'formules-promos', 'Fry Box', '26 pièces', '139.00', 'MAD', '/formules/fry-box.jpeg', null, null, 218, true),
+  ('formule-spring-box', 'formules-promos', 'Spring Box', '34 pièces', '156.00', 'MAD', '/formules/spring-box.jpeg', null, null, 219, true),
+  ('formule-kyoto-box', 'formules-promos', 'Kyoto Box', '28 pièces', '159.00', 'MAD', '/formules/kyoto-box.jpeg', null, null, 220, true),
+  ('formule-nara-box', 'formules-promos', 'Nara Box', '30 pièces', '189.00', 'MAD', '/formules/nara-box.jpeg', null, null, 221, true),
+  ('formule-crispy-box', 'formules-promos', 'Crispy Box', '42 pièces', '229.00', 'MAD', '/formules/crispy-box.jpeg', null, null, 222, true),
+  ('formule-party-box', 'formules-promos', 'Party Box', '50 pièces', '329.00', 'MAD', '/formules/party-box.jpeg', null, null, 223, true),
+  ('formule-fusion-box', 'formules-promos', 'Fusion Box', '60 pièces', '369.00', 'MAD', '/formules/fusion-box.jpeg', null, null, 224, true),
+  ('formule-master-box', 'formules-promos', 'Master Box', '60 pièces', '369.00', 'MAD', '/formules/master-box.jpeg', null, null, 225, true)
 on conflict (id) do update set
   category_id = excluded.category_id,
   name = excluded.name,
@@ -369,10 +382,10 @@ on conflict (product_id, id) do update set
   sort_order = excluded.sort_order,
   is_active = excluded.is_active;
 
--- Contrôle final dans la même transaction : 31 / 214 / 67, sinon tout est annulé.
+-- Contrôle final dans la même transaction : 32 / 226 / 67, sinon tout est annulé.
 do $check$
 begin
-  if (select count(*) from public.categories) <> 31 or (select count(*) from public.products) <> 214
+  if (select count(*) from public.categories) <> 32 or (select count(*) from public.products) <> 226
      or (select count(*) from public.product_variants) <> 67 then
     raise exception 'ARRÊT — comptages inattendus après import : tout est annulé.';
   end if;

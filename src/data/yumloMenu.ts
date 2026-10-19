@@ -1,3 +1,5 @@
+import { FORMULES_PROMOS_CATEGORY, FORMULES_PROMOS_ITEMS } from "./formulesPromos";
+
 /** Données alignées sur captures menu Yumlo (mai 2026) — confirmer sur place si le restaurant met à jour les tarifs. */
 export const YUMLO_MENU_URL = "https://yumlo.ma/fr/casablanca/kaytori-cas" as const;
 
@@ -2055,11 +2057,15 @@ export const YUMLO_MENU = [
     "priceMAD": "15.00",
     "currency": "MAD",
     "image": "/menu-hd-onglet35/boisson-poms.png"
-  }
+  },
+  // Formules en fin de fichier : sort_order globaux des plats classiques inchangés ;
+  // l'affichage public les met en tête via YUMLO_CATEGORIES.
+  ...FORMULES_PROMOS_ITEMS,
 ] as const satisfies readonly YumloMenuItem[];
 
 /** Onglets menu — ordre fixe demandé par le client. */
 export const YUMLO_CATEGORIES = [
+  FORMULES_PROMOS_CATEGORY,
   "Starters",
   "Nems & Gyoza & Rouleaux de printemps",
   "Sushi Fusion",

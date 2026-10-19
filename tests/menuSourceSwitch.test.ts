@@ -99,8 +99,8 @@ describe("source Supabase (base PostgreSQL en mémoire, migration + seed réels)
     const fromSupabase = toParityModel(menu);
     expect(compareParityModels(toParityModel(getStaticMenu()), fromSupabase)).toEqual([]);
     expect(fromSupabase).toEqual(reference);
-    expect(fromSupabase.categories).toHaveLength(31);
-    expect(fromSupabase.products).toHaveLength(214);
+    expect(fromSupabase.categories).toHaveLength(32);
+    expect(fromSupabase.products).toHaveLength(226);
     expect(fromSupabase.products.reduce((n, p) => n + p.variants.length, 0)).toBe(67);
     expect(fromSupabase.products.filter((p) => p.section).length).toBe(21);
   });

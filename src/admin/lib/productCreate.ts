@@ -5,6 +5,7 @@
  * Un échec à n'importe quelle étape ne crée jamais de produit partiel.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import type { CategoryRow, MenuRows } from "../../data/menuRows";
 import { parsePrice, parseSortOrder, positionError, saveErrorMessage } from "./productEditor";
 import { validatePhotoFile } from "./productPhoto";
@@ -46,7 +47,10 @@ export function categoryInsertInfo(rows: MenuRows, categoryId: string): Category
 }
 
 export function emptyNewProductForm(categories: CategoryRow[], rows: MenuRows): NewProductForm {
-  const first = [...categories].sort((a, b) => a.sort_order - b.sort_order)[0];
+  // Les formules ont leur propre écran admin : ne pas les proposer par défaut ici.
+  const first = [...categories]
+    .filter((c) => c.id !== FORMULES_CATEGORY_ID)
+    .sort((a, b) => a.sort_order - b.sort_order)[0];
   const info = first ? categoryInsertInfo(rows, first.id) : null;
   return {
     name: "",
@@ -59,7 +63,7 @@ export function emptyNewProductForm(categories: CategoryRow[], rows: MenuRows): 
   };
 }
 
-/** Nouvel ID produit : 10 caractères hexadécimaux (même format que les 214 produits existants). */
+/** Nouvel ID produit : 10 caractères hexadécimaux (même format que les plats classiques du catalogue). */
 export function newProductId(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(5));
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("");

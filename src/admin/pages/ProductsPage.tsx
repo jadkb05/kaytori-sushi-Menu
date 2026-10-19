@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useMemo, useState } from "react";
+import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import { takeFlash } from "../lib/flash";
 import { AdminLink } from "../components/AdminLink";
 import { ArrowDownIcon, ArrowUpIcon, CategoriesIcon, CloseIcon, PencilIcon, PlusIcon, SearchIcon } from "../components/icons";
@@ -148,8 +149,14 @@ export function ProductsPage({ client }: { client: SupabaseClient }) {
   /** Recherche par nom de catégorie (indépendante de la recherche par nom de produit). */
   const [categoryQuery, setCategoryQuery] = useState("");
 
-  const products = useMemo(() => (data.rows ? buildProductList(data.rows) : []), [data.rows]);
-  const categories = useMemo(() => (data.rows ? buildCategoryList(data.rows) : []), [data.rows]);
+  const products = useMemo(
+    () => (data.rows ? buildProductList(data.rows).filter((p) => p.categoryId !== FORMULES_CATEGORY_ID) : []),
+    [data.rows],
+  );
+  const categories = useMemo(
+    () => (data.rows ? buildCategoryList(data.rows).filter((c) => c.id !== FORMULES_CATEGORY_ID) : []),
+    [data.rows],
+  );
   const shown = useMemo(
     () => filterProducts(products, { query, categoryId, categoryQuery }),
     [products, query, categoryId, categoryQuery],

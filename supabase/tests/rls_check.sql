@@ -33,9 +33,9 @@ begin
     set local role anon;
 
     select count(*) into n from public.categories;
-    results := results || jsonb_build_object('test', 'anon lit 31 catégories', 'ok', n = 31, 'detail', n);
+    results := results || jsonb_build_object('test', 'anon lit 32 catégories', 'ok', n = 32, 'detail', n);
     select count(*) into n from public.products;
-    results := results || jsonb_build_object('test', 'anon lit 214 produits', 'ok', n = 214, 'detail', n);
+    results := results || jsonb_build_object('test', 'anon lit 226 produits', 'ok', n = 226, 'detail', n);
     select count(*) into n from public.product_variants;
     results := results || jsonb_build_object('test', 'anon lit 67 variantes', 'ok', n = 67, 'detail', n);
 

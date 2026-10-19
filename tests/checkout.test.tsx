@@ -26,6 +26,9 @@ import { WHATSAPP_REFERENCE_FILE, cartTotalDh, sampleCartLines } from "./referen
 const reference = readFileSync(WHATSAPP_REFERENCE_FILE, "utf8");
 const lines = sampleCartLines(getStaticMenu());
 const total = cartTotalDh(lines);
+/** Ligne « Total : … DH » de la référence WhatsApp (suit le panier type du menu actuel). */
+const totalLine = reference.split("\n").find((l) => l.startsWith("Total : "))!;
+const totalAmountLabel = totalLine.replace(/^Total : /, "");
 
 const delivery: CheckoutInfo = {
   mode: "delivery",
@@ -42,7 +45,7 @@ describe("quartiers (liste client)", () => {
     expect([...NEIGHBORHOODS]).toEqual([
       "Bourgogne",
       "Ain Diab",
-      "Maarif / Palmier",
+      "Maarif / Anfa / Palmier",
       "Maarif ext",
       "Val Fleuri / Derb Ghallef / Anoual",
       "CFC / El Hana / CIL / Ghandi",
@@ -63,7 +66,7 @@ describe("quartiers (liste client)", () => {
     expect(foldSearch("Belvédère")).toBe(foldSearch("belvedere"));
     expect(filterNeighborhoods("belve").map(String)).toContain("Belvédère / Roche Noire");
     expect(filterNeighborhoods("CALIFORNIE").map(String)).toEqual(["Californie"]);
-    expect(filterNeighborhoods("maarif").map(String)).toEqual(["Maarif / Palmier", "Maarif ext"]);
+    expect(filterNeighborhoods("maarif").map(String)).toEqual(["Maarif / Anfa / Palmier", "Maarif ext"]);
     expect(filterNeighborhoods("xyz-inconnu")).toEqual([]);
   });
 
@@ -168,7 +171,7 @@ describe("mode de paiement", () => {
       expect(validateCheckout(info)).toEqual({});
       const msg = buildWhatsappOrderMessage(lines, total, undefined, checkoutDetails(info));
       expect(msg).toContain(`\n\n${block}\n🛍️ COMMANDE\n`);
-      expect(msg).toContain("Total : 514,00 DH");
+      expect(msg).toContain(totalLine);
       expect(msg).not.toMatch(/payé|réglé/i);
     }
   });
@@ -234,9 +237,9 @@ describe("message WhatsApp", () => {
         "",
         "🛍️ COMMANDE",
         "",
-        ...refLines.slice(detailStart, refLines.indexOf("Total : 514,00 DH")),
+        ...refLines.slice(detailStart, refLines.indexOf(totalLine)),
         "Livraison : offerte",
-        ...refLines.slice(refLines.indexOf("Total : 514,00 DH")),
+        ...refLines.slice(refLines.indexOf(totalLine)),
       ].join("\n"),
     );
   });
@@ -252,7 +255,7 @@ describe("message WhatsApp", () => {
     expect(msg).toContain("🏪 RETRAIT\nMode : À emporter (retrait au restaurant)");
     expect(msg).toContain("Nom et prénom : Yasmine El Amrani");
     expect(msg).not.toMatch(/Adresse|Quartier|Livraison/);
-    expect(msg).toContain("Total : 514,00 DH");
+    expect(msg).toContain(totalLine);
     for (const l of reference.split("\n").filter((x) => x.startsWith("• "))) expect(msg).toContain(l);
   });
 
@@ -297,7 +300,7 @@ describe("récapitulatif", () => {
     expect(html).toContain("Saumon");
     expect(html).toContain("2 × 89,00 DH");
     expect(html).toContain("178,00 DH");
-    expect(html.match(/514,00 DH/g)).toHaveLength(2);
+    expect(html.match(new RegExp(totalAmountLabel.replace(".", "\\."), "g"))).toHaveLength(2);
     expect(html).toContain("Offerte");
     expect(html).toContain("12 rue des Lilas");
     expect(html).toContain('href="https://maps.app.goo.gl/abc123"');

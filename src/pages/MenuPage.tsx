@@ -7,11 +7,13 @@ import { MenuFooter } from "../components/MenuFooter";
 import { MenuSearch } from "../components/MenuSearch";
 import { ReassuranceBand } from "../components/ReassuranceBand";
 import { SITE } from "../config/site";
+import { FORMULES_PROMOS_CATEGORY } from "../data/formulesPromos";
 import type { MenuSnapshot } from "../data/menuSource";
 import { menuCategoryDisplayMode } from "../data/menuRows";
 import { groupItemsForMenuTab } from "../data/menuTabSections";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { DishRow } from "../menu/DishRow";
+import { FormulesCarousel } from "../menu/FormulesCarousel";
 import { useMenu } from "../menu/MenuProvider";
 import { categoryAnchorId, categoryDisplayTitle } from "../menu/menuDisplay";
 import { dishAnchorId, type SearchMatch } from "../menu/menuSearch";
@@ -315,22 +317,27 @@ export function MenuPage() {
                   {items.length} plat{items.length !== 1 ? "s" : ""}
                 </span>
               </h2>
-              <ul className="grid list-none grid-cols-1 gap-2.5 lg:grid-cols-2 lg:gap-3">
-                {groups.map((g, gi) => (
-                  <Fragment key={`${category}-${g.title || "all"}-${gi}`}>
-                    {g.title ? (
-                      <li className="col-span-full list-none">
-                        <h3 className="mt-2 border-b border-kaytori-black/[0.08] pb-1.5 text-center font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-kaytori-black/80">
-                          {g.title}
-                        </h3>
-                      </li>
-                    ) : null}
-                    {g.items.map((item) => (
-                      <DishRow key={item.id} item={item} highlighted={item.id === highlightId} />
-                    ))}
-                  </Fragment>
-                ))}
-              </ul>
+              {/* Formules & Promos : grandes cartes en rangée horizontale ; les autres catégories en grille. */}
+              {category === FORMULES_PROMOS_CATEGORY ? (
+                <FormulesCarousel items={items} label={category} highlightId={highlightId} />
+              ) : (
+                <ul className="grid list-none grid-cols-1 gap-2.5 lg:grid-cols-2 lg:gap-3">
+                  {groups.map((g, gi) => (
+                    <Fragment key={`${category}-${g.title || "all"}-${gi}`}>
+                      {g.title ? (
+                        <li className="col-span-full list-none">
+                          <h3 className="mt-2 border-b border-kaytori-black/[0.08] pb-1.5 text-center font-display text-[0.78rem] font-semibold uppercase tracking-[0.14em] text-kaytori-black/80">
+                            {g.title}
+                          </h3>
+                        </li>
+                      ) : null}
+                      {g.items.map((item) => (
+                        <DishRow key={item.id} item={item} highlighted={item.id === highlightId} />
+                      ))}
+                    </Fragment>
+                  ))}
+                </ul>
+              )}
             </section>
           ))}
         </div>

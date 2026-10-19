@@ -2,12 +2,13 @@ import type { ReactNode } from "react";
 import { BrandLogo } from "../../components/BrandLogo";
 import { ADMIN_ROUTES, type AdminContentPage } from "../lib/routes";
 import { AdminLink } from "./AdminLink";
-import { CategoriesIcon, DashboardIcon, ExternalIcon, LogoutIcon, ProductsIcon } from "./icons";
+import { CategoriesIcon, DashboardIcon, ExternalIcon, FormulesIcon, LogoutIcon, ProductsIcon } from "./icons";
 import { focusRing } from "./ui";
 
-const NAV: { page: Exclude<AdminContentPage, "productEdit" | "productCreate">; href: string; label: string; icon: typeof DashboardIcon }[] = [
+const NAV: { page: Exclude<AdminContentPage, "productEdit" | "productCreate" | "formuleEdit" | "formuleCreate">; href: string; label: string; icon: typeof DashboardIcon }[] = [
   { page: "dashboard", href: ADMIN_ROUTES.dashboard, label: "Tableau de bord", icon: DashboardIcon },
   { page: "products", href: ADMIN_ROUTES.products, label: "Produits", icon: ProductsIcon },
+  { page: "formules", href: ADMIN_ROUTES.formules, label: "Formules", icon: FormulesIcon },
   { page: "categories", href: ADMIN_ROUTES.categories, label: "Catégories", icon: CategoriesIcon },
 ];
 
@@ -29,7 +30,9 @@ export function AdminLayout({
   children: ReactNode;
 }) {
   const isActive = (item: (typeof NAV)[number]) =>
-    item.page === current || ((current === "productEdit" || current === "productCreate") && item.page === "products");
+    item.page === current ||
+    ((current === "productEdit" || current === "productCreate") && item.page === "products") ||
+    ((current === "formuleEdit" || current === "formuleCreate") && item.page === "formules");
   const initial = (email.trim()[0] ?? "A").toUpperCase();
 
   return (
@@ -145,7 +148,7 @@ export function AdminLayout({
         aria-label="Administration"
         className="fixed inset-x-0 bottom-0 z-30 border-t border-admin-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur supports-[backdrop-filter]:bg-white/85 lg:hidden"
       >
-        <ul className="mx-auto grid h-16 max-w-lg grid-cols-3">
+        <ul className="mx-auto grid h-16 max-w-lg grid-cols-4">
           {NAV.map((item) => {
             const active = isActive(item);
             const Icon = item.icon;

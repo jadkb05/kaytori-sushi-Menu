@@ -113,14 +113,14 @@ describe("authentification et admin_users (RPC is_admin, RLS réelle)", () => {
 });
 
 describe("données de l'admin (lues depuis la base)", () => {
-  it("statistiques du tableau de bord : 31 catégories, 214 produits, 67 variantes", async () => {
+  it("statistiques du tableau de bord : 32 catégories, 226 produits, 67 variantes", async () => {
     const rows = await fetchMenuRows(createPgliteSupabase(db, ADMIN));
     expect(computeDashboardStats(rows)).toEqual({
-      activeCategories: 31,
-      totalCategories: 31,
-      visibleProducts: 214,
+      activeCategories: 32,
+      totalCategories: 32,
+      visibleProducts: 226,
       hiddenProducts: 0,
-      totalProducts: 214,
+      totalProducts: 226,
       activeVariants: 67,
       totalVariants: 67,
     });
@@ -135,14 +135,14 @@ describe("données de l'admin (lues depuis la base)", () => {
       const userRows = await fetchMenuRows(createPgliteSupabase(db, USER));
       const desserts = YUMLO_MENU.filter((it) => it.category === "Desserts").length;
       expect(computeDashboardStats(adminRows)).toMatchObject({
-        activeCategories: 30,
-        totalCategories: 31,
-        totalProducts: 214,
+        activeCategories: 31,
+        totalCategories: 32,
+        totalProducts: 226,
         hiddenProducts: 1 + desserts,
-        visibleProducts: 214 - 1 - desserts,
+        visibleProducts: 226 - 1 - desserts,
       });
-      expect(userRows.products).toHaveLength(214 - 1 - desserts);
-      expect(userRows.categories).toHaveLength(30);
+      expect(userRows.products).toHaveLength(226 - 1 - desserts);
+      expect(userRows.categories).toHaveLength(31);
       const listed = buildProductList(adminRows).find((p) => p.id === product.id)!;
       expect(listed).toMatchObject({ isActive: false, visible: false });
     } finally {
@@ -151,10 +151,10 @@ describe("données de l'admin (lues depuis la base)", () => {
     }
   });
 
-  it("produits : 214, dans l'ordre du menu, avec photo, catégorie, prix et variantes", async () => {
+  it("produits : 226, dans l'ordre du menu, avec photo, catégorie, prix et variantes", async () => {
     const rows = await fetchMenuRows(createPgliteSupabase(db, ADMIN));
     const products = buildProductList(rows);
-    expect(products).toHaveLength(214);
+    expect(products).toHaveLength(226);
     const expectedOrder = YUMLO_CATEGORIES.flatMap((c) => YUMLO_MENU.filter((it) => it.category === c).map((it) => it.id));
     expect(products.map((p) => p.id)).toEqual(expectedOrder);
     expect(products.filter((p) => p.variantCount > 0)).toHaveLength(19);
@@ -163,7 +163,7 @@ describe("données de l'admin (lues depuis la base)", () => {
       expect(p.name).toBe(it.name);
       expect(p.categoryName).toBe(it.category);
       expect(p.price).toBe(it.priceMAD.replace(".", ","));
-      expect(p.imageUrl).toMatch(/^\/menu-thumbs\/.+-224\.webp$/);
+      expect(p.imageUrl).toMatch(/^\/(menu-thumbs\/.+-224\.webp|formules\/.+\.jpe?g)$/);
       expect(p.variantCount).toBe(it.variants?.length ?? 0);
     }
     const redCurry = products.find((p) => p.name === "Red Curry Thaï")!;
@@ -197,13 +197,19 @@ describe("données de l'admin (lues depuis la base)", () => {
     expect(filterProducts(products, { query: "", categoryId: null, categoryQuery: "  " })).toHaveLength(products.length);
   });
 
-  it("catégories : 31, dans l'ordre, avec nombre de produits et mode d'affichage", async () => {
+  it("catégories : 32, dans l'ordre, avec nombre de produits et mode d'affichage", async () => {
     const categories = buildCategoryList(await fetchMenuRows(createPgliteSupabase(db, ADMIN)));
     expect(categories.map((c) => c.name)).toEqual([...YUMLO_CATEGORIES]);
-    expect(categories.reduce((n, c) => n + c.productCount, 0)).toBe(214);
+    expect(categories.reduce((n, c) => n + c.productCount, 0)).toBe(226);
     expect(categories.find((c) => c.name === "Plats Thaï")).toMatchObject({
       productCount: 11,
       visibleProductCount: 11,
+      displayMode: "list",
+      isActive: true,
+    });
+    expect(categories.find((c) => c.name === "Formules & Promos")).toMatchObject({
+      productCount: 12,
+      visibleProductCount: 12,
       displayMode: "list",
       isActive: true,
     });
@@ -225,14 +231,16 @@ describe("rendu des pages (sans navigateur)", () => {
   it("tableau de bord, produits, catégories", () => {
     const dashboard = withData(<DashboardPage />);
     expect(dashboard).toContain("Catégories actives");
-    expect(dashboard).toContain(">214<");
+    expect(dashboard).toContain(">226<");
+    // Liste Produits : les formules sont gérées ailleurs → 214 plats classiques.
     const products = withData(<ProductsPage client={createPgliteSupabase(db, ADMIN)} />);
     expect(products).toContain("214 produits");
     expect(products).toContain("Red Curry Thaï");
     expect((products.match(/<tr/g) ?? []).length).toBe(215);
     const categories = withData(<CategoriesPage client={createPgliteSupabase(db, ADMIN)} />);
     expect(categories).toContain("Plats Thaï");
-    expect((categories.match(/<tr/g) ?? []).length).toBe(32);
+    expect(categories).toMatch(/Formules &amp; Promos|Formules & Promos/);
+    expect((categories.match(/<tr/g) ?? []).length).toBe(33);
   });
 
   it("connexion, accès refusé, mise en page", () => {

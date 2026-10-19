@@ -103,7 +103,7 @@ describe("aucun écrasement", () => {
     await db.exec(CATALOG);
     await db.exec("update public.categories set name = 'Salades (modifié)' where id = 'salades'");
     const before = JSON.stringify(await readMenuRows(db));
-    await expect(db.exec(CATALOG)).rejects.toThrow(/le catalogue n'est pas vide \(31 catégories, 214 produits, 67 variantes\)/i);
+    await expect(db.exec(CATALOG)).rejects.toThrow(/le catalogue n'est pas vide \(32 catégories, 226 produits, 67 variantes\)/i);
     await db.exec("rollback");
     expect(JSON.stringify(await readMenuRows(db))).toBe(before);
   });

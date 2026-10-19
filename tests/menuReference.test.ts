@@ -30,9 +30,9 @@ describe("source du menu", () => {
 });
 
 describe("référence du menu", () => {
-  it("contient 31 catégories, 214 plats et 67 variantes", () => {
-    expect(current.categories).toHaveLength(31);
-    expect(current.products).toHaveLength(214);
+  it("contient 32 catégories, 226 plats et 67 variantes", () => {
+    expect(current.categories).toHaveLength(32);
+    expect(current.products).toHaveLength(226);
     expect(current.products.reduce((n, p) => n + p.variants.length, 0)).toBe(67);
   });
 

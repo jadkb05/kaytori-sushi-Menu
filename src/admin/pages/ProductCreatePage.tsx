@@ -6,6 +6,7 @@ import { CheckIcon, PencilIcon, PlusIcon } from "../components/icons";
 import { ErrorState, LoadingState, PageHeader, Spinner, Switch, buttonClass, cardClass, inputClass } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { navigate } from "../hooks/useAdminPath";
+import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import type { MenuRows } from "../../data/menuRows";
 import {
   categoryInsertInfo,
@@ -108,7 +109,7 @@ export function ProductCreateForm({
               <div className="grid gap-5 sm:grid-cols-2">
                 <Field label="Catégorie" htmlFor="n-category" error={errors.categoryId}>
                   <select id="n-category" value={form.categoryId} onChange={(e) => changeCategory(e.target.value)} className={fieldError(inputClass, errors.categoryId)}>
-                    {categories.map((c) => (
+                    {categories.filter((c) => c.id !== FORMULES_CATEGORY_ID).map((c) => (
                       <option key={c.id} value={c.id}>
                         {c.name}
                         {c.is_active ? "" : " (masquée)"}

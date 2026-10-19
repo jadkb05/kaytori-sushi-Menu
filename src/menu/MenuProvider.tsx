@@ -49,6 +49,20 @@ export function MenuProvider({
     };
   }, [menu, source]);
 
+  const waitingForMenu = menu === null;
+  useEffect(() => {
+    let cancelled = false;
+    void import("../data/formulesMenu").then(({ fetchPublishedFormules, replaceFormules }) =>
+      fetchPublishedFormules().then((items) => {
+        if (cancelled || items === null) return;
+        setMenu((current) => (current ? replaceFormules(current, items) : current));
+      }),
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [waitingForMenu]);
+
   if (!menu) return <MenuLoading />;
   return <MenuContext.Provider value={menu}>{children}</MenuContext.Provider>;
 }

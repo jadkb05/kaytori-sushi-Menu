@@ -29,7 +29,7 @@ export function paymentMethod(id: PaymentMethod) {
 export const NEIGHBORHOODS = [
   "Bourgogne",
   "Ain Diab",
-  "Maarif / Palmier",
+  "Maarif / Anfa / Palmier",
   "Maarif ext",
   "Val Fleuri / Derb Ghallef / Anoual",
   "CFC / El Hana / CIL / Ghandi",

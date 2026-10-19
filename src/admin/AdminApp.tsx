@@ -21,6 +21,8 @@ import { AccessDeniedPage, AccessErrorPage, UnconfiguredPage } from "./pages/Acc
 import { CategoriesPage } from "./pages/CategoriesPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LoginPage } from "./pages/LoginPage";
+import { FormuleFormPage } from "./pages/FormuleFormPage";
+import { FormulesPage } from "./pages/FormulesPage";
 import { ProductCreatePage } from "./pages/ProductCreatePage";
 import { ProductEditPage } from "./pages/ProductEditPage";
 import { ProductsPage } from "./pages/ProductsPage";
@@ -81,6 +83,11 @@ export default function AdminApp() {
             {decision.page === "dashboard" ? <DashboardPage /> : null}
             {decision.page === "products" ? <ProductsPage client={client!} /> : null}
             {decision.page === "categories" ? <CategoriesPage client={client!} /> : null}
+            {decision.page === "formules" ? <FormulesPage client={client!} /> : null}
+            {decision.page === "formuleCreate" ? <FormuleFormPage client={client!} productId={null} /> : null}
+            {decision.page === "formuleEdit" && decision.productId ? (
+              <FormuleFormPage client={client!} productId={decision.productId} />
+            ) : null}
             {decision.page === "productCreate" ? <ProductCreatePage client={client!} /> : null}
             {decision.page === "productEdit" && decision.productId ? (
               <ProductEditPage productId={decision.productId} client={client!} />

@@ -191,7 +191,9 @@ describe("page menu (statique)", () => {
 
   it("affiche les noms courts, dans l'ordre, pour tous les plats", () => {
     const menu = getStaticMenu();
-    expect(dishTitles).toHaveLength(menu.items.length);
+    // Formules & Promos : carrousel d'affiches (pas de titres h3 DishRow).
+    const classicDishes = menu.items.filter((it) => it.category !== "Formules & Promos");
+    expect(dishTitles).toHaveLength(classicDishes.length);
     expect(dishTitles).toContain("Tropical");
     expect(dishTitles).toContain("Saumon Avocat 2 pcs");
     expect(dishTitles).toContain("Bento A");

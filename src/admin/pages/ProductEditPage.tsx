@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
 import { PhotoCropEditor } from "../components/PhotoCropEditor";
 import { AddVariantButton, Field, FormActionBar, PriceInput, Section, StaticField, VariantFrame, fieldError } from "../components/formControls";
@@ -426,7 +427,7 @@ function ProductEditForm({
                 <div className="grid gap-5 sm:grid-cols-2">
                   <Field label="Catégorie" htmlFor="p-category" error={errors.categoryId}>
                     <select id="p-category" value={form.categoryId} onChange={(e) => changeCategory(e.target.value)} className={fieldError(inputClass, errors.categoryId)}>
-                      {data.categories.map((c) => (
+                      {data.categories.filter((c) => c.id !== FORMULES_CATEGORY_ID || c.id === data.product.category_id).map((c) => (
                         <option key={c.id} value={c.id}>
                           {c.name}
                           {c.is_active ? "" : " (masquée)"}

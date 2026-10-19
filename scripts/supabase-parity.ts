@@ -4,7 +4,7 @@
  *
  * Lit le projet Supabase configuré dans .env.local (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY,
  * clé publique uniquement) avec la vraie source supabaseMenuSource, et le compare au menu statique.
- * Vérifie en plus les comptages bruts (31 / 214 / 67) et les colonnes de vignettes stockées en base.
+ * Vérifie en plus les comptages bruts (alignés sur le menu statique) et les colonnes de vignettes stockées en base.
  * Lecture seule : n'écrit rien, ne change pas la source active du site.
  *
  * Node 20 : supabase-js exige un WebSocket natif à la création du client ; le script npm lance
