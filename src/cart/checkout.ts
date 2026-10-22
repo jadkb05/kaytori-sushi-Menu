@@ -56,6 +56,12 @@ export const NEIGHBORHOODS = [
   "La Coline / Florida",
   "Laimoune",
   "Oulfa / Hay Hassani",
+  "Bernoussi",
+  "Sidi Othmane",
+  "Bournazil",
+  "Hay Mohamadi",
+  "Roches Noir",
+  "Ain Sbaa",
 ] as const;
 
 export type Neighborhood = (typeof NEIGHBORHOODS)[number];

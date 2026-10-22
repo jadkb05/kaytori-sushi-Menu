@@ -41,7 +41,7 @@ const delivery: CheckoutInfo = {
 const pickup: CheckoutInfo = { ...delivery, mode: "pickup" };
 
 describe("quartiers (liste client)", () => {
-  it("contient exactement les 29 options fournies, dans l'ordre", () => {
+  it("contient exactement les 35 options fournies, dans l'ordre", () => {
     expect([...NEIGHBORHOODS]).toEqual([
       "Casa Finance City (CFC)",
       "CIL",
@@ -72,8 +72,14 @@ describe("quartiers (liste client)", () => {
       "La Coline / Florida",
       "Laimoune",
       "Oulfa / Hay Hassani",
+      "Bernoussi",
+      "Sidi Othmane",
+      "Bournazil",
+      "Hay Mohamadi",
+      "Roches Noir",
+      "Ain Sbaa",
     ]);
-    expect(NEIGHBORHOODS).toHaveLength(29);
+    expect(NEIGHBORHOODS).toHaveLength(35);
   });
 
   it("recherche insensible à la casse et aux accents", () => {
