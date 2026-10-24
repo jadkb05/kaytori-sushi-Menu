@@ -125,6 +125,50 @@ describe("formules : menu public", () => {
     expect(next.categories[0]).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
   });
 
+  it("après renommage de section Supabase : un seul libellé, pas de doublon avec l'ancien nom heuristique", () => {
+    const alreadySplit = splitFormulesForPublicMenu(getStaticMenu());
+    expect(alreadySplit.categories).toContain(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    // Simule fetchPublishedFormules après renommage admin « Formules Solo / Duo / Family » → « Formules Famille ».
+    const fromSupabase = [
+      {
+        id: "formule-duo",
+        category: "Formules Famille",
+        name: "Formule Duo",
+        description: "Pour deux personnes",
+        priceMAD: "279.00",
+        currency: "MAD",
+        image: "/formules/formule-duo.jpeg",
+      },
+      {
+        id: "formule-family",
+        category: "Formules Famille",
+        name: "Formule Family",
+        description: "Pour quatre personnes",
+        priceMAD: "539.00",
+        currency: "MAD",
+        image: "/formules/formule-family.jpeg",
+      },
+      {
+        id: "formule-zen-box",
+        category: FORMULE_SECTION_PROMO,
+        name: "Zen Box",
+        description: "16 pièces",
+        priceMAD: "109.00",
+        currency: "MAD",
+        image: "/formules/zen-box.jpeg",
+      },
+    ];
+    const next = replaceFormules(alreadySplit, fromSupabase);
+    expect(next.categories.filter((c) => c === "Formules Famille")).toHaveLength(1);
+    expect(next.categories).not.toContain(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(next.items.filter((it) => it.id === "formule-duo")).toHaveLength(1);
+    expect(next.items.filter((it) => it.id === "formule-family")).toHaveLength(1);
+    expect(next.items.find((it) => it.id === "formule-duo")?.category).toBe("Formules Famille");
+    expect(next.items.find((it) => it.id === "formule-family")?.category).toBe("Formules Famille");
+    expect(next.items.find((it) => it.id === "formule-zen-box")?.category).toBe(FORMULE_SECTION_PROMO);
+    expect(next.formuleSectionNames).toEqual(["Formules Famille", FORMULE_SECTION_PROMO]);
+  });
+
   it("remonte les formules en tête même si la catégorie était en fin de menu (source Supabase)", async () => {
     const { promoteFormulesCategory } = await import("../src/data/formulesMenu");
     const menu = getStaticMenu();

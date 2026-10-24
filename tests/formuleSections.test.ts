@@ -10,7 +10,7 @@ import {
   FORMULE_SECTION_SOLO_DUO_FAMILY,
   formulePublicCategory,
 } from "../src/data/formulesPromos";
-import { publishedFormules, splitFormulesForPublicMenu } from "../src/data/formulesMenu";
+import { publishedFormules, replaceFormules, splitFormulesForPublicMenu } from "../src/data/formulesMenu";
 import { FORMULES_CATEGORY_ID, FORMULES_PROMOS_CATEGORY } from "../src/data/formulesPromos";
 import { getStaticMenu } from "../src/data/menuSource";
 import { createMigratedDb, runSeed } from "./helpers/supabaseTestDb";
@@ -56,6 +56,51 @@ describe("formule sections : menu public (données, UI inchangée)", () => {
     expect(menu.categories[0]).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
     expect(menu.categories[1]).toBe(FORMULE_SECTION_PROMO);
     expect(menu.formuleSectionNames?.[0]).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
+  });
+
+  it("un renommage de section ne recrée pas l'ancien libellé heuristique sur le menu public", () => {
+    const split = splitFormulesForPublicMenu(getStaticMenu());
+    const renamed = publishedFormules(
+      { id: FORMULES_CATEGORY_ID, is_active: true },
+      [
+        {
+          id: "formule-duo",
+          category_id: FORMULES_CATEGORY_ID,
+          name: "Formule Duo",
+          description: "",
+          price: "279.00",
+          currency: "MAD",
+          image_url: "/formules/formule-duo.jpeg",
+          thumb_small_url: null,
+          thumb_large_url: null,
+          sort_order: 1,
+          is_active: true,
+          formule_section_id: "formules-solo-duo-family",
+        },
+        {
+          id: "formule-zen-box",
+          category_id: FORMULES_CATEGORY_ID,
+          name: "Zen Box",
+          description: "",
+          price: "109.00",
+          currency: "MAD",
+          image_url: "/formules/zen-box.jpeg",
+          thumb_small_url: null,
+          thumb_large_url: null,
+          sort_order: 2,
+          is_active: true,
+          formule_section_id: "promo",
+        },
+      ],
+      [
+        { id: "formules-solo-duo-family", name: "Formules Famille", sort_order: 0, is_active: true },
+        { id: "promo", name: FORMULE_SECTION_PROMO, sort_order: 1, is_active: true },
+      ],
+    )!;
+    const next = replaceFormules(split, renamed);
+    expect(next.categories).toContain("Formules Famille");
+    expect(next.categories).not.toContain(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(next.items.filter((it) => it.category === FORMULE_SECTION_SOLO_DUO_FAMILY)).toHaveLength(0);
   });
 
   it("utilise le nom de section Supabase quand il est fourni", () => {

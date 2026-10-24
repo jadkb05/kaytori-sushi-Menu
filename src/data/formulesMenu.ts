@@ -1,8 +1,11 @@
 /**
  * Formules publiées : lues dans Supabase (catégorie formules-promos) et posées sur le menu
  * statique, sans remplacer les autres catégories. Sans catégorie en base, le menu statique reste.
- * L'affichage public découpe la catégorie unique en sections (même carrousel, même design).
- * Les noms de sections peuvent venir de formule_sections dès que la migration est appliquée.
+ *
+ * Deux modes :
+ * - Dynamique (formule_sections) : le libellé public = nom actuel de la section (id stable).
+ *   Un renommage admin se reflète sans créer de doublon avec les anciens libellés heuristiques.
+ * - Statique / sans sections : repli sur formulePublicCategory (Solo/Duo/Family, Midi, Promo).
  */
 import type { YumloMenuItem } from "./yumloMenu";
 import {
@@ -63,35 +66,50 @@ export function publishedFormules(
     });
 }
 
-function sectionOrderList(menu: MenuSnapshot, placed: readonly YumloMenuItem[]): string[] {
-  const preferred =
-    menu.formuleSectionNames && menu.formuleSectionNames.length > 0
-      ? [...menu.formuleSectionNames]
-      : [...FORMULE_PUBLIC_SECTIONS];
+/** Noms de section dans l'ordre de première apparition (déjà triés côté produits). */
+function uniqueSectionNamesInOrder(items: readonly YumloMenuItem[]): string[] {
+  const out: string[] = [];
+  for (const it of items) {
+    if (it.category === FORMULES_PROMOS_CATEGORY) continue;
+    if (!out.includes(it.category)) out.push(it.category);
+  }
+  return out;
+}
+
+function sectionOrderList(placed: readonly YumloMenuItem[], preferred: readonly string[]): string[] {
   const present = preferred.filter((s) => placed.some((it) => it.category === s));
   const extras = [...new Set(placed.map((it) => it.category))].filter((c) => !present.includes(c));
   return [...present, ...extras];
 }
 
+/** Libellés considérés comme « formules » (à retirer avant un remplacement). */
+function formuleCategoryNamesToStrip(menu: MenuSnapshot, incomingSectionNames: readonly string[]): Set<string> {
+  return new Set([
+    FORMULES_PROMOS_CATEGORY,
+    ...FORMULE_PUBLIC_SECTIONS,
+    ...(menu.formuleSectionNames ?? []),
+    ...incomingSectionNames,
+  ]);
+}
+
 /**
- * Découpe « Formules & Promos » (ou sections déjà nommées) en catégories publiques.
- * Les sections sans offre sont omises. Ids, noms, prix et images inchangés.
- * L'UI publique (FormulesCarousel) n'est pas modifiée : seuls les libellés de section changent.
+ * Découpe heuristique (menu statique / pas de formule_sections) :
+ * Solo/Duo/Family → Midi → Promo. Les sections sans offre sont omises.
  */
 export function splitFormulesForPublicMenu(menu: MenuSnapshot): MenuSnapshot {
-  const known = menu.formuleSectionNames ?? null;
-  const isFormule = (c: string) => isFormuleCarouselCategory(c, known);
+  const strip = formuleCategoryNamesToStrip(menu, []);
+  const isFormule = (c: string) => strip.has(c) || isFormuleCarouselCategory(c, menu.formuleSectionNames);
   const formuleItems = menu.items.filter((it) => isFormule(it.category));
   if (formuleItems.length === 0 && !menu.categories.some(isFormule)) {
     return menu;
   }
   const rest = menu.items.filter((it) => !isFormule(it.category));
   const otherCategories = menu.categories.filter((c) => !isFormule(c));
-  const placed = formuleItems.map((it) => {
-    if (it.category !== FORMULES_PROMOS_CATEGORY) return it;
-    return { ...it, category: formulePublicCategory(it) };
-  });
-  const sections = sectionOrderList({ ...menu, formuleSectionNames: known ?? [...FORMULE_PUBLIC_SECTIONS] }, placed);
+  const placed = formuleItems.map((it) => ({
+    ...it,
+    category: formulePublicCategory(it),
+  }));
+  const sections = sectionOrderList(placed, FORMULE_PUBLIC_SECTIONS);
   return {
     ...menu,
     formuleSectionNames: sections,
@@ -101,31 +119,51 @@ export function splitFormulesForPublicMenu(menu: MenuSnapshot): MenuSnapshot {
 }
 
 /**
- * Remplace uniquement les formules et place toujours les sections formules en tête du menu public.
- * (En source Supabase, sort_order 1000 la mettrait sinon en fin de liste.)
- * Les autres plats, leur ordre relatif et leurs champs restent intacts.
+ * Pose le menu public à partir des formules Supabase (ou d'un tableau déjà scindé).
+ * - Si au moins une offre a un nom de section dynamique : on regroupe uniquement par ces noms
+ *   (renommage admin = un seul libellé, pas de doublon avec Solo/Promo heuristiques).
+ * - Sinon : repli heuristique (statique).
+ * Les plats hors formules et leurs ids/prix restent intacts.
  */
 export function replaceFormules(menu: MenuSnapshot, items: readonly YumloMenuItem[]): MenuSnapshot {
-  const known = [
-    ...new Set([
-      ...(menu.formuleSectionNames ?? []),
-      ...items.map((it) => it.category).filter((c) => c !== FORMULES_PROMOS_CATEGORY),
-      ...FORMULE_PUBLIC_SECTIONS,
-    ]),
-  ];
-  const isFormule = (c: string) => isFormuleCarouselCategory(c, known);
-  const rest = menu.items.filter((it) => !isFormule(it.category));
-  const otherCategories = menu.categories.filter((c) => !isFormule(c));
-  const withItems: MenuSnapshot = {
+  const incomingIds = new Set(items.map((it) => it.id));
+  const incomingSections = uniqueSectionNamesInOrder(items);
+  const strip = formuleCategoryNamesToStrip(menu, incomingSections);
+
+  const rest = menu.items.filter((it) => !incomingIds.has(it.id) && !strip.has(it.category));
+  const otherCategories = menu.categories.filter((c) => !strip.has(c));
+
+  const hasDynamicSections = incomingSections.length > 0;
+
+  if (hasDynamicSections) {
+    // Ne pas réappliquer formulePublicCategory : les noms viennent de formule_sections.name.
+    // Les offres sans section_id restent sous « Formules & Promos » (un seul seau, pas Solo/Promo).
+    const placed = items.map((it) =>
+      it.category === FORMULES_PROMOS_CATEGORY ? it : { ...it, category: it.category },
+    );
+    const orphan = placed.some((it) => it.category === FORMULES_PROMOS_CATEGORY);
+    const sections = orphan ? [...incomingSections, FORMULES_PROMOS_CATEGORY] : [...incomingSections];
+    return {
+      ...menu,
+      formuleSectionNames: sections,
+      categories: [...sections, ...otherCategories],
+      items: [...placed, ...rest],
+    };
+  }
+
+  // Aucune section dynamique : comportement historique (heuristique).
+  return splitFormulesForPublicMenu({
     ...menu,
-    formuleSectionNames: known,
+    formuleSectionNames: undefined,
     categories: items.length > 0 ? [FORMULES_PROMOS_CATEGORY, ...otherCategories] : otherCategories,
-    items: [...items, ...rest],
-  };
-  return splitFormulesForPublicMenu(withItems);
+    items: [
+      ...items.map((it) => ({ ...it, category: FORMULES_PROMOS_CATEGORY })),
+      ...rest,
+    ],
+  });
 }
 
-/** Remonte les sections formules en tête (et les scinde si besoin). */
+/** Remonte les sections formules en tête (et les scinde si besoin — mode heuristique). */
 export function promoteFormulesCategory(menu: MenuSnapshot): MenuSnapshot {
   return splitFormulesForPublicMenu(menu);
 }
