@@ -190,10 +190,16 @@ export const FORMULES_PROMOS_OLD_PRICE_MAD: Readonly<Record<string, string>> = {
   "formule-spring-box": "278.00",
 };
 
-/** Repli de ratio si une affiche n'a pas de dimensions propres (cadre au ratio exact, sans recadrage). */
-export const FORMULE_IMAGE_SIZE = { width: 1125, height: 1248 } as const;
+/**
+ * Cadre extérieur unique des cartes formules (référence visuelle Solo / Duo / Family).
+ * Toutes les sections (Midi, Promos, …) utilisent ce ratio ; l'affiche reste en object-contain.
+ */
+export const FORMULE_CARD_FRAME = { width: 909, height: 1024 } as const;
 
-/** Affiches aux dimensions différentes de FORMULE_IMAGE_SIZE (fichiers d'origine, ratio conservé). */
+/** Repli de dimensions HTML si une affiche n'a pas d'entrée dans FORMULE_IMAGE_SIZE_BY_ID. */
+export const FORMULE_IMAGE_SIZE = FORMULE_CARD_FRAME;
+
+/** Dimensions intrinsèques des affiches (fichiers d'origine) — pour width/height HTML / CLS uniquement. */
 export const FORMULE_IMAGE_SIZE_BY_ID: Readonly<Record<string, { width: number; height: number }>> = {
   "formule-party-box": { width: 970, height: 1104 },
   "formule-zen-box": { width: 970, height: 1114 },

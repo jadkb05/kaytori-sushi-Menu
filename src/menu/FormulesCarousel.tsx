@@ -1,11 +1,17 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "../cart/CartContext";
-import { FORMULE_IMAGE_SIZE_BY_ID } from "../data/formulesPromos";
+import { FORMULE_IMAGE_SIZE, FORMULE_IMAGE_SIZE_BY_ID } from "../data/formulesPromos";
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { dishImage, formatPriceDH } from "./menuDisplay";
 import { dishAnchorId } from "./menuSearch";
 import { useDishAdd } from "./useDishAdd";
+
+/**
+ * Ratio du cadre doré = Solo/Duo/Family (909×1024). Classe en dur pour Tailwind JIT.
+ * Doit rester aligné avec FORMULE_CARD_FRAME dans formulesPromos.ts.
+ */
+const FORMULE_FRAME_ASPECT = "aspect-[909/1024]";
 
 function Chevron({ direction }: { direction: "left" | "right" }) {
   return (
@@ -23,12 +29,10 @@ function Chevron({ direction }: { direction: "left" | "right" }) {
 }
 
 /**
- * Carte d'une formule : affiche du client entière (`contain`, ratio d'origine, ni recadrage ni
- * zoom) dans un cadre doré aux proportions de l'affiche, sur un panneau vert laqué, et le bouton
- * d'ajout juste dessous.
- * Affiches de ratios différents : le bouton reste aligné en bas de carte dans la rangée.
- * Le nom, les pièces et le prix figurent sur l'affiche ; le prix du panier reste celui de la formule.
- * Dès 1024 px, le cadre mesure 17rem de large et la carte prend sa largeur.
+ * Carte d'une formule : même cadre extérieur pour toutes les sections (Solo/Duo/Family, Midi, Promos).
+ * Affiche entière en `object-contain` (ni recadrage, ni zoom, ni déformation du fichier).
+ * Cadre doré = ratio Solo/Duo/Family ; bouton aligné en bas de carte.
+ * Dès 1024 px, le cadre mesure 17rem de large.
  */
 function FormuleCard({ item, highlighted }: { item: YumloMenuItem; highlighted: boolean }) {
   /** Même ajout au panier que les autres plats (aucune variante pour les formules). */
@@ -38,7 +42,7 @@ function FormuleCard({ item, highlighted }: { item: YumloMenuItem; highlighted: 
     () => lines.reduce((n, l) => (l.id === item.id ? n + l.quantity : n), 0),
     [lines, item.id],
   );
-  const imageSize = FORMULE_IMAGE_SIZE_BY_ID[item.id];
+  const imageSize = FORMULE_IMAGE_SIZE_BY_ID[item.id] ?? FORMULE_IMAGE_SIZE;
 
   return (
     <li
@@ -50,17 +54,19 @@ function FormuleCard({ item, highlighted }: { item: YumloMenuItem; highlighted: 
           highlighted ? "ring-2 ring-kaytori-gold" : "ring-kaytori-gold/25"
         }`}
       >
-        <div className="relative w-full shrink-0 rounded-xl bg-kaytori-gold/10 p-1 ring-1 md:rounded-2xl md:p-1.5 ring-kaytori-gold/45 lg:w-[17rem]">
-          <img
-            src={dishImage(item)}
-            alt={`Affiche ${item.name} : ${item.description}, ${formatPriceDH(item.priceMAD)} DH`}
-            width={imageSize?.width}
-            height={imageSize?.height}
-            loading="lazy"
-            decoding="async"
-            sizes="(min-width: 1024px) 260px, (min-width: 768px) 46vw, (min-width: 480px) 46vw, 62vw"
-            className="block h-auto w-full rounded-lg object-contain object-center md:rounded-[10px]"
-          />
+        <div className="relative w-full shrink-0 rounded-xl bg-kaytori-gold/10 p-1 ring-1 ring-kaytori-gold/45 md:rounded-2xl md:p-1.5 lg:w-[17rem]">
+          <div className={`relative w-full ${FORMULE_FRAME_ASPECT}`}>
+            <img
+              src={dishImage(item)}
+              alt={`Affiche ${item.name} : ${item.description}, ${formatPriceDH(item.priceMAD)} DH`}
+              width={imageSize.width}
+              height={imageSize.height}
+              loading="lazy"
+              decoding="async"
+              sizes="(min-width: 1024px) 260px, (min-width: 768px) 46vw, (min-width: 480px) 46vw, 62vw"
+              className="absolute inset-0 h-full w-full rounded-lg object-contain object-center md:rounded-[10px]"
+            />
+          </div>
           {inCart > 0 ? (
             <span
               key={inCart}
@@ -76,7 +82,7 @@ function FormuleCard({ item, highlighted }: { item: YumloMenuItem; highlighted: 
           type="button"
           onClick={handleAdd}
           aria-label={`Ajouter ${item.name} au panier`}
-          className="mt-auto inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-gold-shine px-3 font-sans text-[0.8rem] font-semibold md:min-h-[42px] md:gap-2 md:px-4 md:text-[0.9rem] text-kaytori-black shadow-[0_6px_18px_-8px_rgba(212,175,55,0.7)] transition-[filter] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight focus-visible:ring-offset-2 focus-visible:ring-offset-[#003024]"
+          className="mt-auto inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-gold-shine px-3 font-sans text-[0.8rem] font-semibold text-kaytori-black shadow-[0_6px_18px_-8px_rgba(212,175,55,0.7)] transition-[filter] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight focus-visible:ring-offset-2 focus-visible:ring-offset-[#003024] md:min-h-[42px] md:gap-2 md:px-4 md:text-[0.9rem]"
         >
           <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
             <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
