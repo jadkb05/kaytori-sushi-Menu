@@ -190,3 +190,37 @@ export function coverMoveTarget(position: number, total: number, direction: "up"
   const target = direction === "up" ? position - 1 : position + 1;
   return target >= 1 && target <= total ? target : null;
 }
+
+/**
+ * Réordonne la liste (indices 0…N-1) et réécrit sort_order de façon contiguë.
+ * Aucun effet si from/to hors bornes ou identiques.
+ */
+export function reorderCoverBanners(
+  banners: readonly CoverBannerRow[],
+  fromIndex: number,
+  toIndex: number,
+): CoverBannerRow[] {
+  const ordered = orderedCoverBanners(banners);
+  if (
+    fromIndex < 0 ||
+    toIndex < 0 ||
+    fromIndex >= ordered.length ||
+    toIndex >= ordered.length ||
+    fromIndex === toIndex
+  ) {
+    return ordered;
+  }
+  const next = [...ordered];
+  const [item] = next.splice(fromIndex, 1);
+  next.splice(toIndex, 0, item);
+  return next.map((b, i) => ({ ...b, sort_order: i }));
+}
+
+/** Persiste la position humaine 1…N d'une photo après un glisser-déposer. */
+export async function persistCoverBannerPosition(
+  client: SupabaseClient,
+  bannerId: string,
+  position: number,
+): Promise<CoverBannerActionResult> {
+  return updateCoverBanner(client, bannerId, { position });
+}

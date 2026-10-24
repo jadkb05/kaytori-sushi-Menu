@@ -137,6 +137,13 @@ export const PlusIcon = (p: IconProps) => (
   </Svg>
 );
 
+/** Poignée de glisser-déposer (trois traits). */
+export const GripIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M8 7h8M8 12h8M8 17h8" />
+  </Svg>
+);
+
 export const SearchIcon = (p: IconProps) => (
   <Svg {...p}>
     <circle cx="11" cy="11" r="6.5" />

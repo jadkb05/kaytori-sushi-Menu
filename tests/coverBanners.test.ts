@@ -10,6 +10,7 @@ import {
   coverStoragePath,
   newCoverBannerId,
   orderedCoverBanners,
+  reorderCoverBanners,
   type CoverBannerRow,
 } from "../src/admin/lib/coverBannerAdmin";
 import { ADMIN_ROUTES, resolveAdminRoute } from "../src/admin/lib/routes";
@@ -57,6 +58,15 @@ describe("coverBanners (helpers)", () => {
     expect(coverMoveTarget(1, 3, "up")).toBeNull();
     expect(coverMoveTarget(1, 3, "down")).toBe(2);
     expect(coverMoveTarget(3, 3, "down")).toBeNull();
+  });
+
+  it("réordonne par indices et réécrit sort_order (glisser-déposer)", () => {
+    const banners = [row({ id: "a", sort_order: 0 }), row({ id: "b", sort_order: 1 }), row({ id: "c", sort_order: 2 })];
+    const moved = reorderCoverBanners(banners, 2, 0);
+    expect(moved.map((b) => b.id)).toEqual(["c", "a", "b"]);
+    expect(moved.map((b) => b.sort_order)).toEqual([0, 1, 2]);
+    expect(reorderCoverBanners(banners, 1, 1).map((b) => b.id)).toEqual(["a", "b", "c"]);
+    expect(reorderCoverBanners(banners, -1, 0).map((b) => b.id)).toEqual(["a", "b", "c"]);
   });
 
   it("chemins Storage cover/ et ids uniques", () => {
