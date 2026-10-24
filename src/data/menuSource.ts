@@ -28,6 +28,11 @@ export type MenuSnapshot = {
    * Absent en menu statique : repli sur les 3 libellés initiaux + heuristique.
    */
   formuleSectionNames?: readonly string[];
+  /**
+   * Descriptions facultatives par nom de section (clés = libellés affichés).
+   * Absent ou chaîne vide : aucun sous-titre sous le nom.
+   */
+  formuleSectionDescriptions?: Readonly<Record<string, string>>;
 };
 
 export type MenuSourceId = "static" | "supabase";

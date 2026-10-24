@@ -21,13 +21,16 @@ import {
 import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { deleteFormule, formuleCategoryReady, setFormuleActive } from "../lib/formuleAdmin";
 import {
+  FORMULE_SECTION_DESCRIPTION_MAX,
   FORMULE_SECTION_NAME_MAX,
   createFormuleSection,
   deleteFormuleSection,
   deleteFormuleSectionBlockedMessage,
   fetchFormuleSectionAssignments,
   fetchFormuleSections,
+  formuleSectionDescriptionError,
   formuleSectionNameError,
+  formuleSectionPosition,
   formuleSectionProductCount,
   orderedFormuleSections,
   ranksInOrderedGroup,
@@ -61,6 +64,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
   const [sectionsReady, setSectionsReady] = useState(false);
   const [renaming, setRenaming] = useState<FormuleSectionRow | null>(null);
   const [renameValue, setRenameValue] = useState("");
+  const [renameDescription, setRenameDescription] = useState("");
   const [renameError, setRenameError] = useState<string | null>(null);
   const [renameBusy, setRenameBusy] = useState(false);
   const [deletingSection, setDeletingSection] = useState<FormuleSectionRow | null>(null);
@@ -68,9 +72,11 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
   const [sectionDeleteError, setSectionDeleteError] = useState<string | null>(null);
   const [newSectionOpen, setNewSectionOpen] = useState(false);
   const [newSectionName, setNewSectionName] = useState("");
+  const [newSectionDescription, setNewSectionDescription] = useState("");
   const [newSectionError, setNewSectionError] = useState<string | null>(null);
   const [newSectionBusy, setNewSectionBusy] = useState(false);
   const [movingSectionId, setMovingSectionId] = useState<string | null>(null);
+  const [reorderingSectionId, setReorderingSectionId] = useState<string | null>(null);
 
   const reloadSections = useCallback(async () => {
     try {
@@ -232,10 +238,16 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
       setNewSectionError(nameError);
       return;
     }
+    const descError = formuleSectionDescriptionError(newSectionDescription);
+    if (descError) {
+      setNewSectionError(descError);
+      return;
+    }
     setNewSectionBusy(true);
     setNewSectionError(null);
     const res = await createFormuleSection(client, sections, {
       name: newSectionName,
+      description: newSectionDescription,
       isActive: true,
       position: null,
     });
@@ -245,6 +257,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
       return;
     }
     setNewSectionName("");
+    setNewSectionDescription("");
     setNewSectionOpen(false);
     await reloadSections();
     setToast({ tone: "success", message: `Section « ${res.section.name} » créée.` });
@@ -257,9 +270,17 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
       setRenameError(nameError);
       return;
     }
+    const descError = formuleSectionDescriptionError(renameDescription);
+    if (descError) {
+      setRenameError(descError);
+      return;
+    }
     setRenameBusy(true);
     setRenameError(null);
-    const res = await updateFormuleSection(client, renaming.id, { name: renameValue });
+    const res = await updateFormuleSection(client, renaming.id, {
+      name: renameValue,
+      description: renameDescription.trim() === "" ? null : renameDescription,
+    });
     setRenameBusy(false);
     if (!res.ok) {
       setRenameError(res.error);
@@ -267,7 +288,27 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
     }
     setRenaming(null);
     await reloadSections();
-    setToast({ tone: "success", message: `Section renommée en « ${res.section.name} ».` });
+    setToast({ tone: "success", message: `Section « ${res.section.name} » enregistrée.` });
+  };
+
+  const moveSection = async (section: FormuleSectionRow, direction: MoveDirection) => {
+    if (!sections || reorderingSectionId) return;
+    const pos = formuleSectionPosition(sections, section.id);
+    const target = sectionMoveTarget(pos, sections.length, direction);
+    if (target === null) return;
+    setReorderingSectionId(section.id);
+    setToast({ tone: "pending", message: `Déplacement de « ${section.name} »…` });
+    const res = await updateFormuleSection(client, section.id, { position: target });
+    await reloadSections();
+    setReorderingSectionId(null);
+    if (!res.ok) {
+      setToast({ tone: "error", message: res.error });
+      return;
+    }
+    setToast({
+      tone: "success",
+      message: `Section « ${section.name} » en position ${target} sur le site public.`,
+    });
   };
 
   const confirmDeleteSection = async () => {
@@ -425,15 +466,15 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
       {ready && sectionsReady && !dbSections ? (
         <p className={`${cardClass} mb-4 p-5 text-sm leading-relaxed text-admin-soft`}>
           Les sections administrables ne sont pas encore en base. Appliquez{" "}
-          <span className="font-medium text-admin-ink">supabase/production/08_formule_sections.sql</span> (avec
-          autorisation) pour créer, renommer et supprimer des sections. En attendant, les offres restent listées
-          ci-dessous.
+          <span className="font-medium text-admin-ink">supabase/production/08_formule_sections.sql</span> puis{" "}
+          <span className="font-medium text-admin-ink">09_formule_section_description.sql</span> (avec autorisation)
+          pour créer, ordonner et décrire des sections. En attendant, les offres restent listées ci-dessous.
         </p>
       ) : null}
 
       {ready && newSectionOpen && dbSections ? (
-        <form onSubmit={(e) => void createSection(e)} className={`${cardClass} mb-4 p-4`}>
-          <p className="mb-3 text-sm font-semibold text-admin-ink">Nouvelle section</p>
+        <form onSubmit={(e) => void createSection(e)} className={`${cardClass} mb-4 space-y-3 p-4`}>
+          <p className="text-sm font-semibold text-admin-ink">Nouvelle section</p>
           <Field htmlFor="fs-create-name" label="Nom" error={newSectionError ?? undefined}>
             <input
               id="fs-create-name"
@@ -444,7 +485,21 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
               autoFocus
             />
           </Field>
-          <div className="mt-3 flex flex-wrap gap-2">
+          <Field
+            htmlFor="fs-create-desc"
+            label="Description (optionnel)"
+            hint="Affichée sous le nom sur le site public."
+          >
+            <input
+              id="fs-create-desc"
+              className={inputClass}
+              value={newSectionDescription}
+              maxLength={FORMULE_SECTION_DESCRIPTION_MAX}
+              onChange={(e) => setNewSectionDescription(e.target.value)}
+              placeholder="Ex. Nos formules pour toutes les envies"
+            />
+          </Field>
+          <div className="flex flex-wrap gap-2">
             <button type="submit" className={buttonClass("primary", "sm")} disabled={newSectionBusy}>
               {newSectionBusy ? "Création…" : "Créer la section"}
             </button>
@@ -455,6 +510,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
               onClick={() => {
                 setNewSectionOpen(false);
                 setNewSectionName("");
+                setNewSectionDescription("");
                 setNewSectionError(null);
               }}
             >
@@ -465,12 +521,45 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
       ) : null}
 
       {ready && dbSections
-        ? orderedSections.map((section) => {
+        ? orderedSections.map((section, sectionIndex) => {
             const items = formulesBySection.groups.get(section.id) ?? [];
+            const sectionPos = sectionIndex + 1;
+            const sectionTotal = orderedSections.length;
+            const canSectionUp = sectionMoveTarget(sectionPos, sectionTotal, "up") !== null;
+            const canSectionDown = sectionMoveTarget(sectionPos, sectionTotal, "down") !== null;
             return (
               <section key={section.id} className="mb-6">
                 <div className="mb-3 flex flex-wrap items-center gap-2">
-                  <h2 className="min-w-0 flex-1 font-display text-base font-semibold text-admin-ink">{section.name}</h2>
+                  <div className="flex shrink-0 flex-col items-center gap-1">
+                    <button
+                      type="button"
+                      className={`${orderButton} ${touchButton}`}
+                      disabled={Boolean(reorderingSectionId) || !canSectionUp}
+                      onClick={() => void moveSection(section, "up")}
+                      aria-label={`Monter la section ${section.name}`}
+                    >
+                      <ArrowUpIcon className="h-3.5 w-3.5" />
+                    </button>
+                    <span className="text-xs font-semibold tabular-nums text-admin-ink" title="Ordre sur le site public">
+                      {sectionPos}
+                      <span className="font-normal text-admin-muted">/{sectionTotal}</span>
+                    </span>
+                    <button
+                      type="button"
+                      className={`${orderButton} ${touchButton}`}
+                      disabled={Boolean(reorderingSectionId) || !canSectionDown}
+                      onClick={() => void moveSection(section, "down")}
+                      aria-label={`Descendre la section ${section.name}`}
+                    >
+                      <ArrowDownIcon className="h-3.5 w-3.5" />
+                    </button>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h2 className="font-display text-base font-semibold text-admin-ink">{section.name}</h2>
+                    {section.description ? (
+                      <p className="mt-0.5 text-xs text-admin-muted">{section.description}</p>
+                    ) : null}
+                  </div>
                   <span className="text-xs text-admin-muted">
                     {items.length} offre{items.length !== 1 ? "s" : ""}
                   </span>
@@ -480,11 +569,12 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
                     onClick={() => {
                       setRenaming(section);
                       setRenameValue(section.name);
+                      setRenameDescription(section.description ?? "");
                       setRenameError(null);
                     }}
                   >
                     <PencilIcon className="h-3.5 w-3.5" />
-                    Renommer
+                    Modifier
                   </button>
                   <button
                     type="button"
@@ -564,18 +654,32 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
 
       {renaming ? (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center" role="dialog" aria-modal>
-          <div className={`${cardClass} w-full max-w-md p-5`}>
-            <h3 className="text-base font-semibold text-admin-ink">Renommer la section</h3>
+          <div className={`${cardClass} w-full max-w-md space-y-3 p-5`}>
+            <h3 className="text-base font-semibold text-admin-ink">Modifier la section</h3>
             <Field htmlFor="fs-rename" label="Nom" error={renameError ?? undefined}>
               <input
                 id="fs-rename"
-                className={`${inputClass} mt-2`}
+                className={inputClass}
                 value={renameValue}
                 maxLength={FORMULE_SECTION_NAME_MAX}
                 onChange={(e) => setRenameValue(e.target.value)}
               />
             </Field>
-            <div className="mt-4 flex flex-wrap gap-2">
+            <Field
+              htmlFor="fs-rename-desc"
+              label="Description (optionnel)"
+              hint="Petit texte gris sous le titre sur le site public. Laissez vide pour n'afficher que le nom."
+            >
+              <input
+                id="fs-rename-desc"
+                className={inputClass}
+                value={renameDescription}
+                maxLength={FORMULE_SECTION_DESCRIPTION_MAX}
+                onChange={(e) => setRenameDescription(e.target.value)}
+                placeholder="Ex. Nos formules pour toutes les envies"
+              />
+            </Field>
+            <div className="flex flex-wrap gap-2 pt-1">
               <button type="button" className={buttonClass("primary")} disabled={renameBusy} onClick={() => void saveRename()}>
                 {renameBusy ? "Enregistrement…" : "Enregistrer"}
               </button>

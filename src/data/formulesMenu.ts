@@ -28,7 +28,22 @@ export type FormuleSectionProbe = {
   name: string;
   sort_order: number;
   is_active: boolean;
+  description?: string | null;
 };
+
+/** Map nom de section → description (uniquement si non vide). */
+export function formuleSectionDescriptionMap(
+  sections: readonly FormuleSectionProbe[],
+  namesWithProducts: readonly string[],
+): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const s of sections) {
+    if (!s.is_active || !namesWithProducts.includes(s.name)) continue;
+    const d = (s.description ?? "").trim();
+    if (d) out[s.name] = d;
+  }
+  return out;
+}
 
 export type FormuleProductRow = ProductRow & { formule_section_id?: string | null };
 
@@ -134,6 +149,7 @@ export function splitFormulesForPublicMenu(menu: MenuSnapshot): MenuSnapshot {
   return {
     ...menu,
     formuleSectionNames: sections,
+    formuleSectionDescriptions: undefined,
     categories: [...sections, ...otherCategories],
     items: [...placed, ...rest],
   };
@@ -166,6 +182,7 @@ export function replaceFormules(
     return {
       ...menu,
       formuleSectionNames: namesWithProducts,
+      formuleSectionDescriptions: formuleSectionDescriptionMap(activeOrdered, namesWithProducts),
       categories: [...namesWithProducts, ...otherCategories],
       items: [...items, ...rest],
     };
@@ -210,14 +227,28 @@ export async function fetchPublishedFormules(): Promise<PublishedFormulesResult 
     .maybeSingle();
   if (category.error || !category.data) return null;
 
-  const sectionsRes = await client
+  let sectionsData: unknown[] | null = null;
+  let sectionsError: { message: string } | null = null;
+  const withDesc = await client
     .from("formule_sections")
-    .select("id, name, sort_order, is_active")
+    .select("id, name, description, sort_order, is_active")
     .eq("is_active", true)
     .order("sort_order");
+  if (withDesc.error && /description|column/i.test(withDesc.error.message)) {
+    const fallback = await client
+      .from("formule_sections")
+      .select("id, name, sort_order, is_active")
+      .eq("is_active", true)
+      .order("sort_order");
+    sectionsData = fallback.data;
+    sectionsError = fallback.error;
+  } else {
+    sectionsData = withDesc.data;
+    sectionsError = withDesc.error;
+  }
 
-  const sectionsAvailable = !sectionsRes.error;
-  const sections = sectionsAvailable ? ((sectionsRes.data ?? []) as FormuleSectionProbe[]) : null;
+  const sectionsAvailable = !sectionsError;
+  const sections = sectionsAvailable ? ((sectionsData ?? []) as FormuleSectionProbe[]) : null;
 
   if (sectionsAvailable) {
     const withSection = await client

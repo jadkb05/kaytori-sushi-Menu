@@ -159,9 +159,9 @@ describe("formules : menu public", () => {
       },
     ];
     const sections = [
-      { id: "formules-solo-duo-family", name: "Formules Famille", sort_order: 0, is_active: true },
-      { id: "formule-midi", name: "Formule Midi", sort_order: 1, is_active: true },
-      { id: "promo", name: "Promos", sort_order: 2, is_active: true },
+      { id: "formules-solo-duo-family", name: "Formules Famille", description: null, sort_order: 0, is_active: true },
+      { id: "formule-midi", name: "Formule Midi", description: null, sort_order: 1, is_active: true },
+      { id: "promo", name: "Promos", description: null, sort_order: 2, is_active: true },
     ];
     const next = replaceFormules(alreadySplit, fromSupabase, sections);
     expect(next.categories.filter((c) => c === "Formules Famille")).toHaveLength(1);
@@ -210,9 +210,9 @@ describe("formules : menu public", () => {
           formule_section_id: null,
         },
       ],
-      [{ id: "promo", name: "Promos", sort_order: 0, is_active: true }],
+      [{ id: "promo", name: "Promos", description: null, sort_order: 0, is_active: true }],
     )!;
-    const next = replaceFormules(alreadySplit, items, [{ id: "promo", name: "Promos", sort_order: 0, is_active: true }]);
+    const next = replaceFormules(alreadySplit, items, [{ id: "promo", name: "Promos", description: null, sort_order: 0, is_active: true }]);
     expect(next.categories).toEqual(expect.arrayContaining(["Promos"]));
     expect(next.categories).not.toContain(FORMULES_PROMOS_CATEGORY);
     expect(next.categories).not.toContain(FORMULE_SECTION_SOLO_DUO_FAMILY);

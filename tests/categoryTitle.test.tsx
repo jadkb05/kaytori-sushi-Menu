@@ -35,10 +35,15 @@ const EXPECTED: Record<string, string> = {
 };
 const expectedTitle = (category: string) => EXPECTED[category] ?? category;
 
-/** Titres h2 des sections, dans l'ordre de la page (premier span du titre = nom affiché). */
+/** Titres h2 des sections, dans l'ordre de la page (span.min-w-0 = nom affiché). */
 function sectionTitles(html: string): { id: string; title: string }[] {
-  const re = /<h2 id="heading-([^"]+)"[^>]*><span[^>]*>([^<]*)<\/span>/g;
-  return [...html.matchAll(re)].map((m) => ({ id: m[1], title: m[2].replace(/&amp;/g, "&") }));
+  const re = /<h2 id="heading-([^"]+)"[^>]*>([\s\S]*?)<\/h2>/g;
+  return [...html.matchAll(re)].map((m) => {
+    const body = m[2];
+    const titleMatch =
+      body.match(/<span class="min-w-0"[^>]*>([^<]*)<\/span>/) ?? body.match(/<span[^>]*>([^<]*)<\/span>/);
+    return { id: m[1], title: (titleMatch?.[1] ?? "").replace(/&amp;/g, "&") };
+  });
 }
 
 describe("categoryDisplayTitle", () => {

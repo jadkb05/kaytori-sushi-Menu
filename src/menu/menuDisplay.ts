@@ -67,6 +67,17 @@ export function categoryDisplayTitle(category: string): string {
   return pieces ? `${category} (${pieces})` : category;
 }
 
+/** Sous-titre de section formules : null si absent ou vide (aucun nœud à rendre). */
+export function formuleSectionSubtitle(
+  descriptions: Readonly<Record<string, string>> | undefined,
+  category: string,
+): string | null {
+  const raw = descriptions?.[category];
+  if (typeof raw !== "string") return null;
+  const trimmed = raw.trim();
+  return trimmed === "" ? null : trimmed;
+}
+
 /**
  * Préfixes courts répétés par les plats de certaines catégories de deux mots
  * (« California Classic » dans California Roll → « Classic »). Clé : nom réel de la catégorie.

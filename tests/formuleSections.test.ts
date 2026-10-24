@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  formuleSectionDescriptionError,
   formuleSectionNameError,
+  formuleSectionPosition,
   newFormuleSectionId,
   orderedFormuleSections,
   ranksInOrderedGroup,
@@ -13,16 +15,28 @@ import {
   FORMULE_SECTION_SOLO_DUO_FAMILY,
   formulePublicCategory,
 } from "../src/data/formulesPromos";
-import { publishedFormules, replaceFormules, splitFormulesForPublicMenu } from "../src/data/formulesMenu";
+import {
+  formuleSectionDescriptionMap,
+  publishedFormules,
+  replaceFormules,
+  splitFormulesForPublicMenu,
+} from "../src/data/formulesMenu";
 import { FORMULES_CATEGORY_ID, FORMULES_PROMOS_CATEGORY } from "../src/data/formulesPromos";
 import { getStaticMenu } from "../src/data/menuSource";
+import { formuleSectionSubtitle } from "../src/menu/menuDisplay";
 import { createMigratedDb, runSeed } from "./helpers/supabaseTestDb";
 
 describe("formule sections : helpers", () => {
   const sections = [
-    { id: "formules-solo-duo-family", name: FORMULE_SECTION_SOLO_DUO_FAMILY, sort_order: 0, is_active: true },
-    { id: "formule-midi", name: "Formule Midi", sort_order: 1, is_active: true },
-    { id: "promo", name: FORMULE_SECTION_PROMO, sort_order: 2, is_active: true },
+    {
+      id: "formules-solo-duo-family",
+      name: FORMULE_SECTION_SOLO_DUO_FAMILY,
+      description: null,
+      sort_order: 0,
+      is_active: true,
+    },
+    { id: "formule-midi", name: "Formule Midi", description: null, sort_order: 1, is_active: true },
+    { id: "promo", name: FORMULE_SECTION_PROMO, description: "Offres du moment", sort_order: 2, is_active: true },
   ];
 
   it("refuse un nom vide ou en double", () => {
@@ -42,12 +56,18 @@ describe("formule sections : helpers", () => {
     expect(formulePublicCategory({ id: "formule-zen-box", name: "Zen Box" })).toBe(FORMULE_SECTION_PROMO);
   });
 
-  it("ordonne les sections", () => {
+  it("ordonne les sections et calcule la position humaine", () => {
     expect(orderedFormuleSections([...sections].reverse()).map((s) => s.id)).toEqual([
       "formules-solo-duo-family",
       "formule-midi",
       "promo",
     ]);
+    expect(formuleSectionPosition(sections, "formule-midi")).toBe(2);
+    expect(sectionMoveTarget(1, 3, "up")).toBeNull();
+    expect(sectionMoveTarget(1, 3, "down")).toBe(2);
+    expect(sectionMoveTarget(3, 3, "down")).toBeNull();
+    expect(formuleSectionDescriptionError("x".repeat(161))).toMatch(/160/);
+    expect(formuleSectionDescriptionError("Nos formules pour toutes les envies")).toBeNull();
   });
 
   it("calcule des rangs 1…N indépendants par section (pas le total catégorie)", () => {
@@ -134,13 +154,13 @@ describe("formule sections : menu public (données, UI inchangée)", () => {
         },
       ],
       [
-        { id: "formules-solo-duo-family", name: "Formules Famille", sort_order: 0, is_active: true },
-        { id: "promo", name: FORMULE_SECTION_PROMO, sort_order: 1, is_active: true },
+        { id: "formules-solo-duo-family", name: "Formules Famille", description: null, sort_order: 0, is_active: true },
+        { id: "promo", name: FORMULE_SECTION_PROMO, description: null, sort_order: 1, is_active: true },
       ],
     )!;
     const sections = [
-      { id: "formules-solo-duo-family", name: "Formules Famille", sort_order: 0, is_active: true },
-      { id: "promo", name: FORMULE_SECTION_PROMO, sort_order: 1, is_active: true },
+      { id: "formules-solo-duo-family", name: "Formules Famille", description: null, sort_order: 0, is_active: true },
+      { id: "promo", name: FORMULE_SECTION_PROMO, description: null, sort_order: 1, is_active: true },
     ];
     const next = replaceFormules(split, renamed, sections);
     expect(next.categories.filter((c) => c === "Formules Famille")).toHaveLength(1);
@@ -189,15 +209,15 @@ describe("formule sections : menu public (données, UI inchangée)", () => {
         },
       ],
       [
-        { id: "formules-solo-duo-family", name: "Formules Solo / Duo / Family", sort_order: 0, is_active: true },
-        { id: "formule-midi", name: "Formule Midi", sort_order: 1, is_active: true },
-        { id: "promo", name: "Promos", sort_order: 2, is_active: true },
+        { id: "formules-solo-duo-family", name: "Formules Solo / Duo / Family", description: null, sort_order: 0, is_active: true },
+        { id: "formule-midi", name: "Formule Midi", description: null, sort_order: 1, is_active: true },
+        { id: "promo", name: "Promos", description: null, sort_order: 2, is_active: true },
       ],
     )!;
     const next = replaceFormules(split, dynamic, [
-      { id: "formules-solo-duo-family", name: "Formules Solo / Duo / Family", sort_order: 0, is_active: true },
-      { id: "formule-midi", name: "Formule Midi", sort_order: 1, is_active: true },
-      { id: "promo", name: "Promos", sort_order: 2, is_active: true },
+      { id: "formules-solo-duo-family", name: "Formules Solo / Duo / Family", description: null, sort_order: 0, is_active: true },
+      { id: "formule-midi", name: "Formule Midi", description: null, sort_order: 1, is_active: true },
+      { id: "promo", name: "Promos", description: null, sort_order: 2, is_active: true },
     ]);
     expect(next.categories.filter((c) => c === "Formules Solo / Duo / Family")).toHaveLength(1);
     expect(next.categories.filter((c) => c === "Promos")).toHaveLength(1);
@@ -206,6 +226,79 @@ describe("formule sections : menu public (données, UI inchangée)", () => {
     expect(next.items.filter((it) => it.id === "formule-duo")).toHaveLength(1);
     expect(next.items.filter((it) => it.id === "formule-zen-box")).toHaveLength(1);
     expect(next.items.find((it) => it.id === "formule-zen-box")?.category).toBe("Promos");
+  });
+
+  it("respecte l'ordre sort_order des sections et expose les descriptions non vides", () => {
+    const products = [
+      {
+        id: "formule-zen-box",
+        category_id: FORMULES_CATEGORY_ID,
+        name: "Zen Box",
+        description: "",
+        price: "109.00",
+        currency: "MAD",
+        image_url: "/formules/zen-box.jpeg",
+        thumb_small_url: null,
+        thumb_large_url: null,
+        sort_order: 1,
+        is_active: true,
+        formule_section_id: "promo",
+      },
+      {
+        id: "formule-duo",
+        category_id: FORMULES_CATEGORY_ID,
+        name: "Formule Duo",
+        description: "",
+        price: "279.00",
+        currency: "MAD",
+        image_url: "/formules/formule-duo.jpeg",
+        thumb_small_url: null,
+        thumb_large_url: null,
+        sort_order: 1,
+        is_active: true,
+        formule_section_id: "formules-solo-duo-family",
+      },
+    ];
+    const secs = [
+      {
+        id: "promo",
+        name: "Promos",
+        description: "Offres du moment",
+        sort_order: 0,
+        is_active: true,
+      },
+      {
+        id: "formules-solo-duo-family",
+        name: "Formules Solo / Duo / Family",
+        description: "Nos formules pour toutes les envies",
+        sort_order: 1,
+        is_active: true,
+      },
+      {
+        id: "formule-midi",
+        name: "Formule Midi",
+        description: "   ",
+        sort_order: 2,
+        is_active: true,
+      },
+    ];
+    const items = publishedFormules({ id: FORMULES_CATEGORY_ID, is_active: true }, products, secs)!;
+    const next = replaceFormules(splitFormulesForPublicMenu(getStaticMenu()), items, secs);
+    expect(next.categories.filter((c) => next.formuleSectionNames?.includes(c))).toEqual([
+      "Promos",
+      "Formules Solo / Duo / Family",
+    ]);
+    expect(next.formuleSectionDescriptions).toEqual({
+      Promos: "Offres du moment",
+      "Formules Solo / Duo / Family": "Nos formules pour toutes les envies",
+    });
+    expect(next.formuleSectionDescriptions?.["Formule Midi"]).toBeUndefined();
+    expect(formuleSectionDescriptionMap(secs, ["Promos", "Formule Midi"])).toEqual({
+      Promos: "Offres du moment",
+    });
+    expect(formuleSectionSubtitle(next.formuleSectionDescriptions, "Promos")).toBe("Offres du moment");
+    expect(formuleSectionSubtitle(next.formuleSectionDescriptions, "Formule Midi")).toBeNull();
+    expect(formuleSectionSubtitle({ Promo: "  " }, "Promo")).toBeNull();
   });
 
   it("utilise le nom de section Supabase quand il est fourni", () => {
@@ -244,6 +337,77 @@ describe("formule sections : menu public (données, UI inchangée)", () => {
       }),
     ]);
     expect(items?.[0]?.category).not.toBe(FORMULES_PROMOS_CATEGORY);
+  });
+});
+
+describe("formule sections : ordre et description (RPC)", () => {
+  it("persiste le déplacement de section et la description sans toucher aux offres", async () => {
+    const { createPgliteSupabase } = await import("./helpers/pgliteSupabase");
+    const db = await createMigratedDb();
+    await runSeed(db);
+    await db.exec(`
+      update public.products set formule_section_id = 'formules-solo-duo-family'
+        where id in ('formule-duo', 'formule-family');
+      update public.products set formule_section_id = 'promo'
+        where id = 'formule-zen-box';
+      insert into auth.users (id) values ('11111111-1111-1111-1111-111111111111');
+      insert into public.admin_users (user_id) values ('11111111-1111-1111-1111-111111111111');
+    `);
+    const admin = createPgliteSupabase(db, {
+      id: "11111111-1111-1111-1111-111111111111",
+      email: "admin@kaytori.test",
+    });
+
+    const duoSortBefore = (
+      await db.query<{ sort_order: number }>(`select sort_order from public.products where id = 'formule-duo'`)
+    ).rows[0]!.sort_order;
+
+    // Descendre Solo/Duo/Family (1 → 2) : ordre des sections seulement.
+    const move = await admin.rpc("admin_update_formule_section", {
+      p_section_id: "formules-solo-duo-family",
+      p_changes: {},
+      p_position: 2,
+    });
+    expect(move.error).toBeNull();
+
+    const order = await db.query<{ id: string; name: string; description: string | null }>(
+      `select id, name, description from public.formule_sections order by sort_order, id`,
+    );
+    expect(order.rows.map((r) => r.id)).toEqual(["formule-midi", "formules-solo-duo-family", "promo"]);
+    expect(new Set(order.rows.map((r) => r.id)).size).toBe(3);
+
+    const desc = await admin.rpc("admin_update_formule_section", {
+      p_section_id: "formules-solo-duo-family",
+      p_changes: { description: "Nos formules pour toutes les envies" },
+      p_position: null,
+    });
+    expect(desc.error).toBeNull();
+    const solo = await db.query<{ description: string | null; name: string }>(
+      `select name, description from public.formule_sections where id = 'formules-solo-duo-family'`,
+    );
+    expect(solo.rows[0]).toEqual({
+      name: FORMULE_SECTION_SOLO_DUO_FAMILY,
+      description: "Nos formules pour toutes les envies",
+    });
+
+    const duoSortAfter = (
+      await db.query<{ sort_order: number }>(`select sort_order from public.products where id = 'formule-duo'`)
+    ).rows[0]!.sort_order;
+    expect(duoSortAfter).toBe(duoSortBefore);
+
+    // Description vide → null (pas d'espace fantôme côté public).
+    const clear = await admin.rpc("admin_update_formule_section", {
+      p_section_id: "formules-solo-duo-family",
+      p_changes: { description: "  " },
+      p_position: null,
+    });
+    expect(clear.error).toBeNull();
+    const cleared = await db.query<{ description: string | null }>(
+      `select description from public.formule_sections where id = 'formules-solo-duo-family'`,
+    );
+    expect(cleared.rows[0]?.description).toBeNull();
+
+    await db.close();
   });
 });
 

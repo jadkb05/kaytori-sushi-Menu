@@ -15,7 +15,7 @@ import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { DishRow } from "../menu/DishRow";
 import { FormulesCarousel } from "../menu/FormulesCarousel";
 import { useMenu } from "../menu/MenuProvider";
-import { categoryAnchorId, categoryDisplayTitle } from "../menu/menuDisplay";
+import { categoryAnchorId, categoryDisplayTitle, formuleSectionSubtitle } from "../menu/menuDisplay";
 import { dishAnchorId, type SearchMatch } from "../menu/menuSearch";
 
 /** Durée de la mise en évidence d'un plat trouvé par la recherche (ms). */
@@ -302,7 +302,9 @@ export function MenuPage() {
         className="mx-auto max-w-5xl px-3 pb-12 pt-4 sm:px-6"
       >
         <div className="space-y-8">
-          {sections.map(({ category, items, groups }) => (
+          {sections.map(({ category, items, groups }) => {
+            const sectionSubtitle = formuleSectionSubtitle(menu.formuleSectionDescriptions, category);
+            return (
             <section
               key={category}
               id={categoryAnchorId(category)}
@@ -310,12 +312,19 @@ export function MenuPage() {
             >
               <h2
                 id={`heading-${categoryAnchorId(category)}`}
-                className="mb-3 flex items-baseline gap-2 border-b-2 border-kaytori-gold/40 pb-2 font-display text-[1.25rem] font-bold leading-tight tracking-tight text-kaytori-black sm:text-[1.45rem]"
+                className="mb-3 border-b-2 border-kaytori-gold/40 pb-2 font-display text-[1.25rem] font-bold leading-tight tracking-tight text-kaytori-black sm:text-[1.45rem]"
               >
-                <span className="min-w-0">{categoryDisplayTitle(category)}</span>
-                <span className="ml-auto shrink-0 whitespace-nowrap font-sans text-[0.68rem] font-medium uppercase tracking-[0.14em] text-kaytori-muted">
-                  {items.length} plat{items.length !== 1 ? "s" : ""}
+                <span className="flex items-baseline gap-2">
+                  <span className="min-w-0">{categoryDisplayTitle(category)}</span>
+                  <span className="ml-auto shrink-0 whitespace-nowrap font-sans text-[0.68rem] font-medium uppercase tracking-[0.14em] text-kaytori-muted">
+                    {items.length} plat{items.length !== 1 ? "s" : ""}
+                  </span>
                 </span>
+                {sectionSubtitle ? (
+                  <span className="mt-1 block font-sans text-[0.68rem] font-medium normal-case tracking-[0.04em] text-kaytori-muted">
+                    {sectionSubtitle}
+                  </span>
+                ) : null}
               </h2>
               {/* Formules (3 sections) : mêmes grandes cartes en rangée ; le reste en grille. */}
               {isFormuleCarouselCategory(category, menu.formuleSectionNames) ? (
@@ -339,7 +348,8 @@ export function MenuPage() {
                 </ul>
               )}
             </section>
-          ))}
+            );
+          })}
         </div>
 
       </main>

@@ -31,6 +31,7 @@ begin
   drop function if exists public.admin_delete_formule_section(text);
   drop function if exists public.admin_update_formule_section(text, jsonb, integer);
   drop function if exists public.admin_create_formule_section(text, text, boolean, integer);
+  drop function if exists public.admin_create_formule_section(text, text, boolean, integer, text);
   drop function if exists public.admin_delete_category(text);
   drop function if exists public.admin_update_category(text, jsonb, integer);
   drop function if exists public.admin_create_category(text, text, boolean, integer);
