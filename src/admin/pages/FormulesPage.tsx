@@ -30,10 +30,13 @@ import {
   formuleSectionNameError,
   formuleSectionProductCount,
   orderedFormuleSections,
+  ranksInOrderedGroup,
   resolveFormuleSectionId,
+  sectionMoveTarget,
   setFormuleSection,
   updateFormuleSection,
   type FormuleSectionAssignment,
+  type FormuleSectionRank,
   type FormuleSectionRow,
 } from "../lib/formuleSectionAdmin";
 import { takeFlash } from "../lib/flash";
@@ -121,10 +124,49 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
     return { groups, unassigned };
   }, [formules, orderedSections, assignmentMap]);
 
-  const move = async (p: AdminProduct, direction: MoveDirection) => {
+  /** Rangs 1…N par section (pas le total de la catégorie formules). */
+  const ranksBySection = useMemo(() => {
+    const out = new Map<string, Map<string, FormuleSectionRank>>();
+    for (const [sectionId, items] of formulesBySection.groups) {
+      out.set(sectionId, ranksInOrderedGroup(items.map((p) => p.id)));
+    }
+    return out;
+  }, [formulesBySection]);
+
+  const move = async (p: AdminProduct, direction: MoveDirection, sectionId: string | null) => {
     if (moving || data.status !== "ready") return;
     setMoving(p);
     setToast({ tone: "pending", message: `Déplacement de « ${p.name} »…` });
+
+    if (sectionId) {
+      const rank = ranksBySection.get(sectionId)?.get(p.id);
+      const target = rank ? sectionMoveTarget(rank.position, rank.total, direction) : null;
+      if (target === null) {
+        setMoving(null);
+        setToast({
+          tone: "error",
+          message: `« ${p.name} » est déjà en ${direction === "up" ? "première" : "dernière"} position.`,
+        });
+        return;
+      }
+      const res = await setFormuleSection(client, p.id, sectionId, target);
+      const refreshed = await data.refresh();
+      await reloadSections();
+      setMoving(null);
+      if (!res.ok) {
+        setToast({ tone: "error", message: res.error });
+        return;
+      }
+      const sectionName = orderedSections.find((s) => s.id === sectionId)?.name ?? sectionId;
+      setToast(
+        refreshed
+          ? { tone: "success", message: `« ${p.name} » déplacé en position ${target} dans « ${sectionName} ».` }
+          : { tone: "error", message: `« ${p.name} » a été déplacé, mais la liste n'a pas pu être rechargée. Actualisez la page.` },
+      );
+      return;
+    }
+
+    // Sans sections DB : ordre catégorie (comportement historique).
     const notice = await runProductMove(client, p, direction, data.refresh);
     setMoving(null);
     setToast(notice.error ? { tone: "error", message: notice.error } : notice.success ? { tone: "success", message: notice.success } : null);
@@ -248,7 +290,20 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
     setToast({ tone: "success", message: `Section « ${deletingSection.name} » supprimée.` });
   };
 
-  const renderFormuleRow = (p: AdminProduct, sectionId: string | null) => (
+  const renderFormuleRow = (p: AdminProduct, sectionId: string | null) => {
+    const sectionRank = sectionId ? ranksBySection.get(sectionId)?.get(p.id) : undefined;
+    const position = sectionRank?.position ?? p.position;
+    const total = sectionRank?.total ?? p.categoryTotal;
+    const canUp = sectionRank
+      ? sectionMoveTarget(sectionRank.position, sectionRank.total, "up") !== null
+      : moveTarget(p, "up") !== null;
+    const canDown = sectionRank
+      ? sectionMoveTarget(sectionRank.position, sectionRank.total, "down") !== null
+      : moveTarget(p, "down") !== null;
+    // Avec sections DB : flèches uniquement dans une section ; sinon ordre catégorie.
+    const arrowsEnabled = sectionId !== null ? Boolean(sectionRank) : !dbSections && p.manualOrder;
+
+    return (
     <li
       key={p.id}
       className={`${cardClass} flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:gap-4 sm:p-4 ${p.isActive ? "" : "opacity-70"}`}
@@ -258,21 +313,21 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
           <button
             type="button"
             className={`${orderButton} ${touchButton}`}
-            disabled={Boolean(moving) || moveTarget(p, "up") === null}
-            onClick={() => void move(p, "up")}
+            disabled={Boolean(moving) || !arrowsEnabled || !canUp}
+            onClick={() => void move(p, "up", sectionId)}
             aria-label={`Monter ${p.name}`}
           >
             <ArrowUpIcon className="h-3.5 w-3.5" />
           </button>
-          <span className="text-xs font-semibold tabular-nums text-admin-ink">
-            {p.position}
-            <span className="font-normal text-admin-muted">/{p.categoryTotal}</span>
+          <span className="text-xs font-semibold tabular-nums text-admin-ink" title={sectionId ? `Position dans la section (${position}/${total})` : undefined}>
+            {position}
+            <span className="font-normal text-admin-muted">/{total}</span>
           </span>
           <button
             type="button"
             className={`${orderButton} ${touchButton}`}
-            disabled={Boolean(moving) || moveTarget(p, "down") === null}
-            onClick={() => void move(p, "down")}
+            disabled={Boolean(moving) || !arrowsEnabled || !canDown}
+            onClick={() => void move(p, "down", sectionId)}
             aria-label={`Descendre ${p.name}`}
           >
             <ArrowDownIcon className="h-3.5 w-3.5" />
@@ -333,7 +388,8 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
         </div>
       </div>
     </li>
-  );
+    );
+  };
 
   return (
     <>

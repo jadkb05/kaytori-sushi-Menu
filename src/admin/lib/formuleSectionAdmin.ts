@@ -65,6 +65,29 @@ export function formuleSectionProductCount(assignments: readonly FormuleSectionA
   return assignments.filter((a) => a.sectionId === sectionId).length;
 }
 
+export type FormuleSectionRank = { position: number; total: number };
+
+/**
+ * Rang 1…N dans une section (ou liste déjà filtrée), indépendant des autres sections.
+ * `orderedIds` doit être trié comme en base (sort_order, puis id).
+ */
+export function ranksInOrderedGroup(orderedIds: readonly string[]): Map<string, FormuleSectionRank> {
+  const total = orderedIds.length;
+  const ranks = new Map<string, FormuleSectionRank>();
+  orderedIds.forEach((id, i) => ranks.set(id, { position: i + 1, total }));
+  return ranks;
+}
+
+/** Position cible (1…N de la section), ou null si le déplacement est impossible. */
+export function sectionMoveTarget(
+  position: number,
+  total: number,
+  direction: "up" | "down",
+): number | null {
+  const target = direction === "up" ? position - 1 : position + 1;
+  return target >= 1 && target <= total ? target : null;
+}
+
 export function formuleSectionNameError(
   name: string,
   sections: readonly FormuleSectionRow[],

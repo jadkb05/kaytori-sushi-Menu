@@ -9,6 +9,7 @@ import {
   createFormule,
   formuleCategoryReady,
   formuleCount,
+  formuleCountInSection,
   hasFormuleErrors,
   saveFormule,
   validateFormuleForm,
@@ -20,6 +21,7 @@ import {
   fetchFormuleSections,
   orderedFormuleSections,
   resolveFormuleSectionId,
+  type FormuleSectionAssignment,
   type FormuleSectionRow,
 } from "../lib/formuleSectionAdmin";
 import { setFlash } from "../lib/flash";
@@ -47,6 +49,7 @@ export function FormuleFormPage({ client, productId }: Props) {
   const ready = data.status === "ready" && formuleCategoryReady(data.rows) && !missing;
 
   const [sections, setSections] = useState<FormuleSectionRow[] | null>(null);
+  const [assignments, setAssignments] = useState<FormuleSectionAssignment[] | null>(null);
   const [sectionAssignment, setSectionAssignment] = useState<string | null>(null);
   const [sectionsLoaded, setSectionsLoaded] = useState(false);
 
@@ -60,6 +63,7 @@ export function FormuleFormPage({ client, productId }: Props) {
         ]);
         if (cancelled) return;
         setSections(secs);
+        setAssignments(assigns);
         if (productId && assigns) {
           setSectionAssignment(assigns.find((a) => a.productId === productId)?.sectionId ?? null);
         }
@@ -82,22 +86,31 @@ export function FormuleFormPage({ client, productId }: Props) {
         (querySection && ordered.some((s) => s.id === querySection) ? querySection : null) ??
         ordered[0]?.id ??
         "";
+      const sectionTotal =
+        defaultSection && assignments
+          ? formuleCountInSection(assignments, defaultSection) + 1
+          : formuleCount(data.rows) + 1;
       return {
         name: "",
         description: "",
         price: "",
         isActive: true,
-        position: String(formuleCount(data.rows) + 1),
+        position: String(sectionTotal),
         sectionId: defaultSection,
       };
     }
     if (!product || product.category_id !== FORMULES_CATEGORY_ID) return null;
-    const siblings = data.rows.products
-      .filter((p) => p.category_id === FORMULES_CATEGORY_ID)
-      .sort((a, b) => a.sort_order - b.sort_order || (a.id < b.id ? -1 : 1));
-    const position = siblings.findIndex((p) => p.id === product.id) + 1;
     const sectionId =
       resolveFormuleSectionId({ id: product.id, name: product.name }, ordered, sectionAssignment) ?? "";
+    const siblings = data.rows.products
+      .filter((p) => p.category_id === FORMULES_CATEGORY_ID)
+      .filter((p) => {
+        if (!sectionId || !assignments) return true;
+        const sid = assignments.find((a) => a.productId === p.id)?.sectionId ?? null;
+        return sid === sectionId;
+      })
+      .sort((a, b) => a.sort_order - b.sort_order || (a.id < b.id ? -1 : 1));
+    const position = Math.max(1, siblings.findIndex((p) => p.id === product.id) + 1);
     return {
       name: product.name,
       description: product.description ?? "",
@@ -106,7 +119,7 @@ export function FormuleFormPage({ client, productId }: Props) {
       position: String(position),
       sectionId,
     };
-  }, [data, editing, product, sectionsLoaded, ordered, sectionAssignment]);
+  }, [data, editing, product, sectionsLoaded, ordered, sectionAssignment, assignments]);
 
   const [form, setForm] = useState<FormuleFormInput | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
@@ -132,9 +145,25 @@ export function FormuleFormPage({ client, productId }: Props) {
   const shownImage = preview ?? (editing ? product?.image_url ?? null : null);
   const requireSection = ordered.length > 0;
 
+  const sectionOthersCount = (sectionId: string) => {
+    if (!assignments || !sectionId) return undefined;
+    return formuleCountInSection(assignments, sectionId, productId);
+  };
+
+  const onSectionChange = (sectionId: string) => {
+    if (!form) return;
+    const others = assignments ? formuleCountInSection(assignments, sectionId, productId) : 0;
+    // Nouvelle section : placer en dernier (N+1 des autres).
+    setForm({ ...form, sectionId, position: String(others + 1) });
+  };
+
   const onSubmit = async () => {
     if (!form || data.status !== "ready" || busy) return;
-    const nextErrors = validateFormuleForm(form, data.rows, photo, editing ? "edit" : "create", { requireSection });
+    const mode = editing ? "edit" : "create";
+    const nextErrors = validateFormuleForm(form, data.rows, photo, mode, {
+      requireSection,
+      sectionOthersCount: form.sectionId ? sectionOthersCount(form.sectionId) : undefined,
+    });
     setErrors(nextErrors);
     if (hasFormuleErrors(nextErrors)) return;
     setBusy(true);
@@ -212,7 +241,7 @@ export function FormuleFormPage({ client, productId }: Props) {
                   <select
                     id="formule-section"
                     value={form.sectionId}
-                    onChange={(e) => setForm({ ...form, sectionId: e.target.value })}
+                    onChange={(e) => onSectionChange(e.target.value)}
                     className={fieldError(inputClass, errors.sectionId)}
                   >
                     {ordered.map((s) => (
@@ -223,7 +252,16 @@ export function FormuleFormPage({ client, productId }: Props) {
                   </select>
                 </Field>
               ) : null}
-              <Field htmlFor="formule-position" label="Position" error={errors.position} hint="Ordre dans la catégorie formules (1 = première).">
+              <Field
+                htmlFor="formule-position"
+                label="Position"
+                error={errors.position}
+                hint={
+                  form.sectionId
+                    ? "Ordre dans cette section (1 = première offre de la section)."
+                    : "Ordre dans la catégorie formules (1 = première)."
+                }
+              >
                 <input
                   id="formule-position"
                   inputMode="numeric"

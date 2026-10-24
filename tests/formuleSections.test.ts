@@ -3,8 +3,11 @@ import {
   formuleSectionNameError,
   newFormuleSectionId,
   orderedFormuleSections,
+  ranksInOrderedGroup,
   resolveFormuleSectionId,
+  sectionMoveTarget,
 } from "../src/admin/lib/formuleSectionAdmin";
+import { formuleCountInSection } from "../src/admin/lib/formuleAdmin";
 import {
   FORMULE_SECTION_PROMO,
   FORMULE_SECTION_SOLO_DUO_FAMILY,
@@ -45,6 +48,46 @@ describe("formule sections : helpers", () => {
       "formule-midi",
       "promo",
     ]);
+  });
+
+  it("calcule des rangs 1…N indépendants par section (pas le total catégorie)", () => {
+    const solo = ranksInOrderedGroup(["formule-duo", "formule-family"]);
+    const promo = ranksInOrderedGroup([
+      "formule-zen-box",
+      "formule-yaki-box",
+      "formule-fry-box",
+      "formule-spring-box",
+      "formule-kyoto-box",
+      "formule-nara-box",
+      "formule-crispy-box",
+      "formule-party-box",
+      "formule-fusion-box",
+      "formule-master-box",
+    ]);
+    expect(solo.get("formule-duo")).toEqual({ position: 1, total: 2 });
+    expect(solo.get("formule-family")).toEqual({ position: 2, total: 2 });
+    expect(promo.get("formule-zen-box")).toEqual({ position: 1, total: 10 });
+    expect(promo.get("formule-master-box")).toEqual({ position: 10, total: 10 });
+    expect(sectionMoveTarget(1, 2, "up")).toBeNull();
+    expect(sectionMoveTarget(1, 2, "down")).toBe(2);
+    expect(sectionMoveTarget(2, 2, "up")).toBe(1);
+    expect(sectionMoveTarget(2, 2, "down")).toBeNull();
+    expect(sectionMoveTarget(5, 10, "up")).toBe(4);
+    expect(sectionMoveTarget(5, 10, "down")).toBe(6);
+  });
+
+  it("compte les offres d'une section sans mélanger les autres", () => {
+    const assigns = [
+      { productId: "formule-duo", sectionId: "formules-solo-duo-family" },
+      { productId: "formule-family", sectionId: "formules-solo-duo-family" },
+      { productId: "formule-zen-box", sectionId: "promo" },
+      { productId: "formule-yaki-box", sectionId: "promo" },
+      { productId: "formule-orphan", sectionId: null },
+    ];
+    expect(formuleCountInSection(assigns, "formules-solo-duo-family")).toBe(2);
+    expect(formuleCountInSection(assigns, "promo")).toBe(2);
+    expect(formuleCountInSection(assigns, "promo", "formule-zen-box")).toBe(1);
+    expect(formuleCountInSection(assigns, "formule-midi")).toBe(0);
   });
 });
 
@@ -201,6 +244,64 @@ describe("formule sections : menu public (données, UI inchangée)", () => {
       }),
     ]);
     expect(items?.[0]?.category).not.toBe(FORMULES_PROMOS_CATEGORY);
+  });
+});
+
+describe("formule sections : ordre dans la section (RPC)", () => {
+  it("Monter / Descendre ne réordonne que la section cible", async () => {
+    const { createPgliteSupabase } = await import("./helpers/pgliteSupabase");
+    const db = await createMigratedDb();
+    await runSeed(db);
+    await db.exec(`
+      update public.products set formule_section_id = 'formules-solo-duo-family'
+        where id in ('formule-duo', 'formule-family');
+      update public.products set formule_section_id = 'promo'
+        where id in (
+          'formule-zen-box', 'formule-yaki-box', 'formule-fry-box', 'formule-spring-box',
+          'formule-kyoto-box', 'formule-nara-box', 'formule-crispy-box', 'formule-party-box',
+          'formule-fusion-box', 'formule-master-box'
+        );
+      insert into auth.users (id) values ('11111111-1111-1111-1111-111111111111');
+      insert into public.admin_users (user_id) values ('11111111-1111-1111-1111-111111111111');
+    `);
+    const admin = createPgliteSupabase(db, {
+      id: "11111111-1111-1111-1111-111111111111",
+      email: "admin@kaytori.test",
+    });
+
+    const promoBefore = await db.query<{ id: string }>(
+      `select id from public.products
+        where formule_section_id = 'promo' order by sort_order, id`,
+    );
+    expect(promoBefore.rows.map((r) => r.id)).toHaveLength(10);
+
+    // Descendre Duo (1 → 2) dans Solo/Duo/Family uniquement.
+    const { error } = await admin.rpc("admin_set_formule_section", {
+      p_product_id: "formule-duo",
+      p_section_id: "formules-solo-duo-family",
+      p_position: 2,
+    });
+    expect(error).toBeNull();
+
+    const soloAfter = await db.query<{ id: string }>(
+      `select id from public.products
+        where formule_section_id = 'formules-solo-duo-family' order by sort_order, id`,
+    );
+    expect(soloAfter.rows.map((r) => r.id)).toEqual(["formule-family", "formule-duo"]);
+
+    const promoAfter = await db.query<{ id: string }>(
+      `select id from public.products
+        where formule_section_id = 'promo' order by sort_order, id`,
+    );
+    expect(promoAfter.rows.map((r) => r.id)).toEqual(promoBefore.rows.map((r) => r.id));
+
+    const ranksSolo = ranksInOrderedGroup(soloAfter.rows.map((r) => r.id));
+    expect(ranksSolo.get("formule-family")).toEqual({ position: 1, total: 2 });
+    expect(ranksSolo.get("formule-duo")).toEqual({ position: 2, total: 2 });
+    const ranksPromo = ranksInOrderedGroup(promoAfter.rows.map((r) => r.id));
+    expect(ranksPromo.get("formule-zen-box")?.total).toBe(10);
+
+    await db.close();
   });
 });
 

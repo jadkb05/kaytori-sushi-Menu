@@ -55,12 +55,25 @@ export function formuleCount(rows: MenuRows): number {
   return rows.products.filter((p) => p.category_id === FORMULES_CATEGORY_ID).length;
 }
 
+/** Nombre d'offres déjà dans une section (pour le plafond de position 1…N ou N+1). */
+export function formuleCountInSection(
+  assignments: readonly { productId: string; sectionId: string | null }[],
+  sectionId: string,
+  excludeProductId: string | null = null,
+): number {
+  return assignments.filter(
+    (a) => a.sectionId === sectionId && (excludeProductId === null || a.productId !== excludeProductId),
+  ).length;
+}
+
 export function validateFormuleForm(
   form: FormuleFormInput,
   rows: MenuRows,
   photo: { type: string; size: number } | null,
   mode: "create" | "edit",
-  opts: { requireSection: boolean } = { requireSection: false },
+  opts: { requireSection: boolean; /** Offres déjà dans la section, hors l'offre éditée. */ sectionOthersCount?: number } = {
+    requireSection: false,
+  },
 ): FormuleFormErrors {
   const errors: FormuleFormErrors = {};
   if (!formuleCategoryReady(rows)) {
@@ -71,7 +84,11 @@ export function validateFormuleForm(
   if (price === null || price <= 0) {
     errors.price = "Prix invalide : nombre positif, 2 décimales maximum (ex. 279 ou 279,50).";
   }
-  const max = formuleCount(rows) + (mode === "create" ? 1 : 0);
+  // Avec sections : 1…(autres + 1). Sinon : catégorie entière.
+  const max =
+    opts.sectionOthersCount !== undefined
+      ? opts.sectionOthersCount + 1
+      : formuleCount(rows) + (mode === "create" ? 1 : 0);
   const position = positionError(form.position, Math.max(max, 1));
   if (position) errors.position = position;
   if (opts.requireSection && form.sectionId.trim() === "") {
@@ -112,7 +129,11 @@ export async function createFormule(
   form: FormuleFormInput,
   photo: File,
 ) {
-  const created = await createProduct(client, asNewProduct(form), rows, photo, uploadFormulePoster, newProductId());
+  // Position formulaire = rang dans la section ; en catégorie on pose en dernier, puis RPC section.
+  const forCatalog: FormuleFormInput = form.sectionId.trim()
+    ? { ...form, position: String(formuleCount(rows) + 1) }
+    : form;
+  const created = await createProduct(client, asNewProduct(forCatalog), rows, photo, uploadFormulePoster, newProductId());
   if (!created.ok) return created;
   if (form.sectionId.trim()) {
     const pos = Number(form.position.trim());
@@ -145,13 +166,14 @@ export async function saveFormule(
   if (!data || data.product.category_id !== FORMULES_CATEGORY_ID) {
     return { ok: false as const, error: "Cette formule est introuvable.", failedStep: "save" as const, uploadedPath: null };
   }
+  // Avec section : ne pas appliquer la position catégorie (rang section géré par admin_set_formule_section).
   const catalog: CatalogForm = {
     name: form.name,
     description: form.description.trim(),
     price: form.price,
     categoryId: FORMULES_CATEGORY_ID,
     isActive: form.isActive,
-    position: form.position,
+    position: form.sectionId.trim() ? String(data.currentPosition) : form.position,
     variants: [],
   };
   const saved = await saveCatalogProduct(client, data, catalog, photo, uploadFormulePoster);
