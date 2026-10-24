@@ -23,11 +23,51 @@ export type FormuleSectionAssignment = {
   sectionId: string | null;
 };
 
+/** Message si la RPC / colonne description (09) n'est pas encore en production. */
+export const FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT =
+  "La description des sections n'est pas encore activée sur Supabase. Appliquez supabase/production/09_formule_section_description.sql (avec autorisation).";
+
 function rpcError(error: { message: string; code?: string }): string {
+  // RPC 08 : allowlist name/is_active seulement → rejet explicite de « description ».
+  if (/Champ de section non modifiable\s*:\s*description/i.test(error.message)) {
+    return FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT;
+  }
   if (error.code === "PGRST202" || /could not find the function|relation .* does not exist|column .* does not exist/i.test(error.message)) {
     return "Les sections de formules ne sont pas encore installées sur Supabase (migration formule_sections / 08_formule_sections.sql).";
   }
   return saveErrorMessage(error);
+}
+
+export type FormuleSectionsLoad = {
+  sections: FormuleSectionRow[];
+  /** true si `formule_sections.description` est lisible (migration 09 appliquée). */
+  descriptionSupported: boolean;
+};
+
+/**
+ * Construit le payload d'update : n'envoie `description` que si le schéma 09 est disponible.
+ * Description non vide sans support → erreur claire (pas d'appel RPC qui échoue obscurément).
+ */
+export function buildFormuleSectionUpdateChanges(input: {
+  name?: string;
+  description?: string | null;
+  isActive?: boolean;
+  descriptionSupported: boolean;
+}): { ok: true; changes: { name?: string; description?: string | null; isActive?: boolean } } | { ok: false; error: string } {
+  const changes: { name?: string; description?: string | null; isActive?: boolean } = {};
+  if (input.name !== undefined) changes.name = input.name.trim();
+  if (input.isActive !== undefined) changes.isActive = input.isActive;
+  if (input.description !== undefined) {
+    const trimmed =
+      input.description === null || input.description === undefined ? "" : String(input.description).trim();
+    if (!input.descriptionSupported) {
+      if (trimmed !== "") return { ok: false, error: FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT };
+      // Ne pas inclure la clé : la RPC 08 refuse tout champ hors name / is_active.
+    } else {
+      changes.description = trimmed === "" ? null : trimmed;
+    }
+  }
+  return { ok: true, changes };
 }
 
 function normalizeSectionRow(row: Record<string, unknown>): FormuleSectionRow {
@@ -41,16 +81,18 @@ function normalizeSectionRow(row: Record<string, unknown>): FormuleSectionRow {
   };
 }
 
-/** null = table absente ou illisible (migration non appliquée). */
-export async function fetchFormuleSections(client: SupabaseClient): Promise<FormuleSectionRow[] | null> {
+/** null = table absente ou illisible (migration 08 non appliquée). */
+export async function fetchFormuleSections(client: SupabaseClient): Promise<FormuleSectionsLoad | null> {
   let data: unknown[] | null = null;
   let error: { message: string } | null = null;
+  let descriptionSupported = true;
   const withDesc = await client
     .from("formule_sections")
     .select("id, name, description, sort_order, is_active")
     .order("sort_order");
   if (withDesc.error && /description|column/i.test(withDesc.error.message)) {
     // Colonne description absente (09 pas encore appliqué) : repli sans description.
+    descriptionSupported = false;
     const fallback = await client.from("formule_sections").select("id, name, sort_order, is_active").order("sort_order");
     data = fallback.data;
     error = fallback.error;
@@ -62,7 +104,10 @@ export async function fetchFormuleSections(client: SupabaseClient): Promise<Form
     if (/does not exist|schema cache/i.test(error.message)) return null;
     throw new Error(error.message);
   }
-  return (data ?? []).map((row) => normalizeSectionRow(row as Record<string, unknown>));
+  return {
+    sections: (data ?? []).map((row) => normalizeSectionRow(row as Record<string, unknown>)),
+    descriptionSupported,
+  };
 }
 
 /** Affectations section pour les formules ; null si colonne absente. */
@@ -174,10 +219,20 @@ export type FormuleSectionActionResult =
 export async function createFormuleSection(
   client: SupabaseClient,
   sections: readonly FormuleSectionRow[],
-  input: { name: string; description?: string; isActive: boolean; position: number | null },
+  input: {
+    name: string;
+    description?: string;
+    isActive: boolean;
+    position: number | null;
+    descriptionSupported?: boolean;
+  },
 ): Promise<FormuleSectionActionResult> {
   const name = input.name.trim();
   const description = (input.description ?? "").trim();
+  const descriptionSupported = input.descriptionSupported !== false;
+  if (description && !descriptionSupported) {
+    return { ok: false, error: FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT };
+  }
   const args: Record<string, unknown> = {
     p_id: newFormuleSectionId(name, sections),
     p_name: name,
@@ -185,8 +240,8 @@ export async function createFormuleSection(
     p_position: input.position,
   };
   // p_description : signature 09 ; si absente, création puis update description.
-  if (description) args.p_description = description;
-  let { data, error } = await client.rpc("admin_create_formule_section", args);
+  if (description && descriptionSupported) args.p_description = description;
+  const { data, error } = await client.rpc("admin_create_formule_section", args);
   if (error && description && /p_description|could not find the function|PGRST202/i.test(error.message)) {
     const created = await client.rpc("admin_create_formule_section", {
       p_id: args.p_id,
@@ -195,7 +250,10 @@ export async function createFormuleSection(
       p_position: input.position,
     });
     if (created.error) return { ok: false, error: rpcError(created.error) };
-    const updated = await updateFormuleSection(client, String(args.p_id), { description });
+    const updated = await updateFormuleSection(client, String(args.p_id), {
+      description,
+      descriptionSupported: true,
+    });
     if (!updated.ok) return updated;
     return { ok: true, section: updated.section };
   }
@@ -206,14 +264,26 @@ export async function createFormuleSection(
 export async function updateFormuleSection(
   client: SupabaseClient,
   sectionId: string,
-  changes: { name?: string; description?: string | null; isActive?: boolean; position?: number },
+  changes: {
+    name?: string;
+    description?: string | null;
+    isActive?: boolean;
+    position?: number;
+    /** Défaut true : le formulaire doit passer false si 09 n'est pas détecté. */
+    descriptionSupported?: boolean;
+  },
 ): Promise<FormuleSectionActionResult> {
+  const built = buildFormuleSectionUpdateChanges({
+    name: changes.name,
+    description: changes.description,
+    isActive: changes.isActive,
+    descriptionSupported: changes.descriptionSupported !== false,
+  });
+  if (!built.ok) return built;
   const p_changes: Record<string, unknown> = {};
-  if (changes.name !== undefined) p_changes.name = changes.name.trim();
-  if (changes.isActive !== undefined) p_changes.is_active = changes.isActive;
-  if (changes.description !== undefined) {
-    p_changes.description = changes.description === null ? null : String(changes.description).trim();
-  }
+  if (built.changes.name !== undefined) p_changes.name = built.changes.name;
+  if (built.changes.isActive !== undefined) p_changes.is_active = built.changes.isActive;
+  if (built.changes.description !== undefined) p_changes.description = built.changes.description;
   const { data, error } = await client.rpc("admin_update_formule_section", {
     p_section_id: sectionId,
     p_changes,

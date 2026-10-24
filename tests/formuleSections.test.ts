@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT,
+  buildFormuleSectionUpdateChanges,
   formuleSectionDescriptionError,
   formuleSectionNameError,
   formuleSectionPosition,
@@ -8,7 +10,9 @@ import {
   ranksInOrderedGroup,
   resolveFormuleSectionId,
   sectionMoveTarget,
+  updateFormuleSection,
 } from "../src/admin/lib/formuleSectionAdmin";
+import { readFileSync } from "node:fs";
 import { formuleCountInSection } from "../src/admin/lib/formuleAdmin";
 import {
   FORMULE_SECTION_PROMO,
@@ -94,6 +98,63 @@ describe("formule sections : helpers", () => {
     expect(sectionMoveTarget(2, 2, "down")).toBeNull();
     expect(sectionMoveTarget(5, 10, "up")).toBe(4);
     expect(sectionMoveTarget(5, 10, "down")).toBe(6);
+  });
+
+  it("n'envoie description à la RPC que si la migration 09 est disponible", () => {
+    expect(
+      buildFormuleSectionUpdateChanges({
+        name: "Promos",
+        description: "Offres du moment",
+        descriptionSupported: true,
+      }),
+    ).toEqual({
+      ok: true,
+      changes: { name: "Promos", description: "Offres du moment" },
+    });
+    expect(
+      buildFormuleSectionUpdateChanges({
+        name: "Promos",
+        description: "  ",
+        descriptionSupported: true,
+      }),
+    ).toEqual({ ok: true, changes: { name: "Promos", description: null } });
+    expect(
+      buildFormuleSectionUpdateChanges({
+        name: "Promos",
+        description: null,
+        descriptionSupported: true,
+      }),
+    ).toEqual({ ok: true, changes: { name: "Promos", description: null } });
+    // Sans 09 : renommer seul (pas de clé description) pour ne pas déclencher la RPC 08.
+    expect(
+      buildFormuleSectionUpdateChanges({
+        name: "Promos",
+        description: "",
+        descriptionSupported: false,
+      }),
+    ).toEqual({ ok: true, changes: { name: "Promos" } });
+    expect(
+      buildFormuleSectionUpdateChanges({
+        name: "Promos",
+        description: "Texte",
+        descriptionSupported: false,
+      }),
+    ).toEqual({ ok: false, error: FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT });
+  });
+
+  it("le script 09 autorise description dans admin_update_formule_section", () => {
+    const sql = readFileSync(
+      new URL("../supabase/migrations/20261024180000_formule_section_description.sql", import.meta.url),
+      "utf8",
+    );
+    expect(sql).toMatch(/not in \('name', 'is_active', 'description'\)/);
+    expect(sql).toMatch(/add column if not exists description text/i);
+    const legacy = readFileSync(
+      new URL("../supabase/migrations/20261024000000_formule_sections.sql", import.meta.url),
+      "utf8",
+    );
+    expect(legacy).toMatch(/not in \('name', 'is_active'\)/);
+    expect(legacy).not.toMatch(/not in \('name', 'is_active', 'description'\)/);
   });
 
   it("compte les offres d'une section sans mélanger les autres", () => {
@@ -376,17 +437,28 @@ describe("formule sections : ordre et description (RPC)", () => {
     expect(order.rows.map((r) => r.id)).toEqual(["formule-midi", "formules-solo-duo-family", "promo"]);
     expect(new Set(order.rows.map((r) => r.id)).size).toBe(3);
 
-    const desc = await admin.rpc("admin_update_formule_section", {
-      p_section_id: "formules-solo-duo-family",
-      p_changes: { description: "Nos formules pour toutes les envies" },
-      p_position: null,
+    // Description seule (sans renommer).
+    const descOnly = await updateFormuleSection(admin, "formules-solo-duo-family", {
+      description: "Nos formules pour toutes les envies",
+      descriptionSupported: true,
     });
-    expect(desc.error).toBeNull();
-    const solo = await db.query<{ description: string | null; name: string }>(
+    expect(descOnly.ok).toBe(true);
+    if (descOnly.ok) {
+      expect(descOnly.section.description).toBe("Nos formules pour toutes les envies");
+      expect(descOnly.section.name).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    }
+
+    // Nom seul (description inchangée).
+    const nameOnly = await updateFormuleSection(admin, "formules-solo-duo-family", {
+      name: "Formules Famille",
+      descriptionSupported: true,
+    });
+    expect(nameOnly.ok).toBe(true);
+    const afterName = await db.query<{ name: string; description: string | null }>(
       `select name, description from public.formule_sections where id = 'formules-solo-duo-family'`,
     );
-    expect(solo.rows[0]).toEqual({
-      name: FORMULE_SECTION_SOLO_DUO_FAMILY,
+    expect(afterName.rows[0]).toEqual({
+      name: "Formules Famille",
       description: "Nos formules pour toutes les envies",
     });
 
@@ -396,16 +468,28 @@ describe("formule sections : ordre et description (RPC)", () => {
     expect(duoSortAfter).toBe(duoSortBefore);
 
     // Description vide → null (pas d'espace fantôme côté public).
-    const clear = await admin.rpc("admin_update_formule_section", {
-      p_section_id: "formules-solo-duo-family",
-      p_changes: { description: "  " },
-      p_position: null,
+    const clear = await updateFormuleSection(admin, "formules-solo-duo-family", {
+      description: "  ",
+      descriptionSupported: true,
     });
-    expect(clear.error).toBeNull();
+    expect(clear.ok).toBe(true);
     const cleared = await db.query<{ description: string | null }>(
       `select description from public.formule_sections where id = 'formules-solo-duo-family'`,
     );
     expect(cleared.rows[0]?.description).toBeNull();
+
+    // Message d'erreur clair si la RPC 08 rejette encore le champ.
+    const legacyReject = await updateFormuleSection(
+      {
+        rpc: async () => ({
+          data: null,
+          error: { message: "Champ de section non modifiable : description.", code: "P0001" },
+        }),
+      } as never,
+      "formules-solo-duo-family",
+      { description: "x", descriptionSupported: true },
+    );
+    expect(legacyReject).toEqual({ ok: false, error: FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT });
 
     await db.close();
   });

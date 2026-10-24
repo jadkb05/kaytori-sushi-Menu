@@ -22,6 +22,7 @@ import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { deleteFormule, formuleCategoryReady, setFormuleActive } from "../lib/formuleAdmin";
 import {
   FORMULE_SECTION_DESCRIPTION_MAX,
+  FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT,
   FORMULE_SECTION_NAME_MAX,
   createFormuleSection,
   deleteFormuleSection,
@@ -60,6 +61,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
   const [deleteBusy, setDeleteBusy] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [sections, setSections] = useState<FormuleSectionRow[] | null>(null);
+  const [descriptionSupported, setDescriptionSupported] = useState(false);
   const [assignments, setAssignments] = useState<FormuleSectionAssignment[] | null>(null);
   const [sectionsReady, setSectionsReady] = useState(false);
   const [renaming, setRenaming] = useState<FormuleSectionRow | null>(null);
@@ -80,15 +82,17 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
 
   const reloadSections = useCallback(async () => {
     try {
-      const [secs, assigns] = await Promise.all([
+      const [secsLoad, assigns] = await Promise.all([
         fetchFormuleSections(client),
         fetchFormuleSectionAssignments(client),
       ]);
-      setSections(secs);
+      setSections(secsLoad?.sections ?? null);
+      setDescriptionSupported(secsLoad?.descriptionSupported ?? false);
       setAssignments(assigns);
     } catch (e) {
       setToast({ tone: "error", message: e instanceof Error ? e.message : "Lecture des sections impossible." });
       setSections(null);
+      setDescriptionSupported(false);
       setAssignments(null);
     } finally {
       setSectionsReady(true);
@@ -250,6 +254,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
       description: newSectionDescription,
       isActive: true,
       position: null,
+      descriptionSupported,
     });
     setNewSectionBusy(false);
     if (!res.ok) {
@@ -280,6 +285,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
     const res = await updateFormuleSection(client, renaming.id, {
       name: renameValue,
       description: renameDescription.trim() === "" ? null : renameDescription,
+      descriptionSupported,
     });
     setRenameBusy(false);
     if (!res.ok) {
@@ -471,6 +477,12 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
           pour créer, ordonner et décrire des sections. En attendant, les offres restent listées ci-dessous.
         </p>
       ) : null}
+      {ready && dbSections && !descriptionSupported ? (
+        <p className={`${cardClass} mb-4 p-5 text-sm leading-relaxed text-admin-soft`}>
+          {FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT} Sans ce script, vous pouvez toujours renommer et réordonner les
+          sections ; le champ description reste désactivé.
+        </p>
+      ) : null}
 
       {ready && newSectionOpen && dbSections ? (
         <form onSubmit={(e) => void createSection(e)} className={`${cardClass} mb-4 space-y-3 p-4`}>
@@ -488,7 +500,11 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
           <Field
             htmlFor="fs-create-desc"
             label="Description (optionnel)"
-            hint="Affichée sous le nom sur le site public."
+            hint={
+              descriptionSupported
+                ? "Affichée sous le nom sur le site public."
+                : FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT
+            }
           >
             <input
               id="fs-create-desc"
@@ -497,6 +513,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
               maxLength={FORMULE_SECTION_DESCRIPTION_MAX}
               onChange={(e) => setNewSectionDescription(e.target.value)}
               placeholder="Ex. Nos formules pour toutes les envies"
+              disabled={!descriptionSupported}
             />
           </Field>
           <div className="flex flex-wrap gap-2">
@@ -668,7 +685,11 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
             <Field
               htmlFor="fs-rename-desc"
               label="Description (optionnel)"
-              hint="Petit texte gris sous le titre sur le site public. Laissez vide pour n'afficher que le nom."
+              hint={
+                descriptionSupported
+                  ? "Petit texte gris sous le titre sur le site public. Laissez vide pour n'afficher que le nom."
+                  : FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT
+              }
             >
               <input
                 id="fs-rename-desc"
@@ -677,6 +698,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
                 maxLength={FORMULE_SECTION_DESCRIPTION_MAX}
                 onChange={(e) => setRenameDescription(e.target.value)}
                 placeholder="Ex. Nos formules pour toutes les envies"
+                disabled={!descriptionSupported}
               />
             </Field>
             <div className="flex flex-wrap gap-2 pt-1">

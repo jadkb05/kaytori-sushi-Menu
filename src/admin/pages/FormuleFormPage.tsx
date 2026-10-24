@@ -57,12 +57,12 @@ export function FormuleFormPage({ client, productId }: Props) {
     let cancelled = false;
     void (async () => {
       try {
-        const [secs, assigns] = await Promise.all([
+        const [secsLoad, assigns] = await Promise.all([
           fetchFormuleSections(client),
           fetchFormuleSectionAssignments(client),
         ]);
         if (cancelled) return;
-        setSections(secs);
+        setSections(secsLoad?.sections ?? null);
         setAssignments(assigns);
         if (productId && assigns) {
           setSectionAssignment(assigns.find((a) => a.productId === productId)?.sectionId ?? null);
