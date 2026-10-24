@@ -30,6 +30,7 @@ begin
   drop function if exists public.admin_delete_cover_banner(text);
   drop function if exists public.admin_update_cover_banner(text, jsonb, integer);
   drop function if exists public.admin_create_cover_banner(text, text, text, boolean, integer);
+  drop function if exists public.admin_create_cover_banner(text, text, text, boolean, integer, text);
   drop function if exists public.admin_set_formule_section(text, text, integer);
   drop function if exists public.admin_delete_formule_section(text);
   drop function if exists public.admin_update_formule_section(text, jsonb, integer);

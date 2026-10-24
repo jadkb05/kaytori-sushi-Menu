@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useCart } from "../cart/CartContext";
 import { FALLBACK_COVER_SLIDE, fetchPublishedCoverSlides, type CoverSlide } from "../data/coverBanners";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
@@ -32,8 +33,10 @@ function CoverImage({ slide, priority }: { slide: CoverSlide; priority: boolean 
 /**
  * Carrousel de couverture : auto 3 s vers la droite, boucle, pause pendant le glissement
  * (doigt / souris), reprise après interaction. Photos d'origine (object-cover, sans filtre).
+ * « + » or en bas à droite quand la photo est liée à une formule (nom + prix catalogue).
  */
 export function CoverCarousel() {
+  const { addItem, lines } = useCart();
   const reducedMotion = usePrefersReducedMotion();
   const [slides, setSlides] = useState<CoverSlide[]>([FALLBACK_COVER_SLIDE]);
   const [index, setIndex] = useState(0);
@@ -118,6 +121,22 @@ export function CoverCarousel() {
     }
   };
 
+  const current = slides[index] ?? slides[0];
+  const canAdd =
+    Boolean(current?.productId && current.productName && current.productPriceMAD) && current !== undefined;
+  const inCart =
+    canAdd && current.productId
+      ? lines.reduce((n, l) => (l.id === current.productId || l.id.startsWith(`${current.productId}:`) ? n + l.quantity : n), 0)
+      : 0;
+
+  const onAdd = (e: React.MouseEvent | React.PointerEvent) => {
+    e.stopPropagation();
+    e.preventDefault();
+    if (!canAdd || !current.productId || !current.productName || !current.productPriceMAD) return;
+    addItem(current.productId, current.productName, current.productPriceMAD);
+    pauseForInteraction();
+  };
+
   const n = slides.length;
   // Piste = n × viewport ; chaque slide = 100/n % de la piste (= 100 % viewport).
   // translate % est relatif à la piste → -index × (100/n) % décale d'un viewport.
@@ -147,11 +166,33 @@ export function CoverCarousel() {
         onPointerCancel={endDrag}
       >
         {slides.map((slide, i) => (
-          <div key={slide.id} className="h-full shrink-0" style={{ width: `${slidePct}%` }} aria-hidden={i !== index}>
+          <div key={slide.id} className="relative h-full shrink-0" style={{ width: `${slidePct}%` }} aria-hidden={i !== index}>
             <CoverImage slide={slide} priority={i === 0} />
           </div>
         ))}
       </div>
+
+      {canAdd ? (
+        <button
+          type="button"
+          className="absolute bottom-3 right-3 z-20 grid h-11 w-11 place-items-center rounded-full bg-kaytori-gold text-[1.65rem] font-light leading-none text-kaytori-black shadow-[0_8px_20px_-6px_rgba(0,0,0,0.55)] transition-[filter,transform] active:brightness-95 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f1815]"
+          aria-label={`Ajouter ${current.productName} au panier`}
+          onPointerDown={(e) => {
+            e.stopPropagation();
+          }}
+          onClick={onAdd}
+        >
+          <span aria-hidden>+</span>
+          {inCart > 0 ? (
+            <span
+              key={inCart}
+              className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full border-2 border-[#0f1815] bg-kaytori-black px-1 font-sans text-[0.65rem] font-bold tabular-nums text-kaytori-gold motion-safe:animate-badge-pop"
+            >
+              {inCart}
+            </span>
+          ) : null}
+        </button>
+      ) : null}
 
       {n > 1 ? (
         <div className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center gap-1.5" aria-hidden>

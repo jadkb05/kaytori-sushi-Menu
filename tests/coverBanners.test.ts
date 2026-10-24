@@ -14,13 +14,22 @@ import {
   type CoverBannerRow,
 } from "../src/admin/lib/coverBannerAdmin";
 import { ADMIN_ROUTES, resolveAdminRoute } from "../src/admin/lib/routes";
-import { activeCoverSlides, FALLBACK_COVER_SLIDE } from "../src/data/coverBanners";
+import {
+  COVER_PRODUCT_LINKS,
+  activeCoverSlides,
+  FALLBACK_COVER_SLIDE,
+  resolveCoverProductId,
+} from "../src/data/coverBanners";
 import { createPgliteSupabase } from "./helpers/pgliteSupabase";
-import { createMigratedDb } from "./helpers/supabaseTestDb";
+import { createMigratedDb, runSeed } from "./helpers/supabaseTestDb";
 
 const ADMIN = { id: "11111111-1111-1111-1111-111111111111", email: "admin@kaytori.test" };
 const COVER_MIGRATION = readFileSync(
   new URL("../supabase/migrations/20261024200000_cover_banners.sql", import.meta.url),
+  "utf8",
+);
+const COVER_PRODUCT_MIGRATION = readFileSync(
+  new URL("../supabase/migrations/20261024210000_cover_banner_product.sql", import.meta.url),
   "utf8",
 );
 
@@ -36,6 +45,7 @@ function row(partial: Partial<CoverBannerRow> & Pick<CoverBannerRow, "id">): Cov
     storage_path: null,
     sort_order: 0,
     is_active: true,
+    product_id: null,
     ...partial,
   };
 }
@@ -49,6 +59,14 @@ describe("coverBanners (helpers)", () => {
     ]);
     expect(slides.map((s) => s.id)).toEqual(["c", "b"]);
     expect(FALLBACK_COVER_SLIDE.imageUrl).toContain("kaytori-makis");
+  });
+
+  it("résout le product_id (DB ou associations affiches formules)", () => {
+    expect(resolveCoverProductId({ id: "cover-778984f58f", product_id: null })).toBe("formule-duo");
+    expect(resolveCoverProductId({ id: "cover-778984f58f", product_id: "formule-family" })).toBe("formule-family");
+    expect(resolveCoverProductId({ id: "cover-default", product_id: null })).toBeNull();
+    expect(COVER_PRODUCT_LINKS["cover-5bdc163cc0"]).toBe("721f54c1ed");
+    expect(COVER_PRODUCT_MIGRATION).toContain("product_id");
   });
 
   it("positions et déplacement", () => {
@@ -163,5 +181,54 @@ describe("cover_banners (migration + RPC)", () => {
       p_position: null,
     });
     expect(res.error).toBeTruthy();
+  });
+
+  it("lie une couverture à une formule (product_id) à la création ou ensuite", async () => {
+    db = await createMigratedDb();
+    await runSeed(db);
+    await db.exec(`
+      insert into auth.users (id) values ('${ADMIN.id}');
+      insert into public.admin_users (user_id) values ('${ADMIN.id}');
+    `);
+    const admin = createPgliteSupabase(db, ADMIN);
+
+    const created = await admin.rpc("admin_create_cover_banner", {
+      p_id: "cover-duo-new",
+      p_image_url: "https://example.test/duo.jpg",
+      p_storage_path: null,
+      p_is_active: true,
+      p_position: null,
+      p_product_id: "formule-duo",
+    });
+    expect(created.error).toBeNull();
+    const linkedAtCreate = await db.query<{ product_id: string | null }>(
+      "select product_id from public.cover_banners where id = 'cover-duo-new'",
+    );
+    expect(linkedAtCreate.rows[0]?.product_id).toBe("formule-duo");
+
+    const solo = await admin.rpc("admin_create_cover_banner", {
+      p_id: "cover-photo-only",
+      p_image_url: "https://example.test/deco.jpg",
+      p_storage_path: null,
+      p_is_active: true,
+      p_position: null,
+      p_product_id: null,
+    });
+    expect(solo.error).toBeNull();
+    const photoOnly = await db.query<{ product_id: string | null }>(
+      "select product_id from public.cover_banners where id = 'cover-photo-only'",
+    );
+    expect(photoOnly.rows[0]?.product_id).toBeNull();
+
+    const cleared = await admin.rpc("admin_update_cover_banner", {
+      p_banner_id: "cover-duo-new",
+      p_changes: { product_id: null },
+      p_position: null,
+    });
+    expect(cleared.error).toBeNull();
+    const after = await db.query<{ product_id: string | null }>(
+      "select product_id from public.cover_banners where id = 'cover-duo-new'",
+    );
+    expect(after.rows[0]?.product_id).toBeNull();
   });
 });

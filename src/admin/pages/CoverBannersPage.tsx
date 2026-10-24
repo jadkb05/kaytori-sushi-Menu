@@ -15,8 +15,10 @@ import { restrictToVerticalAxis, restrictToWindowEdges } from "@dnd-kit/modifier
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { GripIcon, PlusIcon, TrashIcon } from "../components/icons";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { createPortal } from "react-dom";
+import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
+import { CloseIcon, GripIcon, PlusIcon, TrashIcon } from "../components/icons";
 import {
   ConfirmDialog,
   LoadingState,
@@ -25,8 +27,10 @@ import {
   Toast,
   buttonClass,
   cardClass,
+  inputClass,
   type ToastNotice,
 } from "../components/ui";
+import { useAdminMenuData } from "../hooks/AdminMenuData";
 import {
   COVER_BANNERS_MIGRATION_HINT,
   PHOTO_ACCEPT,
@@ -42,6 +46,9 @@ import {
   validatePhotoFile,
   type CoverBannerRow,
 } from "../lib/coverBannerAdmin";
+import { buildProductList } from "../lib/menuAdmin";
+
+type FormuleOption = { id: string; label: string };
 
 const dropAnimation: DropAnimation = {
   duration: 180,
@@ -74,9 +81,11 @@ function SortableCoverRow({
   total,
   busy,
   savingOrder,
+  formuleOptions,
   onSetFirst,
   onReplace,
   onToggle,
+  onProductChange,
   onDelete,
 }: {
   banner: CoverBannerRow;
@@ -84,9 +93,11 @@ function SortableCoverRow({
   total: number;
   busy: boolean;
   savingOrder: boolean;
+  formuleOptions: readonly FormuleOption[];
   onSetFirst: () => void;
   onReplace: () => void;
   onToggle: () => void;
+  onProductChange: (productId: string | null) => void;
   onDelete: () => void;
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
@@ -143,6 +154,26 @@ function SortableCoverRow({
             <span className="text-xs text-admin-muted">Glissez la photo pour réordonner</span>
           ) : null}
         </div>
+        <label className="block min-w-0 space-y-1">
+          <span className="text-[12px] font-medium text-admin-ink">Formule liée (bouton « + »)</span>
+          <select
+            className={`${inputClass} max-w-md`}
+            value={banner.product_id ?? ""}
+            disabled={busy || savingOrder}
+            onChange={(e) => onProductChange(e.target.value.trim() === "" ? null : e.target.value)}
+            aria-label={`Formule liée à la photo en position ${position}`}
+          >
+            <option value="">Photo seule — sans « + »</option>
+            {formuleOptions.map((o) => (
+              <option key={o.id} value={o.id}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+          <span className="block text-[11px] leading-snug text-admin-muted">
+            Le prix affiché au panier est celui de la formule catalogue (non inventé ici).
+          </span>
+        </label>
         <div className="flex flex-wrap gap-2">
           <button
             type="button"
@@ -197,10 +228,186 @@ function CoverDragPreview({ banner }: { banner: CoverBannerRow }) {
 }
 
 /**
+ * Ajout d'une ou plusieurs photos : formule optionnelle (nom + prix catalogue)
+ * ou photo seule sans bouton « + ».
+ */
+function AddCoverDialog({
+  busy,
+  error,
+  formuleOptions,
+  onClose,
+  onSubmit,
+}: {
+  busy: boolean;
+  error: string | null;
+  formuleOptions: readonly FormuleOption[];
+  onClose: () => void;
+  onSubmit: (files: File[], productId: string | null) => void;
+}) {
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [files, setFiles] = useState<File[]>([]);
+  const [productId, setProductId] = useState("");
+  const [localError, setLocalError] = useState<string | null>(null);
+  const busyRef = useRef(busy);
+  busyRef.current = busy;
+
+  useEffect(() => {
+    const opener = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    dialogRef.current?.querySelector<HTMLElement>("[data-autofocus]")?.focus({ preventScroll: true });
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && !busyRef.current) {
+        e.preventDefault();
+        onClose();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = previousOverflow;
+      if (opener?.isConnected) opener.focus({ preventScroll: true });
+    };
+  }, [onClose]);
+
+  const onPick = (list: FileList | null) => {
+    setLocalError(null);
+    if (!list || list.length === 0) {
+      setFiles([]);
+      return;
+    }
+    const next: File[] = [];
+    for (const file of Array.from(list)) {
+      const invalid = validatePhotoFile(file);
+      if (invalid) {
+        setLocalError(invalid);
+        setFiles([]);
+        if (fileRef.current) fileRef.current.value = "";
+        return;
+      }
+      next.push(file);
+    }
+    setFiles(next);
+  };
+
+  const submit = () => {
+    setLocalError(null);
+    if (files.length === 0) {
+      setLocalError("Choisissez au moins une photo.");
+      return;
+    }
+    onSubmit(files, productId.trim() === "" ? null : productId);
+  };
+
+  const displayError = error ?? localError;
+
+  return createPortal(
+    <div
+      className="fixed inset-0 z-50 flex items-end justify-center bg-admin-ink/40 p-4 font-sans motion-safe:animate-admin-fade sm:items-center"
+      role="presentation"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget && !busy) onClose();
+      }}
+    >
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="add-cover-title"
+        className="w-full max-w-lg rounded-2xl bg-white p-5 shadow-admin-lg motion-safe:animate-admin-pop sm:p-6"
+      >
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <h3 id="add-cover-title" className="text-lg font-semibold text-admin-ink">
+              Ajouter des photos de couverture
+            </h3>
+            <p className="mt-1 text-sm leading-relaxed text-admin-soft">
+              Liez une formule pour afficher le « + » or (nom et prix du catalogue), ou laissez « Photo seule »
+              pour une image décorative sans bouton.
+            </p>
+          </div>
+          <button
+            type="button"
+            className={buttonClass("ghost", "sm")}
+            disabled={busy}
+            aria-label="Fermer"
+            onClick={onClose}
+          >
+            <CloseIcon className="h-4 w-4" />
+          </button>
+        </div>
+
+        <div className="mt-5 space-y-4">
+          <label className="block space-y-1.5">
+            <span className="text-[13px] font-medium text-admin-ink">Photos</span>
+            <input
+              ref={fileRef}
+              type="file"
+              accept={PHOTO_ACCEPT}
+              multiple
+              data-autofocus
+              disabled={busy}
+              className={`${inputClass} file:mr-3 file:rounded-md file:border-0 file:bg-admin-tint file:px-2.5 file:py-1.5 file:text-xs file:font-semibold file:text-kaytori-green`}
+              onChange={(e) => onPick(e.target.files)}
+            />
+            {files.length > 0 ? (
+              <span className="block text-xs text-admin-muted">
+                {files.length === 1 ? files[0].name : `${files.length} fichiers sélectionnés`}
+              </span>
+            ) : null}
+          </label>
+
+          <label className="block space-y-1.5">
+            <span className="text-[13px] font-medium text-admin-ink">Formule (optionnel)</span>
+            <select
+              className={inputClass}
+              value={productId}
+              disabled={busy}
+              onChange={(e) => setProductId(e.target.value)}
+              aria-label="Formule liée aux photos ajoutées"
+            >
+              <option value="">Photo seule — sans « + »</option>
+              {formuleOptions.map((o) => (
+                <option key={o.id} value={o.id}>
+                  {o.label}
+                </option>
+              ))}
+            </select>
+            <span className="block text-[11px] leading-snug text-admin-muted">
+              Même choix pour toutes les photos de cet ajout. Modifiable ensuite ligne par ligne. Le prix vient de
+              la fiche formule.
+            </span>
+          </label>
+        </div>
+
+        {displayError ? (
+          <p className="mt-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-800" role="alert">
+            {displayError}
+          </p>
+        ) : null}
+
+        <div className="mt-6 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+          <button type="button" className={buttonClass("secondary")} disabled={busy} onClick={onClose}>
+            Annuler
+          </button>
+          <button type="button" className={buttonClass("primary")} disabled={busy} onClick={submit}>
+            <PlusIcon className="h-4 w-4" />
+            {busy ? "Ajout…" : files.length > 1 ? `Ajouter ${files.length} photos` : "Ajouter"}
+          </button>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
+/**
  * Gestion des photos de couverture du menu public (carrousel).
  * Ordre : glisser-déposer fluide (overlay qui suit le doigt / la souris) + enregistrement auto.
  */
 export function CoverBannersPage({ client }: { client: SupabaseClient }) {
+  const menuData = useAdminMenuData();
   const [banners, setBanners] = useState<CoverBannerRow[] | null>(null);
   const [ready, setReady] = useState(false);
   const [toast, setToast] = useState<ToastNotice | null>(null);
@@ -211,10 +418,21 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
   const [deleteBusy, setDeleteBusy] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [addBusy, setAddBusy] = useState(false);
-  const addInputRef = useRef<HTMLInputElement>(null);
+  const [addOpen, setAddOpen] = useState(false);
+  const [addError, setAddError] = useState<string | null>(null);
   const replaceInputRef = useRef<HTMLInputElement>(null);
   const replaceTargetRef = useRef<string | null>(null);
   const orderBeforeDragRef = useRef<CoverBannerRow[] | null>(null);
+
+  const formuleOptions = useMemo(() => {
+    if (menuData.status !== "ready") return [];
+    return buildProductList(menuData.rows)
+      .filter((p) => p.categoryId === FORMULES_CATEGORY_ID)
+      .map((p) => ({
+        id: p.id,
+        label: `${p.name} — ${p.displayPrice} DH`,
+      }));
+  }, [menuData]);
 
   const reload = useCallback(async () => {
     try {
@@ -239,36 +457,40 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
     useSensor(TouchSensor, { activationConstraint: { delay: 140, tolerance: 8 } }),
   );
 
-  const onAddFiles = async (files: FileList | null) => {
-    if (!files || files.length === 0 || !banners) return;
+  const onAddSubmit = async (files: File[], productId: string | null) => {
+    if (!banners || files.length === 0) return;
     setAddBusy(true);
+    setAddError(null);
     try {
       let list = banners;
       let added = 0;
-      for (const file of Array.from(files)) {
-        const invalid = validatePhotoFile(file);
-        if (invalid) {
-          setToast({ tone: "error", message: invalid });
-          continue;
-        }
+      for (const file of files) {
         const res = await createCoverBanner(client, list, {
           file,
           isActive: true,
           position: list.length + 1,
+          productId,
         });
         if (!res.ok) {
-          setToast({ tone: "error", message: res.error });
+          setAddError(res.error);
           break;
         }
         list = orderedCoverBanners([...list, res.banner]);
         setBanners(list);
         added += 1;
       }
-      if (added > 0) setToast({ tone: "success", message: added === 1 ? "Photo ajoutée." : `${added} photos ajoutées.` });
-      await reload();
+      if (added > 0) {
+        const linked = productId ? " avec formule liée" : " (photo seule)";
+        setToast({
+          tone: "success",
+          message:
+            added === 1 ? `Photo ajoutée${linked}.` : `${added} photos ajoutées${linked}.`,
+        });
+        setAddOpen(false);
+        await reload();
+      }
     } finally {
       setAddBusy(false);
-      if (addInputRef.current) addInputRef.current.value = "";
     }
   };
 
@@ -314,6 +536,22 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
       return;
     }
     setToast({ tone: "success", message: "Première photo du carrousel." });
+    await reload();
+  };
+
+  const setProduct = async (b: CoverBannerRow, productId: string | null) => {
+    if ((b.product_id ?? null) === productId) return;
+    setBusyId(b.id);
+    const res = await updateCoverBanner(client, b.id, { productId });
+    setBusyId(null);
+    if (!res.ok) {
+      setToast({ tone: "error", message: res.error });
+      return;
+    }
+    setToast({
+      tone: "success",
+      message: productId ? "Formule liée à la couverture." : "Couverture décorative (sans « + »).",
+    });
     await reload();
   };
 
@@ -375,28 +613,21 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
     <>
       <PageHeader
         title="Couverture"
-        description="Photos du bandeau d'accueil du menu public. Glissez une photo (elle suit votre doigt ou la souris) pour changer l'ordre. Le carrousel public suit cet ordre pour les photos actives."
+        description="Photos du bandeau d'accueil du menu public. Glissez pour réordonner. Liez une formule pour afficher le « + » or sur la photo (ajout au panier avec le nom et le prix catalogue)."
         actions={
           banners ? (
-            <>
-              <input
-                ref={addInputRef}
-                type="file"
-                accept={PHOTO_ACCEPT}
-                multiple
-                className="sr-only"
-                onChange={(e) => void onAddFiles(e.target.files)}
-              />
-              <button
-                type="button"
-                className={buttonClass("primary")}
-                disabled={addBusy || savingOrder}
-                onClick={() => addInputRef.current?.click()}
-              >
-                <PlusIcon className="h-4 w-4" />
-                {addBusy ? "Ajout…" : "Ajouter des photos"}
-              </button>
-            </>
+            <button
+              type="button"
+              className={buttonClass("primary")}
+              disabled={addBusy || savingOrder}
+              onClick={() => {
+                setAddError(null);
+                setAddOpen(true);
+              }}
+            >
+              <PlusIcon className="h-4 w-4" />
+              Ajouter des photos
+            </button>
           ) : null
         }
       />
@@ -431,12 +662,14 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
                     total={ordered.length}
                     busy={busyId === b.id}
                     savingOrder={savingOrder}
+                    formuleOptions={formuleOptions}
                     onSetFirst={() => void setFirst(b)}
                     onReplace={() => {
                       replaceTargetRef.current = b.id;
                       replaceInputRef.current?.click();
                     }}
                     onToggle={() => void toggle(b)}
+                    onProductChange={(productId) => void setProduct(b, productId)}
                     onDelete={() => {
                       setDeleteError(null);
                       setDeleting(b);
@@ -464,6 +697,21 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
         className="sr-only"
         onChange={(e) => void onReplace(e.target.files?.[0])}
       />
+
+      {addOpen ? (
+        <AddCoverDialog
+          busy={addBusy}
+          error={addError}
+          formuleOptions={formuleOptions}
+          onClose={() => {
+            if (!addBusy) {
+              setAddOpen(false);
+              setAddError(null);
+            }
+          }}
+          onSubmit={(files, productId) => void onAddSubmit(files, productId)}
+        />
+      ) : null}
 
       {deleting ? (
         <ConfirmDialog

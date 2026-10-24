@@ -24,10 +24,15 @@ export type CoverBannerRow = {
   storage_path: string | null;
   sort_order: number;
   is_active: boolean;
+  /** Formule liée pour le « + » panier sur le carrousel public (null = décoratif). */
+  product_id: string | null;
 };
 
 export const COVER_BANNERS_MIGRATION_HINT =
   "Les photos de couverture ne sont pas encore installées sur Supabase. Appliquez supabase/production/10_cover_banners.sql (avec autorisation).";
+
+export const COVER_PRODUCT_MIGRATION_HINT =
+  "La liaison couverture → formule n'est pas encore installée. Appliquez supabase/production/11_cover_banner_product.sql (avec autorisation).";
 
 function rpcError(error: { message: string; code?: string }): string {
   if (error.code === "PGRST202" || /could not find the function|relation .* does not exist/i.test(error.message)) {
@@ -38,27 +43,45 @@ function rpcError(error: { message: string; code?: string }): string {
 
 function normalizeRow(row: Record<string, unknown>): CoverBannerRow {
   const path = row.storage_path;
+  const product = row.product_id;
   return {
     id: String(row.id),
     image_url: String(row.image_url),
     storage_path: typeof path === "string" && path.trim() !== "" ? path.trim() : null,
     sort_order: Number(row.sort_order),
     is_active: Boolean(row.is_active),
+    product_id: typeof product === "string" && product.trim() !== "" ? product.trim() : null,
   };
 }
 
 /** null = table absente (migration 10 non appliquée). */
 export async function fetchCoverBanners(client: SupabaseClient): Promise<CoverBannerRow[] | null> {
-  const { data, error } = await client
+  const withProduct = await client
     .from("cover_banners")
-    .select("id, image_url, storage_path, sort_order, is_active")
+    .select("id, image_url, storage_path, sort_order, is_active, product_id")
     .order("sort_order")
     .order("id");
-  if (error) {
-    if (/does not exist|schema cache/i.test(error.message)) return null;
-    throw new Error(error.message);
+  if (withProduct.error && /product_id|column/i.test(withProduct.error.message)) {
+    const fallback = await client
+      .from("cover_banners")
+      .select("id, image_url, storage_path, sort_order, is_active")
+      .order("sort_order")
+      .order("id");
+    if (fallback.error) {
+      if (/does not exist|schema cache/i.test(fallback.error.message)) return null;
+      throw new Error(fallback.error.message);
+    }
+    const { COVER_PRODUCT_LINKS } = await import("../../data/coverBanners");
+    return (fallback.data ?? []).map((row) => {
+      const base = normalizeRow(row as Record<string, unknown>);
+      return { ...base, product_id: COVER_PRODUCT_LINKS[base.id] ?? null };
+    });
   }
-  return (data ?? []).map((row) => normalizeRow(row as Record<string, unknown>));
+  if (withProduct.error) {
+    if (/does not exist|schema cache/i.test(withProduct.error.message)) return null;
+    throw new Error(withProduct.error.message);
+  }
+  return (withProduct.data ?? []).map((row) => normalizeRow(row as Record<string, unknown>));
 }
 
 export function orderedCoverBanners(banners: readonly CoverBannerRow[]): CoverBannerRow[] {
@@ -125,20 +148,52 @@ export type CoverBannerActionResult = { ok: true; banner: CoverBannerRow } | { o
 export async function createCoverBanner(
   client: SupabaseClient,
   banners: readonly CoverBannerRow[],
-  input: { file: File; isActive: boolean; position: number | null },
+  input: {
+    file: File;
+    isActive: boolean;
+    position: number | null;
+    /** null / omis = photo seule (pas de « + » panier). */
+    productId?: string | null;
+  },
 ): Promise<CoverBannerActionResult> {
   const id = newCoverBannerId(banners);
   const uploaded = await uploadCoverPhoto(client, id, input.file);
   if (!uploaded.ok) return uploaded;
-  const { data, error } = await client.rpc("admin_create_cover_banner", {
+  const productId =
+    typeof input.productId === "string" && input.productId.trim() !== "" ? input.productId.trim() : null;
+
+  const withProduct = await client.rpc("admin_create_cover_banner", {
+    p_id: id,
+    p_image_url: uploaded.publicUrl,
+    p_storage_path: uploaded.path,
+    p_is_active: input.isActive,
+    p_position: input.position,
+    p_product_id: productId,
+  });
+  if (!withProduct.error) {
+    return { ok: true, banner: normalizeRow(withProduct.data as Record<string, unknown>) };
+  }
+
+  const createProductUnsupported =
+    withProduct.error.code === "PGRST202" ||
+    /Could not find the function|p_product_id|no function matches/i.test(withProduct.error.message);
+
+  if (!createProductUnsupported) {
+    return { ok: false, error: rpcError(withProduct.error) };
+  }
+
+  // Migration 11 absente : créer sans produit, puis lier via update si demandé.
+  const legacy = await client.rpc("admin_create_cover_banner", {
     p_id: id,
     p_image_url: uploaded.publicUrl,
     p_storage_path: uploaded.path,
     p_is_active: input.isActive,
     p_position: input.position,
   });
-  if (error) return { ok: false, error: rpcError(error) };
-  return { ok: true, banner: normalizeRow(data as Record<string, unknown>) };
+  if (legacy.error) return { ok: false, error: rpcError(legacy.error) };
+  const created = normalizeRow(legacy.data as Record<string, unknown>);
+  if (!productId) return { ok: true, banner: { ...created, product_id: null } };
+  return updateCoverBanner(client, created.id, { productId });
 }
 
 export async function updateCoverBanner(
@@ -148,6 +203,8 @@ export async function updateCoverBanner(
     isActive?: boolean;
     imageUrl?: string;
     storagePath?: string | null;
+    /** null = décoratif (pas de « + » panier). */
+    productId?: string | null;
     position?: number;
   },
 ): Promise<CoverBannerActionResult> {
@@ -155,12 +212,18 @@ export async function updateCoverBanner(
   if (changes.isActive !== undefined) p_changes.is_active = changes.isActive;
   if (changes.imageUrl !== undefined) p_changes.image_url = changes.imageUrl;
   if (changes.storagePath !== undefined) p_changes.storage_path = changes.storagePath;
+  if (changes.productId !== undefined) p_changes.product_id = changes.productId;
   const { data, error } = await client.rpc("admin_update_cover_banner", {
     p_banner_id: bannerId,
     p_changes,
     p_position: changes.position ?? null,
   });
-  if (error) return { ok: false, error: rpcError(error) };
+  if (error) {
+    if (/product_id|Champ de couverture non modifiable/i.test(error.message)) {
+      return { ok: false, error: COVER_PRODUCT_MIGRATION_HINT };
+    }
+    return { ok: false, error: rpcError(error) };
+  }
   return { ok: true, banner: normalizeRow(data as Record<string, unknown>) };
 }
 
