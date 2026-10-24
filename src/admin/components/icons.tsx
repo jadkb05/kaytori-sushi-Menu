@@ -31,6 +31,15 @@ export const FormulesIcon = (p: IconProps) => (
   </Svg>
 );
 
+/** Couverture : cadre photo. */
+export const CoverIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="3.5" y="5.5" width="17" height="13" rx="2" />
+    <circle cx="9" cy="10.5" r="1.75" />
+    <path d="m7 16.5 3.2-3.5 2.3 2.2 3-3.7 3.5 4.9" />
+  </Svg>
+);
+
 export const DashboardIcon = (p: IconProps) => (
   <Svg {...p}>
     <rect x="3.5" y="3.5" width="7" height="8" rx="1.5" />

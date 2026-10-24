@@ -45,6 +45,7 @@ describe("migration + seed (PostgreSQL en mémoire)", () => {
       "admin_users",
       "audit_log",
       "categories",
+      "cover_banners",
       "formule_sections",
       "product_variants",
       "products",

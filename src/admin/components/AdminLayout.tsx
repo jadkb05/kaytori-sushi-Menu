@@ -2,13 +2,14 @@ import type { ReactNode } from "react";
 import { BrandLogo } from "../../components/BrandLogo";
 import { ADMIN_ROUTES, type AdminContentPage } from "../lib/routes";
 import { AdminLink } from "./AdminLink";
-import { CategoriesIcon, DashboardIcon, ExternalIcon, FormulesIcon, LogoutIcon, ProductsIcon } from "./icons";
+import { CategoriesIcon, CoverIcon, DashboardIcon, ExternalIcon, FormulesIcon, LogoutIcon, ProductsIcon } from "./icons";
 import { focusRing } from "./ui";
 
 const NAV: { page: Exclude<AdminContentPage, "productEdit" | "productCreate" | "formuleEdit" | "formuleCreate">; href: string; label: string; icon: typeof DashboardIcon }[] = [
   { page: "dashboard", href: ADMIN_ROUTES.dashboard, label: "Tableau de bord", icon: DashboardIcon },
   { page: "products", href: ADMIN_ROUTES.products, label: "Produits", icon: ProductsIcon },
   { page: "formules", href: ADMIN_ROUTES.formules, label: "Formules", icon: FormulesIcon },
+  { page: "cover", href: ADMIN_ROUTES.cover, label: "Couverture", icon: CoverIcon },
   { page: "categories", href: ADMIN_ROUTES.categories, label: "Catégories", icon: CategoriesIcon },
 ];
 
@@ -148,7 +149,7 @@ export function AdminLayout({
         aria-label="Administration"
         className="fixed inset-x-0 bottom-0 z-30 border-t border-admin-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur supports-[backdrop-filter]:bg-white/85 lg:hidden"
       >
-        <ul className="mx-auto grid h-16 max-w-lg grid-cols-4">
+        <ul className="mx-auto grid h-16 max-w-lg grid-cols-5">
           {NAV.map((item) => {
             const active = isActive(item);
             const Icon = item.icon;

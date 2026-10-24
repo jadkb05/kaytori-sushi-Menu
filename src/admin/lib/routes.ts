@@ -12,6 +12,7 @@ export const ADMIN_ROUTES = {
   productNew: "/admin/products/new",
   formules: "/admin/formules",
   formuleNew: "/admin/formules/new",
+  cover: "/admin/cover",
 } as const;
 
 /** /admin/products/:id — édition d'un produit existant. */
@@ -28,6 +29,7 @@ export type AdminContentPage =
   | "products"
   | "categories"
   | "formules"
+  | "cover"
   | "productEdit"
   | "productCreate"
   | "formuleEdit"
@@ -58,6 +60,7 @@ const CONTENT_PAGES: Record<string, AdminContentPage> = {
   [ADMIN_ROUTES.productNew]: "productCreate",
   [ADMIN_ROUTES.formules]: "formules",
   [ADMIN_ROUTES.formuleNew]: "formuleCreate",
+  [ADMIN_ROUTES.cover]: "cover",
 };
 
 /** « /admin/products/743455af94 » → « 743455af94 » (un seul segment), sinon null. */

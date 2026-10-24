@@ -21,6 +21,7 @@ import { AccessDeniedPage, AccessErrorPage, UnconfiguredPage } from "./pages/Acc
 import { CategoriesPage } from "./pages/CategoriesPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LoginPage } from "./pages/LoginPage";
+import { CoverBannersPage } from "./pages/CoverBannersPage";
 import { FormuleFormPage } from "./pages/FormuleFormPage";
 import { FormulesPage } from "./pages/FormulesPage";
 import { ProductCreatePage } from "./pages/ProductCreatePage";
@@ -84,6 +85,7 @@ export default function AdminApp() {
             {decision.page === "products" ? <ProductsPage client={client!} /> : null}
             {decision.page === "categories" ? <CategoriesPage client={client!} /> : null}
             {decision.page === "formules" ? <FormulesPage client={client!} /> : null}
+            {decision.page === "cover" ? <CoverBannersPage client={client!} /> : null}
             {decision.page === "formuleCreate" ? <FormuleFormPage client={client!} productId={null} /> : null}
             {decision.page === "formuleEdit" && decision.productId ? (
               <FormuleFormPage client={client!} productId={decision.productId} />
