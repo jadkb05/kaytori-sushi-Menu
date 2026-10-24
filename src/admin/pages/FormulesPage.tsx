@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import { AdminLink } from "../components/AdminLink";
+import { FormuleSectionOffersList } from "../components/FormuleSectionOffersList";
 import { ArrowDownIcon, ArrowUpIcon, PencilIcon, PlusIcon, TrashIcon } from "../components/icons";
 import { Field } from "../components/formControls";
 import {
@@ -79,6 +80,9 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
   const [newSectionBusy, setNewSectionBusy] = useState(false);
   const [movingSectionId, setMovingSectionId] = useState<string | null>(null);
   const [reorderingSectionId, setReorderingSectionId] = useState<string | null>(null);
+  /** Ordre optimiste des offres par section (ids) pendant / juste après un glisser-déposer. */
+  const [orderOverrides, setOrderOverrides] = useState<Record<string, string[]> | null>(null);
+  const [savingOrderSectionId, setSavingOrderSectionId] = useState<string | null>(null);
 
   const reloadSections = useCallback(async () => {
     try {
@@ -134,52 +138,75 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
     return { groups, unassigned };
   }, [formules, orderedSections, assignmentMap]);
 
+  const itemsInSection = useCallback(
+    (sectionId: string): AdminProduct[] => {
+      const base = formulesBySection.groups.get(sectionId) ?? [];
+      const ids = orderOverrides?.[sectionId];
+      if (!ids) return base;
+      const byId = new Map(base.map((p) => [p.id, p]));
+      const ordered = ids.map((id) => byId.get(id)).filter((p): p is AdminProduct => Boolean(p));
+      for (const p of base) if (!ids.includes(p.id)) ordered.push(p);
+      return ordered;
+    },
+    [formulesBySection, orderOverrides],
+  );
+
   /** Rangs 1…N par section (pas le total de la catégorie formules). */
   const ranksBySection = useMemo(() => {
     const out = new Map<string, Map<string, FormuleSectionRank>>();
-    for (const [sectionId, items] of formulesBySection.groups) {
-      out.set(sectionId, ranksInOrderedGroup(items.map((p) => p.id)));
+    for (const section of orderedSections) {
+      const items = itemsInSection(section.id);
+      out.set(section.id, ranksInOrderedGroup(items.map((p) => p.id)));
     }
     return out;
-  }, [formulesBySection]);
+  }, [orderedSections, itemsInSection]);
 
   const move = async (p: AdminProduct, direction: MoveDirection, sectionId: string | null) => {
     if (moving || data.status !== "ready") return;
     setMoving(p);
     setToast({ tone: "pending", message: `Déplacement de « ${p.name} »…` });
 
+    // Flèches : uniquement hors sections DB (liste plate). Dans une section : glisser-déposer.
     if (sectionId) {
-      const rank = ranksBySection.get(sectionId)?.get(p.id);
-      const target = rank ? sectionMoveTarget(rank.position, rank.total, direction) : null;
-      if (target === null) {
-        setMoving(null);
-        setToast({
-          tone: "error",
-          message: `« ${p.name} » est déjà en ${direction === "up" ? "première" : "dernière"} position.`,
-        });
-        return;
-      }
-      const res = await setFormuleSection(client, p.id, sectionId, target);
-      const refreshed = await data.refresh();
-      await reloadSections();
       setMoving(null);
-      if (!res.ok) {
-        setToast({ tone: "error", message: res.error });
-        return;
-      }
-      const sectionName = orderedSections.find((s) => s.id === sectionId)?.name ?? sectionId;
-      setToast(
-        refreshed
-          ? { tone: "success", message: `« ${p.name} » déplacé en position ${target} dans « ${sectionName} ».` }
-          : { tone: "error", message: `« ${p.name} » a été déplacé, mais la liste n'a pas pu être rechargée. Actualisez la page.` },
-      );
       return;
     }
 
-    // Sans sections DB : ordre catégorie (comportement historique).
     const notice = await runProductMove(client, p, direction, data.refresh);
     setMoving(null);
     setToast(notice.error ? { tone: "error", message: notice.error } : notice.success ? { tone: "success", message: notice.success } : null);
+  };
+
+  const persistSectionOfferOrder = async (
+    sectionId: string,
+    productId: string,
+    toPosition: number,
+    previousItems: AdminProduct[],
+    nextItems: AdminProduct[],
+  ) => {
+    setOrderOverrides((prev) => ({ ...(prev ?? {}), [sectionId]: nextItems.map((p) => p.id) }));
+    setSavingOrderSectionId(sectionId);
+    const res = await setFormuleSection(client, productId, sectionId, toPosition);
+    if (!res.ok) {
+      setOrderOverrides((prev) => ({ ...(prev ?? {}), [sectionId]: previousItems.map((p) => p.id) }));
+      setSavingOrderSectionId(null);
+      setToast({ tone: "error", message: res.error || "Ordre non enregistré." });
+      return;
+    }
+    const refreshed = await data.refresh();
+    await reloadSections();
+    setOrderOverrides((prev) => {
+      if (!prev) return null;
+      const { [sectionId]: _removed, ...rest } = prev;
+      return Object.keys(rest).length > 0 ? rest : null;
+    });
+    setSavingOrderSectionId(null);
+    if (!refreshed) {
+      setToast({
+        tone: "error",
+        message: "L'ordre a été enregistré, mais la liste n'a pas pu être rechargée. Actualisez la page.",
+      });
+    }
   };
 
   const toggle = async (p: AdminProduct) => {
@@ -442,7 +469,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
     <>
       <PageHeader
         title="Formules & Promos"
-        description="Organisez les offres en sections (Solo/Duo/Family, Midi, Promo, ou les vôtres). Une seule catégorie catalogue ; le site public lit les sections dès que la migration est appliquée."
+        description="Organisez les offres en sections (Solo/Duo/Family, Midi, Promo, ou les vôtres). Dans une section, glissez une offre pour changer l'ordre du carrousel public."
         actions={
           ready ? (
             <div className="flex flex-wrap gap-2">
@@ -539,7 +566,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
 
       {ready && dbSections
         ? orderedSections.map((section, sectionIndex) => {
-            const items = formulesBySection.groups.get(section.id) ?? [];
+            const items = itemsInSection(section.id);
             const sectionPos = sectionIndex + 1;
             const sectionTotal = orderedSections.length;
             const canSectionUp = sectionMoveTarget(sectionPos, sectionTotal, "up") !== null;
@@ -612,12 +639,24 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
                     Ajouter
                   </AdminLink>
                 </div>
-                <ul className="space-y-3">
-                  {items.map((p) => renderFormuleRow(p, section.id))}
-                  {items.length === 0 ? (
-                    <li className={`${cardClass} p-4 text-sm text-admin-soft`}>Aucune offre dans cette section.</li>
-                  ) : null}
-                </ul>
+                <FormuleSectionOffersList
+                  sectionId={section.id}
+                  items={items}
+                  orderedSections={orderedSections}
+                  disabled={Boolean(moving) || Boolean(savingOrderSectionId)}
+                  savingOrder={savingOrderSectionId === section.id}
+                  movingSectionId={movingSectionId}
+                  pendingId={pendingId}
+                  onReorderPersist={(productId, toPosition, previousItems, nextItems) =>
+                    persistSectionOfferOrder(section.id, productId, toPosition, previousItems, nextItems)
+                  }
+                  onMoveToSection={(p, next) => void moveToSection(p, next)}
+                  onToggle={(p) => void toggle(p)}
+                  onDelete={(p) => {
+                    setDeleteError(null);
+                    setDeleting(p);
+                  }}
+                />
               </section>
             );
           })

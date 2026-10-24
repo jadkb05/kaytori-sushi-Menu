@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { reorderIds } from "../src/admin/lib/adminDnd";
 import {
   FORMULE_SECTION_DESCRIPTION_MIGRATION_HINT,
   buildFormuleSectionUpdateChanges,
@@ -72,6 +73,12 @@ describe("formule sections : helpers", () => {
     expect(sectionMoveTarget(3, 3, "down")).toBeNull();
     expect(formuleSectionDescriptionError("x".repeat(161))).toMatch(/160/);
     expect(formuleSectionDescriptionError("Nos formules pour toutes les envies")).toBeNull();
+  });
+
+  it("réordonne les ids pour le glisser-déposer dans une section", () => {
+    expect(reorderIds(["a", "b", "c"], 2, 0)).toEqual(["c", "a", "b"]);
+    expect(reorderIds(["a", "b", "c"], 0, 2)).toEqual(["b", "c", "a"]);
+    expect(reorderIds(["a", "b", "c"], 1, 1)).toEqual(["a", "b", "c"]);
   });
 
   it("calcule des rangs 1…N indépendants par section (pas le total catégorie)", () => {
