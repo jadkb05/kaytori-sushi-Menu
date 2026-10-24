@@ -1,11 +1,17 @@
 import {
   DndContext,
-  PointerSensor,
+  DragOverlay,
+  MouseSensor,
+  TouchSensor,
   closestCenter,
+  defaultDropAnimationSideEffects,
   useSensor,
   useSensors,
   type DragEndEvent,
+  type DragStartEvent,
+  type DropAnimation,
 } from "@dnd-kit/core";
+import { restrictToVerticalAxis, restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -37,9 +43,30 @@ import {
   type CoverBannerRow,
 } from "../lib/coverBannerAdmin";
 
+const dropAnimation: DropAnimation = {
+  duration: 180,
+  easing: "cubic-bezier(0.2, 0, 0, 1)",
+  sideEffects: defaultDropAnimationSideEffects({
+    styles: { active: { opacity: "0.3" } },
+  }),
+};
+
+function CoverThumb({ src, className = "" }: { src: string; className?: string }) {
+  return (
+    <img
+      src={src}
+      alt=""
+      className={`pointer-events-none h-full w-full object-cover ${className}`}
+      loading="lazy"
+      decoding="async"
+      draggable={false}
+    />
+  );
+}
+
 /**
- * Ligne sortable : appui prolongé / glisser sur la photo (et la poignée).
- * Delay + tolérance pour ne pas bloquer le défilement vertical sur mobile.
+ * Ligne sortable : la photo (ou la poignée) suit le doigt / la souris via DragOverlay.
+ * Souris = démarrage dès quelques pixels ; tactile = court appui pour laisser scroller.
  */
 function SortableCoverRow({
   banner,
@@ -65,12 +92,14 @@ function SortableCoverRow({
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: banner.id,
     disabled: busy || savingOrder || total < 2,
+    animateLayoutChanges: ({ isSorting, wasDragging }) => !(isSorting || wasDragging),
   });
   const isFirst = position === 1;
+  const canDrag = total >= 2 && !busy && !savingOrder;
   const style = {
-    transform: CSS.Transform.toString(transform),
-    transition,
-    zIndex: isDragging ? 20 : undefined,
+    transform: CSS.Translate.toString(transform),
+    transition: isDragging ? undefined : transition,
+    opacity: isDragging ? 0.35 : undefined,
   };
 
   return (
@@ -78,7 +107,7 @@ function SortableCoverRow({
       ref={setNodeRef}
       style={style}
       className={`${cardClass} flex flex-col gap-3 p-3 sm:flex-row sm:items-center ${
-        isDragging ? "shadow-admin-lg ring-2 ring-kaytori-green/40 opacity-95" : ""
+        isDragging ? "ring-1 ring-kaytori-green/30" : ""
       }`}
     >
       <div className="flex w-full shrink-0 items-stretch gap-2 sm:w-auto">
@@ -86,7 +115,7 @@ function SortableCoverRow({
           type="button"
           className="flex w-9 shrink-0 cursor-grab touch-none flex-col items-center justify-center rounded-lg border border-admin-line bg-admin-canvas text-admin-muted active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-40"
           aria-label={`Déplacer la photo, position ${position}`}
-          disabled={busy || savingOrder || total < 2}
+          disabled={!canDrag}
           {...attributes}
           {...listeners}
         >
@@ -94,18 +123,11 @@ function SortableCoverRow({
         </button>
         <div
           className={`aspect-[2/1] min-w-0 flex-1 overflow-hidden rounded-lg bg-admin-canvas sm:w-48 sm:flex-none ${
-            total >= 2 && !busy && !savingOrder ? "cursor-grab touch-none active:cursor-grabbing" : ""
+            canDrag ? "cursor-grab touch-none active:cursor-grabbing" : ""
           }`}
-          {...(total >= 2 && !busy && !savingOrder ? listeners : {})}
+          {...(canDrag ? listeners : {})}
         >
-          <img
-            src={banner.image_url}
-            alt=""
-            className="pointer-events-none h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
-            draggable={false}
-          />
+          <CoverThumb src={banner.image_url} />
         </div>
       </div>
       <div className="min-w-0 flex-1 space-y-2">
@@ -118,7 +140,7 @@ function SortableCoverRow({
           ) : null}
           <span className="text-xs text-admin-muted">Position {position}</span>
           {total >= 2 ? (
-            <span className="text-xs text-admin-muted">Maintenez puis glissez pour réordonner</span>
+            <span className="text-xs text-admin-muted">Glissez la photo pour réordonner</span>
           ) : null}
         </div>
         <div className="flex flex-wrap gap-2">
@@ -161,9 +183,22 @@ function SortableCoverRow({
   );
 }
 
+function CoverDragPreview({ banner }: { banner: CoverBannerRow }) {
+  return (
+    <div
+      className={`${cardClass} flex w-[min(100vw-2rem,22rem)] items-center gap-3 p-3 shadow-admin-lg ring-2 ring-kaytori-green/50`}
+    >
+      <div className="aspect-[2/1] w-36 shrink-0 overflow-hidden rounded-lg bg-admin-canvas sm:w-44">
+        <CoverThumb src={banner.image_url} />
+      </div>
+      <p className="min-w-0 truncate text-sm font-medium text-admin-ink">Déplacement…</p>
+    </div>
+  );
+}
+
 /**
  * Gestion des photos de couverture du menu public (carrousel).
- * Ordre : glisser-déposer (doigt / souris) avec enregistrement auto Supabase.
+ * Ordre : glisser-déposer fluide (overlay qui suit le doigt / la souris) + enregistrement auto.
  */
 export function CoverBannersPage({ client }: { client: SupabaseClient }) {
   const [banners, setBanners] = useState<CoverBannerRow[] | null>(null);
@@ -171,6 +206,7 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
   const [toast, setToast] = useState<ToastNotice | null>(null);
   const [busyId, setBusyId] = useState<string | null>(null);
   const [savingOrder, setSavingOrder] = useState(false);
+  const [activeId, setActiveId] = useState<string | null>(null);
   const [deleting, setDeleting] = useState<CoverBannerRow | null>(null);
   const [deleteBusy, setDeleteBusy] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -196,12 +232,11 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
   }, [reload]);
 
   const ordered = banners ? orderedCoverBanners(banners) : [];
+  const activeBanner = activeId ? (ordered.find((b) => b.id === activeId) ?? null) : null;
 
-  // Delay : appui prolongé avant de démarrer le drag → le scroll vertical reste libre.
   const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { delay: 220, tolerance: 8 },
-    }),
+    useSensor(MouseSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 140, tolerance: 8 } }),
   );
 
   const onAddFiles = async (files: FileList | null) => {
@@ -282,14 +317,25 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
     await reload();
   };
 
-  const onDragStart = () => {
+  const onDragStart = (event: DragStartEvent) => {
     orderBeforeDragRef.current = ordered;
+    setActiveId(String(event.active.id));
+  };
+
+  const finishDrag = () => {
+    setActiveId(null);
+  };
+
+  const onDragCancel = () => {
+    orderBeforeDragRef.current = null;
+    finishDrag();
   };
 
   const onDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
     const previous = orderBeforeDragRef.current;
     orderBeforeDragRef.current = null;
+    finishDrag();
     if (!over || active.id === over.id || !previous) return;
 
     const fromIndex = previous.findIndex((b) => b.id === active.id);
@@ -329,7 +375,7 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
     <>
       <PageHeader
         title="Couverture"
-        description="Photos du bandeau d'accueil du menu public. Maintenez une photo puis glissez-la pour changer l'ordre (même geste à la souris). Le carrousel public suit cet ordre pour les photos actives."
+        description="Photos du bandeau d'accueil du menu public. Glissez une photo (elle suit votre doigt ou la souris) pour changer l'ordre. Le carrousel public suit cet ordre pour les photos actives."
         actions={
           banners ? (
             <>
@@ -370,7 +416,9 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}
+            modifiers={[restrictToVerticalAxis, restrictToWindowEdges]}
             onDragStart={onDragStart}
+            onDragCancel={onDragCancel}
             onDragEnd={(e) => void onDragEnd(e)}
           >
             <SortableContext items={ordered.map((b) => b.id)} strategy={verticalListSortingStrategy}>
@@ -402,6 +450,9 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
                 ) : null}
               </ul>
             </SortableContext>
+            <DragOverlay adjustScale={false} dropAnimation={dropAnimation}>
+              {activeBanner ? <CoverDragPreview banner={activeBanner} /> : null}
+            </DragOverlay>
           </DndContext>
         </>
       ) : null}
