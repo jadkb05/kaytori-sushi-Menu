@@ -33,11 +33,9 @@ describe("formule sections : helpers", () => {
     expect(newFormuleSectionId("Promo", sections)).toMatch(/^promo-\d+$/);
   });
 
-  it("résout la section persistée ou le repli heuristique", () => {
+  it("ne résout la section que via l'affectation persistée (pas d'heuristique)", () => {
     expect(resolveFormuleSectionId({ id: "formule-duo", name: "Formule Duo" }, sections, "promo")).toBe("promo");
-    expect(resolveFormuleSectionId({ id: "formule-duo", name: "Formule Duo" }, sections, null)).toBe(
-      "formules-solo-duo-family",
-    );
+    expect(resolveFormuleSectionId({ id: "formule-duo", name: "Formule Duo" }, sections, null)).toBeNull();
     expect(formulePublicCategory({ id: "formule-zen-box", name: "Zen Box" })).toBe(FORMULE_SECTION_PROMO);
   });
 
@@ -97,10 +95,74 @@ describe("formule sections : menu public (données, UI inchangée)", () => {
         { id: "promo", name: FORMULE_SECTION_PROMO, sort_order: 1, is_active: true },
       ],
     )!;
-    const next = replaceFormules(split, renamed);
-    expect(next.categories).toContain("Formules Famille");
+    const sections = [
+      { id: "formules-solo-duo-family", name: "Formules Famille", sort_order: 0, is_active: true },
+      { id: "promo", name: FORMULE_SECTION_PROMO, sort_order: 1, is_active: true },
+    ];
+    const next = replaceFormules(split, renamed, sections);
+    expect(next.categories.filter((c) => c === "Formules Famille")).toHaveLength(1);
+    expect(next.categories).toContain(FORMULE_SECTION_PROMO);
     expect(next.categories).not.toContain(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(next.categories).not.toContain(FORMULES_PROMOS_CATEGORY);
     expect(next.items.filter((it) => it.category === FORMULE_SECTION_SOLO_DUO_FAMILY)).toHaveLength(0);
+    expect(next.items.find((it) => it.id === "formule-duo")?.category).toBe("Formules Famille");
+    expect(next.items.find((it) => it.id === "formule-zen-box")?.category).toBe(FORMULE_SECTION_PROMO);
+  });
+
+  it("ne mélange jamais le fallback heuristique aux sections dynamiques", () => {
+    const split = splitFormulesForPublicMenu(getStaticMenu());
+    expect(split.categories).toContain(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(split.categories).toContain(FORMULE_SECTION_PROMO);
+    const dynamic = publishedFormules(
+      { id: FORMULES_CATEGORY_ID, is_active: true },
+      [
+        {
+          id: "formule-duo",
+          category_id: FORMULES_CATEGORY_ID,
+          name: "Formule Duo",
+          description: "",
+          price: "279.00",
+          currency: "MAD",
+          image_url: "/formules/formule-duo.jpeg",
+          thumb_small_url: null,
+          thumb_large_url: null,
+          sort_order: 1,
+          is_active: true,
+          formule_section_id: "formules-solo-duo-family",
+        },
+        {
+          id: "formule-zen-box",
+          category_id: FORMULES_CATEGORY_ID,
+          name: "Zen Box",
+          description: "",
+          price: "109.00",
+          currency: "MAD",
+          image_url: "/formules/zen-box.jpeg",
+          thumb_small_url: null,
+          thumb_large_url: null,
+          sort_order: 2,
+          is_active: true,
+          formule_section_id: "promo",
+        },
+      ],
+      [
+        { id: "formules-solo-duo-family", name: "Formules Solo / Duo / Family", sort_order: 0, is_active: true },
+        { id: "formule-midi", name: "Formule Midi", sort_order: 1, is_active: true },
+        { id: "promo", name: "Promos", sort_order: 2, is_active: true },
+      ],
+    )!;
+    const next = replaceFormules(split, dynamic, [
+      { id: "formules-solo-duo-family", name: "Formules Solo / Duo / Family", sort_order: 0, is_active: true },
+      { id: "formule-midi", name: "Formule Midi", sort_order: 1, is_active: true },
+      { id: "promo", name: "Promos", sort_order: 2, is_active: true },
+    ]);
+    expect(next.categories.filter((c) => c === "Formules Solo / Duo / Family")).toHaveLength(1);
+    expect(next.categories.filter((c) => c === "Promos")).toHaveLength(1);
+    expect(next.categories).not.toContain(FORMULE_SECTION_PROMO);
+    expect(next.categories).not.toContain(FORMULES_PROMOS_CATEGORY);
+    expect(next.items.filter((it) => it.id === "formule-duo")).toHaveLength(1);
+    expect(next.items.filter((it) => it.id === "formule-zen-box")).toHaveLength(1);
+    expect(next.items.find((it) => it.id === "formule-zen-box")?.category).toBe("Promos");
   });
 
   it("utilise le nom de section Supabase quand il est fourni", () => {

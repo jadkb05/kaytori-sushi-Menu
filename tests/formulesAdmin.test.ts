@@ -150,7 +150,7 @@ describe("formules : menu public", () => {
       },
       {
         id: "formule-zen-box",
-        category: FORMULE_SECTION_PROMO,
+        category: "Promos",
         name: "Zen Box",
         description: "16 pièces",
         priceMAD: "109.00",
@@ -158,15 +158,70 @@ describe("formules : menu public", () => {
         image: "/formules/zen-box.jpeg",
       },
     ];
-    const next = replaceFormules(alreadySplit, fromSupabase);
+    const sections = [
+      { id: "formules-solo-duo-family", name: "Formules Famille", sort_order: 0, is_active: true },
+      { id: "formule-midi", name: "Formule Midi", sort_order: 1, is_active: true },
+      { id: "promo", name: "Promos", sort_order: 2, is_active: true },
+    ];
+    const next = replaceFormules(alreadySplit, fromSupabase, sections);
     expect(next.categories.filter((c) => c === "Formules Famille")).toHaveLength(1);
+    expect(next.categories.filter((c) => c === "Promos")).toHaveLength(1);
     expect(next.categories).not.toContain(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(next.categories).not.toContain(FORMULES_PROMOS_CATEGORY);
+    expect(next.categories).not.toContain(FORMULE_SECTION_PROMO);
     expect(next.items.filter((it) => it.id === "formule-duo")).toHaveLength(1);
-    expect(next.items.filter((it) => it.id === "formule-family")).toHaveLength(1);
+    expect(next.items.filter((it) => it.id === "formule-zen-box")).toHaveLength(1);
     expect(next.items.find((it) => it.id === "formule-duo")?.category).toBe("Formules Famille");
-    expect(next.items.find((it) => it.id === "formule-family")?.category).toBe("Formules Famille");
-    expect(next.items.find((it) => it.id === "formule-zen-box")?.category).toBe(FORMULE_SECTION_PROMO);
-    expect(next.formuleSectionNames).toEqual(["Formules Famille", FORMULE_SECTION_PROMO]);
+    expect(next.items.find((it) => it.id === "formule-zen-box")?.category).toBe("Promos");
+    expect(next.formuleSectionNames).toEqual(["Formules Famille", "Promos"]);
+  });
+
+  it("en mode dynamique, une offre sans formule_section_id n'apparaît pas sous Formules & Promos", () => {
+    const alreadySplit = splitFormulesForPublicMenu(getStaticMenu());
+    const items = publishedFormules(
+      { id: "formules-promos", is_active: true },
+      [
+        {
+          id: "formule-zen-box",
+          category_id: "formules-promos",
+          name: "Zen Box",
+          description: "16 pièces",
+          price: "109.00",
+          currency: "MAD",
+          image_url: "/formules/zen-box.jpeg",
+          thumb_small_url: null,
+          thumb_large_url: null,
+          sort_order: 1,
+          is_active: true,
+          formule_section_id: "promo",
+        },
+        {
+          id: "formule-orphan",
+          category_id: "formules-promos",
+          name: "Orpheline",
+          description: "",
+          price: "99.00",
+          currency: "MAD",
+          image_url: "/formules/zen-box.jpeg",
+          thumb_small_url: null,
+          thumb_large_url: null,
+          sort_order: 2,
+          is_active: true,
+          formule_section_id: null,
+        },
+      ],
+      [{ id: "promo", name: "Promos", sort_order: 0, is_active: true }],
+    )!;
+    const next = replaceFormules(alreadySplit, items, [{ id: "promo", name: "Promos", sort_order: 0, is_active: true }]);
+    expect(next.categories).toEqual(expect.arrayContaining(["Promos"]));
+    expect(next.categories).not.toContain(FORMULES_PROMOS_CATEGORY);
+    expect(next.categories).not.toContain(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(next.categories).not.toContain(FORMULE_SECTION_PROMO);
+    const formuleIds = next.items
+      .filter((it) => isFormuleCarouselCategory(it.category, next.formuleSectionNames))
+      .map((it) => it.id);
+    expect(formuleIds).toEqual(["formule-zen-box"]);
+    expect(next.items.find((it) => it.id === "formule-orphan")).toBeUndefined();
   });
 
   it("remonte les formules en tête même si la catégorie était en fin de menu (source Supabase)", async () => {

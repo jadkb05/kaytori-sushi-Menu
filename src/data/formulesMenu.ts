@@ -1,11 +1,14 @@
 /**
  * Formules publiées : lues dans Supabase (catégorie formules-promos) et posées sur le menu
- * statique, sans remplacer les autres catégories. Sans catégorie en base, le menu statique reste.
+ * statique, sans remplacer les autres catégories.
  *
- * Deux modes :
- * - Dynamique (formule_sections) : le libellé public = nom actuel de la section (id stable).
- *   Un renommage admin se reflète sans créer de doublon avec les anciens libellés heuristiques.
- * - Statique / sans sections : repli sur formulePublicCategory (Solo/Duo/Family, Midi, Promo).
+ * Mode dynamique (formule_sections disponible) :
+ *   - regroupement strict par formule_section_id → nom actuel de la section ;
+ *   - remplace intégralement l'affichage formules précédent (statique / heuristique) ;
+ *   - jamais de section fantôme « Formules & Promos » ni de mélange avec Solo/Promo hardcodés.
+ *
+ * Mode repli (table sections absente ou fetch formules impossible) :
+ *   - formulePublicCategory (Solo/Duo/Family, Midi, Promo) sur le menu statique uniquement.
  */
 import type { YumloMenuItem } from "./yumloMenu";
 import {
@@ -29,10 +32,16 @@ export type FormuleSectionProbe = {
 
 export type FormuleProductRow = ProductRow & { formule_section_id?: string | null };
 
+/** Résultat du fetch public : sections non null = source dynamique qui remplace le statique. */
+export type PublishedFormulesResult = {
+  items: YumloMenuItem[];
+  sections: FormuleSectionProbe[] | null;
+};
+
 /**
- * null : catégorie absente ou lecture impossible → conserver les affiches statiques.
- * tableau : source Supabase (éventuellement vide si tout est désactivé).
- * Si `sections` est fourni, le libellé de catégorie de chaque offre est le nom de sa section.
+ * null : catégorie absente → conserver le menu statique.
+ * Si `sections` est fourni (même vide) : mode dynamique — seules les offres avec un
+ * formule_section_id valide sont publiées, sous le nom actuel de leur section.
  */
 export function publishedFormules(
   category: FormuleCategoryProbe,
@@ -41,39 +50,47 @@ export function publishedFormules(
 ): YumloMenuItem[] | null {
   if (!category || category.id !== FORMULES_CATEGORY_ID) return null;
   if (!category.is_active) return [];
-  const activeSections = (sections ?? []).filter((s) => s.is_active);
-  const sectionById = new Map(activeSections.map((s) => [s.id, s]));
-  const sectionOrder = new Map(activeSections.map((s, i) => [s.id, i]));
 
+  if (sections !== null) {
+    const activeSections = sections.filter((s) => s.is_active);
+    const sectionById = new Map(activeSections.map((s) => [s.id, s]));
+    const sectionOrder = new Map(activeSections.map((s, i) => [s.id, i]));
+
+    return [...products]
+      .filter((p) => p.category_id === FORMULES_CATEGORY_ID && p.is_active)
+      .filter((p) => Boolean(p.formule_section_id && sectionById.has(p.formule_section_id)))
+      .sort((a, b) => {
+        const sa = sectionOrder.get(a.formule_section_id!) ?? 999;
+        const sb = sectionOrder.get(b.formule_section_id!) ?? 999;
+        return sa - sb || a.sort_order - b.sort_order || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
+      })
+      .map((p) => {
+        const sec = sectionById.get(p.formule_section_id!)!;
+        return {
+          id: p.id,
+          category: sec.name,
+          name: p.name,
+          description: p.description ?? "",
+          priceMAD: formatDbPrice(p.price),
+          currency: p.currency || "MAD",
+          image: p.image_url ?? "",
+        };
+      });
+  }
+
+  // Sans table sections : une seule catégorie catalogue (scindée ensuite par heuristique).
   return [...products]
     .filter((p) => p.category_id === FORMULES_CATEGORY_ID && p.is_active)
-    .sort((a, b) => {
-      const sa = a.formule_section_id ? (sectionOrder.get(a.formule_section_id) ?? 999) : 999;
-      const sb = b.formule_section_id ? (sectionOrder.get(b.formule_section_id) ?? 999) : 999;
-      return sa - sb || a.sort_order - b.sort_order || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0);
-    })
-    .map((p) => {
-      const sec = p.formule_section_id ? sectionById.get(p.formule_section_id) : undefined;
-      return {
-        id: p.id,
-        category: sec?.name ?? FORMULES_PROMOS_CATEGORY,
-        name: p.name,
-        description: p.description ?? "",
-        priceMAD: formatDbPrice(p.price),
-        currency: p.currency || "MAD",
-        image: p.image_url ?? "",
-      };
-    });
-}
-
-/** Noms de section dans l'ordre de première apparition (déjà triés côté produits). */
-function uniqueSectionNamesInOrder(items: readonly YumloMenuItem[]): string[] {
-  const out: string[] = [];
-  for (const it of items) {
-    if (it.category === FORMULES_PROMOS_CATEGORY) continue;
-    if (!out.includes(it.category)) out.push(it.category);
-  }
-  return out;
+    .sort((a, b) => a.sort_order - b.sort_order || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+    .map((p) => ({
+      id: p.id,
+      category: FORMULES_PROMOS_CATEGORY,
+      name: p.name,
+      description: p.description ?? "",
+      priceMAD: formatDbPrice(p.price),
+      currency: p.currency || "MAD",
+      image: p.image_url ?? "",
+    }));
 }
 
 function sectionOrderList(placed: readonly YumloMenuItem[], preferred: readonly string[]): string[] {
@@ -82,19 +99,23 @@ function sectionOrderList(placed: readonly YumloMenuItem[], preferred: readonly 
   return [...present, ...extras];
 }
 
-/** Libellés considérés comme « formules » (à retirer avant un remplacement). */
-function formuleCategoryNamesToStrip(menu: MenuSnapshot, incomingSectionNames: readonly string[]): Set<string> {
+/** Tous les libellés formules à retirer du menu avant un remplacement dynamique. */
+function formuleCategoryNamesToStrip(
+  menu: MenuSnapshot,
+  incomingSectionNames: readonly string[],
+): Set<string> {
   return new Set([
     FORMULES_PROMOS_CATEGORY,
     ...FORMULE_PUBLIC_SECTIONS,
     ...(menu.formuleSectionNames ?? []),
     ...incomingSectionNames,
+    // Anciens libellés éventuels encore présents dans les catégories du menu.
+    ...menu.categories.filter((c) => isFormuleCarouselCategory(c, menu.formuleSectionNames)),
   ]);
 }
 
 /**
- * Découpe heuristique (menu statique / pas de formule_sections) :
- * Solo/Duo/Family → Midi → Promo. Les sections sans offre sont omises.
+ * Découpe heuristique (menu statique / pas de formule_sections).
  */
 export function splitFormulesForPublicMenu(menu: MenuSnapshot): MenuSnapshot {
   const strip = formuleCategoryNamesToStrip(menu, []);
@@ -119,39 +140,42 @@ export function splitFormulesForPublicMenu(menu: MenuSnapshot): MenuSnapshot {
 }
 
 /**
- * Pose le menu public à partir des formules Supabase (ou d'un tableau déjà scindé).
- * - Si au moins une offre a un nom de section dynamique : on regroupe uniquement par ces noms
- *   (renommage admin = un seul libellé, pas de doublon avec Solo/Promo heuristiques).
- * - Sinon : repli heuristique (statique).
- * Les plats hors formules et leurs ids/prix restent intacts.
+ * Remplace les formules du menu.
+ * - `sections !== null` : mode dynamique — remplacement intégral, ordre = sort_order Supabase,
+ *   aucune section « Formules & Promos », aucun mélange avec l'heuristique.
+ * - `sections === null` : repli heuristique (statique).
  */
-export function replaceFormules(menu: MenuSnapshot, items: readonly YumloMenuItem[]): MenuSnapshot {
+export function replaceFormules(
+  menu: MenuSnapshot,
+  items: readonly YumloMenuItem[],
+  sections: readonly FormuleSectionProbe[] | null = null,
+): MenuSnapshot {
   const incomingIds = new Set(items.map((it) => it.id));
-  const incomingSections = uniqueSectionNamesInOrder(items);
-  const strip = formuleCategoryNamesToStrip(menu, incomingSections);
 
-  const rest = menu.items.filter((it) => !incomingIds.has(it.id) && !strip.has(it.category));
-  const otherCategories = menu.categories.filter((c) => !strip.has(c));
+  if (sections !== null) {
+    const activeOrdered = [...sections]
+      .filter((s) => s.is_active)
+      .sort((a, b) => a.sort_order - b.sort_order || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
+    const sectionNames = activeOrdered.map((s) => s.name);
+    const namesWithProducts = sectionNames.filter((n) => items.some((it) => it.category === n));
+    const strip = formuleCategoryNamesToStrip(menu, sectionNames);
 
-  const hasDynamicSections = incomingSections.length > 0;
+    const rest = menu.items.filter((it) => !incomingIds.has(it.id) && !strip.has(it.category));
+    const otherCategories = menu.categories.filter((c) => !strip.has(c));
 
-  if (hasDynamicSections) {
-    // Ne pas réappliquer formulePublicCategory : les noms viennent de formule_sections.name.
-    // Les offres sans section_id restent sous « Formules & Promos » (un seul seau, pas Solo/Promo).
-    const placed = items.map((it) =>
-      it.category === FORMULES_PROMOS_CATEGORY ? it : { ...it, category: it.category },
-    );
-    const orphan = placed.some((it) => it.category === FORMULES_PROMOS_CATEGORY);
-    const sections = orphan ? [...incomingSections, FORMULES_PROMOS_CATEGORY] : [...incomingSections];
     return {
       ...menu,
-      formuleSectionNames: sections,
-      categories: [...sections, ...otherCategories],
-      items: [...placed, ...rest],
+      formuleSectionNames: namesWithProducts,
+      categories: [...namesWithProducts, ...otherCategories],
+      items: [...items, ...rest],
     };
   }
 
-  // Aucune section dynamique : comportement historique (heuristique).
+  // Repli : aucune métadonnée de section → heuristique sur le catalogue unifié.
+  const strip = formuleCategoryNamesToStrip(menu, []);
+  const rest = menu.items.filter((it) => !incomingIds.has(it.id) && !strip.has(it.category));
+  const otherCategories = menu.categories.filter((c) => !strip.has(c));
+
   return splitFormulesForPublicMenu({
     ...menu,
     formuleSectionNames: undefined,
@@ -163,17 +187,22 @@ export function replaceFormules(menu: MenuSnapshot, items: readonly YumloMenuIte
   });
 }
 
-/** Remonte les sections formules en tête (et les scinde si besoin — mode heuristique). */
+/** Remonte / scinde les formules (heuristique — menu sans overlay dynamique). */
 export function promoteFormulesCategory(menu: MenuSnapshot): MenuSnapshot {
   return splitFormulesForPublicMenu(menu);
 }
 
-/** Lecture publique (produits actifs seulement). null si Supabase n'est pas configuré ou si la catégorie n'existe pas. */
-export async function fetchPublishedFormules(): Promise<YumloMenuItem[] | null> {
+/**
+ * Lecture publique. null = indisponibilité réelle → garder le menu déjà chargé (statique).
+ * Si la table formule_sections est lisible, `sections` est un tableau (éventuellement vide)
+ * et remplace intégralement l'affichage formules précédent.
+ */
+export async function fetchPublishedFormules(): Promise<PublishedFormulesResult | null> {
   if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) return null;
   const { getSupabaseClient } = await import("../lib/supabase/client");
   const client = getSupabaseClient();
   if (!client) return null;
+
   const category = await client
     .from("categories")
     .select("id, is_active")
@@ -186,20 +215,23 @@ export async function fetchPublishedFormules(): Promise<YumloMenuItem[] | null> 
     .select("id, name, sort_order, is_active")
     .eq("is_active", true)
     .order("sort_order");
-  const sections =
-    sectionsRes.error || !sectionsRes.data ? null : (sectionsRes.data as FormuleSectionProbe[]);
 
-  const withSection = await client
-    .from("products")
-    .select(
-      "id, category_id, name, description, price, currency, image_url, thumb_small_url, thumb_large_url, sort_order, is_active, formule_section_id",
-    )
-    .eq("category_id", FORMULES_CATEGORY_ID)
-    .eq("is_active", true)
-    .order("sort_order");
+  const sectionsAvailable = !sectionsRes.error;
+  const sections = sectionsAvailable ? ((sectionsRes.data ?? []) as FormuleSectionProbe[]) : null;
 
-  if (!withSection.error && withSection.data) {
-    return publishedFormules(category.data, withSection.data as FormuleProductRow[], sections);
+  if (sectionsAvailable) {
+    const withSection = await client
+      .from("products")
+      .select(
+        "id, category_id, name, description, price, currency, image_url, thumb_small_url, thumb_large_url, sort_order, is_active, formule_section_id",
+      )
+      .eq("category_id", FORMULES_CATEGORY_ID)
+      .eq("is_active", true)
+      .order("sort_order");
+    if (withSection.error) return null;
+    const items = publishedFormules(category.data, (withSection.data ?? []) as FormuleProductRow[], sections);
+    if (items === null) return null;
+    return { items, sections };
   }
 
   const products = await client
@@ -211,5 +243,7 @@ export async function fetchPublishedFormules(): Promise<YumloMenuItem[] | null> 
     .eq("is_active", true)
     .order("sort_order");
   if (products.error) return null;
-  return publishedFormules(category.data, (products.data ?? []) as ProductRow[], null);
+  const items = publishedFormules(category.data, (products.data ?? []) as ProductRow[], null);
+  if (items === null) return null;
+  return { items, sections: null };
 }

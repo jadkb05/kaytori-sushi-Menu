@@ -33,6 +33,8 @@ function MenuLoading() {
  * Fournit le menu à l'interface, quelle que soit la source :
  * - static : disponible immédiatement (rendu identique à la V1, sans écran d'attente) ;
  * - supabase : chargé une fois au démarrage, avec repli statique géré par loadMenu().
+ * Overlay formules : si Supabase renvoie les sections, elles remplacent intégralement
+ * l'affichage formules (jamais en complément du découpage heuristique).
  */
 export function MenuProvider({
   children,
@@ -60,13 +62,13 @@ export function MenuProvider({
   const waitingForMenu = menu === null;
   useEffect(() => {
     let cancelled = false;
-    void fetchPublishedFormules().then((items) => {
+    void fetchPublishedFormules().then((result) => {
       if (cancelled) return;
       setMenu((current) => {
         if (!current) return current;
-        // null = catégorie absente côté anon → garder le menu (déjà scindé / promu si besoin).
-        if (items === null) return promoteFormulesCategory(current);
-        return replaceFormules(current, items);
+        // null = indisponibilité réelle → garder le menu (statique / déjà promu).
+        if (result === null) return promoteFormulesCategory(current);
+        return replaceFormules(current, result.items, result.sections);
       });
     });
     return () => {

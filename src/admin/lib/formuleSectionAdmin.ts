@@ -3,7 +3,7 @@
  * l'architecture catalogue. Les offres restent dans la catégorie formules-promos.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { FORMULES_CATEGORY_ID, formulePublicCategory } from "../../data/formulesPromos";
+import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import { categorySlug } from "../../data/menuRows";
 import { saveErrorMessage } from "./productEditor";
 
@@ -95,19 +95,16 @@ export function parseFormuleSectionPosition(value: string, max: number): number 
 }
 
 /**
- * Section d'affichage d'une offre : id persisté si valide, sinon repli sur le
- * classement heuristique (noms Solo/Duo/Family / Midi / Promo) pour les offres
- * pas encore affectées.
+ * Section d'affichage d'une offre : uniquement l'affectation persistée (formule_section_id).
+ * Pas de repli heuristique — sinon l'admin et le site public divergent (doublons / mauvaises sections).
  */
 export function resolveFormuleSectionId(
-  product: { id: string; name: string },
+  _product: { id: string; name: string },
   sections: readonly FormuleSectionRow[],
   assignment: string | null | undefined,
 ): string | null {
   if (assignment && sections.some((s) => s.id === assignment)) return assignment;
-  if (sections.length === 0) return null;
-  const label = formulePublicCategory(product);
-  return sections.find((s) => s.name === label)?.id ?? sections[0]?.id ?? null;
+  return null;
 }
 
 export type FormuleSectionActionResult =
