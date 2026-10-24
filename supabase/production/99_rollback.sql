@@ -27,6 +27,10 @@ begin
     raise exception 'ARRÊT — rien n''a été modifié : confirmation absente (voir la ligne à décommenter).';
   end if;
 
+  drop function if exists public.admin_set_formule_section(text, text, integer);
+  drop function if exists public.admin_delete_formule_section(text);
+  drop function if exists public.admin_update_formule_section(text, jsonb, integer);
+  drop function if exists public.admin_create_formule_section(text, text, boolean, integer);
   drop function if exists public.admin_delete_category(text);
   drop function if exists public.admin_update_category(text, jsonb, integer);
   drop function if exists public.admin_create_category(text, text, boolean, integer);
@@ -35,9 +39,10 @@ begin
   drop function if exists public.admin_create_product(jsonb, jsonb, integer);
   drop function if exists public.admin_update_product(text, jsonb, jsonb);
 
-  -- Tables (variantes → produits → catégories ; triggers, index et politiques suivent leur table).
+  -- Tables (variantes → produits → sections formules → catégories ; triggers, index et politiques suivent leur table).
   drop table if exists public.product_variants;
   drop table if exists public.products;
+  drop table if exists public.formule_sections;
   drop table if exists public.categories;
   drop table if exists public.audit_log;
   drop table if exists public.admin_users;

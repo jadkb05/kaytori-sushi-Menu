@@ -1,18 +1,69 @@
 import type { YumloMenuItem } from "./yumloMenu";
 
-/** Catégorie mise en avant en tête du menu (grandes cartes en rangée horizontale, voir FormulesCarousel). */
+/**
+ * Libellé unique en base / seed / CMS (une seule catégorie Supabase).
+ * L'affichage public découpe ensuite en FORMULE_PUBLIC_SECTIONS (voir formulePublicCategory).
+ */
 export const FORMULES_PROMOS_CATEGORY = "Formules & Promos";
 
 /** Identifiant stable de la catégorie dans Supabase (slug, pas le libellé affiché). */
 export const FORMULES_CATEGORY_ID = "formules-promos";
 
+/** Sections publiques, dans l'ordre d'affichage du menu. */
+export const FORMULE_SECTION_SOLO_DUO_FAMILY = "Formules Solo / Duo / Family";
+export const FORMULE_SECTION_MIDI = "Formule Midi";
+export const FORMULE_SECTION_PROMO = "Promo";
+
+export const FORMULE_PUBLIC_SECTIONS = [
+  FORMULE_SECTION_SOLO_DUO_FAMILY,
+  FORMULE_SECTION_MIDI,
+  FORMULE_SECTION_PROMO,
+] as const;
+
+export type FormulePublicSection = (typeof FORMULE_PUBLIC_SECTIONS)[number];
+
+/**
+ * Catégorie affichée en carrousel d'affiches.
+ * `knownSectionNames` : noms issus de formule_sections (prépare le menu public dynamique
+ * sans changer les composants d'affichage).
+ */
+export function isFormuleCarouselCategory(
+  category: string,
+  knownSectionNames?: readonly string[] | null,
+): boolean {
+  if (category === FORMULES_PROMOS_CATEGORY) return true;
+  if ((FORMULE_PUBLIC_SECTIONS as readonly string[]).includes(category)) return true;
+  return Boolean(knownSectionNames?.includes(category));
+}
+
+/**
+ * Affecte une formule à l'une des 3 sections publiques, sans inventer d'offre.
+ * Solo / Duo / Family : id ou nom contenant solo, duo ou family.
+ * Formule Midi : id ou nom contenant « midi ».
+ * Promo : le reste (boxes et autres offres de la catégorie formules).
+ */
+export function formulePublicCategory(item: { id: string; name: string }): FormulePublicSection {
+  const hay = `${item.id} ${item.name}`
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "");
+  if (/\bmidi\b/.test(hay) || hay.includes("formule-midi") || hay.includes("formule midi")) {
+    return FORMULE_SECTION_MIDI;
+  }
+  if (/\b(solo|duo|family)\b/.test(hay) || /formule-(solo|duo|family)\b/.test(hay)) {
+    return FORMULE_SECTION_SOLO_DUO_FAMILY;
+  }
+  return FORMULE_SECTION_PROMO;
+}
+
 /**
  * Formules du client, relevées sur ses affiches (public/formules/, fichiers d'origine non modifiés).
- * Ordre : Formule Duo et Family en tête, puis les boxes du moins cher au plus cher.
+ * Ordre catalogue : Formule Duo et Family, puis les boxes du moins cher au plus cher.
  * Duo et Family : affiches officielles, prix confirmés (279 / 539 DH), sans ancien prix barré.
  * Yaki, Fusion, Crispy, Nara, Kyoto, Spring : affiches officielles (2e envoi), prix et ancien prix relevés sur l'affiche.
  * Party, Zen et Fry : affiches officielles (3e envoi), mêmes prix que déjà relevés. Master Box : nouvelle formule du même envoi.
  * Reprises dans Supabase par supabase/production/07_formules_promos.sql (à appliquer manuellement). Noms, pièces et prix : ceux des affiches.
+ * Pas de Formule Solo ni Formule Midi dans les données actuelles : elles apparaîtront dans la bonne section dès qu'elles seront ajoutées au CMS.
  */
 export const FORMULES_PROMOS_ITEMS = [
   {

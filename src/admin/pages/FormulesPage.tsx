@@ -1,8 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import { AdminLink } from "../components/AdminLink";
-import { ArrowDownIcon, ArrowUpIcon, PencilIcon, PlusIcon } from "../components/icons";
+import { ArrowDownIcon, ArrowUpIcon, PencilIcon, PlusIcon, TrashIcon } from "../components/icons";
+import { Field } from "../components/formControls";
 import {
   ConfirmDialog,
   ErrorState,
@@ -12,19 +13,36 @@ import {
   Toast,
   buttonClass,
   cardClass,
+  inputClass,
   orderButton,
   touchButton,
   type ToastNotice,
 } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { deleteFormule, formuleCategoryReady, setFormuleActive } from "../lib/formuleAdmin";
+import {
+  FORMULE_SECTION_NAME_MAX,
+  createFormuleSection,
+  deleteFormuleSection,
+  deleteFormuleSectionBlockedMessage,
+  fetchFormuleSectionAssignments,
+  fetchFormuleSections,
+  formuleSectionNameError,
+  formuleSectionProductCount,
+  orderedFormuleSections,
+  resolveFormuleSectionId,
+  setFormuleSection,
+  updateFormuleSection,
+  type FormuleSectionAssignment,
+  type FormuleSectionRow,
+} from "../lib/formuleSectionAdmin";
 import { takeFlash } from "../lib/flash";
 import { buildProductList, type AdminProduct } from "../lib/menuAdmin";
 import { moveTarget, runProductMove, type MoveDirection } from "../lib/productOrder";
 import { ADMIN_ROUTES, formuleEditPath } from "../lib/routes";
 
 /**
- * Liste des formules (catégorie dédiée). Distincte de la liste Produits :
+ * Liste des formules groupées par section. Distincte de la liste Produits :
  * pas de recadrage, statut propre au carrousel.
  */
 export function FormulesPage({ client }: { client: SupabaseClient }) {
@@ -35,11 +53,47 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
   const [deleting, setDeleting] = useState<AdminProduct | null>(null);
   const [deleteBusy, setDeleteBusy] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [sections, setSections] = useState<FormuleSectionRow[] | null>(null);
+  const [assignments, setAssignments] = useState<FormuleSectionAssignment[] | null>(null);
+  const [sectionsReady, setSectionsReady] = useState(false);
+  const [renaming, setRenaming] = useState<FormuleSectionRow | null>(null);
+  const [renameValue, setRenameValue] = useState("");
+  const [renameError, setRenameError] = useState<string | null>(null);
+  const [renameBusy, setRenameBusy] = useState(false);
+  const [deletingSection, setDeletingSection] = useState<FormuleSectionRow | null>(null);
+  const [sectionDeleteBusy, setSectionDeleteBusy] = useState(false);
+  const [sectionDeleteError, setSectionDeleteError] = useState<string | null>(null);
+  const [newSectionOpen, setNewSectionOpen] = useState(false);
+  const [newSectionName, setNewSectionName] = useState("");
+  const [newSectionError, setNewSectionError] = useState<string | null>(null);
+  const [newSectionBusy, setNewSectionBusy] = useState(false);
+  const [movingSectionId, setMovingSectionId] = useState<string | null>(null);
+
+  const reloadSections = useCallback(async () => {
+    try {
+      const [secs, assigns] = await Promise.all([
+        fetchFormuleSections(client),
+        fetchFormuleSectionAssignments(client),
+      ]);
+      setSections(secs);
+      setAssignments(assigns);
+    } catch (e) {
+      setToast({ tone: "error", message: e instanceof Error ? e.message : "Lecture des sections impossible." });
+      setSections(null);
+      setAssignments(null);
+    } finally {
+      setSectionsReady(true);
+    }
+  }, [client]);
 
   useEffect(() => {
     const flash = takeFlash();
     if (flash) setToast({ tone: "success", message: flash });
   }, []);
+
+  useEffect(() => {
+    void reloadSections();
+  }, [reloadSections]);
 
   const formules = useMemo(() => {
     if (data.status !== "ready") return [];
@@ -47,6 +101,25 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
   }, [data]);
 
   const ready = data.status === "ready" && formuleCategoryReady(data.rows);
+  const dbSections = sections !== null;
+  const orderedSections = useMemo(() => (sections ? orderedFormuleSections(sections) : []), [sections]);
+  const assignmentMap = useMemo(() => {
+    const m = new Map<string, string | null>();
+    for (const a of assignments ?? []) m.set(a.productId, a.sectionId);
+    return m;
+  }, [assignments]);
+
+  const formulesBySection = useMemo(() => {
+    const groups = new Map<string, AdminProduct[]>();
+    for (const s of orderedSections) groups.set(s.id, []);
+    const unassigned: AdminProduct[] = [];
+    for (const p of formules) {
+      const sid = resolveFormuleSectionId(p, orderedSections, assignmentMap.get(p.id));
+      if (sid && groups.has(sid)) groups.get(sid)!.push(p);
+      else unassigned.push(p);
+    }
+    return { groups, unassigned };
+  }, [formules, orderedSections, assignmentMap]);
 
   const move = async (p: AdminProduct, direction: MoveDirection) => {
     if (moving || data.status !== "ready") return;
@@ -89,106 +162,320 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
       return;
     }
     await data.refresh();
+    await reloadSections();
     setDeleteBusy(false);
     setDeleting(null);
     setToast({ tone: "success", message: `« ${deleting.name} » a été supprimée. Les commandes déjà envoyées ne sont pas modifiées.` });
   };
 
+  const moveToSection = async (p: AdminProduct, sectionId: string) => {
+    setMovingSectionId(p.id);
+    const res = await setFormuleSection(client, p.id, sectionId, null);
+    await reloadSections();
+    await data.refresh();
+    setMovingSectionId(null);
+    if (!res.ok) {
+      setToast({ tone: "error", message: res.error });
+      return;
+    }
+    const label = orderedSections.find((s) => s.id === sectionId)?.name ?? sectionId;
+    setToast({ tone: "success", message: `« ${p.name} » déplacée vers « ${label} ».` });
+  };
+
+  const createSection = async (e: FormEvent) => {
+    e.preventDefault();
+    if (!sections || newSectionBusy) return;
+    const nameError = formuleSectionNameError(newSectionName, sections);
+    if (nameError) {
+      setNewSectionError(nameError);
+      return;
+    }
+    setNewSectionBusy(true);
+    setNewSectionError(null);
+    const res = await createFormuleSection(client, sections, {
+      name: newSectionName,
+      isActive: true,
+      position: null,
+    });
+    setNewSectionBusy(false);
+    if (!res.ok) {
+      setNewSectionError(res.error);
+      return;
+    }
+    setNewSectionName("");
+    setNewSectionOpen(false);
+    await reloadSections();
+    setToast({ tone: "success", message: `Section « ${res.section.name} » créée.` });
+  };
+
+  const saveRename = async () => {
+    if (!renaming || !sections) return;
+    const nameError = formuleSectionNameError(renameValue, sections, renaming.id);
+    if (nameError) {
+      setRenameError(nameError);
+      return;
+    }
+    setRenameBusy(true);
+    setRenameError(null);
+    const res = await updateFormuleSection(client, renaming.id, { name: renameValue });
+    setRenameBusy(false);
+    if (!res.ok) {
+      setRenameError(res.error);
+      return;
+    }
+    setRenaming(null);
+    await reloadSections();
+    setToast({ tone: "success", message: `Section renommée en « ${res.section.name} ».` });
+  };
+
+  const confirmDeleteSection = async () => {
+    if (!deletingSection || !assignments) return;
+    const count = formuleSectionProductCount(assignments, deletingSection.id);
+    if (count > 0) {
+      setSectionDeleteError(deleteFormuleSectionBlockedMessage(count));
+      return;
+    }
+    setSectionDeleteBusy(true);
+    setSectionDeleteError(null);
+    const res = await deleteFormuleSection(client, deletingSection.id);
+    setSectionDeleteBusy(false);
+    if (!res.ok) {
+      setSectionDeleteError(res.error);
+      return;
+    }
+    setDeletingSection(null);
+    await reloadSections();
+    setToast({ tone: "success", message: `Section « ${deletingSection.name} » supprimée.` });
+  };
+
+  const renderFormuleRow = (p: AdminProduct, sectionId: string | null) => (
+    <li
+      key={p.id}
+      className={`${cardClass} flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:gap-4 sm:p-4 ${p.isActive ? "" : "opacity-70"}`}
+    >
+      <div className="flex min-w-0 flex-1 items-center gap-3">
+        <div className="flex shrink-0 flex-col items-center gap-1">
+          <button
+            type="button"
+            className={`${orderButton} ${touchButton}`}
+            disabled={Boolean(moving) || moveTarget(p, "up") === null}
+            onClick={() => void move(p, "up")}
+            aria-label={`Monter ${p.name}`}
+          >
+            <ArrowUpIcon className="h-3.5 w-3.5" />
+          </button>
+          <span className="text-xs font-semibold tabular-nums text-admin-ink">
+            {p.position}
+            <span className="font-normal text-admin-muted">/{p.categoryTotal}</span>
+          </span>
+          <button
+            type="button"
+            className={`${orderButton} ${touchButton}`}
+            disabled={Boolean(moving) || moveTarget(p, "down") === null}
+            onClick={() => void move(p, "down")}
+            aria-label={`Descendre ${p.name}`}
+          >
+            <ArrowDownIcon className="h-3.5 w-3.5" />
+          </button>
+        </div>
+        {p.imageUrl ? (
+          <img src={p.imageUrl} alt="" className="h-20 w-16 shrink-0 rounded-lg bg-[#0f1815] object-contain ring-1 ring-black/5" />
+        ) : (
+          <span className="grid h-20 w-16 shrink-0 place-items-center rounded-lg bg-admin-subtle text-xs text-admin-muted">Sans photo</span>
+        )}
+        <div className="min-w-0">
+          <p className="truncate font-semibold text-admin-ink">{p.name}</p>
+          <p className="mt-0.5 text-sm tabular-nums text-admin-soft">{p.price} DH</p>
+          <div className="mt-1.5">
+            <StatusBadge active={p.isActive} activeLabel="Active" inactiveLabel="Désactivée" />
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col gap-2 sm:items-end">
+        {dbSections && orderedSections.length > 0 ? (
+          <label className="flex items-center gap-2 text-xs text-admin-muted">
+            <span className="shrink-0">Section</span>
+            <select
+              className={`${inputClass} max-w-[14rem] py-1.5 text-sm`}
+              value={sectionId ?? ""}
+              disabled={movingSectionId === p.id}
+              onChange={(e) => {
+                const next = e.target.value;
+                if (next) void moveToSection(p, next);
+              }}
+            >
+              {orderedSections.map((s) => (
+                <option key={s.id} value={s.id}>
+                  {s.name}
+                </option>
+              ))}
+            </select>
+          </label>
+        ) : null}
+        <div className="flex flex-wrap gap-2 sm:justify-end">
+          <AdminLink href={formuleEditPath(p.id)} className={buttonClass("secondary", "sm")}>
+            <PencilIcon className="h-3.5 w-3.5" />
+            Modifier
+          </AdminLink>
+          <button type="button" className={buttonClass("secondary", "sm")} disabled={pendingId === p.id} onClick={() => void toggle(p)}>
+            {p.isActive ? "Désactiver" : "Activer"}
+          </button>
+          <button
+            type="button"
+            className={buttonClass("dangerOutline", "sm")}
+            onClick={() => {
+              setDeleteError(null);
+              setDeleting(p);
+            }}
+          >
+            Supprimer
+          </button>
+        </div>
+      </div>
+    </li>
+  );
+
   return (
     <>
       <PageHeader
         title="Formules & Promos"
-        description="Affiches du carrousel. Le nom et le prix servent au panier et à WhatsApp ; ils ne s'affichent pas sous la photo."
+        description="Organisez les offres en sections (Solo/Duo/Family, Midi, Promo, ou les vôtres). Une seule catégorie catalogue ; le site public lit les sections dès que la migration est appliquée."
         actions={
           ready ? (
-            <AdminLink href={ADMIN_ROUTES.formuleNew} className={buttonClass("primary")}>
-              <PlusIcon className="h-4 w-4" />
-              Ajouter une formule
-            </AdminLink>
+            <div className="flex flex-wrap gap-2">
+              {dbSections ? (
+                <button type="button" className={buttonClass("secondary")} onClick={() => setNewSectionOpen(true)}>
+                  <PlusIcon className="h-4 w-4" />
+                  Nouvelle section
+                </button>
+              ) : null}
+              <AdminLink href={ADMIN_ROUTES.formuleNew} className={buttonClass("primary")}>
+                <PlusIcon className="h-4 w-4" />
+                Ajouter une formule
+              </AdminLink>
+            </div>
           ) : null
         }
       />
-      {data.status === "loading" ? <LoadingState /> : null}
+      {data.status === "loading" || !sectionsReady ? <LoadingState /> : null}
       {data.status === "error" ? <ErrorState message={data.error} onRetry={() => data.reload()} /> : null}
       {data.status === "ready" && !ready ? (
         <p className={`${cardClass} p-5 text-sm leading-relaxed text-admin-soft`}>
           La catégorie n'est pas encore dans Supabase. Le script{" "}
           <span className="font-medium text-admin-ink">supabase/production/07_formules_promos.sql</span> doit être appliqué
-          une fois, avec autorisation, avant de pouvoir ajouter ou modifier des formules ici. Le site public continue
-          d'afficher les affiches déjà intégrées.
+          une fois, avec autorisation, avant de pouvoir ajouter ou modifier des formules ici.
         </p>
       ) : null}
-      {ready ? (
-        <ul className="space-y-3">
-          {formules.map((p) => (
-            <li
-              key={p.id}
-              className={`${cardClass} flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:gap-4 sm:p-4 ${p.isActive ? "" : "opacity-70"}`}
+      {ready && sectionsReady && !dbSections ? (
+        <p className={`${cardClass} mb-4 p-5 text-sm leading-relaxed text-admin-soft`}>
+          Les sections administrables ne sont pas encore en base. Appliquez{" "}
+          <span className="font-medium text-admin-ink">supabase/production/08_formule_sections.sql</span> (avec
+          autorisation) pour créer, renommer et supprimer des sections. En attendant, les offres restent listées
+          ci-dessous.
+        </p>
+      ) : null}
+
+      {ready && newSectionOpen && dbSections ? (
+        <form onSubmit={(e) => void createSection(e)} className={`${cardClass} mb-4 p-4`}>
+          <p className="mb-3 text-sm font-semibold text-admin-ink">Nouvelle section</p>
+          <Field htmlFor="fs-create-name" label="Nom" error={newSectionError ?? undefined}>
+            <input
+              id="fs-create-name"
+              className={inputClass}
+              value={newSectionName}
+              maxLength={FORMULE_SECTION_NAME_MAX}
+              onChange={(e) => setNewSectionName(e.target.value)}
+              autoFocus
+            />
+          </Field>
+          <div className="mt-3 flex flex-wrap gap-2">
+            <button type="submit" className={buttonClass("primary", "sm")} disabled={newSectionBusy}>
+              {newSectionBusy ? "Création…" : "Créer la section"}
+            </button>
+            <button
+              type="button"
+              className={buttonClass("secondary", "sm")}
+              disabled={newSectionBusy}
+              onClick={() => {
+                setNewSectionOpen(false);
+                setNewSectionName("");
+                setNewSectionError(null);
+              }}
             >
-              <div className="flex min-w-0 flex-1 items-center gap-3">
-                <div className="flex shrink-0 flex-col items-center gap-1">
-                  <button
-                    type="button"
-                    className={`${orderButton} ${touchButton}`}
-                    disabled={Boolean(moving) || moveTarget(p, "up") === null}
-                    onClick={() => void move(p, "up")}
-                    aria-label={`Monter ${p.name}`}
-                  >
-                    <ArrowUpIcon className="h-3.5 w-3.5" />
-                  </button>
-                  <span className="text-xs font-semibold tabular-nums text-admin-ink">
-                    {p.position}
-                    <span className="font-normal text-admin-muted">/{p.categoryTotal}</span>
+              Annuler
+            </button>
+          </div>
+        </form>
+      ) : null}
+
+      {ready && dbSections
+        ? orderedSections.map((section) => {
+            const items = formulesBySection.groups.get(section.id) ?? [];
+            return (
+              <section key={section.id} className="mb-6">
+                <div className="mb-3 flex flex-wrap items-center gap-2">
+                  <h2 className="min-w-0 flex-1 font-display text-base font-semibold text-admin-ink">{section.name}</h2>
+                  <span className="text-xs text-admin-muted">
+                    {items.length} offre{items.length !== 1 ? "s" : ""}
                   </span>
                   <button
                     type="button"
-                    className={`${orderButton} ${touchButton}`}
-                    disabled={Boolean(moving) || moveTarget(p, "down") === null}
-                    onClick={() => void move(p, "down")}
-                    aria-label={`Descendre ${p.name}`}
+                    className={buttonClass("secondary", "sm")}
+                    onClick={() => {
+                      setRenaming(section);
+                      setRenameValue(section.name);
+                      setRenameError(null);
+                    }}
                   >
-                    <ArrowDownIcon className="h-3.5 w-3.5" />
+                    <PencilIcon className="h-3.5 w-3.5" />
+                    Renommer
                   </button>
+                  <button
+                    type="button"
+                    className={buttonClass("dangerOutline", "sm")}
+                    onClick={() => {
+                      setSectionDeleteError(null);
+                      setDeletingSection(section);
+                    }}
+                  >
+                    <TrashIcon className="h-3.5 w-3.5" />
+                    Supprimer
+                  </button>
+                  <AdminLink
+                    href={`${ADMIN_ROUTES.formuleNew}?section=${encodeURIComponent(section.id)}`}
+                    className={buttonClass("secondary", "sm")}
+                  >
+                    <PlusIcon className="h-3.5 w-3.5" />
+                    Ajouter
+                  </AdminLink>
                 </div>
-                {p.imageUrl ? (
-                  <img src={p.imageUrl} alt="" className="h-20 w-16 shrink-0 rounded-lg bg-[#0f1815] object-contain ring-1 ring-black/5" />
-                ) : (
-                  <span className="grid h-20 w-16 shrink-0 place-items-center rounded-lg bg-admin-subtle text-xs text-admin-muted">Sans photo</span>
-                )}
-                <div className="min-w-0">
-                  <p className="truncate font-semibold text-admin-ink">{p.name}</p>
-                  <p className="mt-0.5 text-sm tabular-nums text-admin-soft">{p.price} DH</p>
-                  <div className="mt-1.5">
-                    <StatusBadge active={p.isActive} activeLabel="Active" inactiveLabel="Désactivée" />
-                  </div>
-                </div>
-              </div>
-              <div className="flex flex-wrap gap-2 sm:justify-end">
-                <AdminLink href={formuleEditPath(p.id)} className={buttonClass("secondary", "sm")}>
-                  <PencilIcon className="h-3.5 w-3.5" />
-                  Modifier
-                </AdminLink>
-                <button type="button" className={buttonClass("secondary", "sm")} disabled={pendingId === p.id} onClick={() => void toggle(p)}>
-                  {p.isActive ? "Désactiver" : "Activer"}
-                </button>
-                <button
-                  type="button"
-                  className={buttonClass("dangerOutline", "sm")}
-                  onClick={() => {
-                    setDeleteError(null);
-                    setDeleting(p);
-                  }}
-                >
-                  Supprimer
-                </button>
-              </div>
-            </li>
-          ))}
+                <ul className="space-y-3">
+                  {items.map((p) => renderFormuleRow(p, section.id))}
+                  {items.length === 0 ? (
+                    <li className={`${cardClass} p-4 text-sm text-admin-soft`}>Aucune offre dans cette section.</li>
+                  ) : null}
+                </ul>
+              </section>
+            );
+          })
+        : null}
+
+      {ready && dbSections && formulesBySection.unassigned.length > 0 ? (
+        <section className="mb-6">
+          <h2 className="mb-3 font-display text-base font-semibold text-admin-ink">Sans section</h2>
+          <ul className="space-y-3">{formulesBySection.unassigned.map((p) => renderFormuleRow(p, null))}</ul>
+        </section>
+      ) : null}
+
+      {ready && !dbSections ? (
+        <ul className="space-y-3">
+          {formules.map((p) => renderFormuleRow(p, null))}
           {formules.length === 0 ? (
             <li className={`${cardClass} p-5 text-sm text-admin-soft`}>Aucune formule pour le moment.</li>
           ) : null}
         </ul>
       ) : null}
+
       {deleting ? (
         <ConfirmDialog
           title={`Supprimer « ${deleting.name} » ?`}
@@ -203,6 +490,47 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
           }}
         />
       ) : null}
+
+      {deletingSection ? (
+        <ConfirmDialog
+          title={`Supprimer la section « ${deletingSection.name} » ?`}
+          description="La section doit être vide. Les offres ne sont pas effacées : déplacez-les avant."
+          confirmLabel="Supprimer la section"
+          pendingLabel="Suppression…"
+          busy={sectionDeleteBusy}
+          error={sectionDeleteError}
+          onConfirm={() => void confirmDeleteSection()}
+          onClose={() => {
+            if (!sectionDeleteBusy) setDeletingSection(null);
+          }}
+        />
+      ) : null}
+
+      {renaming ? (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-black/40 p-4 sm:items-center" role="dialog" aria-modal>
+          <div className={`${cardClass} w-full max-w-md p-5`}>
+            <h3 className="text-base font-semibold text-admin-ink">Renommer la section</h3>
+            <Field htmlFor="fs-rename" label="Nom" error={renameError ?? undefined}>
+              <input
+                id="fs-rename"
+                className={`${inputClass} mt-2`}
+                value={renameValue}
+                maxLength={FORMULE_SECTION_NAME_MAX}
+                onChange={(e) => setRenameValue(e.target.value)}
+              />
+            </Field>
+            <div className="mt-4 flex flex-wrap gap-2">
+              <button type="button" className={buttonClass("primary")} disabled={renameBusy} onClick={() => void saveRename()}>
+                {renameBusy ? "Enregistrement…" : "Enregistrer"}
+              </button>
+              <button type="button" className={buttonClass("secondary")} disabled={renameBusy} onClick={() => setRenaming(null)}>
+                Annuler
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       <Toast notice={toast} onDismiss={() => setToast(null)} />
     </>
   );

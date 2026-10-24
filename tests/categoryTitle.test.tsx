@@ -67,7 +67,7 @@ describe("categoryDisplayTitle", () => {
 });
 
 describe("menu statique : titres affichés sur la page", () => {
-  it("titres avec quantités, ordre et ancres inchangés, données intactes", () => {
+  it("titres avec quantités, ordre et ancres inchangés, données intactes", async () => {
     const html = renderToStaticMarkup(
       <MenuProvider source={staticMenuSource}>
         <CartProvider>
@@ -76,11 +76,15 @@ describe("menu statique : titres affichés sur la page", () => {
       </MenuProvider>,
     );
     const titles = sectionTitles(html);
-    const menu = getStaticMenu();
+    // MenuProvider scinde Formules & Promos en sections publiques ; le catalogue seed reste une seule catégorie.
+    const { promoteFormulesCategory } = await import("../src/data/formulesMenu");
+    const menu = promoteFormulesCategory(getStaticMenu());
     expect(titles.map((t) => t.id)).toEqual(menu.categories.map(categoryAnchorId));
     expect(titles.map((t) => t.title)).toEqual(menu.categories.map(expectedTitle));
     expect(titles.find((t) => t.id === categoryAnchorId("Nigiri"))!.title).toBe("Nigiri (2 pcs)");
     expect(titles.find((t) => t.id === categoryAnchorId("Starters"))!.title).toBe("Starters");
+    expect(titles.map((t) => t.title)[0]).toBe("Formules Solo / Duo / Family");
+    expect(titles.map((t) => t.title)[1]).toBe("Promo");
     // Noms réels inchangés : l'onglet de navigation et les données gardent « Nigiri ».
     expect(html).toContain('data-cat="Nigiri"');
     expect(menu.categories).toContain("Nigiri");

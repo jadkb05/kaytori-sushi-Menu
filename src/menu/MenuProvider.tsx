@@ -1,6 +1,11 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { BrandLogo } from "../components/BrandLogo";
 import {
+  fetchPublishedFormules,
+  promoteFormulesCategory,
+  replaceFormules,
+} from "../data/formulesMenu";
+import {
   ACTIVE_MENU_SOURCE,
   getInitialMenu,
   loadMenu,
@@ -36,14 +41,15 @@ export function MenuProvider({
   children: ReactNode;
   source?: MenuSource;
 }) {
-  const [menu, setMenu] = useState<MenuSnapshot | null>(() => getInitialMenu(source));
+  const [menu, setMenu] = useState<MenuSnapshot | null>(() => {
+    const initial = getInitialMenu(source);
+    return initial ? promoteFormulesCategory(initial) : null;
+  });
 
   useEffect(() => {
     if (menu) return;
     let cancelled = false;
-    void loadMenu(source).then(async (result) => {
-      if (cancelled) return;
-      const { promoteFormulesCategory } = await import("../data/formulesMenu");
+    void loadMenu(source).then((result) => {
       if (!cancelled) setMenu(promoteFormulesCategory(result.menu));
     });
     return () => {
@@ -54,17 +60,15 @@ export function MenuProvider({
   const waitingForMenu = menu === null;
   useEffect(() => {
     let cancelled = false;
-    void import("../data/formulesMenu").then(({ fetchPublishedFormules, replaceFormules, promoteFormulesCategory }) =>
-      fetchPublishedFormules().then((items) => {
-        if (cancelled) return;
-        setMenu((current) => {
-          if (!current) return current;
-          // null = catégorie absente côté anon → garder le menu (déjà promu si besoin).
-          if (items === null) return promoteFormulesCategory(current);
-          return replaceFormules(current, items);
-        });
-      }),
-    );
+    void fetchPublishedFormules().then((items) => {
+      if (cancelled) return;
+      setMenu((current) => {
+        if (!current) return current;
+        // null = catégorie absente côté anon → garder le menu (déjà scindé / promu si besoin).
+        if (items === null) return promoteFormulesCategory(current);
+        return replaceFormules(current, items);
+      });
+    });
     return () => {
       cancelled = true;
     };

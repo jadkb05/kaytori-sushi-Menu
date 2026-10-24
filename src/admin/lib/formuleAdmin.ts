@@ -1,6 +1,7 @@
 /**
  * Formules & Promos : produits de la catégorie formules-promos, via les RPC admin déjà en place.
  * L'affiche téléversée n'est pas recadrée ni recompressée.
+ * La section (formule_sections) est assignée après création / à l'enregistrement via admin_set_formule_section.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
@@ -10,6 +11,7 @@ import { parsePrice, positionError, saveErrorMessage } from "./productEditor";
 import type { PhotoOptimizer } from "./photoOptimize";
 import { uploadProductPhoto, validatePhotoFile } from "./productPhoto";
 import { deleteCatalogProduct, loadCatalogEdit, saveCatalogProduct, type CatalogForm } from "./productSave";
+import { setFormuleSection } from "./formuleSectionAdmin";
 
 /** Conserve le fichier choisi, octet pour octet (pas de recadrage, pas de WebP, pas de filtre). */
 export const keepFormulePoster: PhotoOptimizer = async (file) => ({
@@ -28,16 +30,21 @@ export function uploadFormulePoster(client: SupabaseClient, productId: string, f
 
 export type FormuleFormInput = {
   name: string;
+  description: string;
   price: string;
   isActive: boolean;
   position: string;
+  /** Id de formule_sections ; vide si migration absente. */
+  sectionId: string;
 };
 
 export type FormuleFormErrors = {
   name?: string;
+  description?: string;
   price?: string;
   position?: string;
   photo?: string;
+  sectionId?: string;
 };
 
 export function formuleCategoryReady(rows: MenuRows): boolean {
@@ -53,6 +60,7 @@ export function validateFormuleForm(
   rows: MenuRows,
   photo: { type: string; size: number } | null,
   mode: "create" | "edit",
+  opts: { requireSection: boolean } = { requireSection: false },
 ): FormuleFormErrors {
   const errors: FormuleFormErrors = {};
   if (!formuleCategoryReady(rows)) {
@@ -66,6 +74,9 @@ export function validateFormuleForm(
   const max = formuleCount(rows) + (mode === "create" ? 1 : 0);
   const position = positionError(form.position, Math.max(max, 1));
   if (position) errors.position = position;
+  if (opts.requireSection && form.sectionId.trim() === "") {
+    errors.sectionId = "Choisissez une section.";
+  }
   if (mode === "create") {
     if (!photo) errors.photo = "L'affiche est obligatoire.";
     else {
@@ -80,13 +91,13 @@ export function validateFormuleForm(
 }
 
 export function hasFormuleErrors(errors: FormuleFormErrors): boolean {
-  return Boolean(errors.name || errors.price || errors.position || errors.photo);
+  return Boolean(errors.name || errors.description || errors.price || errors.position || errors.photo || errors.sectionId);
 }
 
 function asNewProduct(form: FormuleFormInput): NewProductForm {
   return {
     name: form.name,
-    description: "",
+    description: form.description.trim(),
     categoryId: FORMULES_CATEGORY_ID,
     price: form.price,
     isActive: form.isActive,
@@ -101,7 +112,26 @@ export async function createFormule(
   form: FormuleFormInput,
   photo: File,
 ) {
-  return createProduct(client, asNewProduct(form), rows, photo, uploadFormulePoster, newProductId());
+  const created = await createProduct(client, asNewProduct(form), rows, photo, uploadFormulePoster, newProductId());
+  if (!created.ok) return created;
+  if (form.sectionId.trim()) {
+    const pos = Number(form.position.trim());
+    const sectionRes = await setFormuleSection(
+      client,
+      created.productId,
+      form.sectionId.trim(),
+      Number.isFinite(pos) ? pos : null,
+    );
+    if (!sectionRes.ok) {
+      return {
+        ok: false as const,
+        error: `Formule créée, mais section non enregistrée : ${sectionRes.error}`,
+        failedStep: "create" as const,
+        uploadedPath: null,
+      };
+    }
+  }
+  return created;
 }
 
 export async function saveFormule(
@@ -117,14 +147,33 @@ export async function saveFormule(
   }
   const catalog: CatalogForm = {
     name: form.name,
-    description: data.product.description ?? "",
+    description: form.description.trim(),
     price: form.price,
     categoryId: FORMULES_CATEGORY_ID,
     isActive: form.isActive,
     position: form.position,
     variants: [],
   };
-  return saveCatalogProduct(client, data, catalog, photo, uploadFormulePoster);
+  const saved = await saveCatalogProduct(client, data, catalog, photo, uploadFormulePoster);
+  if (!saved.ok) return saved;
+  if (form.sectionId.trim()) {
+    const pos = Number(form.position.trim());
+    const sectionRes = await setFormuleSection(
+      client,
+      productId,
+      form.sectionId.trim(),
+      Number.isFinite(pos) ? pos : null,
+    );
+    if (!sectionRes.ok) {
+      return {
+        ok: false as const,
+        error: `Formule enregistrée, mais section non mise à jour : ${sectionRes.error}`,
+        failedStep: "save" as const,
+        uploadedPath: null,
+      };
+    }
+  }
+  return saved;
 }
 
 export async function setFormuleActive(client: SupabaseClient, productId: string, isActive: boolean) {

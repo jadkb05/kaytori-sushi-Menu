@@ -1,8 +1,16 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { keepFormulePoster, validateFormuleForm, hasFormuleErrors } from "../src/admin/lib/formuleAdmin";
-import { FORMULES_CATEGORY_ID, FORMULES_PROMOS_CATEGORY, FORMULES_PROMOS_ITEMS } from "../src/data/formulesPromos";
-import { publishedFormules, replaceFormules } from "../src/data/formulesMenu";
+import {
+  FORMULE_SECTION_PROMO,
+  FORMULE_SECTION_SOLO_DUO_FAMILY,
+  FORMULES_CATEGORY_ID,
+  FORMULES_PROMOS_CATEGORY,
+  FORMULES_PROMOS_ITEMS,
+  formulePublicCategory,
+  isFormuleCarouselCategory,
+} from "../src/data/formulesPromos";
+import { publishedFormules, replaceFormules, splitFormulesForPublicMenu } from "../src/data/formulesMenu";
 import type { MenuRows, ProductRow } from "../src/data/menuRows";
 import { getStaticMenu } from "../src/data/menuSource";
 import { ADMIN_ROUTES, resolveAdminRoute } from "../src/admin/lib/routes";
@@ -17,7 +25,7 @@ const rowsWithCategory = (extra: ProductRow[] = []): MenuRows => ({
 });
 
 describe("formules : validation", () => {
-  const base = { name: "Zen Box", price: "109,00", isActive: true, position: "1" };
+  const base = { name: "Zen Box", description: "", price: "109,00", isActive: true, position: "1", sectionId: "" };
   const photo = { type: "image/jpeg", size: 1200 };
 
   it("refuse un nom vide, un prix négatif ou nul, et une affiche absente à la création", () => {
@@ -57,7 +65,45 @@ describe("formules : validation", () => {
 });
 
 describe("formules : menu public", () => {
-  it("remplace seulement la catégorie Formules et garde les autres plats", () => {
+  it("classe Duo/Family en Solo/Duo/Family et les boxes en Promo", () => {
+    expect(formulePublicCategory({ id: "formule-duo", name: "Formule Duo" })).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(formulePublicCategory({ id: "formule-family", name: "Formule Family" })).toBe(
+      FORMULE_SECTION_SOLO_DUO_FAMILY,
+    );
+    expect(formulePublicCategory({ id: "formule-solo", name: "Formule Solo" })).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(formulePublicCategory({ id: "formule-midi", name: "Formule Midi" })).toBe("Formule Midi");
+    expect(formulePublicCategory({ id: "formule-zen-box", name: "Zen Box" })).toBe(FORMULE_SECTION_PROMO);
+    expect(formulePublicCategory({ id: "formule-master-box", name: "Master Box" })).toBe(FORMULE_SECTION_PROMO);
+  });
+
+  it("scinde le menu public en sections sans doubler ni inventer d'offres", () => {
+    const menu = splitFormulesForPublicMenu(getStaticMenu());
+    expect(menu.categories[0]).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(menu.categories[1]).toBe(FORMULE_SECTION_PROMO);
+    expect(menu.categories).not.toContain(FORMULES_PROMOS_CATEGORY);
+    expect(menu.categories).not.toContain("Formule Midi");
+    expect(menu.items.filter((it) => it.category === FORMULE_SECTION_SOLO_DUO_FAMILY).map((it) => it.id)).toEqual([
+      "formule-duo",
+      "formule-family",
+    ]);
+    const promos = menu.items.filter((it) => it.category === FORMULE_SECTION_PROMO);
+    expect(promos).toHaveLength(10);
+    expect(promos.map((it) => it.id)).toEqual([
+      "formule-zen-box",
+      "formule-yaki-box",
+      "formule-fry-box",
+      "formule-spring-box",
+      "formule-kyoto-box",
+      "formule-nara-box",
+      "formule-crispy-box",
+      "formule-party-box",
+      "formule-fusion-box",
+      "formule-master-box",
+    ]);
+    expect(menu.items.filter((it) => isFormuleCarouselCategory(it.category))).toHaveLength(12);
+  });
+
+  it("remplace seulement les formules et garde les autres plats", () => {
     const menu = getStaticMenu();
     const next = replaceFormules(menu, [
       {
@@ -70,14 +116,16 @@ describe("formules : menu public", () => {
         image: "/formules/formule-duo.jpeg",
       },
     ]);
-    expect(next.items.filter((it) => it.category === FORMULES_PROMOS_CATEGORY).map((it) => it.id)).toEqual(["formule-duo"]);
+    expect(next.items.filter((it) => it.category === FORMULE_SECTION_SOLO_DUO_FAMILY).map((it) => it.id)).toEqual([
+      "formule-duo",
+    ]);
     expect(next.items.find((it) => it.id === "formule-duo")?.priceMAD).toBe("280.00");
-    const classic = menu.items.filter((it) => it.category !== FORMULES_PROMOS_CATEGORY);
-    expect(next.items.filter((it) => it.category !== FORMULES_PROMOS_CATEGORY)).toEqual(classic);
-    expect(next.categories[0]).toBe(FORMULES_PROMOS_CATEGORY);
+    const classic = menu.items.filter((it) => !isFormuleCarouselCategory(it.category));
+    expect(next.items.filter((it) => !isFormuleCarouselCategory(it.category))).toEqual(classic);
+    expect(next.categories[0]).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
   });
 
-  it("remonte Formules en tête même si la catégorie était en fin de menu (source Supabase)", async () => {
+  it("remonte les formules en tête même si la catégorie était en fin de menu (source Supabase)", async () => {
     const { promoteFormulesCategory } = await import("../src/data/formulesMenu");
     const menu = getStaticMenu();
     const atEnd = {
@@ -85,10 +133,15 @@ describe("formules : menu public", () => {
       categories: [...menu.categories.filter((c) => c !== FORMULES_PROMOS_CATEGORY), FORMULES_PROMOS_CATEGORY],
     };
     expect(atEnd.categories.at(-1)).toBe(FORMULES_PROMOS_CATEGORY);
-    expect(promoteFormulesCategory(atEnd).categories[0]).toBe(FORMULES_PROMOS_CATEGORY);
-    const replaced = replaceFormules(atEnd, menu.items.filter((it) => it.category === FORMULES_PROMOS_CATEGORY));
-    expect(replaced.categories[0]).toBe(FORMULES_PROMOS_CATEGORY);
-    expect(replaced.categories.filter((c) => c === FORMULES_PROMOS_CATEGORY)).toHaveLength(1);
+    const promoted = promoteFormulesCategory(atEnd);
+    expect(promoted.categories[0]).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(promoted.categories[1]).toBe(FORMULE_SECTION_PROMO);
+    const replaced = replaceFormules(
+      atEnd,
+      menu.items.filter((it) => it.category === FORMULES_PROMOS_CATEGORY),
+    );
+    expect(replaced.categories[0]).toBe(FORMULE_SECTION_SOLO_DUO_FAMILY);
+    expect(replaced.categories.filter((c) => c === FORMULES_PROMOS_CATEGORY)).toHaveLength(0);
   });
 
   it("une formule désactivée n'est pas publiée ; une catégorie absente laisse le statique", () => {

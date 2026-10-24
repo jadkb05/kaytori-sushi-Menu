@@ -15,6 +15,13 @@ import {
   type FormuleFormErrors,
   type FormuleFormInput,
 } from "../lib/formuleAdmin";
+import {
+  fetchFormuleSectionAssignments,
+  fetchFormuleSections,
+  orderedFormuleSections,
+  resolveFormuleSectionId,
+  type FormuleSectionRow,
+} from "../lib/formuleSectionAdmin";
 import { setFlash } from "../lib/flash";
 import { PHOTO_ACCEPT } from "../lib/productPhoto";
 import { ADMIN_ROUTES } from "../lib/routes";
@@ -24,6 +31,14 @@ type Props = {
   productId: string | null;
 };
 
+function sectionFromQuery(): string {
+  try {
+    return new URLSearchParams(window.location.search).get("section") ?? "";
+  } catch {
+    return "";
+  }
+}
+
 export function FormuleFormPage({ client, productId }: Props) {
   const data = useAdminMenuData();
   const editing = productId !== null;
@@ -31,23 +46,67 @@ export function FormuleFormPage({ client, productId }: Props) {
   const missing = data.status === "ready" && editing && (!product || product.category_id !== FORMULES_CATEGORY_ID);
   const ready = data.status === "ready" && formuleCategoryReady(data.rows) && !missing;
 
+  const [sections, setSections] = useState<FormuleSectionRow[] | null>(null);
+  const [sectionAssignment, setSectionAssignment] = useState<string | null>(null);
+  const [sectionsLoaded, setSectionsLoaded] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    void (async () => {
+      try {
+        const [secs, assigns] = await Promise.all([
+          fetchFormuleSections(client),
+          fetchFormuleSectionAssignments(client),
+        ]);
+        if (cancelled) return;
+        setSections(secs);
+        if (productId && assigns) {
+          setSectionAssignment(assigns.find((a) => a.productId === productId)?.sectionId ?? null);
+        }
+      } finally {
+        if (!cancelled) setSectionsLoaded(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [client, productId]);
+
+  const ordered = useMemo(() => (sections ? orderedFormuleSections(sections) : []), [sections]);
+
   const initial = useMemo<FormuleFormInput | null>(() => {
-    if (data.status !== "ready" || !formuleCategoryReady(data.rows)) return null;
+    if (data.status !== "ready" || !formuleCategoryReady(data.rows) || !sectionsLoaded) return null;
+    const querySection = sectionFromQuery();
     if (!editing) {
-      return { name: "", price: "", isActive: true, position: String(formuleCount(data.rows) + 1) };
+      const defaultSection =
+        (querySection && ordered.some((s) => s.id === querySection) ? querySection : null) ??
+        ordered[0]?.id ??
+        "";
+      return {
+        name: "",
+        description: "",
+        price: "",
+        isActive: true,
+        position: String(formuleCount(data.rows) + 1),
+        sectionId: defaultSection,
+      };
     }
     if (!product || product.category_id !== FORMULES_CATEGORY_ID) return null;
     const siblings = data.rows.products
       .filter((p) => p.category_id === FORMULES_CATEGORY_ID)
       .sort((a, b) => a.sort_order - b.sort_order || (a.id < b.id ? -1 : 1));
     const position = siblings.findIndex((p) => p.id === product.id) + 1;
+    const sectionId =
+      resolveFormuleSectionId({ id: product.id, name: product.name }, ordered, sectionAssignment) ?? "";
     return {
       name: product.name,
+      description: product.description ?? "",
       price: Number(product.price).toFixed(2).replace(".", ","),
       isActive: product.is_active,
       position: String(position),
+      sectionId,
     };
-  }, [data, editing, product]);
+  }, [data, editing, product, sectionsLoaded, ordered, sectionAssignment]);
 
   const [form, setForm] = useState<FormuleFormInput | null>(null);
   const [photo, setPhoto] = useState<File | null>(null);
@@ -71,10 +130,11 @@ export function FormuleFormPage({ client, productId }: Props) {
   }, [photo]);
 
   const shownImage = preview ?? (editing ? product?.image_url ?? null : null);
+  const requireSection = ordered.length > 0;
 
   const onSubmit = async () => {
     if (!form || data.status !== "ready" || busy) return;
-    const nextErrors = validateFormuleForm(form, data.rows, photo, editing ? "edit" : "create");
+    const nextErrors = validateFormuleForm(form, data.rows, photo, editing ? "edit" : "create", { requireSection });
     setErrors(nextErrors);
     if (hasFormuleErrors(nextErrors)) return;
     setBusy(true);
@@ -100,7 +160,7 @@ export function FormuleFormPage({ client, productId }: Props) {
         description="L'affiche est enregistrée telle quelle, sans recadrage ni filtre."
         back={{ href: ADMIN_ROUTES.formules, label: "Formules & Promos" }}
       />
-      {data.status === "loading" || (ready && !form) ? <LoadingState /> : null}
+      {data.status === "loading" || !sectionsLoaded || (ready && !form) ? <LoadingState /> : null}
       {data.status === "error" ? <ErrorState message={data.error} onRetry={() => data.reload()} /> : null}
       {missing ? <ErrorState message="Cette formule est introuvable." /> : null}
       {data.status === "ready" && !formuleCategoryReady(data.rows) ? (
@@ -147,13 +207,38 @@ export function FormuleFormPage({ client, productId }: Props) {
               <Field htmlFor="formule-price" label="Prix" error={errors.price}>
                 <PriceInput id="formule-price" value={form.price} error={errors.price} onChange={(price) => setForm({ ...form, price })} />
               </Field>
-              <Field htmlFor="formule-position" label="Position dans le carrousel" error={errors.position} hint="1 = première affiche.">
+              {ordered.length > 0 ? (
+                <Field htmlFor="formule-section" label="Section" error={errors.sectionId}>
+                  <select
+                    id="formule-section"
+                    value={form.sectionId}
+                    onChange={(e) => setForm({ ...form, sectionId: e.target.value })}
+                    className={fieldError(inputClass, errors.sectionId)}
+                  >
+                    {ordered.map((s) => (
+                      <option key={s.id} value={s.id}>
+                        {s.name}
+                      </option>
+                    ))}
+                  </select>
+                </Field>
+              ) : null}
+              <Field htmlFor="formule-position" label="Position" error={errors.position} hint="Ordre dans la catégorie formules (1 = première).">
                 <input
                   id="formule-position"
                   inputMode="numeric"
                   value={form.position}
                   onChange={(e) => setForm({ ...form, position: e.target.value })}
                   className={fieldError(`${inputClass} tabular-nums`, errors.position)}
+                />
+              </Field>
+              <Field htmlFor="formule-description" label="Description (optionnel)" error={errors.description}>
+                <input
+                  id="formule-description"
+                  value={form.description}
+                  onChange={(e) => setForm({ ...form, description: e.target.value })}
+                  className={fieldError(inputClass, errors.description)}
+                  autoComplete="off"
                 />
               </Field>
               <div className="flex items-end">

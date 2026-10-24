@@ -7,7 +7,7 @@ import { MenuFooter } from "../components/MenuFooter";
 import { MenuSearch } from "../components/MenuSearch";
 import { ReassuranceBand } from "../components/ReassuranceBand";
 import { SITE } from "../config/site";
-import { FORMULES_PROMOS_CATEGORY } from "../data/formulesPromos";
+import { isFormuleCarouselCategory } from "../data/formulesPromos";
 import type { MenuSnapshot } from "../data/menuSource";
 import { menuCategoryDisplayMode } from "../data/menuRows";
 import { groupItemsForMenuTab } from "../data/menuTabSections";
@@ -317,8 +317,8 @@ export function MenuPage() {
                   {items.length} plat{items.length !== 1 ? "s" : ""}
                 </span>
               </h2>
-              {/* Formules & Promos : grandes cartes en rangée horizontale ; les autres catégories en grille. */}
-              {category === FORMULES_PROMOS_CATEGORY ? (
+              {/* Formules (3 sections) : mêmes grandes cartes en rangée ; le reste en grille. */}
+              {isFormuleCarouselCategory(category, menu.formuleSectionNames) ? (
                 <FormulesCarousel items={items} label={category} highlightId={highlightId} />
               ) : (
                 <ul className="grid list-none grid-cols-1 gap-2.5 lg:grid-cols-2 lg:gap-3">

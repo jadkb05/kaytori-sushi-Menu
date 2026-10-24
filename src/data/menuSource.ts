@@ -23,6 +23,11 @@ export type MenuSnapshot = {
    * l'identifiant : il survit à un renommage). Absent pour le menu statique : règle par nom.
    */
   displayModes?: Readonly<Record<string, CategoryDisplayMode>>;
+  /**
+   * Noms des sections formules (formule_sections), pour le carrousel public.
+   * Absent en menu statique : repli sur les 3 libellés initiaux + heuristique.
+   */
+  formuleSectionNames?: readonly string[];
 };
 
 export type MenuSourceId = "static" | "supabase";
