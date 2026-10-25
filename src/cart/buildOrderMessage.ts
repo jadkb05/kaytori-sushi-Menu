@@ -56,6 +56,7 @@ function checkoutBlock(c: CheckoutDetails): string[] {
   return [
     "👤 CLIENT",
     ...field("Nom et prénom", c.fullName),
+    ...field("Téléphone", c.phone),
     "",
     ...fulfillment,
     "",

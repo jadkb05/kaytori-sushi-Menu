@@ -39,6 +39,7 @@ const FIELD_ORDER: (CheckoutField | "payment")[] = [
   "neighborhood",
   "locationUrl",
   "payment",
+  "phone",
 ];
 const FORM_ID = "checkout-form";
 

@@ -15,6 +15,7 @@ import {
   isValidNeighborhood,
   mapsUrlFromCoords,
   normalizeLocationUrl,
+  normalizeMoroccanPhone,
   validateCheckout,
   type CheckoutInfo,
 } from "../src/cart/checkout";
@@ -37,6 +38,7 @@ const delivery: CheckoutInfo = {
   address: "12 rue des Lilas, imm. 4, 2e étage",
   neighborhood: "Oasis / Bachkou / Polo",
   locationUrl: "maps.app.goo.gl/abc123",
+  phone: "06 12 34 56 78",
 };
 const pickup: CheckoutInfo = { ...delivery, mode: "pickup" };
 
@@ -100,8 +102,23 @@ describe("quartiers (liste client)", () => {
 
 describe("validation des coordonnées", () => {
   it("nom et prénom obligatoires", () => {
-    const e = validateCheckout({ ...EMPTY_CHECKOUT, mode: "pickup", payment: "cash", fullName: "   " });
+    const e = validateCheckout({
+      ...EMPTY_CHECKOUT,
+      mode: "pickup",
+      payment: "cash",
+      fullName: "   ",
+      phone: "0612345678",
+    });
     expect(e.fullName).toMatch(/nom et prénom/i);
+  });
+
+  it("téléphone obligatoire et formats marocains acceptés", () => {
+    expect(normalizeMoroccanPhone("06 12 34 56 78")).toBe("0612345678");
+    expect(normalizeMoroccanPhone("+212612345678")).toBe("0612345678");
+    expect(normalizeMoroccanPhone("+212 7 12 34 56 78")).toBe("0712345678");
+    expect(normalizeMoroccanPhone("05 20 02 68 24")).toBeNull();
+    expect(validateCheckout({ ...delivery, phone: "" }).phone).toMatch(/téléphone/i);
+    expect(validateCheckout({ ...delivery, phone: "123" }).phone).toMatch(/invalide/i);
   });
 
   it("livraison : adresse et quartier obligatoires ; localisation facultative", () => {
@@ -109,6 +126,7 @@ describe("validation des coordonnées", () => {
       ...EMPTY_CHECKOUT,
       payment: "cash",
       fullName: "A B",
+      phone: "0612345678",
     });
     expect(Object.keys(e).sort()).toEqual(["address", "neighborhood"]);
     expect(validateCheckout({ ...delivery, locationUrl: "" })).toEqual({});
@@ -125,6 +143,7 @@ describe("validation des coordonnées", () => {
         mode: "pickup",
         payment: "card",
         fullName: "A B",
+        phone: "0612345678",
       }),
     ).toEqual({});
   });
@@ -137,7 +156,7 @@ describe("validation des coordonnées", () => {
     expect(mapsUrlFromCoords(33.528081, -7.6155)).toBe("https://www.google.com/maps?q=33.52808,-7.61550");
   });
 
-  it("formulaire : nom et prénom regroupés, quartier searchable ; pas de téléphone ni instructions", () => {
+  it("formulaire : nom, quartier, téléphone ; pas d'instructions libres", () => {
     const html = renderToStaticMarkup(
       <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
     );
@@ -148,17 +167,22 @@ describe("validation des coordonnées", () => {
     expect(html).toContain("Quartier");
     expect(html).toContain('role="combobox"');
     expect(html).toContain('id="checkout-address"');
-    expect(html).not.toMatch(/type="tel"|téléphone\b(?! demandé)/i);
+    expect(html).toContain('id="checkout-phone"');
+    expect(html).toContain('type="tel"');
+    expect(html).toContain("06 12 34 56 78");
     expect(html).not.toMatch(/Instructions de livraison/);
     expect(html).not.toMatch(/id="checkout-address"[^>]*autoFocus|autoFocus[^>]*id="checkout-address"/i);
   });
 
-  it("à emporter : champs adresse et quartier absents du formulaire", () => {
+  it("à emporter : champs adresse et quartier absents ; téléphone présent ; sans sous-texte « Retrait »", () => {
     const html = renderToStaticMarkup(
       <CheckoutForm formId="f" value={pickup} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
     );
     expect(html).not.toContain('id="checkout-address"');
     expect(html).not.toContain('id="checkout-neighborhood"');
+    expect(html).toContain('id="checkout-phone"');
+    expect(html).toContain("À emporter");
+    expect(html).not.toContain("Retrait au restaurant");
     expect(html).toContain("retirer au restaurant");
   });
 });
@@ -172,13 +196,14 @@ describe("mode de paiement", () => {
     expect(validateCheckout({ ...filled, mode: "pickup" })).toEqual({ payment: "Veuillez choisir un mode de paiement." });
   });
 
-  it("libellé TPE exact", () => {
+  it("libellés paiement sans textes secondaires", () => {
     const html = renderToStaticMarkup(
       <CheckoutForm formId="f" value={delivery} onChange={() => {}} errors={{}} onSubmit={() => {}} />,
     );
     expect(html).toContain("Carte bancaire");
-    expect(html).toContain("Paiement par carte");
-    expect(html).toContain("Paiement en espèces");
+    expect(html).toContain("Espèces");
+    expect(html).not.toContain("Paiement par carte");
+    expect(html).not.toContain("Paiement en espèces");
     expect(html).not.toContain("à la livraison ou au retrait");
   });
 
@@ -210,11 +235,12 @@ describe("mode de paiement", () => {
 });
 
 describe("coordonnées nettoyées (récapitulatif et message)", () => {
-  it("livraison : espaces normalisés, lien normalisé, nom complet", () => {
+  it("livraison : espaces normalisés, lien normalisé, nom complet, téléphone", () => {
     expect(checkoutDetails(delivery)).toEqual({
       mode: "delivery",
       payment: "card",
       fullName: "Yasmine El Amrani",
+      phone: "0612345678",
       address: "12 rue des Lilas, imm. 4, 2e étage",
       neighborhood: "Oasis / Bachkou / Polo",
       locationUrl: "https://maps.app.goo.gl/abc123",
@@ -226,6 +252,7 @@ describe("coordonnées nettoyées (récapitulatif et message)", () => {
       mode: "pickup",
       payment: "card",
       fullName: "Yasmine El Amrani",
+      phone: "0612345678",
     });
   });
 });
@@ -245,6 +272,7 @@ describe("message WhatsApp", () => {
         ...refLines.slice(0, detailStart),
         "👤 CLIENT",
         "Nom et prénom : Yasmine El Amrani",
+        "Téléphone : 0612345678",
         "",
         "📍 LIVRAISON",
         "Mode : Livraison",
@@ -293,7 +321,7 @@ describe("récapitulatif", () => {
       <OrderRecap lines={cart} totalDh={cartTotalDh([...cart])} details={checkoutDetails(info)} onEditDetails={() => {}} onEditCart={() => {}} />,
     );
 
-  it("ordre demandé : mode, nom, adresse, quartier, localisation, paiement", () => {
+  it("ordre demandé : mode, nom, adresse, quartier, localisation, paiement, téléphone", () => {
     const html = recap(delivery);
     const order = [
       "Livraison ou à emporter",
@@ -302,6 +330,7 @@ describe("récapitulatif", () => {
       "Quartier",
       "Localisation",
       "Mode de paiement",
+      "Téléphone",
     ];
     let prev = -1;
     for (const label of order) {
@@ -312,6 +341,7 @@ describe("récapitulatif", () => {
     expect(html).toContain("Yasmine El Amrani");
     expect(html).toContain("Oasis / Bachkou / Polo");
     expect(html).toContain("Carte bancaire");
+    expect(html).toContain("06 12 34 56 78");
   });
 
   it("données réelles du panier : produit, variante, quantité × prix unitaire, total", () => {

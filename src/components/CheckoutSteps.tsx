@@ -3,6 +3,7 @@ import { lineSubtotalDh, type CartLine } from "../cart/buildOrderMessage";
 import {
   DELIVERY_FEE_LABEL,
   PAYMENT_METHODS,
+  formatMoroccanPhoneDisplay,
   mapsUrlFromCoords,
   paymentMethod,
   type CheckoutDetails,
@@ -28,9 +29,9 @@ export function splitName(name: string): { product: string; variant: string | nu
   return i < 0 ? { product: name, variant: null } : { product: name.slice(0, i), variant: name.slice(i + 3) };
 }
 
-const MODES: { id: FulfillmentMode; title: string; text: string }[] = [
+const MODES: { id: FulfillmentMode; title: string; text?: string }[] = [
   { id: "delivery", title: "Livraison", text: "Livraison offerte" },
-  { id: "pickup", title: "À emporter", text: "Retrait au restaurant" },
+  { id: "pickup", title: "À emporter" },
 ];
 
 /** 16 px minimum : évite le zoom automatique d'iOS Safari au focus. */
@@ -100,7 +101,7 @@ function ChoiceCard({
   value: string;
   id?: string;
   title: string;
-  text: string;
+  text?: string;
   checked: boolean;
   invalid?: boolean;
   onSelect: () => void;
@@ -127,7 +128,7 @@ function ChoiceCard({
         </span>
         {title}
       </span>
-      <span className="mt-0.5 pl-6 font-sans text-[0.74rem] text-kaytori-muted">{text}</span>
+      {text ? <span className="mt-0.5 pl-6 font-sans text-[0.74rem] text-kaytori-muted">{text}</span> : null}
     </label>
   );
 }
@@ -141,7 +142,7 @@ type FormProps = {
   onSubmit: () => void;
 };
 
-/** Étape « Vos coordonnées » : mode, identité, adresse/quartier si livraison, localisation, paiement. */
+/** Étape « Vos coordonnées » : mode, identité, adresse si livraison, paiement, téléphone. */
 export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: FormProps) {
   const [locating, setLocating] = useState(false);
   const [locateStatus, setLocateStatus] = useState<{ ok: boolean; text: string } | null>(null);
@@ -235,111 +236,122 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
             onChange={set("fullName")}
           />
         </Field>
-      </fieldset>
 
-      {value.mode === "delivery" ? (
-        <fieldset className="space-y-4">
-          <Field id="checkout-address" label="Adresse complète" required error={errors.address}>
-            <input
-              {...a11y("address")}
-              type="text"
-              autoComplete="street-address"
-              placeholder="Rue, numéro, immeuble, étage…"
-              value={value.address}
-              onChange={set("address")}
-            />
-          </Field>
-          <Field id="checkout-neighborhood" label="Quartier" required error={errors.neighborhood}>
-            <NeighborhoodSelect
-              id="checkout-neighborhood"
-              value={value.neighborhood}
-              onChange={(neighborhood) => onChange({ ...value, neighborhood })}
-              invalid={Boolean(errors.neighborhood)}
-              describedBy={errors.neighborhood ? "checkout-neighborhood-error" : undefined}
-            />
-          </Field>
-          <Field
-            id="checkout-locationUrl"
-            label="Localisation"
-            hint="Lien Google Maps ou votre position actuelle."
-            error={errors.locationUrl}
-          >
-            <input
-              {...a11y("locationUrl", true)}
-              type="url"
-              inputMode="url"
-              autoComplete="off"
-              placeholder="https://maps.app.goo.gl/…"
-              value={value.locationUrl}
-              onChange={set("locationUrl")}
-            />
-            <button
-              type="button"
-              onClick={locate}
-              disabled={locating}
-              aria-busy={locating}
-              className="mt-2 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-kaytori-green/30 bg-white px-4 font-sans text-[0.84rem] font-semibold text-kaytori-green transition-colors hover:bg-kaytori-green/[0.06] disabled:opacity-60"
+        {value.mode === "delivery" ? (
+          <>
+            <Field id="checkout-address" label="Adresse complète" required error={errors.address}>
+              <input
+                {...a11y("address")}
+                type="text"
+                autoComplete="street-address"
+                placeholder="Rue, numéro, immeuble, étage…"
+                value={value.address}
+                onChange={set("address")}
+              />
+            </Field>
+            <Field id="checkout-neighborhood" label="Quartier" required error={errors.neighborhood}>
+              <NeighborhoodSelect
+                id="checkout-neighborhood"
+                value={value.neighborhood}
+                onChange={(neighborhood) => onChange({ ...value, neighborhood })}
+                invalid={Boolean(errors.neighborhood)}
+                describedBy={errors.neighborhood ? "checkout-neighborhood-error" : undefined}
+              />
+            </Field>
+            <Field
+              id="checkout-locationUrl"
+              label="Localisation"
+              hint="Lien Google Maps ou votre position actuelle."
+              error={errors.locationUrl}
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden focusable="false">
-                <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" />
-                <circle cx="12" cy="10" r="2.3" />
-              </svg>
-              {locating ? "Localisation…" : "Utiliser ma position actuelle"}
-            </button>
-            <p
-              role="status"
-              aria-live="polite"
-              className={`font-sans text-[0.78rem] font-medium ${locateStatus ? "mt-1.5" : ""} ${
-                locateStatus?.ok ? "text-kaytori-green" : "text-red-700"
-              }`}
-            >
-              {locateStatus ? `${locateStatus.ok ? "✓ " : ""}${locateStatus.text}` : null}
-            </p>
-          </Field>
-        </fieldset>
-      ) : (
-        <p className="rounded-xl border border-kaytori-green/15 bg-white/70 px-4 py-3 font-sans text-[0.84rem] leading-relaxed text-kaytori-muted">
-          Commande à retirer au restaurant. Le restaurant vous confirmera l'heure de retrait sur WhatsApp.
-        </p>
-      )}
-
-      <fieldset aria-describedby={errors.payment ? "checkout-payment-error" : undefined}>
-        <legend className="mb-3">
-          <SectionTitle>
-            Mode de paiement
-            <span className="text-kaytori-green" aria-hidden>
-              {" "}
-              *
-            </span>
-          </SectionTitle>
-        </legend>
-        <div className="grid grid-cols-2 gap-2.5">
-          {PAYMENT_METHODS.map((p, i) => (
-            <ChoiceCard
-              key={p.id}
-              id={i === 0 ? "checkout-payment" : undefined}
-              name="checkout-payment"
-              value={p.id}
-              title={p.label}
-              text={p.text}
-              checked={value.payment === p.id}
-              invalid={Boolean(errors.payment)}
-              onSelect={() => onChange({ ...value, payment: p.id })}
-            />
-          ))}
-        </div>
-        {errors.payment ? (
-          <p id="checkout-payment-error" className="mt-1.5 font-sans text-[0.78rem] font-medium text-red-700">
-            {errors.payment}
+              <input
+                {...a11y("locationUrl", true)}
+                type="url"
+                inputMode="url"
+                autoComplete="off"
+                placeholder="https://maps.app.goo.gl/…"
+                value={value.locationUrl}
+                onChange={set("locationUrl")}
+              />
+              <button
+                type="button"
+                onClick={locate}
+                disabled={locating}
+                aria-busy={locating}
+                className="mt-2 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-kaytori-green/30 bg-white px-4 font-sans text-[0.84rem] font-semibold text-kaytori-green transition-colors hover:bg-kaytori-green/[0.06] disabled:opacity-60"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden focusable="false">
+                  <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" />
+                  <circle cx="12" cy="10" r="2.3" />
+                </svg>
+                {locating ? "Localisation…" : "Utiliser ma position actuelle"}
+              </button>
+              <p
+                role="status"
+                aria-live="polite"
+                className={`font-sans text-[0.78rem] font-medium ${locateStatus ? "mt-1.5" : ""} ${
+                  locateStatus?.ok ? "text-kaytori-green" : "text-red-700"
+                }`}
+              >
+                {locateStatus ? `${locateStatus.ok ? "✓ " : ""}${locateStatus.text}` : null}
+              </p>
+            </Field>
+          </>
+        ) : (
+          <p className="rounded-xl border border-kaytori-green/15 bg-white/70 px-4 py-3 font-sans text-[0.84rem] leading-relaxed text-kaytori-muted">
+            Commande à retirer au restaurant. Le restaurant vous confirmera l'heure de retrait sur WhatsApp.
           </p>
-        ) : null}
+        )}
+
+        <fieldset aria-describedby={errors.payment ? "checkout-payment-error" : undefined}>
+          <legend className="mb-3">
+            <SectionTitle>
+              Mode de paiement
+              <span className="text-kaytori-green" aria-hidden>
+                {" "}
+                *
+              </span>
+            </SectionTitle>
+          </legend>
+          <div className="grid grid-cols-2 gap-2.5">
+            {PAYMENT_METHODS.map((p, i) => (
+              <ChoiceCard
+                key={p.id}
+                id={i === 0 ? "checkout-payment" : undefined}
+                name="checkout-payment"
+                value={p.id}
+                title={p.label}
+                checked={value.payment === p.id}
+                invalid={Boolean(errors.payment)}
+                onSelect={() => onChange({ ...value, payment: p.id })}
+              />
+            ))}
+          </div>
+          {errors.payment ? (
+            <p id="checkout-payment-error" className="mt-1.5 font-sans text-[0.78rem] font-medium text-red-700">
+              {errors.payment}
+            </p>
+          ) : null}
+        </fieldset>
+
+        <Field id="checkout-phone" label="Numéro de téléphone" required error={errors.phone}>
+          <input
+            {...a11y("phone")}
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="06 12 34 56 78"
+            value={value.phone}
+            onChange={set("phone")}
+          />
+        </Field>
       </fieldset>
 
       <p className="font-sans text-[0.74rem] text-kaytori-muted">
         <span className="text-kaytori-green" aria-hidden>
           *
         </span>{" "}
-        Champs obligatoires. Aucun numéro de téléphone demandé : vous enverrez la commande depuis votre WhatsApp.
+        Champs obligatoires.
       </p>
     </form>
   );
@@ -412,6 +424,7 @@ export function OrderRecap({ lines, totalDh, details, onEditDetails, onEditCart 
             </Row>
           ) : null}
           {details.payment ? <Row label="Mode de paiement">{paymentMethod(details.payment).label}</Row> : null}
+          <Row label="Téléphone">{formatMoroccanPhoneDisplay(details.phone)}</Row>
         </dl>
         {details.payment ? (
           <p className="mt-1.5 font-sans text-[0.76rem] text-kaytori-muted">
