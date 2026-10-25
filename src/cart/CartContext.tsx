@@ -7,6 +7,10 @@ import {
   type ReactNode,
 } from "react";
 import { whatsappHref } from "../config/site";
+import {
+  isFormuleMidiAvailableAt,
+  isFormuleMidiOffer,
+} from "../data/formuleMidiAvailability";
 import { useOptionalMenu } from "../menu/MenuProvider";
 import { buildWhatsappOrderMessage, categoryLookupFromMenu, type CartLine } from "./buildOrderMessage";
 import { EMPTY_CHECKOUT, type CheckoutDetails, type CheckoutInfo } from "./checkout";
@@ -14,6 +18,11 @@ import { EMPTY_CHECKOUT, type CheckoutDetails, type CheckoutInfo } from "./check
 function parseUnitPriceDh(priceMAD: string): number {
   const n = Number.parseFloat(priceMAD.replace(",", "."));
   return Number.isFinite(n) ? n : 0;
+}
+
+function productIdFromCartLineId(lineId: string): string {
+  const sep = lineId.indexOf(":");
+  return sep >= 0 ? lineId.slice(0, sep) : lineId;
 }
 
 type CartContextValue = {
@@ -41,24 +50,43 @@ export function CartProvider({ children }: { children: ReactNode }) {
   /** Coordonnées en mémoire uniquement (aucun stockage navigateur ni serveur). */
   const [checkout, setCheckout] = useState<CheckoutInfo>(EMPTY_CHECKOUT);
 
-  const addItem = useCallback((id: string, name: string, priceMAD: string) => {
-    const unit = parseUnitPriceDh(priceMAD);
-    setLines((prev) => {
-      const i = prev.findIndex((x) => x.id === id);
-      if (i >= 0) {
-        const next = [...prev];
-        next[i] = { ...next[i], quantity: next[i].quantity + 1 };
-        return next;
-      }
-      return [...prev, { id, name, unitPriceDh: unit, quantity: 1 }];
-    });
-  }, []);
+  /** Catégories du menu réellement chargé (Supabase ou statique) pour le message WhatsApp. */
+  const menu = useOptionalMenu();
+  const dishById = useMemo(() => new Map((menu?.items ?? []).map((it) => [it.id, it])), [menu]);
 
-  const increment = useCallback((id: string) => {
-    setLines((prev) =>
-      prev.map((l) => (l.id === id ? { ...l, quantity: l.quantity + 1 } : l)),
-    );
-  }, []);
+  const midiBlockedForLine = useCallback(
+    (lineId: string) => {
+      if (isFormuleMidiAvailableAt()) return false;
+      const dish = dishById.get(productIdFromCartLineId(lineId));
+      return Boolean(dish && isFormuleMidiOffer(dish));
+    },
+    [dishById],
+  );
+
+  const addItem = useCallback(
+    (id: string, name: string, priceMAD: string) => {
+      if (midiBlockedForLine(id)) return;
+      const unit = parseUnitPriceDh(priceMAD);
+      setLines((prev) => {
+        const i = prev.findIndex((x) => x.id === id);
+        if (i >= 0) {
+          const next = [...prev];
+          next[i] = { ...next[i], quantity: next[i].quantity + 1 };
+          return next;
+        }
+        return [...prev, { id, name, unitPriceDh: unit, quantity: 1 }];
+      });
+    },
+    [midiBlockedForLine],
+  );
+
+  const increment = useCallback(
+    (id: string) => {
+      if (midiBlockedForLine(id)) return;
+      setLines((prev) => prev.map((l) => (l.id === id ? { ...l, quantity: l.quantity + 1 } : l)));
+    },
+    [midiBlockedForLine],
+  );
 
   const decrement = useCallback((id: string) => {
     setLines((prev) =>
@@ -74,8 +102,6 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const clear = useCallback(() => setLines([]), []);
 
-  /** Catégories du menu réellement chargé (Supabase ou statique) pour le message WhatsApp. */
-  const menu = useOptionalMenu();
   const categories = useMemo(() => (menu ? categoryLookupFromMenu(menu.items) : undefined), [menu]);
 
   const { itemCount, totalDh, whatsappOrderUrl } = useMemo(() => {

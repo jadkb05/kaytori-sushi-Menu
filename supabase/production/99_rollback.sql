@@ -44,11 +44,11 @@ begin
   drop function if exists public.admin_create_product(jsonb, jsonb, integer);
   drop function if exists public.admin_update_product(text, jsonb, jsonb);
 
-  -- Tables (variantes → produits → sections formules → couvertures → catégories ; triggers, index et politiques suivent leur table).
+  -- Tables (couvertures avant produits : FK product_id ; variantes → produits → sections → catégories).
+  drop table if exists public.cover_banners;
   drop table if exists public.product_variants;
   drop table if exists public.products;
   drop table if exists public.formule_sections;
-  drop table if exists public.cover_banners;
   drop table if exists public.categories;
   drop table if exists public.audit_log;
   drop table if exists public.admin_users;

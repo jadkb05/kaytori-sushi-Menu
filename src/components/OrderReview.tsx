@@ -4,7 +4,12 @@ import { lineSubtotalDh } from "../cart/buildOrderMessage";
 import { useCart } from "../cart/CartContext";
 import { checkoutDetails, validateCheckout, type CheckoutField } from "../cart/checkout";
 import { formatDhAmount } from "../cart/formatDh";
+import {
+  FORMULE_MIDI_CART_BLOCK_MESSAGE,
+  unavailableMidiCartLineIds,
+} from "../data/formuleMidiAvailability";
 import type { YumloMenuItem } from "../data/yumloMenu";
+import { useFormuleMidiAvailable } from "../hooks/useFormuleMidiAvailable";
 import { useMenu } from "../menu/MenuProvider";
 import { dishImage, dishThumbs } from "../menu/menuDisplay";
 import { CheckoutForm, OrderRecap, splitName } from "./CheckoutSteps";
@@ -105,6 +110,13 @@ export function OrderReview({ onClose }: Props) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const menu = useMenu();
   const dishById = useMemo(() => new Map(menu.items.map((it) => [it.id, it])), [menu]);
+  const midiAvailable = useFormuleMidiAvailable();
+  const blockedMidiLineIds = useMemo(
+    () => new Set(unavailableMidiCartLineIds(lines, dishById)),
+    [lines, dishById, midiAvailable],
+  );
+  const hasBlockedMidi = blockedMidiLineIds.size > 0;
+  const [midiBlockNotice, setMidiBlockNotice] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
   const dialogRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -172,6 +184,11 @@ export function OrderReview({ onClose }: Props) {
   }, [step, onClose]);
 
   const toRecap = () => {
+    if (hasBlockedMidi) {
+      setMidiBlockNotice(true);
+      setStep("cart");
+      return;
+    }
     const found = validateCheckout(checkout);
     const first = FIELD_ORDER.find((f) => found[f]);
     if (first) {
@@ -218,6 +235,12 @@ export function OrderReview({ onClose }: Props) {
 
   const confirm = () => {
     if (sentRef.current) return;
+    if (hasBlockedMidi) {
+      setMidiBlockNotice(true);
+      setStep("cart");
+      setSending(false);
+      return;
+    }
     if (Object.keys(validateCheckout(checkout)).length > 0) {
       setStep("details");
       return;
@@ -230,6 +253,10 @@ export function OrderReview({ onClose }: Props) {
     else window.location.href = url;
     clear();
   };
+
+  useEffect(() => {
+    if (!hasBlockedMidi) setMidiBlockNotice(false);
+  }, [hasBlockedMidi]);
 
   const stepIndex = STEPS.findIndex((s) => s.id === step);
 
@@ -319,10 +346,19 @@ export function OrderReview({ onClose }: Props) {
           </div>
         ) : (
         <div className="mx-auto max-w-lg px-4 pb-6 pt-2 sm:px-6">
+          {hasBlockedMidi || midiBlockNotice ? (
+            <p
+              role="alert"
+              className="mb-3 rounded-xl border border-amber-300/80 bg-amber-50 px-3.5 py-3 font-sans text-[0.82rem] leading-relaxed text-amber-950"
+            >
+              {FORMULE_MIDI_CART_BLOCK_MESSAGE}
+            </p>
+          ) : null}
           <ul className="divide-y divide-kaytori-green/10">
             {lines.map((l) => {
               const { product, variant } = splitName(l.name);
               const dish = dishOf(dishById, l.id);
+              const midiBlocked = blockedMidiLineIds.has(l.id);
               return (
                 <li key={l.id} className="flex items-center gap-3 py-3.5">
                   <LineThumb item={dish} />
@@ -337,6 +373,11 @@ export function OrderReview({ onClose }: Props) {
                     </p>
                     {variant ? (
                       <p className="font-sans text-[0.8rem] leading-snug text-kaytori-muted">{variant}</p>
+                    ) : null}
+                    {midiBlocked ? (
+                      <p className="mt-0.5 font-sans text-[0.72rem] font-semibold text-amber-800">
+                        Indisponible maintenant — retirez cette formule pour commander
+                      </p>
                     ) : null}
                     <p className="mt-0.5 font-sans text-[0.9rem] font-semibold tabular-nums text-kaytori-black">
                       {formatDhAmount(lineSubtotalDh(l))} DH
@@ -368,7 +409,8 @@ export function OrderReview({ onClose }: Props) {
                     <button
                       type="button"
                       onClick={() => increment(l.id)}
-                      className={`${qtyButton} text-xl leading-none`}
+                      disabled={midiBlocked}
+                      className={`${qtyButton} text-xl leading-none disabled:cursor-not-allowed disabled:opacity-35`}
                       aria-label={`Ajouter une unité de ${l.name}`}
                     >
                       +
@@ -405,7 +447,18 @@ export function OrderReview({ onClose }: Props) {
             </p>
           </div>
           {step === "cart" ? (
-            <button key="checkout-primary-cart" type="button" onClick={() => setStep("details")} className={primaryButton}>
+            <button
+              key="checkout-primary-cart"
+              type="button"
+              onClick={() => {
+                if (hasBlockedMidi) {
+                  setMidiBlockNotice(true);
+                  return;
+                }
+                setStep("details");
+              }}
+              className={primaryButton}
+            >
               <span className="truncate">Continuer</span>
               <span aria-hidden>→</span>
             </button>
@@ -415,7 +468,13 @@ export function OrderReview({ onClose }: Props) {
               <span aria-hidden>→</span>
             </button>
           ) : (
-            <button key="checkout-primary-recap" type="button" onClick={confirm} disabled={sending} className={`${primaryButton} disabled:opacity-70`}>
+            <button
+              key="checkout-primary-recap"
+              type="button"
+              onClick={confirm}
+              disabled={sending || hasBlockedMidi}
+              className={`${primaryButton} disabled:opacity-70`}
+            >
               <span className="truncate">{sending ? "Ouverture de WhatsApp…" : "Confirmer sur WhatsApp"}</span>
             </button>
           )}

@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useCart } from "../cart/CartContext";
+import {
+  FORMULE_MIDI_UNAVAILABLE_LABEL,
+  isFormuleMidiOffer,
+} from "../data/formuleMidiAvailability";
 import { FORMULE_IMAGE_SIZE, FORMULE_IMAGE_SIZE_BY_ID } from "../data/formulesPromos";
 import type { YumloMenuItem } from "../data/yumloMenu";
+import { useFormuleMidiAvailable } from "../hooks/useFormuleMidiAvailable";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { dishImage, formatPriceDH } from "./menuDisplay";
 import { dishAnchorId } from "./menuSearch";
@@ -34,7 +39,15 @@ function Chevron({ direction }: { direction: "left" | "right" }) {
  * Cadre doré = ratio Solo/Duo/Family ; bouton aligné en bas de carte.
  * Dès 1024 px, le cadre mesure 17rem de large.
  */
-function FormuleCard({ item, highlighted }: { item: YumloMenuItem; highlighted: boolean }) {
+function FormuleCard({
+  item,
+  highlighted,
+  midiAvailable,
+}: {
+  item: YumloMenuItem;
+  highlighted: boolean;
+  midiAvailable: boolean;
+}) {
   /** Même ajout au panier que les autres plats (aucune variante pour les formules). */
   const { handleAdd } = useDishAdd(item);
   const { lines } = useCart();
@@ -43,6 +56,7 @@ function FormuleCard({ item, highlighted }: { item: YumloMenuItem; highlighted: 
     [lines, item.id],
   );
   const imageSize = FORMULE_IMAGE_SIZE_BY_ID[item.id] ?? FORMULE_IMAGE_SIZE;
+  const midiBlocked = isFormuleMidiOffer(item) && !midiAvailable;
 
   return (
     <li
@@ -78,17 +92,29 @@ function FormuleCard({ item, highlighted }: { item: YumloMenuItem; highlighted: 
           ) : null}
         </div>
 
-        <button
-          type="button"
-          onClick={handleAdd}
-          aria-label={`Ajouter ${item.name} au panier`}
-          className="mt-auto inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-gold-shine px-3 font-sans text-[0.8rem] font-semibold text-kaytori-black shadow-[0_6px_18px_-8px_rgba(212,175,55,0.7)] transition-[filter] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight focus-visible:ring-offset-2 focus-visible:ring-offset-[#003024] md:min-h-[42px] md:gap-2 md:px-4 md:text-[0.9rem]"
-        >
-          <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
-            <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-          </svg>
-          Ajouter au panier
-        </button>
+        {midiBlocked ? (
+          <button
+            type="button"
+            disabled
+            aria-disabled="true"
+            aria-label={`${item.name} : ${FORMULE_MIDI_UNAVAILABLE_LABEL}`}
+            className="mt-auto inline-flex min-h-[40px] w-full cursor-not-allowed items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-[#5a635e] px-3 font-sans text-[0.8rem] font-semibold text-white/75 shadow-none md:min-h-[42px] md:gap-2 md:px-4 md:text-[0.9rem]"
+          >
+            {FORMULE_MIDI_UNAVAILABLE_LABEL}
+          </button>
+        ) : (
+          <button
+            type="button"
+            onClick={handleAdd}
+            aria-label={`Ajouter ${item.name} au panier`}
+            className="mt-auto inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-gold-shine px-3 font-sans text-[0.8rem] font-semibold text-kaytori-black shadow-[0_6px_18px_-8px_rgba(212,175,55,0.7)] transition-[filter] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight focus-visible:ring-offset-2 focus-visible:ring-offset-[#003024] md:min-h-[42px] md:gap-2 md:px-4 md:text-[0.9rem]"
+          >
+            <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
+              <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
+            </svg>
+            Ajouter au panier
+          </button>
+        )}
       </article>
     </li>
   );
@@ -112,6 +138,7 @@ export function FormulesCarousel({
 }) {
   const listRef = useRef<HTMLUListElement>(null);
   const reducedMotion = usePrefersReducedMotion();
+  const midiAvailable = useFormuleMidiAvailable();
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
 
@@ -162,7 +189,12 @@ export function FormulesCarousel({
         className="-mb-8 -mt-2 flex w-full list-none gap-3 overflow-x-auto overflow-y-hidden overscroll-x-contain pb-8 pt-2 md:gap-4 lg:w-[calc(3*(17rem+1.25rem)+2rem+0.25rem)] lg:max-w-full [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item) => (
-          <FormuleCard key={item.id} item={item} highlighted={item.id === highlightId} />
+          <FormuleCard
+            key={item.id}
+            item={item}
+            highlighted={item.id === highlightId}
+            midiAvailable={midiAvailable}
+          />
         ))}
       </ul>
       <button

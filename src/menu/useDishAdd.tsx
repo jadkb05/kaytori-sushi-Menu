@@ -2,6 +2,10 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useCart } from "../cart/CartContext";
 import { formatDhAmount } from "../cart/formatDh";
+import {
+  isFormuleMidiAvailableAt,
+  isFormuleMidiOffer,
+} from "../data/formuleMidiAvailability";
 import { PRODUCT_CUSTOMIZATIONS, customizedCartLine } from "../data/productOptions";
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { formatPriceDH, getDisplayProductName } from "./menuDisplay";
@@ -105,6 +109,7 @@ export function useDishAdd(item: YumloMenuItem) {
   }, [pickerOpen]);
 
   const handleAdd = (e?: { currentTarget: EventTarget | null }) => {
+    if (isFormuleMidiOffer(item) && !isFormuleMidiAvailableAt()) return;
     if (hasVariants) {
       openPicker(e);
       return;

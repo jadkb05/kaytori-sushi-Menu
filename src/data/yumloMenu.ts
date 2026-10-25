@@ -24,6 +24,11 @@ export type YumloMenuItem = {
   image: string;
   /** Si défini, une seule carte avec choix + prix par option. */
   variants?: readonly YumloMenuVariant[];
+  /**
+   * Id stable formule_sections (ex. formule-midi). Présent en mode dynamique Supabase ;
+   * sert aux règles métier (disponibilité) sans dépendre du libellé renommé.
+   */
+  formuleSectionId?: string | null;
 };
 
 export const YUMLO_MENU = [

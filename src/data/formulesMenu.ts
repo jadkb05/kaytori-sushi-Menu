@@ -89,6 +89,7 @@ export function publishedFormules(
           priceMAD: formatDbPrice(p.price),
           currency: p.currency || "MAD",
           image: p.image_url ?? "",
+          formuleSectionId: p.formule_section_id ?? null,
         };
       });
   }
