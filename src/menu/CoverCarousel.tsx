@@ -1,6 +1,11 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { useCart } from "../cart/CartContext";
-import { FALLBACK_COVER_SLIDE, fetchPublishedCoverSlides, type CoverSlide } from "../data/coverBanners";
+import {
+  FALLBACK_COVER_SLIDE,
+  preloadPublishedCoverSlides,
+  preloadedCoverSlides,
+  type CoverSlide,
+} from "../data/coverBanners";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 
 const AUTOPLAY_MS = 3000;
@@ -30,6 +35,12 @@ function CoverImage({ slide, priority }: { slide: CoverSlide; priority: boolean 
   );
 }
 
+/** Couvertures déjà reçues (préchargées avec le menu), sinon bannière de repli. */
+function initialSlides(): CoverSlide[] {
+  const remote = preloadedCoverSlides();
+  return remote && remote.length > 0 ? remote : [FALLBACK_COVER_SLIDE];
+}
+
 /**
  * Carrousel de couverture : auto 3 s vers la droite, boucle, pause pendant le glissement
  * (doigt / souris), reprise après interaction. Photos d'origine (object-cover, sans filtre).
@@ -38,7 +49,7 @@ function CoverImage({ slide, priority }: { slide: CoverSlide; priority: boolean 
 export function CoverCarousel() {
   const { addItem, lines } = useCart();
   const reducedMotion = usePrefersReducedMotion();
-  const [slides, setSlides] = useState<CoverSlide[]>([FALLBACK_COVER_SLIDE]);
+  const [slides, setSlides] = useState<CoverSlide[]>(initialSlides);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [dragPx, setDragPx] = useState(0);
@@ -49,8 +60,9 @@ export function CoverCarousel() {
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
+    if (preloadedCoverSlides() !== undefined) return;
     let cancelled = false;
-    void fetchPublishedCoverSlides().then((remote) => {
+    void preloadPublishedCoverSlides().then((remote) => {
       if (cancelled || remote === null) return;
       if (remote.length === 0) {
         setSlides([FALLBACK_COVER_SLIDE]);

@@ -129,3 +129,27 @@ export async function fetchPublishedCoverSlides(): Promise<CoverSlide[] | null> 
     return { ...s, productName: p.name, productPriceMAD: p.priceMAD };
   });
 }
+
+let coverSlidesRequest: Promise<CoverSlide[] | null> | null = null;
+let coverSlidesResult: CoverSlide[] | null | undefined;
+
+/**
+ * Lecture unique et partagée des couvertures : lancée par MenuProvider en même temps que le menu,
+ * puis réutilisée par CoverCarousel (pas de seconde requête, pas de bannière de repli intermédiaire).
+ */
+export function preloadPublishedCoverSlides(): Promise<CoverSlide[] | null> {
+  coverSlidesRequest ??= fetchPublishedCoverSlides()
+    .catch(() => null)
+    .then((slides) => {
+      coverSlidesResult = slides;
+      // Indisponible : un nouvel essai (bouton « Réessayer » du menu) relancera la lecture.
+      if (slides === null) coverSlidesRequest = null;
+      return slides;
+    });
+  return coverSlidesRequest;
+}
+
+/** Résultat déjà reçu de preloadPublishedCoverSlides() ; undefined tant que la lecture est en cours. */
+export function preloadedCoverSlides(): CoverSlide[] | null | undefined {
+  return coverSlidesResult;
+}
