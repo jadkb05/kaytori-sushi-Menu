@@ -196,10 +196,10 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
   /** Bouton « + » : carré du même vert que les fonds de photos, coins très arrondis. */
   const plus = (
     <span
-      className="grid h-11 w-11 place-items-center rounded-[0.85rem] bg-kaytori-photoGreen text-kaytori-goldLight shadow-[0_6px_14px_-8px_rgba(31,81,51,0.8)] transition-transform group-active/add:scale-95"
+      className="grid h-9 w-9 place-items-center rounded-[0.7rem] bg-kaytori-photoGreen text-kaytori-goldLight shadow-[0_6px_14px_-8px_rgba(31,81,51,0.8)] transition-transform group-active/add:scale-95"
       aria-hidden
     >
-      <svg viewBox="0 0 20 20" className="h-[18px] w-[18px]">
+      <svg viewBox="0 0 20 20" className="h-4 w-4">
         <path d="M10 4v12M4 10h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" fill="none" />
       </svg>
     </span>
