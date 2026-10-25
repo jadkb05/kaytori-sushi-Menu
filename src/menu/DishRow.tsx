@@ -185,7 +185,7 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
 
   const priceBlock = (
     <span className="flex w-full flex-1 flex-col items-center justify-center rounded-bl-[1.25rem] rounded-tr-[1.25rem] bg-gold-price px-1 pb-2 pt-2.5 text-kaytori-black">
-      <span className="whitespace-nowrap font-sans text-[1.14rem] font-bold leading-none tracking-[-0.01em] tabular-nums min-[375px]:text-[1.22rem]">
+      <span className="whitespace-nowrap font-display text-[1.14rem] font-bold leading-none tracking-[-0.01em] lining-nums tabular-nums min-[375px]:text-[1.22rem]">
         {formatPriceDH(lowestPriceMAD(item))}
       </span>
       <span className="mt-1 font-sans text-[0.62rem] font-medium uppercase leading-none tracking-[0.14em] text-kaytori-black/65">
