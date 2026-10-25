@@ -257,14 +257,16 @@ export function CoverCarousel() {
             <button
               key={dir}
               type="button"
-              className={`absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/75 text-kaytori-black shadow-[0_4px_14px_-4px_rgba(0,0,0,0.45)] transition-[background-color,transform] active:scale-95 active:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight md:h-11 md:w-11 ${
-                dir === "prev" ? "left-2 md:left-4" : "right-2 md:right-4"
+              className={`group absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full text-kaytori-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight md:h-11 md:w-11 ${
+                dir === "prev" ? "left-0.5 md:left-4" : "right-0.5 md:right-4"
               }`}
               aria-label={dir === "prev" ? "Photo précédente" : "Photo suivante"}
               onPointerDown={(e) => e.stopPropagation()}
               onClick={() => goRelative(dir === "prev" ? -1 : 1)}
             >
-              <svg viewBox="0 0 20 20" className="h-5 w-5" aria-hidden>
+              {/* Mobile : pastille blanche réduite et plus transparente (zone tactile 40 px conservée). */}
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-white/55 shadow-[0_3px_10px_-4px_rgba(0,0,0,0.45)] transition-[background-color,transform] group-active:scale-95 group-active:bg-white/80 md:h-11 md:w-11 md:bg-white/75 md:shadow-[0_4px_14px_-4px_rgba(0,0,0,0.45)] md:group-active:bg-white/90">
+                <svg viewBox="0 0 20 20" className="h-4 w-4 md:h-5 md:w-5" aria-hidden>
                 <path
                   d={dir === "prev" ? "M12.5 4.5 7 10l5.5 5.5" : "M7.5 4.5 13 10l-5.5 5.5"}
                   stroke="currentColor"
@@ -273,7 +275,8 @@ export function CoverCarousel() {
                   strokeLinejoin="round"
                   fill="none"
                 />
-              </svg>
+                </svg>
+              </span>
             </button>
           ))}
           <div className="pointer-events-none absolute inset-x-0 bottom-2.5 flex justify-center gap-1.5 md:bottom-3 md:gap-2" aria-hidden>
