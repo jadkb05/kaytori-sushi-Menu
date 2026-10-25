@@ -321,16 +321,16 @@ describe("récapitulatif", () => {
       <OrderRecap lines={cart} totalDh={cartTotalDh([...cart])} details={checkoutDetails(info)} onEditDetails={() => {}} onEditCart={() => {}} />,
     );
 
-  it("ordre demandé : mode, nom, adresse, quartier, localisation, paiement, téléphone", () => {
+  it("ordre demandé : mode, nom, adresse, quartier, téléphone, paiement, localisation", () => {
     const html = recap(delivery);
     const order = [
       "Livraison ou à emporter",
       "Nom et prénom",
       "Adresse complète",
       "Quartier",
-      "Localisation",
-      "Mode de paiement",
       "Téléphone",
+      "Mode de paiement",
+      "Localisation",
     ];
     let prev = -1;
     for (const label of order) {

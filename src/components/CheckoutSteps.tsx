@@ -30,7 +30,7 @@ export function splitName(name: string): { product: string; variant: string | nu
 }
 
 const MODES: { id: FulfillmentMode; title: string; text?: string }[] = [
-  { id: "delivery", title: "Livraison", text: "Livraison offerte" },
+  { id: "delivery", title: "Livraison" },
   { id: "pickup", title: "À emporter" },
 ];
 
@@ -108,7 +108,7 @@ function ChoiceCard({
 }) {
   return (
     <label
-      className={`relative flex min-h-[64px] cursor-pointer flex-col justify-center rounded-xl border px-3.5 py-2.5 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-kaytori-green/30 ${
+      className={`relative flex min-h-[44px] cursor-pointer flex-col justify-center rounded-xl border px-3 py-2 transition-colors has-[:focus-visible]:ring-2 has-[:focus-visible]:ring-kaytori-green/30 ${
         checked
           ? "border-kaytori-green bg-kaytori-green/[0.06]"
           : invalid
@@ -117,9 +117,9 @@ function ChoiceCard({
       }`}
     >
       <input id={id} type="radio" name={name} value={value} checked={checked} onChange={onSelect} className="sr-only" />
-      <span className="flex items-center gap-2 font-sans text-[0.92rem] font-semibold text-kaytori-black">
+      <span className="flex items-center gap-2 font-sans text-[0.88rem] font-semibold text-kaytori-black">
         <span
-          className={`grid h-4 w-4 shrink-0 place-items-center rounded-full border-2 ${
+          className={`grid h-3.5 w-3.5 shrink-0 place-items-center rounded-full border-2 ${
             checked ? "border-kaytori-green" : "border-kaytori-green/35"
           }`}
           aria-hidden
@@ -128,7 +128,7 @@ function ChoiceCard({
         </span>
         {title}
       </span>
-      {text ? <span className="mt-0.5 pl-6 font-sans text-[0.74rem] text-kaytori-muted">{text}</span> : null}
+      {text ? <span className="mt-0.5 pl-5 font-sans text-[0.74rem] text-kaytori-muted">{text}</span> : null}
     </label>
   );
 }
@@ -206,7 +206,7 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
         <legend className="mb-3">
           <SectionTitle>Livraison ou à emporter</SectionTitle>
         </legend>
-        <div className="grid grid-cols-2 gap-2.5">
+        <div className="grid grid-cols-2 gap-2">
           {MODES.map((m) => (
             <ChoiceCard
               key={m.id}
@@ -258,50 +258,24 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
                 describedBy={errors.neighborhood ? "checkout-neighborhood-error" : undefined}
               />
             </Field>
-            <Field
-              id="checkout-locationUrl"
-              label="Localisation"
-              hint="Lien Google Maps ou votre position actuelle."
-              error={errors.locationUrl}
-            >
-              <input
-                {...a11y("locationUrl", true)}
-                type="url"
-                inputMode="url"
-                autoComplete="off"
-                placeholder="https://maps.app.goo.gl/…"
-                value={value.locationUrl}
-                onChange={set("locationUrl")}
-              />
-              <button
-                type="button"
-                onClick={locate}
-                disabled={locating}
-                aria-busy={locating}
-                className="mt-2 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-kaytori-green/30 bg-white px-4 font-sans text-[0.84rem] font-semibold text-kaytori-green transition-colors hover:bg-kaytori-green/[0.06] disabled:opacity-60"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden focusable="false">
-                  <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" />
-                  <circle cx="12" cy="10" r="2.3" />
-                </svg>
-                {locating ? "Localisation…" : "Utiliser ma position actuelle"}
-              </button>
-              <p
-                role="status"
-                aria-live="polite"
-                className={`font-sans text-[0.78rem] font-medium ${locateStatus ? "mt-1.5" : ""} ${
-                  locateStatus?.ok ? "text-kaytori-green" : "text-red-700"
-                }`}
-              >
-                {locateStatus ? `${locateStatus.ok ? "✓ " : ""}${locateStatus.text}` : null}
-              </p>
-            </Field>
           </>
         ) : (
           <p className="rounded-xl border border-kaytori-green/15 bg-white/70 px-4 py-3 font-sans text-[0.84rem] leading-relaxed text-kaytori-muted">
             Commande à retirer au restaurant. Le restaurant vous confirmera l'heure de retrait sur WhatsApp.
           </p>
         )}
+
+        <Field id="checkout-phone" label="Numéro de téléphone" required error={errors.phone}>
+          <input
+            {...a11y("phone")}
+            type="tel"
+            inputMode="tel"
+            autoComplete="tel"
+            placeholder="06 12 34 56 78"
+            value={value.phone}
+            onChange={set("phone")}
+          />
+        </Field>
 
         <fieldset aria-describedby={errors.payment ? "checkout-payment-error" : undefined}>
           <legend className="mb-3">
@@ -313,7 +287,7 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
               </span>
             </SectionTitle>
           </legend>
-          <div className="grid grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2">
             {PAYMENT_METHODS.map((p, i) => (
               <ChoiceCard
                 key={p.id}
@@ -334,17 +308,46 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
           ) : null}
         </fieldset>
 
-        <Field id="checkout-phone" label="Numéro de téléphone" required error={errors.phone}>
-          <input
-            {...a11y("phone")}
-            type="tel"
-            inputMode="tel"
-            autoComplete="tel"
-            placeholder="06 12 34 56 78"
-            value={value.phone}
-            onChange={set("phone")}
-          />
-        </Field>
+        {value.mode === "delivery" ? (
+          <Field
+            id="checkout-locationUrl"
+            label="Localisation"
+            hint="Lien Google Maps ou votre position actuelle."
+            error={errors.locationUrl}
+          >
+            <input
+              {...a11y("locationUrl", true)}
+              type="url"
+              inputMode="url"
+              autoComplete="off"
+              placeholder="https://maps.app.goo.gl/…"
+              value={value.locationUrl}
+              onChange={set("locationUrl")}
+            />
+            <button
+              type="button"
+              onClick={locate}
+              disabled={locating}
+              aria-busy={locating}
+              className="mt-2 inline-flex min-h-[44px] items-center gap-2 rounded-full border border-kaytori-green/30 bg-white px-4 font-sans text-[0.84rem] font-semibold text-kaytori-green transition-colors hover:bg-kaytori-green/[0.06] disabled:opacity-60"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" className="h-[18px] w-[18px]" aria-hidden focusable="false">
+                <path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11Z" />
+                <circle cx="12" cy="10" r="2.3" />
+              </svg>
+              {locating ? "Localisation…" : "Utiliser ma position actuelle"}
+            </button>
+            <p
+              role="status"
+              aria-live="polite"
+              className={`font-sans text-[0.78rem] font-medium ${locateStatus ? "mt-1.5" : ""} ${
+                locateStatus?.ok ? "text-kaytori-green" : "text-red-700"
+              }`}
+            >
+              {locateStatus ? `${locateStatus.ok ? "✓ " : ""}${locateStatus.text}` : null}
+            </p>
+          </Field>
+        ) : null}
       </fieldset>
 
       <p className="font-sans text-[0.74rem] text-kaytori-muted">
@@ -411,6 +414,8 @@ export function OrderRecap({ lines, totalDh, details, onEditDetails, onEditCart 
           <Row label="Nom et prénom">{details.fullName}</Row>
           {details.address ? <Row label="Adresse complète">{details.address}</Row> : null}
           {details.neighborhood ? <Row label="Quartier">{details.neighborhood}</Row> : null}
+          <Row label="Téléphone">{formatMoroccanPhoneDisplay(details.phone)}</Row>
+          {details.payment ? <Row label="Mode de paiement">{paymentMethod(details.payment).label}</Row> : null}
           {details.locationUrl ? (
             <Row label="Localisation">
               <a
@@ -423,8 +428,6 @@ export function OrderRecap({ lines, totalDh, details, onEditDetails, onEditCart 
               </a>
             </Row>
           ) : null}
-          {details.payment ? <Row label="Mode de paiement">{paymentMethod(details.payment).label}</Row> : null}
-          <Row label="Téléphone">{formatMoroccanPhoneDisplay(details.phone)}</Row>
         </dl>
         {details.payment ? (
           <p className="mt-1.5 font-sans text-[0.76rem] text-kaytori-muted">
