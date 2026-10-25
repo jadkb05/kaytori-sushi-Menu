@@ -19,6 +19,12 @@ export default {
           goldLight: "#e8d89f",
           cream: "#F5F1EA",
           creamDark: "#EDE8DF",
+          /** Carte plat : fond de page crème chaud, carte ivoire, badge vert très pâle. */
+          page: "#F6F1E6",
+          ivory: "#FCF9F2",
+          sage: "#E5EEE6",
+          /** Vert des fonds de photos de plats (médiane mesurée sur les vignettes) : bouton « + ». */
+          photoGreen: "#1F5133",
           muted: "#5c6b66",
           line: "rgba(0, 77, 51, 0.14)",
         },
@@ -44,6 +50,7 @@ export default {
         green: "0 14px 36px rgba(0, 77, 51, 0.32)",
         lift: "0 24px 48px rgba(10, 15, 13, 0.12)",
         card: "0 4px 24px rgba(10, 15, 13, 0.06)",
+        dish: "0 0 0 1px rgba(120, 95, 45, 0.07), 0 1px 2px rgba(60, 45, 20, 0.05), 0 10px 24px -14px rgba(60, 45, 20, 0.24)",
         "admin-xs": "0 1px 2px rgba(24, 33, 29, 0.05)",
         "admin-sm": "0 1px 3px rgba(24, 33, 29, 0.06), 0 1px 2px rgba(24, 33, 29, 0.04)",
         "admin-md": "0 6px 16px -4px rgba(24, 33, 29, 0.10), 0 2px 4px -2px rgba(24, 33, 29, 0.05)",
@@ -52,6 +59,8 @@ export default {
       backgroundImage: {
         "gold-shine":
           "linear-gradient(135deg, #f8efd8 0%, #e5cf73 38%, #d4af37 62%, #a88432 100%)",
+        /** Bloc prix des cartes plats : transition dorée sobre. */
+        "gold-price": "linear-gradient(160deg, #f6e8bd 0%, #ead18a 45%, #ddbb5e 100%)",
         "green-deep": "linear-gradient(160deg, #004d33 0%, #001910 100%)",
       },
       animation: {

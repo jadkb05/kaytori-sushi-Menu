@@ -255,7 +255,7 @@ export function MenuPage() {
   );
 
   return (
-    <div className="min-h-dvh bg-[#f7f6f2]">
+    <div className="min-h-dvh bg-kaytori-page">
       <header ref={headerRef} className="sticky top-0 z-30 bg-[#0c1712]">
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-2.5 px-3 sm:gap-3 sm:px-6">
           <BrandLogo size={36} className="ring-1 ring-kaytori-gold/30" />
@@ -290,7 +290,7 @@ export function MenuPage() {
       {isDesktopCover ? <DesktopCoverBanner /> : <CoverCarousel />}
 
       <div ref={stickyRef} className="sticky top-14 z-20 shadow-[0_6px_16px_-10px_rgba(10,15,13,0.25)]">
-        <nav className="border-b border-kaytori-black/[0.06] bg-[#fafaf7]" aria-label="Catégories du menu">
+        <nav className="border-b border-kaytori-black/[0.06] bg-[#fbf8f1]" aria-label="Catégories du menu">
           <ul
             ref={navRef}
             className="relative mx-auto flex max-w-5xl list-none gap-5 overflow-x-auto overscroll-x-contain px-4 [-ms-overflow-style:none] [scrollbar-width:none] sm:gap-7 sm:px-6 [&::-webkit-scrollbar]:hidden"
@@ -370,7 +370,7 @@ export function MenuPage() {
               {isFormuleCarouselCategory(category, menu.formuleSectionNames) ? (
                 <FormulesCarousel items={items} label={category} highlightId={highlightId} />
               ) : (
-                <ul className="grid list-none grid-cols-1 gap-2.5 lg:grid-cols-2 lg:gap-3">
+                <ul className="grid list-none grid-cols-1 gap-3 lg:grid-cols-2 lg:gap-4">
                   {groups.map((g, gi) => (
                     <Fragment key={`${category}-${g.title || "all"}-${gi}`}>
                       {g.title ? (

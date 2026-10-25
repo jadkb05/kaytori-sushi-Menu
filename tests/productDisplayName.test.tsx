@@ -185,8 +185,9 @@ describe("page menu (statique)", () => {
       </CartProvider>
     </MenuProvider>,
   );
-  const dishTitles = [...html.matchAll(/<h3 class="font-display text-\[0\.95rem\][^"]*">([^<]*)<\/h3>/g)].map(
-    (m) => m[1].replace(/&amp;/g, "&").replace(/&#x27;/g, "'"),
+  const dishTitles = [...html.matchAll(/<h3 class="font-display text-\[1rem\][^"]*">([^<]*)<\/h3>/g)].map(
+    // Espace insécable d'affichage (« 2\u00a0pcs ») ramené à un espace normal.
+    (m) => m[1].replace(/&amp;/g, "&").replace(/&#x27;/g, "'").replace(/\u00a0/g, " "),
   );
 
   it("affiche les noms courts, dans l'ordre, pour tous les plats", () => {

@@ -6,6 +6,10 @@ import { dishAnchorId } from "./menuSearch";
 import { useDishAdd } from "./useDishAdd";
 
 /** Description compacte (2 lignes). « Voir plus » seulement si le texte dépasse. */
+/** Badge vert très pâle (type de produit, nombre de choix). */
+const TAG =
+  "inline-flex rounded-md bg-kaytori-sage px-2 py-1 font-sans text-[0.7rem] font-medium leading-none text-kaytori-green";
+
 function DishDescription({ text }: { text: string }) {
   const fullRef = useRef<HTMLParagraphElement>(null);
   const [expanded, setExpanded] = useState(false);
@@ -37,7 +41,7 @@ function DishDescription({ text }: { text: string }) {
         {text}
       </p>
       <p
-        className={`font-sans text-[0.76rem] leading-snug text-kaytori-muted ${expanded ? "" : "line-clamp-2"}`}
+        className={`font-sans text-[0.76rem] leading-snug text-[#6b6a5f] ${expanded ? "" : "line-clamp-2"}`}
       >
         {text}
       </p>
@@ -60,6 +64,20 @@ function DishDescription({ text }: { text: string }) {
 }
 
 /**
+ * Description très courte (« Saumon », « Crevettes ») : affichée en badge, comme un type de produit.
+ * Au-delà de 3 mots, ou avec ponctuation / chiffres, c'est une vraie description (texte).
+ */
+function isTagDescription(text: string): boolean {
+  const t = text.trim();
+  return t.length > 0 && t.length <= 24 && t.split(/\s+/).length <= 3 && !/[\d.,:;!?()—–-]/.test(t);
+}
+
+/** Affichage seulement : « 5 pcs » ne se coupe pas en fin de ligne. */
+function keepQuantityTogether(name: string): string {
+  return name.replace(/(\d+)\s+(pcs?|pièces?)\b/gi, "$1\u00a0$2");
+}
+
+/**
  * Carte plat compacte pour /menu — vignette, nom, description, prix, bouton +.
  * `highlighted` : brève mise en évidence quand la recherche mène à ce plat.
  */
@@ -68,6 +86,7 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
   const { lines } = useCart();
   /** Nom affiché sous le titre de catégorie (le panier garde le nom complet). */
   const displayName = getDisplayProductName(item, item.category);
+  const tagDescription = isTagDescription(item.description);
   const original = dishImage(item);
   const thumbs = dishThumbs(original);
   /** Vignette absente ou en erreur → retour à l'image d'origine. */
@@ -85,11 +104,11 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
   );
 
   const photo = (
-    <div className="h-[90px] w-[90px] overflow-hidden rounded-xl bg-[#0f1815] min-[375px]:h-[104px] min-[375px]:w-[104px] md:h-[120px] md:w-[120px]">
+    <div className="h-[84px] w-[84px] overflow-hidden rounded-[0.9rem] bg-[#0f1815] min-[375px]:h-[96px] min-[375px]:w-[96px] md:h-[112px] md:w-[112px]">
       <img
         src={useThumb ? thumbs.small : original}
         srcSet={useThumb ? `${thumbs.small} 224w, ${thumbs.large} 336w` : undefined}
-        sizes={useThumb ? "(min-width: 768px) 120px, (min-width: 375px) 104px, 90px" : undefined}
+        sizes={useThumb ? "(min-width: 768px) 112px, (min-width: 375px) 96px, 84px" : undefined}
         onError={useThumb ? () => setThumbFailed(true) : undefined}
         alt=""
         width={104}
@@ -109,7 +128,7 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
           tabIndex={-1}
           aria-hidden
           onClick={openPicker}
-          className="block rounded-xl outline-none"
+          className="block rounded-[0.9rem] outline-none"
         >
           {photo}
         </button>
@@ -119,7 +138,7 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
       {inCart > 0 ? (
         <span
           key={inCart}
-          className="absolute -right-1.5 -top-1.5 grid h-6 min-w-6 place-items-center rounded-full border-2 border-white bg-kaytori-green px-1 font-sans text-[0.7rem] font-bold tabular-nums text-white shadow-sm motion-safe:animate-badge-pop"
+          className="absolute -right-1.5 -top-1.5 grid h-6 min-w-6 place-items-center rounded-full border-2 border-kaytori-ivory bg-kaytori-greenDark px-1 font-sans text-[0.7rem] font-bold tabular-nums text-kaytori-goldLight shadow-sm motion-safe:animate-badge-pop"
           aria-label={`${inCart} au panier`}
         >
           {inCart}
@@ -129,8 +148,8 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
   );
 
   const title = (
-    <h3 className="font-display text-[0.95rem] font-semibold leading-snug tracking-tight text-kaytori-black">
-      {displayName}
+    <h3 className="font-display text-[1rem] font-bold leading-[1.22] tracking-[-0.01em] text-kaytori-black [overflow-wrap:anywhere] [text-wrap:balance] md:text-[1.06rem]">
+      {keepQuantityTogether(displayName)}
     </h3>
   );
 
@@ -153,10 +172,11 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
         ) : (
           title
         )}
-        {item.description ? <DishDescription text={item.description} /> : null}
-        {hasVariants ? (
-          <p className="mt-1 font-sans text-[0.64rem] font-semibold uppercase tracking-[0.08em] text-kaytori-green/85">
-            {item.variants?.length} choix
+        {item.description && !tagDescription ? <DishDescription text={item.description} /> : null}
+        {tagDescription || hasVariants ? (
+          <p className="mt-2 flex flex-wrap gap-1.5">
+            {tagDescription ? <span className={TAG}>{item.description.trim()}</span> : null}
+            {hasVariants ? <span className={TAG}>{item.variants?.length} choix</span> : null}
           </p>
         ) : null}
       </div>
@@ -164,37 +184,48 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
   );
 
   const priceBlock = (
-    <span className="flex w-full flex-1 flex-col items-center justify-center bg-gold-shine px-1.5 py-1.5 text-kaytori-black">
-      <span className="font-sans text-[0.98rem] font-bold leading-tight tabular-nums">
+    <span className="flex w-full flex-1 flex-col items-center justify-center rounded-bl-[1.25rem] rounded-tr-[1.25rem] bg-gold-price px-1 pb-2 pt-2.5 text-kaytori-black">
+      <span className="whitespace-nowrap font-sans text-[1.14rem] font-bold leading-none tracking-[-0.01em] tabular-nums min-[375px]:text-[1.22rem]">
         {formatPriceDH(lowestPriceMAD(item))}
       </span>
-      <span className="font-sans text-[0.56rem] font-semibold uppercase leading-none tracking-[0.12em] text-kaytori-black/60">
+      <span className="mt-1 font-sans text-[0.62rem] font-medium uppercase leading-none tracking-[0.14em] text-kaytori-black/65">
         DH
       </span>
     </span>
   );
-  const plusClass =
-    "grid min-h-[44px] place-items-center bg-[#fffcf9] text-2xl font-light leading-none text-kaytori-green";
+  /** Bouton « + » : carré du même vert que les fonds de photos, coins très arrondis. */
+  const plus = (
+    <span
+      className="grid h-11 w-11 place-items-center rounded-[0.85rem] bg-kaytori-photoGreen text-kaytori-goldLight shadow-[0_6px_14px_-8px_rgba(31,81,51,0.8)] transition-transform group-active/add:scale-95"
+      aria-hidden
+    >
+      <svg viewBox="0 0 20 20" className="h-[18px] w-[18px]">
+        <path d="M10 4v12M4 10h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+      </svg>
+    </span>
+  );
+  const sideClass =
+    "group/add relative z-[1] flex w-[5rem] shrink-0 flex-col items-center outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-kaytori-green/50 min-[375px]:w-[5.4rem]";
 
   return (
     <li id={dishAnchorId(item.id)} className="touch-manipulation">
       <article
-        className={`flex items-stretch overflow-hidden rounded-2xl border bg-white shadow-[0_1px_2px_rgba(10,15,13,0.04),0_6px_18px_-12px_rgba(10,15,13,0.1)] transition-[box-shadow,border-color] duration-500 motion-reduce:transition-none ${
-          highlighted ? "border-kaytori-gold ring-2 ring-kaytori-gold/70" : "border-kaytori-black/[0.06]"
+        className={`relative isolate flex items-stretch overflow-hidden rounded-[1.25rem] bg-kaytori-ivory shadow-dish transition-[box-shadow] duration-500 motion-reduce:transition-none ${
+          highlighted ? "ring-2 ring-kaytori-gold/80" : ""
         }`}
       >
-        <div className="flex min-w-0 flex-1 items-center p-2.5">{body}</div>
+        <div className="relative z-[1] flex min-w-0 flex-1 items-center py-2.5 pl-2.5 pr-2">{body}</div>
 
         {hasVariants ? (
-          <div className="flex w-[4.75rem] shrink-0 flex-col border-l border-kaytori-black/[0.05]">
+          <div className={sideClass}>
             {priceBlock}
             <button
               type="button"
               onClick={handleAdd}
-              className={`${plusClass} border-t border-kaytori-black/[0.06] transition-colors active:bg-kaytori-cream/70`}
+              className="group/add grid place-items-center px-2 py-2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-kaytori-green/50"
               aria-label={`Choisir une option pour ${displayName}`}
             >
-              +
+              {plus}
             </button>
           </div>
         ) : (
@@ -202,16 +233,11 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
           <button
             type="button"
             onClick={handleAdd}
-            className="group/add flex w-[4.75rem] shrink-0 flex-col border-l border-kaytori-black/[0.05] text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-kaytori-green/50"
+            className={`${sideClass} text-left`}
             aria-label={`Ajouter ${displayName} au panier`}
           >
             {priceBlock}
-            <span
-              className={`${plusClass} w-full border-t border-kaytori-black/[0.06] transition-colors group-active/add:bg-kaytori-cream/70`}
-              aria-hidden
-            >
-              +
-            </span>
+            <span className="grid place-items-center px-2 py-2">{plus}</span>
           </button>
         )}
       </article>
