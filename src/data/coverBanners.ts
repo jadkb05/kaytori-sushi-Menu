@@ -157,6 +157,8 @@ function preloadFirstCoverImage(slides: readonly CoverSlide[]): void {
     link.setAttribute("imagesizes", "100vw");
   }
   link.setAttribute("fetchpriority", "high");
+  // Mobile uniquement : sur PC / tablette, la couverture est la bannière fixe.
+  link.media = "(max-width: 767px)";
   document.head.appendChild(link);
 }
 

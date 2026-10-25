@@ -91,6 +91,16 @@
         ]
       }
     </script>
+    <!-- Couverture PC fixe : téléchargée dès le HTML (mobile : carrousel, non concerné). -->
+    <link
+      rel="preload"
+      as="image"
+      href="/banner/kaytori-pc-1600.webp"
+      imagesrcset="/banner/kaytori-pc-1280.webp 1280w, /banner/kaytori-pc-1600.webp 1600w, /banner/kaytori-pc-2172.webp 2172w"
+      imagesizes="100vw"
+      media="(min-width: 768px)"
+      fetchpriority="high"
+    />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link

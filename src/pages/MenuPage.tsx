@@ -12,8 +12,10 @@ import { isFormuleCarouselCategory } from "../data/formulesPromos";
 import type { MenuSnapshot } from "../data/menuSource";
 import { menuCategoryDisplayMode } from "../data/menuRows";
 import { groupItemsForMenuTab } from "../data/menuTabSections";
+import { useIsDesktopCover } from "../hooks/useIsDesktopCover";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
 import { CoverCarousel } from "../menu/CoverCarousel";
+import { DesktopCoverBanner } from "../menu/DesktopCoverBanner";
 import { DishRow } from "../menu/DishRow";
 import { FormulesCarousel } from "../menu/FormulesCarousel";
 import { useMenu } from "../menu/MenuProvider";
@@ -40,6 +42,7 @@ export function MenuPage() {
   const menu = useMenu();
   const SECTIONS = useMemo(() => toSections(menu), [menu]);
   const reducedMotion = usePrefersReducedMotion();
+  const isDesktopCover = useIsDesktopCover();
   const headerRef = useRef<HTMLElement>(null);
   const stickyRef = useRef<HTMLDivElement>(null);
   const navRef = useRef<HTMLUListElement>(null);
@@ -283,8 +286,8 @@ export function MenuPage() {
 
       <ReassuranceBand />
 
-      {/* Bannière / carrousel (décoratif) : cadre inchangé, photos d'origine sans filtre. */}
-      <CoverCarousel />
+      {/* Couverture : bannière fixe sur PC / tablette ; carrousel (photos de l'admin) sur mobile. */}
+      {isDesktopCover ? <DesktopCoverBanner /> : <CoverCarousel />}
 
       <div ref={stickyRef} className="sticky top-14 z-20 shadow-[0_6px_16px_-10px_rgba(10,15,13,0.25)]">
         <nav className="border-b border-kaytori-black/[0.06] bg-[#fafaf7]" aria-label="Catégories du menu">
