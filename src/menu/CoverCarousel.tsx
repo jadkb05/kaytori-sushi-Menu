@@ -13,7 +13,7 @@ const RESUME_MS = 4500;
 const SWIPE_THRESHOLD_PX = 48;
 
 const FRAME =
-  "aspect-[2/1] max-h-[13.5rem] w-full overflow-hidden bg-[#0f1815] md:aspect-auto md:h-52 md:max-h-none lg:h-64 xl:h-72";
+  "aspect-[2/1] max-h-[13.5rem] w-full overflow-hidden bg-[#0f1815] md:aspect-auto md:h-52 md:max-h-none lg:aspect-[12/5] lg:h-auto lg:max-h-[78vh]";
 const IMG =
   "pointer-events-none h-full w-full select-none object-cover object-[50%_62%] md:object-[50%_40%]";
 
