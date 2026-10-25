@@ -250,17 +250,43 @@ export function CoverCarousel() {
         </button>
       ) : null}
 
+      {/* Une seule couverture : ni flèches ni points. */}
       {n > 1 ? (
-        <div className="pointer-events-none absolute inset-x-0 bottom-2 flex justify-center gap-1.5" aria-hidden>
-          {slides.map((s, i) => (
-            <span
-              key={s.id}
-              className={`h-1 rounded-full transition-[width,background-color] duration-300 ${
-                i === index ? "w-4 bg-kaytori-gold" : "w-1.5 bg-white/45"
+        <>
+          {(["prev", "next"] as const).map((dir) => (
+            <button
+              key={dir}
+              type="button"
+              className={`absolute top-1/2 z-10 grid h-10 w-10 -translate-y-1/2 place-items-center rounded-full bg-white/75 text-kaytori-black shadow-[0_4px_14px_-4px_rgba(0,0,0,0.45)] transition-[background-color,transform] active:scale-95 active:bg-white/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight md:h-11 md:w-11 ${
+                dir === "prev" ? "left-2 md:left-4" : "right-2 md:right-4"
               }`}
-            />
+              aria-label={dir === "prev" ? "Photo précédente" : "Photo suivante"}
+              onPointerDown={(e) => e.stopPropagation()}
+              onClick={() => goRelative(dir === "prev" ? -1 : 1)}
+            >
+              <svg viewBox="0 0 20 20" className="h-5 w-5" aria-hidden>
+                <path
+                  d={dir === "prev" ? "M12.5 4.5 7 10l5.5 5.5" : "M7.5 4.5 13 10l-5.5 5.5"}
+                  stroke="currentColor"
+                  strokeWidth="2.4"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  fill="none"
+                />
+              </svg>
+            </button>
           ))}
-        </div>
+          <div className="pointer-events-none absolute inset-x-0 bottom-2.5 flex justify-center gap-1.5 md:bottom-3 md:gap-2" aria-hidden>
+            {slides.map((s, i) => (
+              <span
+                key={s.id}
+                className={`h-2 w-2 rounded-full border-[1.5px] border-white transition-colors duration-300 md:h-2.5 md:w-2.5 ${
+                  i === index ? "bg-white" : "bg-transparent"
+                }`}
+              />
+            ))}
+          </div>
+        </>
       ) : null}
     </div>
   );
