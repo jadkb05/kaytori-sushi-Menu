@@ -1,5 +1,5 @@
 /**
- * Couverture PC / tablette : bannière fixe (format 3:1), indépendante des photos de couverture
+ * Couverture PC / tablette : bannière fixe (photo 3:1 affichée en 3,45:1, rognée au centre), indépendante des photos de couverture
  * de l'admin, qui ne pilotent que le carrousel mobile. Fichiers : public/banner/kaytori-pc-*.webp.
  */
 export const DESKTOP_COVER_SRCSET =
@@ -7,7 +7,7 @@ export const DESKTOP_COVER_SRCSET =
 
 export function DesktopCoverBanner() {
   return (
-    <div className="aspect-[3/1] max-h-[40rem] w-full overflow-hidden bg-[#0f1815]">
+    <div className="aspect-[69/20] max-h-[40rem] w-full overflow-hidden bg-[#0f1815]">
       <img
         src="/banner/kaytori-pc-1600.webp"
         srcSet={DESKTOP_COVER_SRCSET}
