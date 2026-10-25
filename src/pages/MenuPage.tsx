@@ -7,6 +7,7 @@ import { MenuFooter } from "../components/MenuFooter";
 import { MenuSearch } from "../components/MenuSearch";
 import { ReassuranceBand } from "../components/ReassuranceBand";
 import { SITE } from "../config/site";
+import { FORMULE_MIDI_SCHEDULE_HINT, isFormuleMidiOffer } from "../data/formuleMidiAvailability";
 import { isFormuleCarouselCategory } from "../data/formulesPromos";
 import type { MenuSnapshot } from "../data/menuSource";
 import { menuCategoryDisplayMode } from "../data/menuRows";
@@ -314,6 +315,12 @@ export function MenuPage() {
                   </span>
                 ) : null}
               </h2>
+              {items.length > 0 && items.every(isFormuleMidiOffer) ? (
+                <p className="-mt-1.5 mb-3 flex items-center gap-1.5 font-sans text-[0.72rem] font-medium text-kaytori-green sm:text-[0.78rem]">
+                  <span className="h-1.5 w-1.5 shrink-0 rotate-45 bg-kaytori-gold" aria-hidden />
+                  {FORMULE_MIDI_SCHEDULE_HINT}
+                </p>
+              ) : null}
               {/* Formules (3 sections) : mêmes grandes cartes en rangée ; le reste en grille. */}
               {isFormuleCarouselCategory(category, menu.formuleSectionNames) ? (
                 <FormulesCarousel items={items} label={category} highlightId={highlightId} />

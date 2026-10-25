@@ -9,8 +9,11 @@ export const FORMULE_MIDI_SECTION_ID = "formule-midi";
 
 export const FORMULE_MIDI_TIME_ZONE = "Africa/Casablanca";
 
-/** Message affiché sur le bouton et dans le parcours commande. */
-export const FORMULE_MIDI_UNAVAILABLE_LABEL = "Indisponible maintenant";
+/** Libellé du bouton désactivé hors créneau (carte formule). */
+export const FORMULE_MIDI_UNAVAILABLE_LABEL = "Disponible de 12h à 15h";
+
+/** Indication sous le titre de la section Formule Midi. */
+export const FORMULE_MIDI_SCHEDULE_HINT = "Du lundi au vendredi, de 12h à 15h uniquement.";
 
 export const FORMULE_MIDI_CART_BLOCK_MESSAGE =
   "Les formules de midi ne sont commandables que du lundi au vendredi, de 12 h à 15 h (heure de Casablanca). Retirez-les du panier ou réessayez pendant ces horaires.";
