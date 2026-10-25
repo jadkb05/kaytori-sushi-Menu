@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPoi
 import { useCart } from "../cart/CartContext";
 import {
   FALLBACK_COVER_SLIDE,
+  coverSlideSrcSet,
   preloadPublishedCoverSlides,
   preloadedCoverSlides,
   type CoverSlide,
@@ -17,11 +18,23 @@ const FRAME =
 const IMG =
   "pointer-events-none h-full w-full select-none object-cover object-[50%_62%] md:object-[50%_40%]";
 
-function CoverImage({ slide, priority }: { slide: CoverSlide; priority: boolean }) {
+function CoverImage({
+  slide,
+  priority,
+  onSettled,
+}: {
+  slide: CoverSlide;
+  priority: boolean;
+  /** Image affichable (chargée) ou définitivement en échec : le défilement automatique peut y aller. */
+  onSettled: (id: string) => void;
+}) {
+  /** Version allégée en erreur → fichier d'origine. */
+  const [resizedFailed, setResizedFailed] = useState(false);
+  const srcSet = resizedFailed ? undefined : coverSlideSrcSet(slide);
   return (
     <img
       src={slide.imageUrl}
-      srcSet={slide.srcSet}
+      srcSet={srcSet}
       sizes="100vw"
       width={1280}
       height={640}
@@ -30,6 +43,8 @@ function CoverImage({ slide, priority }: { slide: CoverSlide; priority: boolean 
       fetchPriority={priority ? "high" : "auto"}
       loading={priority ? "eager" : "lazy"}
       decoding="async"
+      onLoad={() => onSettled(slide.id)}
+      onError={() => (srcSet ? setResizedFailed(true) : onSettled(slide.id))}
       className={IMG}
     />
   );
@@ -58,6 +73,10 @@ export function CoverCarousel() {
   const pointerIdRef = useRef<number | null>(null);
   const startXRef = useRef(0);
   const resumeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const settledRef = useRef(new Set<string>());
+  const markSettled = useCallback((slideId: string) => {
+    settledRef.current.add(slideId);
+  }, []);
 
   useEffect(() => {
     if (preloadedCoverSlides() !== undefined) return;
@@ -91,10 +110,14 @@ export function CoverCarousel() {
   useEffect(() => {
     if (slides.length <= 1 || paused || reducedMotion || dragging) return;
     const id = window.setInterval(() => {
-      setIndex((i) => (i + 1) % slides.length);
+      // Attendre que l'affiche suivante soit chargée : jamais de cadre vide en défilement automatique.
+      setIndex((i) => {
+        const next = (i + 1) % slides.length;
+        return settledRef.current.has(slides[next].id) ? next : i;
+      });
     }, AUTOPLAY_MS);
     return () => window.clearInterval(id);
-  }, [slides.length, paused, reducedMotion, dragging]);
+  }, [slides, paused, reducedMotion, dragging]);
 
   const goRelative = useCallback(
     (delta: number) => {
@@ -179,7 +202,12 @@ export function CoverCarousel() {
       >
         {slides.map((slide, i) => (
           <div key={slide.id} className="relative h-full shrink-0" style={{ width: `${slidePct}%` }} aria-hidden={i !== index}>
-            <CoverImage slide={slide} priority={i === 0} />
+            {/* Affiche visible et suivante en priorité : prêtes avant le défilement automatique. */}
+            <CoverImage
+              slide={slide}
+              priority={i === 0 || i === index || i === (index + 1) % n}
+              onSettled={markSettled}
+            />
           </div>
         ))}
       </div>

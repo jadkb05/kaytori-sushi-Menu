@@ -6,6 +6,7 @@ import { CLIENT_DISH_IMAGES, CUSTOM_DISH_IMAGES } from "../data/dishImages";
 import { STARTER_IMAGE_URL_BY_ID } from "../data/startersYakamon";
 import { ZIP_ORDER_DISH_IMAGES } from "../data/zipOrderDishImages";
 import type { YumloMenuItem } from "../data/yumloMenu";
+import { supabaseImageUrl } from "../lib/supabase/imageTransform";
 
 export function formatPriceDH(priceMAD: string) {
   const parts = priceMAD.split(".");
@@ -137,9 +138,13 @@ export function dishImage(item: YumloMenuItem) {
 /**
  * Vignettes WebP légères (scripts/generate-menu-thumbs.py) pour une image d'origine de
  * /menu-hd-*\/ ou /starters-hd/ : 224 px et 336 px pour un affichage en 88–112 px.
+ * Photo Supabase Storage : mêmes largeurs via la transformation d'images Supabase.
  * null pour toute autre image : on garde alors l'original.
  */
 export function dishThumbs(src: string): { small: string; large: string } | null {
+  const small = supabaseImageUrl(src, 224);
+  const large = supabaseImageUrl(src, 336);
+  if (small && large) return { small, large };
   const m = src.match(/^\/((?:menu-hd-[^/]+)|starters-hd)\/([^/]+)\.(?:png|jpe?g|webp)$/i);
   if (!m) return null;
   const base = `/menu-thumbs/${m[1]}/${m[2]}`;

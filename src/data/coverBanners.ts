@@ -1,3 +1,5 @@
+import { supabaseImageSrcSet } from "../lib/supabase/imageTransform";
+
 /**
  * Photos de couverture du menu public (carrousel).
  * Lecture des lignes actives ordonnées ; repli sur la bannière statique historique.
@@ -130,6 +132,34 @@ export async function fetchPublishedCoverSlides(): Promise<CoverSlide[] | null> 
   });
 }
 
+/** Largeurs servies pour les couvertures Supabase (pleine largeur, mobile 3x → desktop). */
+const COVER_IMAGE_WIDTHS = [640, 960, 1280, 1600] as const;
+
+/** srcSet de la couverture : bannière locale multi-résolutions, ou versions allégées Supabase. */
+export function coverSlideSrcSet(slide: CoverSlide): string | undefined {
+  return slide.srcSet ?? supabaseImageSrcSet(slide.imageUrl, COVER_IMAGE_WIDTHS) ?? undefined;
+}
+
+/**
+ * Télécharge la première couverture dès que la liste est connue, sans attendre le reste du menu
+ * (même srcset / sizes que l'<img> du carrousel : le navigateur réutilise ce téléchargement).
+ */
+function preloadFirstCoverImage(slides: readonly CoverSlide[]): void {
+  const first = slides[0];
+  if (!first || typeof document === "undefined") return;
+  const link = document.createElement("link");
+  link.rel = "preload";
+  link.as = "image";
+  link.href = first.imageUrl;
+  const srcSet = coverSlideSrcSet(first);
+  if (srcSet) {
+    link.setAttribute("imagesrcset", srcSet);
+    link.setAttribute("imagesizes", "100vw");
+  }
+  link.setAttribute("fetchpriority", "high");
+  document.head.appendChild(link);
+}
+
 let coverSlidesRequest: Promise<CoverSlide[] | null> | null = null;
 let coverSlidesResult: CoverSlide[] | null | undefined;
 
@@ -142,6 +172,7 @@ export function preloadPublishedCoverSlides(): Promise<CoverSlide[] | null> {
     .catch(() => null)
     .then((slides) => {
       coverSlidesResult = slides;
+      if (slides && slides.length > 0) preloadFirstCoverImage(slides);
       // Indisponible : un nouvel essai (bouton « Réessayer » du menu) relancera la lecture.
       if (slides === null) coverSlidesRequest = null;
       return slides;

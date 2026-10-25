@@ -221,20 +221,27 @@ export async function fetchPublishedFormules(): Promise<PublishedFormulesResult 
   const client = getSupabaseClient();
   if (!client) return null;
 
-  const category = await client
-    .from("categories")
-    .select("id, is_active")
-    .eq("id", FORMULES_CATEGORY_ID)
-    .maybeSingle();
+  // Requêtes indépendantes lancées ensemble (une seule attente réseau au lieu de trois).
+  const [category, withDesc, withSection] = await Promise.all([
+    client.from("categories").select("id, is_active").eq("id", FORMULES_CATEGORY_ID).maybeSingle(),
+    client
+      .from("formule_sections")
+      .select("id, name, description, sort_order, is_active")
+      .eq("is_active", true)
+      .order("sort_order"),
+    client
+      .from("products")
+      .select(
+        "id, category_id, name, description, price, currency, image_url, thumb_small_url, thumb_large_url, sort_order, is_active, formule_section_id",
+      )
+      .eq("category_id", FORMULES_CATEGORY_ID)
+      .eq("is_active", true)
+      .order("sort_order"),
+  ]);
   if (category.error || !category.data) return null;
 
   let sectionsData: unknown[] | null = null;
   let sectionsError: { message: string } | null = null;
-  const withDesc = await client
-    .from("formule_sections")
-    .select("id, name, description, sort_order, is_active")
-    .eq("is_active", true)
-    .order("sort_order");
   if (withDesc.error && /description|column/i.test(withDesc.error.message)) {
     const fallback = await client
       .from("formule_sections")
@@ -252,14 +259,6 @@ export async function fetchPublishedFormules(): Promise<PublishedFormulesResult 
   const sections = sectionsAvailable ? ((sectionsData ?? []) as FormuleSectionProbe[]) : null;
 
   if (sectionsAvailable) {
-    const withSection = await client
-      .from("products")
-      .select(
-        "id, category_id, name, description, price, currency, image_url, thumb_small_url, thumb_large_url, sort_order, is_active, formule_section_id",
-      )
-      .eq("category_id", FORMULES_CATEGORY_ID)
-      .eq("is_active", true)
-      .order("sort_order");
     if (withSection.error) return null;
     const items = publishedFormules(category.data, (withSection.data ?? []) as FormuleProductRow[], sections);
     if (items === null) return null;

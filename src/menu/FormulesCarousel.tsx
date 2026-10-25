@@ -8,6 +8,7 @@ import { FORMULE_IMAGE_SIZE, FORMULE_IMAGE_SIZE_BY_ID } from "../data/formulesPr
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { useFormuleMidiAvailable } from "../hooks/useFormuleMidiAvailable";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { supabaseImageSrcSet } from "../lib/supabase/imageTransform";
 import { dishImage, formatPriceDH } from "./menuDisplay";
 import { dishAnchorId } from "./menuSearch";
 import { useDishAdd } from "./useDishAdd";
@@ -17,6 +18,9 @@ import { useDishAdd } from "./useDishAdd";
  * Doit rester aligné avec FORMULE_CARD_FRAME dans formulesPromos.ts.
  */
 const FORMULE_FRAME_ASPECT = "aspect-[909/1024]";
+
+/** Largeurs servies pour les affiches Supabase (carte de 62vw à 17rem, écrans 1x à 3x). */
+const FORMULE_IMAGE_WIDTHS = [360, 540, 750, 960] as const;
 
 function Chevron({ direction }: { direction: "left" | "right" }) {
   return (
@@ -57,6 +61,10 @@ function FormuleCard({
   );
   const imageSize = FORMULE_IMAGE_SIZE_BY_ID[item.id] ?? FORMULE_IMAGE_SIZE;
   const midiBlocked = isFormuleMidiOffer(item) && !midiAvailable;
+  const original = dishImage(item);
+  /** Affiche Supabase allégée (même fichier redimensionné) ; erreur → fichier d'origine. */
+  const [resizedFailed, setResizedFailed] = useState(false);
+  const srcSet = resizedFailed ? null : supabaseImageSrcSet(original, FORMULE_IMAGE_WIDTHS);
 
   return (
     <li
@@ -71,7 +79,9 @@ function FormuleCard({
         <div className="relative w-full shrink-0 rounded-xl bg-kaytori-gold/10 p-1 ring-1 ring-kaytori-gold/45 md:rounded-2xl md:p-1.5 lg:w-[17rem]">
           <div className={`relative w-full ${FORMULE_FRAME_ASPECT}`}>
             <img
-              src={dishImage(item)}
+              src={original}
+              srcSet={srcSet ?? undefined}
+              onError={srcSet ? () => setResizedFailed(true) : undefined}
               alt={`Affiche ${item.name} : ${item.description}, ${formatPriceDH(item.priceMAD)} DH`}
               width={imageSize.width}
               height={imageSize.height}
