@@ -279,11 +279,11 @@ export function CoverCarousel() {
               </span>
             </button>
           ))}
-          <div className="pointer-events-none absolute inset-x-0 bottom-2.5 flex justify-center gap-1.5 md:bottom-3 md:gap-2" aria-hidden>
+          <div className="pointer-events-none absolute inset-x-0 bottom-1.5 flex justify-center gap-1 md:bottom-3 md:gap-2" aria-hidden>
             {slides.map((s, i) => (
               <span
                 key={s.id}
-                className={`h-2 w-2 rounded-full border-[1.5px] border-white transition-colors duration-300 md:h-2.5 md:w-2.5 ${
+                className={`h-[5px] w-[5px] rounded-full border border-white/90 transition-colors duration-300 md:h-2.5 md:w-2.5 md:border-[1.5px] md:border-white ${
                   i === index ? "bg-white" : "bg-transparent"
                 }`}
               />
