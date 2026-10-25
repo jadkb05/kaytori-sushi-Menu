@@ -187,7 +187,7 @@ export function CoverCarousel() {
       {canAdd ? (
         <button
           type="button"
-          className="absolute bottom-0 right-0 z-20 grid h-[38px] w-[38px] place-items-center rounded-full border-2 border-kaytori-black bg-kaytori-gold/[0.88] text-[1.45rem] font-normal leading-none text-kaytori-black shadow-[0_6px_18px_-6px_rgba(0,0,0,0.7)] transition-[filter,transform] active:brightness-95 active:scale-95 md:h-10 md:w-10 md:text-[1.55rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f1815]"
+          className="absolute bottom-0.5 right-0.5 z-20 grid h-[38px] w-[38px] place-items-center rounded-full border-2 border-kaytori-black bg-kaytori-gold/[0.88] text-[1.45rem] font-normal leading-none text-kaytori-black shadow-[0_6px_18px_-6px_rgba(0,0,0,0.7)] transition-[filter,transform] active:brightness-95 active:scale-95 md:h-10 md:w-10 md:text-[1.55rem] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f1815]"
           aria-label={`Ajouter ${current.productName} au panier`}
           onPointerDown={(e) => {
             e.stopPropagation();
