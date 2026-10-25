@@ -18,6 +18,7 @@ import { DishRow } from "../menu/DishRow";
 import { FormulesCarousel } from "../menu/FormulesCarousel";
 import { useMenu } from "../menu/MenuProvider";
 import { categoryAnchorId, categoryDisplayTitle, formuleSectionSubtitle } from "../menu/menuDisplay";
+import { resolveMenuDeepLink } from "../menu/menuDeepLinks";
 import { dishAnchorId, type SearchMatch } from "../menu/menuSearch";
 
 /** Durée de la mise en évidence d'un plat trouvé par la recherche (ms). */
@@ -161,15 +162,18 @@ export function MenuPage() {
     nav.scrollTo({ left, behavior: reducedMotion ? "instant" : "smooth" });
   }, [active, reducedMotion]);
 
-  /** Défile jusqu'à `el` sous les barres fixes ; `category` reste l'onglet actif pendant le défilement. */
-  const scrollToElement = (el: HTMLElement, category: string) => {
+  /**
+   * Défile jusqu'à `el` sous les barres fixes ; `category` reste l'onglet actif pendant le défilement.
+   * `instant` : arrivée directe (lien partagé ouvert), sans animation.
+   */
+  const scrollToElement = (el: HTMLElement, category: string, instant = false) => {
     const top = Math.max(0, el.getBoundingClientRect().top + window.scrollY - stickyOffset());
     setActive(category);
     clicked.current = { category, locked: true, target: top, at: performance.now() };
     // Si la page est déjà à la bonne position, aucun scroll n'aura lieu : on vérifie quand même.
     if (settleTimer.current !== null) window.clearTimeout(settleTimer.current);
     settleTimer.current = window.setTimeout(() => releaseRef.current(), 150);
-    window.scrollTo({ top, behavior: reducedMotion ? "instant" : "smooth" });
+    window.scrollTo({ top, behavior: instant || reducedMotion ? "instant" : "smooth" });
   };
 
   const goTo = (category: string) => {
@@ -189,6 +193,44 @@ export function MenuPage() {
   };
   useEffect(() => () => {
     if (highlightTimer.current !== null) window.clearTimeout(highlightTimer.current);
+  }, []);
+
+  /**
+   * Lien direct (#formules-solo-duo-family, #formules-midi, #promos) : arrivée sur la section.
+   * À l'ouverture (menu déjà chargé : MenuProvider n'affiche
+   * la page qu'avec les données), après les polices (hauteurs définitives), et à chaque changement de hash.
+   * Sans hash reconnu : aucun effet, navigation inchangée.
+   */
+  const deepLinkMenu = useRef(menu);
+  deepLinkMenu.current = menu;
+  const openDeepLinkRef = useRef<() => void>(() => {});
+  openDeepLinkRef.current = () => {
+    const category = resolveMenuDeepLink(window.location.hash, deepLinkMenu.current);
+    if (!category) return;
+    const el = document.getElementById(categoryAnchorId(category));
+    if (el) scrollToElement(el, category, true);
+  };
+  useEffect(() => {
+    if (!resolveMenuDeepLink(window.location.hash, deepLinkMenu.current)) return;
+    // La page gère elle-même la position : pas de restauration de l'ancien scroll au rechargement.
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    let cancelled = false;
+    const frame = requestAnimationFrame(() => openDeepLinkRef.current());
+    document.fonts?.ready
+      .then(() => {
+        // Recalage si les polices ont changé les hauteurs, sauf si le client a déjà fait défiler.
+        if (!cancelled && clicked.current !== null) requestAnimationFrame(() => openDeepLinkRef.current());
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(frame);
+    };
+  }, []);
+  useEffect(() => {
+    const onHashChange = () => openDeepLinkRef.current();
+    window.addEventListener("hashchange", onHashChange);
+    return () => window.removeEventListener("hashchange", onHashChange);
   }, []);
 
   /** Choix d'une suggestion : section (catégorie) ou plat ; navigation après la fermeture du panneau. */
