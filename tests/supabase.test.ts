@@ -49,6 +49,7 @@ describe("migration + seed (PostgreSQL en mémoire)", () => {
       "formule_sections",
       "product_variants",
       "products",
+      "site_settings",
     ]);
     const bucket = await db.query("select id, public from storage.buckets where id = 'menu-images'");
     expect(bucket.rows).toEqual([{ id: "menu-images", public: true }]);

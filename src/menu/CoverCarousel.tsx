@@ -3,6 +3,8 @@ import { useCart } from "../cart/CartContext";
 import {
   FALLBACK_COVER_SLIDE,
   coverSlideSrcSet,
+  preloadCoverAutoplay,
+  preloadedCoverAutoplay,
   preloadPublishedCoverSlides,
   preloadedCoverSlides,
   type CoverSlide,
@@ -57,7 +59,7 @@ function initialSlides(): CoverSlide[] {
 }
 
 /**
- * Carrousel de couverture : auto 3 s vers la droite, boucle, pause pendant le glissement
+ * Carrousel de couverture : auto 3 s vers la droite (si activé dans l'admin), boucle, pause pendant le glissement
  * (doigt / souris), reprise après interaction. Photos d'origine (object-cover, sans filtre).
  * « + » or en bas à droite quand la photo est liée à une formule (nom + prix catalogue).
  */
@@ -65,6 +67,8 @@ export function CoverCarousel() {
   const { addItem, lines } = useCart();
   const reducedMotion = usePrefersReducedMotion();
   const [slides, setSlides] = useState<CoverSlide[]>(initialSlides);
+  /** Réglage admin « défilement automatique » ; undefined tant qu'il n'est pas connu (aucun défilement). */
+  const [autoplay, setAutoplay] = useState<boolean | undefined>(preloadedCoverAutoplay);
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const [dragPx, setDragPx] = useState(0);
@@ -108,7 +112,19 @@ export function CoverCarousel() {
   }, []);
 
   useEffect(() => {
-    if (slides.length <= 1 || paused || reducedMotion || dragging) return;
+    if (autoplay !== undefined) return;
+    let cancelled = false;
+    void preloadCoverAutoplay().then((value) => {
+      if (!cancelled) setAutoplay(value);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [autoplay]);
+
+  useEffect(() => {
+    // Désactivé dans l'admin (ou pas encore connu) : aucune minuterie ; navigation manuelle intacte.
+    if (autoplay !== true || slides.length <= 1 || paused || reducedMotion || dragging) return;
     const id = window.setInterval(() => {
       // Attendre que l'affiche suivante soit chargée : jamais de cadre vide en défilement automatique.
       setIndex((i) => {
@@ -117,7 +133,7 @@ export function CoverCarousel() {
       });
     }, AUTOPLAY_MS);
     return () => window.clearInterval(id);
-  }, [slides, paused, reducedMotion, dragging]);
+  }, [autoplay, slides, paused, reducedMotion, dragging]);
 
   const goRelative = useCallback(
     (delta: number) => {

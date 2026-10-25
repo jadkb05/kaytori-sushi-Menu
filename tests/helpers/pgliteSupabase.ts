@@ -1,7 +1,7 @@
 /**
  * Faux client Supabase adossé à PGlite : chaque requête s'exécute avec le rôle de l'utilisateur
  * simulé (anon, ou authenticated + auth.uid()), donc sous les VRAIES politiques RLS.
- * Couvre ce qu'utilise l'admin : auth.getSession, rpc, from().select().order().
+ * Couvre ce qu'utilise l'admin : auth.getSession, rpc, from().select().order(), from().select().eq().maybeSingle().
  */
 import type { PGlite } from "@electric-sql/pglite";
 import type { SupabaseClient } from "@supabase/supabase-js";
@@ -75,6 +75,18 @@ export function createPgliteSupabase(
     from: (table: string) => ({
       select: (columns: string) => ({
         order: (column: string) => select(table, columns, column),
+        // select(cols).eq(col, val).maybeSingle() — une ligne au plus, sous RLS.
+        eq: (column: string, value: unknown) => ({
+          maybeSingle: (): Promise<Result<unknown>> =>
+            asUser(async () => {
+              try {
+                const res = await db.query(`select ${columns} from public.${table} where ${column} = $1 limit 1`, [value]);
+                return { data: res.rows[0] ?? null, error: null };
+              } catch (e) {
+                return { data: null, error: { message: (e as Error).message } };
+              }
+            }),
+        }),
       }),
       // update(values).eq(col, val).select(cols) — la RLS filtre les lignes (0 ligne = refus).
       update: (values: Record<string, unknown>) => ({

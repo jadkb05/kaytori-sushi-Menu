@@ -184,3 +184,36 @@ export function preloadPublishedCoverSlides(): Promise<CoverSlide[] | null> {
 export function preloadedCoverSlides(): CoverSlide[] | null | undefined {
   return coverSlidesResult;
 }
+
+/**
+ * Réglage « défilement automatique des couvertures » (site_settings.cover_autoplay).
+ * true par défaut : réglage absent, table non installée ou lecture impossible → comportement actuel.
+ */
+export async function fetchCoverAutoplay(): Promise<boolean> {
+  if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) return true;
+  const { getSupabaseClient } = await import("../lib/supabase/client");
+  const client = getSupabaseClient();
+  if (!client) return true;
+  const { data, error } = await client.from("site_settings").select("cover_autoplay").eq("id", "default").maybeSingle();
+  if (error || !data) return true;
+  return data.cover_autoplay !== false;
+}
+
+let coverAutoplayRequest: Promise<boolean> | null = null;
+let coverAutoplayResult: boolean | undefined;
+
+/** Lecture unique du réglage, lancée par MenuProvider avec le menu et réutilisée par CoverCarousel. */
+export function preloadCoverAutoplay(): Promise<boolean> {
+  coverAutoplayRequest ??= fetchCoverAutoplay()
+    .catch(() => true)
+    .then((autoplay) => {
+      coverAutoplayResult = autoplay;
+      return autoplay;
+    });
+  return coverAutoplayRequest;
+}
+
+/** Réglage déjà reçu ; undefined tant que la lecture est en cours. */
+export function preloadedCoverAutoplay(): boolean | undefined {
+  return coverAutoplayResult;
+}

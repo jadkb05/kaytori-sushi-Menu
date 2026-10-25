@@ -27,6 +27,7 @@ begin
     raise exception 'ARRÊT — rien n''a été modifié : confirmation absente (voir la ligne à décommenter).';
   end if;
 
+  drop function if exists public.admin_update_site_settings(jsonb);
   drop function if exists public.admin_delete_cover_banner(text);
   drop function if exists public.admin_update_cover_banner(text, jsonb, integer);
   drop function if exists public.admin_create_cover_banner(text, text, text, boolean, integer);
@@ -45,6 +46,7 @@ begin
   drop function if exists public.admin_update_product(text, jsonb, jsonb);
 
   -- Tables (couvertures avant produits : FK product_id ; variantes → produits → sections → catégories).
+  drop table if exists public.site_settings;
   drop table if exists public.cover_banners;
   drop table if exists public.product_variants;
   drop table if exists public.products;

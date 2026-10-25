@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { BrandLogo } from "../components/BrandLogo";
 import { SITE } from "../config/site";
-import { preloadPublishedCoverSlides } from "../data/coverBanners";
+import { preloadCoverAutoplay, preloadPublishedCoverSlides } from "../data/coverBanners";
 import {
   fetchPublishedFormules,
   promoteFormulesCategory,
@@ -87,7 +87,7 @@ function settleWithin<T>(promise: Promise<T>, ms: number, fallback: T): Promise<
  * Fournit le menu à l'interface, quelle que soit la source :
  * - static : disponible immédiatement (rendu identique à la V1, sans écran d'attente),
  *   formules Supabase posées ensuite par-dessus ;
- * - supabase : menu, formules et couvertures lus en parallèle, affichés ensemble une fois prêts
+ * - supabase : menu, formules, couvertures et réglage de défilement lus en parallèle, affichés ensemble une fois prêts
  *   (aucun état intermédiaire). Échec ou délai dépassé → écran d'erreur, jamais le menu statique.
  * Overlay formules : si Supabase renvoie les sections, elles remplacent intégralement
  * l'affichage formules (jamais en complément du découpage heuristique).
@@ -115,6 +115,7 @@ export function MenuProvider({
       loadMenu(source, REMOTE_MENU_TIMEOUT_MS),
       settleWithin(fetchPublishedFormules(), REMOTE_MENU_TIMEOUT_MS, null),
       settleWithin(preloadPublishedCoverSlides(), REMOTE_MENU_TIMEOUT_MS, null),
+      settleWithin(preloadCoverAutoplay(), REMOTE_MENU_TIMEOUT_MS, true),
     ]).then(([result, formules]) => {
       if (cancelled) return;
       if (result.fallbackReason !== null) {

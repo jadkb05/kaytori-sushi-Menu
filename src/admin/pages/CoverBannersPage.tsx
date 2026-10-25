@@ -24,6 +24,7 @@ import {
   LoadingState,
   PageHeader,
   StatusBadge,
+  Switch,
   Toast,
   buttonClass,
   cardClass,
@@ -47,6 +48,7 @@ import {
   type CoverBannerRow,
 } from "../lib/coverBannerAdmin";
 import { buildProductList } from "../lib/menuAdmin";
+import { SITE_SETTINGS_MIGRATION_HINT, fetchSiteSettings, updateCoverAutoplay } from "../lib/siteSettingsAdmin";
 
 type FormuleOption = { id: string; label: string };
 
@@ -406,6 +408,66 @@ function AddCoverDialog({
  * Gestion des photos de couverture du menu public (carrousel).
  * Ordre : glisser-déposer fluide (overlay qui suit le doigt / la souris) + enregistrement auto.
  */
+/** Réglage « Défilement automatique des couvertures » (site_settings.cover_autoplay). */
+function CoverAutoplaySetting({
+  client,
+  onNotice,
+}: {
+  client: SupabaseClient;
+  onNotice: (notice: ToastNotice) => void;
+}) {
+  /** undefined = chargement ; null = migration 12 non appliquée. */
+  const [autoplay, setAutoplay] = useState<boolean | null | undefined>(undefined);
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchSiteSettings(client)
+      .then((settings) => {
+        if (!cancelled) setAutoplay(settings ? settings.coverAutoplay : null);
+      })
+      .catch((e: unknown) => {
+        if (cancelled) return;
+        setAutoplay(null);
+        onNotice({ tone: "error", message: e instanceof Error ? e.message : "Lecture du réglage impossible." });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [client, onNotice]);
+
+  const onChange = async (next: boolean) => {
+    setSaving(true);
+    const res = await updateCoverAutoplay(client, next);
+    setSaving(false);
+    if (!res.ok) {
+      onNotice({ tone: "error", message: res.error });
+      return;
+    }
+    setAutoplay(res.settings.coverAutoplay);
+    onNotice({
+      tone: "success",
+      message: res.settings.coverAutoplay ? "Défilement automatique activé." : "Défilement automatique désactivé.",
+    });
+  };
+
+  return (
+    <div className={`${cardClass} mb-4 p-4`}>
+      <Switch
+        checked={autoplay !== false}
+        disabled={autoplay === undefined || autoplay === null || saving}
+        onChange={(next) => void onChange(next)}
+        label="Défilement automatique des couvertures"
+        description={
+          autoplay === null
+            ? SITE_SETTINGS_MIGRATION_HINT
+            : "Permet de faire défiler automatiquement les couvertures du menu."
+        }
+      />
+    </div>
+  );
+}
+
 export function CoverBannersPage({ client }: { client: SupabaseClient }) {
   const menuData = useAdminMenuData();
   const [banners, setBanners] = useState<CoverBannerRow[] | null>(null);
@@ -639,6 +701,7 @@ export function CoverBannersPage({ client }: { client: SupabaseClient }) {
 
       {ready && banners ? (
         <>
+          <CoverAutoplaySetting client={client} onNotice={setToast} />
           {savingOrder ? (
             <p className="mb-3 text-xs font-medium text-admin-muted" aria-live="polite">
               Enregistrement de l'ordre…
