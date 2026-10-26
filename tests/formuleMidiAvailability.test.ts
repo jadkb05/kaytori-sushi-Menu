@@ -1,5 +1,5 @@
 /**
- * Disponibilité Formule Midi — Africa/Casablanca, lun–ven 12:00–15:00.
+ * Disponibilité Formule Midi — Africa/Casablanca, lun–ven 11:30–15:00.
  */
 import { describe, expect, it } from "vitest";
 import {
@@ -60,9 +60,10 @@ describe("isFormuleMidiOffer", () => {
 
 describe("isFormuleMidiAvailableAt (Casablanca)", () => {
   // 2026-10-26 = lundi ; 2026-10-24 = samedi ; 2026-10-25 = dimanche
-  it("lundi 11:59 indisponible, 12:00 disponible", () => {
-    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 26, 11, 59))).toBe(false);
-    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 26, 12, 0))).toBe(true);
+  it("lundi 11:29 indisponible, 11:30 disponible", () => {
+    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 26, 11, 29))).toBe(false);
+    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 26, 11, 30))).toBe(true);
+    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 26, 11, 59))).toBe(true);
   });
 
   it("lundi 14:59 disponible, 15:00 indisponible", () => {
@@ -73,12 +74,15 @@ describe("isFormuleMidiAvailableAt (Casablanca)", () => {
   it("samedi et dimanche indisponibles toute la journée", () => {
     expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 24, 12, 30))).toBe(false);
     expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 24, 13, 0))).toBe(false);
+    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 24, 11, 30))).toBe(false);
+    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 25, 11, 30))).toBe(false);
     expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 25, 12, 0))).toBe(false);
     expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 25, 14, 59))).toBe(false);
   });
 
   it("vendredi dans le créneau, hors créneau", () => {
-    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 30, 12, 0))).toBe(true);
+    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 30, 11, 29))).toBe(false);
+    expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 30, 11, 30))).toBe(true);
     expect(isFormuleMidiAvailableAt(atCasablanca(2026, 10, 30, 15, 0))).toBe(false);
   });
 });
@@ -97,33 +101,35 @@ describe("nextFormuleMidiAvailabilityChangeAt", () => {
     expect(isFormuleMidiAvailableAt(next)).toBe(false);
   });
 
-  it("avant 12:00 un jour ouvré → 12:00 le même jour", () => {
-    const at = atCasablanca(2026, 10, 26, 11, 59);
+  it("avant 11:30 un jour ouvré → 11:30 le même jour", () => {
+    const at = atCasablanca(2026, 10, 26, 11, 29);
     const next = nextFormuleMidiAvailabilityChangeAt(at);
     const wall = getCasablancaWallClock(next);
     expect(wall.day).toBe(26);
-    expect(wall.hour).toBe(12);
-    expect(wall.minute).toBe(0);
+    expect(wall.hour).toBe(11);
+    expect(wall.minute).toBe(30);
+    expect(isFormuleMidiAvailableAt(new Date(next.getTime() - 1000))).toBe(false);
     expect(isFormuleMidiAvailableAt(next)).toBe(true);
   });
 
-  it("après 15:00 vendredi → lundi suivant 12:00", () => {
+  it("après 15:00 vendredi → lundi suivant 11:30", () => {
     const at = atCasablanca(2026, 10, 30, 16, 0);
     const next = nextFormuleMidiAvailabilityChangeAt(at);
     const wall = getCasablancaWallClock(next);
     expect(wall.weekday).toBe("Mon");
-    expect(wall.hour).toBe(12);
-    expect(wall.minute).toBe(0);
+    expect(wall.hour).toBe(11);
+    expect(wall.minute).toBe(30);
     expect(isFormuleMidiAvailableAt(next)).toBe(true);
   });
 
-  it("samedi → lundi 12:00", () => {
+  it("samedi → lundi 11:30", () => {
     const at = atCasablanca(2026, 10, 24, 10, 0);
     const next = nextFormuleMidiAvailabilityChangeAt(at);
     const wall = getCasablancaWallClock(next);
     expect(wall.weekday).toBe("Mon");
     expect(wall.day).toBe(26);
-    expect(wall.hour).toBe(12);
+    expect(wall.hour).toBe(11);
+    expect(wall.minute).toBe(30);
   });
 });
 

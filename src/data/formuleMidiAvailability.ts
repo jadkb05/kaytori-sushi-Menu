@@ -1,6 +1,6 @@
 /**
  * Disponibilité des formules rattachées à la section « Formule Midi » (id stable formule-midi).
- * Fuseau : Africa/Casablanca — lun–ven, 12:00 inclus à 15:00 exclus.
+ * Fuseau : Africa/Casablanca — lun–ven, 11:30 inclus à 15:00 exclus.
  */
 import { FORMULE_SECTION_MIDI, formulePublicCategory } from "./formulesPromos";
 
@@ -9,14 +9,21 @@ export const FORMULE_MIDI_SECTION_ID = "formule-midi";
 
 export const FORMULE_MIDI_TIME_ZONE = "Africa/Casablanca";
 
+/** Début du créneau (inclus), heure murale Casablanca. */
+const MIDI_START = { hour: 11, minute: 30 };
+/** Fin du créneau (exclue), heure murale Casablanca. */
+const MIDI_END = { hour: 15, minute: 0 };
+const MIDI_START_MINUTES = MIDI_START.hour * 60 + MIDI_START.minute;
+const MIDI_END_MINUTES = MIDI_END.hour * 60 + MIDI_END.minute;
+
 /** Libellé du bouton désactivé hors créneau (carte formule). */
-export const FORMULE_MIDI_UNAVAILABLE_LABEL = "Disponible de 12h à 15h";
+export const FORMULE_MIDI_UNAVAILABLE_LABEL = "Disponible de 11h30 à 15h";
 
 /** Indication sous le titre de la section Formule Midi. */
-export const FORMULE_MIDI_SCHEDULE_HINT = "Du lundi au vendredi, de 12h à 15h uniquement.";
+export const FORMULE_MIDI_SCHEDULE_HINT = "Du lundi au vendredi, de 11h30 à 15h uniquement.";
 
 export const FORMULE_MIDI_CART_BLOCK_MESSAGE =
-  "Les formules de midi ne sont commandables que du lundi au vendredi, de 12 h à 15 h (heure de Casablanca). Retirez-les du panier ou réessayez pendant ces horaires.";
+  "Les formules de midi ne sont commandables que du lundi au vendredi, de 11 h 30 à 15 h (heure de Casablanca). Retirez-les du panier ou réessayez pendant ces horaires.";
 
 type MidiOfferLike = {
   id: string;
@@ -84,14 +91,14 @@ function isWeekday(weekday: string): boolean {
 }
 
 /**
- * Disponible si lun–ven et 12:00 ≤ heure < 15:00 (Casablanca).
- * 11:59 → non ; 12:00 → oui ; 14:59 → oui ; 15:00 → non.
+ * Disponible si lun–ven et 11:30 ≤ heure < 15:00 (Casablanca).
+ * 11:29 → non ; 11:30 → oui ; 14:59 → oui ; 15:00 → non.
  */
 export function isFormuleMidiAvailableAt(at: Date = new Date()): boolean {
   const w = getCasablancaWallClock(at);
   if (!isWeekday(w.weekday)) return false;
   const minutes = w.hour * 60 + w.minute;
-  return minutes >= 12 * 60 && minutes < 15 * 60;
+  return minutes >= MIDI_START_MINUTES && minutes < MIDI_END_MINUTES;
 }
 
 /** Instant UTC approximatif d'une date/heure murale Casablanca (ajustement par itération). */
@@ -126,21 +133,21 @@ export function nextFormuleMidiAvailabilityChangeAt(at: Date = new Date()): Date
   const available = isFormuleMidiAvailableAt(at);
 
   if (available) {
-    return casablancaLocalToUtc(w.year, w.month, w.day, 15, 0, 0);
+    return casablancaLocalToUtc(w.year, w.month, w.day, MIDI_END.hour, MIDI_END.minute, 0);
   }
 
-  // Avant l'ouverture un jour ouvré → aujourd'hui 12:00.
-  if (isWeekday(w.weekday) && w.hour * 60 + w.minute < 12 * 60) {
-    return casablancaLocalToUtc(w.year, w.month, w.day, 12, 0, 0);
+  // Avant l'ouverture un jour ouvré → aujourd'hui 11:30.
+  if (isWeekday(w.weekday) && w.hour * 60 + w.minute < MIDI_START_MINUTES) {
+    return casablancaLocalToUtc(w.year, w.month, w.day, MIDI_START.hour, MIDI_START.minute, 0);
   }
 
-  // Après 15:00 ou week-end → prochain lundi–vendredi à 12:00.
+  // Après 15:00 ou week-end → prochain lundi–vendredi à 11:30.
   let cursor = { year: w.year, month: w.month, day: w.day };
   for (let step = 1; step <= 8; step++) {
     cursor = addCalendarDays(cursor.year, cursor.month, cursor.day, 1);
-    const probe = casablancaLocalToUtc(cursor.year, cursor.month, cursor.day, 12, 0, 0);
+    const probe = casablancaLocalToUtc(cursor.year, cursor.month, cursor.day, MIDI_START.hour, MIDI_START.minute, 0);
     const pw = getCasablancaWallClock(probe);
-    if (isWeekday(pw.weekday) && pw.hour === 12 && pw.minute === 0) {
+    if (isWeekday(pw.weekday) && pw.hour === MIDI_START.hour && pw.minute === MIDI_START.minute) {
       return probe;
     }
   }
