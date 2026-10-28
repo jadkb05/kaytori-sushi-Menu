@@ -109,8 +109,6 @@ export function OrderReview({ onClose }: Props) {
     clear,
     checkout,
     setCheckout,
-    rememberCheckout,
-    setRememberCheckout,
     checkoutPrefilled,
     forgetCheckout,
     persistCheckout,
@@ -263,7 +261,7 @@ export function OrderReview({ onClose }: Props) {
     sentRef.current = true;
     setSending(true);
     const url = whatsappOrderUrlWith(checkoutDetails(checkout)); // message généré avant de vider le panier
-    persistCheckout(); // coordonnées validées, mémorisées seulement si le client l'a demandé
+    persistCheckout(); // coordonnées validées, mémorisées sur l'appareil pour la prochaine commande
     const win = window.open(url, "_blank");
     if (win) win.opener = null;
     else window.location.href = url;
@@ -355,8 +353,6 @@ export function OrderReview({ onClose }: Props) {
               errors={errors}
               onSubmit={toRecap}
               memory={{
-                remember: rememberCheckout,
-                onRememberChange: setRememberCheckout,
                 prefilled: checkoutPrefilled,
                 onForget: forgetCheckout,
               }}

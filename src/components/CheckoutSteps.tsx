@@ -140,43 +140,15 @@ type FormProps = {
   /** Erreurs affichées (après une première tentative de validation). */
   errors: CheckoutErrors;
   onSubmit: () => void;
-  /** Mémorisation facultative des coordonnées sur l'appareil (absente : aucune case affichée). */
+  /** Mémorisation des coordonnées sur l'appareil (absente : ni indicateur ni mention). */
   memory?: CheckoutMemory;
 };
 
 export type CheckoutMemory = {
-  remember: boolean;
-  onRememberChange: (remember: boolean) => void;
   /** Champs préremplis depuis l'appareil : indicateur discret + « Effacer ». */
   prefilled: boolean;
   onForget: () => void;
 };
-
-/** Case « Mémoriser mes informations… », jamais cochée d'office ; décocher efface l'appareil. */
-function RememberCheckbox({ memory }: { memory: CheckoutMemory }) {
-  return (
-    <div>
-      <label
-        htmlFor="checkout-remember"
-        className="flex min-h-[44px] cursor-pointer items-center gap-3 font-sans text-[0.86rem] font-medium text-kaytori-black"
-      >
-        <input
-          id="checkout-remember"
-          type="checkbox"
-          checked={memory.remember}
-          onChange={(e) => memory.onRememberChange(e.target.checked)}
-          aria-describedby="checkout-remember-hint"
-          className="h-[18px] w-[18px] shrink-0 cursor-pointer rounded accent-kaytori-green"
-        />
-        Mémoriser mes informations pour mes prochaines commandes
-      </label>
-      <p id="checkout-remember-hint" className="pl-[30px] font-sans text-[0.74rem] leading-relaxed text-kaytori-muted">
-        Nom, téléphone, adresse et quartier, enregistrés uniquement sur cet appareil, dans ce navigateur.
-        {memory.remember ? " Décochez pour les effacer." : ""}
-      </p>
-    </div>
-  );
-}
 
 /** Étape « Vos coordonnées » : mode, identité, adresse si livraison, paiement, téléphone. */
 export function CheckoutForm({ formId, value, onChange, errors, onSubmit, memory }: FormProps) {
@@ -404,7 +376,12 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit, memory
         ) : null}
       </fieldset>
 
-      {memory ? <RememberCheckbox memory={memory} /> : null}
+      {memory ? (
+        <p id="checkout-memory-note" className="font-sans text-[0.74rem] leading-relaxed text-kaytori-muted">
+          Vos nom, téléphone, adresse et quartier sont mémorisés uniquement sur cet appareil, dans ce navigateur,
+          pour préremplir vos prochaines commandes.
+        </p>
+      ) : null}
 
       <p className="font-sans text-[0.74rem] text-kaytori-muted">
         <span className="text-kaytori-green" aria-hidden>
