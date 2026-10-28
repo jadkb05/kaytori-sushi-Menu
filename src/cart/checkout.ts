@@ -1,5 +1,6 @@
 /**
- * Coordonnées du client saisies avant l'envoi WhatsApp (en mémoire uniquement, jamais stockées).
+ * Coordonnées du client saisies avant l'envoi WhatsApp (en mémoire ; mémorisation facultative sur
+ * l'appareil, à la demande du client : voir savedCheckout.ts).
  */
 
 export type FulfillmentMode = "delivery" | "pickup";

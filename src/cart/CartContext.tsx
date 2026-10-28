@@ -14,6 +14,7 @@ import {
 import { useOptionalMenu } from "../menu/MenuProvider";
 import { buildWhatsappOrderMessage, categoryLookupFromMenu, type CartLine } from "./buildOrderMessage";
 import { EMPTY_CHECKOUT, type CheckoutDetails, type CheckoutInfo } from "./checkout";
+import { forgetSavedCheckout, prefilledCheckout, readSavedCheckout, saveCheckout } from "./savedCheckout";
 
 function parseUnitPriceDh(priceMAD: string): number {
   const n = Number.parseFloat(priceMAD.replace(",", "."));
@@ -37,9 +38,20 @@ type CartContextValue = {
   whatsappOrderUrl: string;
   /** Lien WhatsApp du même message, complété des coordonnées client (récapitulatif final). */
   whatsappOrderUrlWith: (checkout: CheckoutDetails) => string;
-  /** Coordonnées saisies : conservées en mémoire entre les étapes et les ouvertures du panier. */
+  /** Coordonnées saisies : conservées en mémoire entre les étapes et les ouvertures du panier,
+   * et sur l'appareil seulement si le client coche « Mémoriser mes informations… ». */
   checkout: CheckoutInfo;
   setCheckout: (next: CheckoutInfo) => void;
+  /** Case « Mémoriser mes informations… » : cochée seulement si le client l'a déjà choisie. */
+  rememberCheckout: boolean;
+  /** Décocher efface immédiatement les coordonnées mémorisées sur l'appareil. */
+  setRememberCheckout: (remember: boolean) => void;
+  /** Le formulaire a été prérempli depuis l'appareil (indicateur discret). */
+  checkoutPrefilled: boolean;
+  /** « Effacer » : vide les champs préremplis et oublie les coordonnées mémorisées. */
+  forgetCheckout: () => void;
+  /** À l'envoi de la commande : mémorise les coordonnées si le client l'a demandé. */
+  persistCheckout: () => void;
 };
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -47,8 +59,34 @@ const CartContext = createContext<CartContextValue | null>(null);
 export function CartProvider({ children }: { children: ReactNode }) {
   /** Panier en mémoire uniquement : un rechargement de la page repart d'un panier vide. */
   const [lines, setLines] = useState<CartLine[]>([]);
-  /** Coordonnées en mémoire uniquement (aucun stockage navigateur ni serveur). */
-  const [checkout, setCheckout] = useState<CheckoutInfo>(EMPTY_CHECKOUT);
+  /**
+   * Coordonnées en mémoire, préremplies une seule fois au chargement depuis l'appareil si le client
+   * a choisi de les mémoriser : une saisie ou un champ effacé n'est jamais écrasé ensuite.
+   */
+  const [initial] = useState(() => {
+    const saved = readSavedCheckout();
+    return { checkout: prefilledCheckout(saved), remembered: saved !== null };
+  });
+  const [checkout, setCheckout] = useState<CheckoutInfo>(initial.checkout);
+  const [rememberCheckout, setRemember] = useState(initial.remembered);
+  const [checkoutPrefilled, setCheckoutPrefilled] = useState(initial.remembered);
+
+  const setRememberCheckout = useCallback((remember: boolean) => {
+    setRemember(remember);
+    if (!remember) forgetSavedCheckout();
+  }, []);
+
+  const forgetCheckout = useCallback(() => {
+    forgetSavedCheckout();
+    setRemember(false);
+    setCheckoutPrefilled(false);
+    // Mode et paiement ne sont pas des coordonnées : le choix en cours est gardé.
+    setCheckout((prev) => ({ ...EMPTY_CHECKOUT, mode: prev.mode, payment: prev.payment }));
+  }, []);
+
+  const persistCheckout = useCallback(() => {
+    if (rememberCheckout) saveCheckout(checkout);
+  }, [rememberCheckout, checkout]);
 
   /** Catégories du menu réellement chargé (Supabase ou statique) pour le message WhatsApp. */
   const menu = useOptionalMenu();
@@ -131,8 +169,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
       whatsappOrderUrlWith,
       checkout,
       setCheckout,
+      rememberCheckout,
+      setRememberCheckout,
+      checkoutPrefilled,
+      forgetCheckout,
+      persistCheckout,
     }),
-    [lines, itemCount, totalDh, addItem, increment, decrement, removeLine, clear, whatsappOrderUrl, whatsappOrderUrlWith, checkout],
+    [
+      lines,
+      itemCount,
+      totalDh,
+      addItem,
+      increment,
+      decrement,
+      removeLine,
+      clear,
+      whatsappOrderUrl,
+      whatsappOrderUrlWith,
+      checkout,
+      rememberCheckout,
+      setRememberCheckout,
+      checkoutPrefilled,
+      forgetCheckout,
+      persistCheckout,
+    ],
   );
 
   return <CartContext.Provider value={value}>{children}</CartContext.Provider>;

@@ -99,8 +99,22 @@ function LineThumb({ item }: { item: YumloMenuItem | undefined }) {
  * confirmation du récapitulatif ouvre WhatsApp (message existant + coordonnées) puis vide le panier.
  */
 export function OrderReview({ onClose }: Props) {
-  const { lines, totalDh, whatsappOrderUrlWith, increment, decrement, removeLine, clear, checkout, setCheckout } =
-    useCart();
+  const {
+    lines,
+    totalDh,
+    whatsappOrderUrlWith,
+    increment,
+    decrement,
+    removeLine,
+    clear,
+    checkout,
+    setCheckout,
+    rememberCheckout,
+    setRememberCheckout,
+    checkoutPrefilled,
+    forgetCheckout,
+    persistCheckout,
+  } = useCart();
   const [step, setStep] = useState<Step>("cart");
   /** Erreurs affichées seulement après une première tentative de passage au récapitulatif. */
   const [showErrors, setShowErrors] = useState(false);
@@ -249,6 +263,7 @@ export function OrderReview({ onClose }: Props) {
     sentRef.current = true;
     setSending(true);
     const url = whatsappOrderUrlWith(checkoutDetails(checkout)); // message généré avant de vider le panier
+    persistCheckout(); // coordonnées validées, mémorisées seulement si le client l'a demandé
     const win = window.open(url, "_blank");
     if (win) win.opener = null;
     else window.location.href = url;
@@ -333,7 +348,19 @@ export function OrderReview({ onClose }: Props) {
       <div ref={scrollRef} className="min-h-0 flex-1 overflow-y-auto overscroll-y-contain">
         {step === "details" ? (
           <div className="mx-auto max-w-lg px-4 pb-8 pt-5 sm:px-6">
-            <CheckoutForm formId={FORM_ID} value={checkout} onChange={setCheckout} errors={errors} onSubmit={toRecap} />
+            <CheckoutForm
+              formId={FORM_ID}
+              value={checkout}
+              onChange={setCheckout}
+              errors={errors}
+              onSubmit={toRecap}
+              memory={{
+                remember: rememberCheckout,
+                onRememberChange: setRememberCheckout,
+                prefilled: checkoutPrefilled,
+                onForget: forgetCheckout,
+              }}
+            />
           </div>
         ) : step === "recap" ? (
           <div className="mx-auto max-w-lg px-4 pb-8 pt-4 sm:px-6">

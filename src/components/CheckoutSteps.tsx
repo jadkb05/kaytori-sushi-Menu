@@ -140,10 +140,46 @@ type FormProps = {
   /** Erreurs affichées (après une première tentative de validation). */
   errors: CheckoutErrors;
   onSubmit: () => void;
+  /** Mémorisation facultative des coordonnées sur l'appareil (absente : aucune case affichée). */
+  memory?: CheckoutMemory;
 };
 
+export type CheckoutMemory = {
+  remember: boolean;
+  onRememberChange: (remember: boolean) => void;
+  /** Champs préremplis depuis l'appareil : indicateur discret + « Effacer ». */
+  prefilled: boolean;
+  onForget: () => void;
+};
+
+/** Case « Mémoriser mes informations… », jamais cochée d'office ; décocher efface l'appareil. */
+function RememberCheckbox({ memory }: { memory: CheckoutMemory }) {
+  return (
+    <div>
+      <label
+        htmlFor="checkout-remember"
+        className="flex min-h-[44px] cursor-pointer items-center gap-3 font-sans text-[0.86rem] font-medium text-kaytori-black"
+      >
+        <input
+          id="checkout-remember"
+          type="checkbox"
+          checked={memory.remember}
+          onChange={(e) => memory.onRememberChange(e.target.checked)}
+          aria-describedby="checkout-remember-hint"
+          className="h-[18px] w-[18px] shrink-0 cursor-pointer rounded accent-kaytori-green"
+        />
+        Mémoriser mes informations pour mes prochaines commandes
+      </label>
+      <p id="checkout-remember-hint" className="pl-[30px] font-sans text-[0.74rem] leading-relaxed text-kaytori-muted">
+        Nom, téléphone, adresse et quartier, enregistrés uniquement sur cet appareil, dans ce navigateur.
+        {memory.remember ? " Décochez pour les effacer." : ""}
+      </p>
+    </div>
+  );
+}
+
 /** Étape « Vos coordonnées » : mode, identité, adresse si livraison, paiement, téléphone. */
-export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: FormProps) {
+export function CheckoutForm({ formId, value, onChange, errors, onSubmit, memory }: FormProps) {
   const [locating, setLocating] = useState(false);
   const [locateStatus, setLocateStatus] = useState<{ ok: boolean; text: string } | null>(null);
   /** Garde synchrone contre le double tap (`disabled` n'agit qu'au rendu suivant). */
@@ -225,6 +261,24 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
         <legend className="mb-1.5">
           <SectionTitle>Vos informations</SectionTitle>
         </legend>
+        {memory?.prefilled ? (
+          <p className="-mt-1 flex flex-wrap items-center gap-x-1 font-sans text-[0.76rem] text-kaytori-muted">
+            <span>
+              <span className="text-kaytori-green" aria-hidden>
+                ✓{" "}
+              </span>
+              Informations préremplies — vérifiez-les.
+            </span>
+            <button
+              type="button"
+              onClick={memory.onForget}
+              aria-label="Effacer les informations préremplies et mémorisées"
+              className="-my-2 inline-flex min-h-[44px] items-center px-1 font-semibold text-kaytori-green underline decoration-kaytori-green/30 underline-offset-2 hover:text-kaytori-greenMid"
+            >
+              Effacer
+            </button>
+          </p>
+        ) : null}
         <Field id="checkout-fullName" label="Nom et prénom" required error={errors.fullName}>
           <input
             {...a11y("fullName")}
@@ -349,6 +403,8 @@ export function CheckoutForm({ formId, value, onChange, errors, onSubmit }: Form
           </Field>
         ) : null}
       </fieldset>
+
+      {memory ? <RememberCheckbox memory={memory} /> : null}
 
       <p className="font-sans text-[0.74rem] text-kaytori-muted">
         <span className="text-kaytori-green" aria-hidden>
