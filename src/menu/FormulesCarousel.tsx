@@ -52,11 +52,12 @@ function FormuleCard({
   highlighted: boolean;
   midiAvailable: boolean;
 }) {
-  /** Même ajout au panier que les autres plats (aucune variante pour les formules). */
-  const { handleAdd } = useDishAdd(item);
+  /** Même ajout au panier que les autres plats (Formule Duo 2 : fenêtre de choix du plat). */
+  const { handleAdd, variantModal } = useDishAdd(item);
   const { lines } = useCart();
+  /** Lignes du produit, y compris celles avec un choix (`id:plat=…`). */
   const inCart = useMemo(
-    () => lines.reduce((n, l) => (l.id === item.id ? n + l.quantity : n), 0),
+    () => lines.reduce((n, l) => (l.id === item.id || l.id.startsWith(`${item.id}:`) ? n + l.quantity : n), 0),
     [lines, item.id],
   );
   const imageSize = FORMULE_IMAGE_SIZE_BY_ID[item.id] ?? FORMULE_IMAGE_SIZE;
@@ -126,6 +127,7 @@ function FormuleCard({
           </button>
         )}
       </article>
+      {variantModal}
     </li>
   );
 }

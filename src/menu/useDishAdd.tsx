@@ -16,7 +16,8 @@ import { formatPriceDH, getDisplayProductName } from "./menuDisplay";
  * - avec variantes → modale de choix avec prix final par variante, quantité (− 1 +, minimum 1) et
  *   bouton « Ajouter N pour X DH » ; ligne panier `platId:variantId` / « Nom — Variante » ;
  * - plat personnalisé (PRODUCT_CUSTOMIZATIONS) → en plus, options requises et aucune
- *   présélection ; ligne « Nom — Variante — Sauce : X ».
+ *   présélection ; ligne « Nom — Variante — Sauce : X ». Sans variante (Formule Duo 2) : même
+ *   fenêtre avec les seules options, au prix du produit ; ligne « Nom — Plat : X ».
  */
 export function useDishAdd(item: YumloMenuItem) {
   const { addItem } = useCart();
@@ -24,6 +25,8 @@ export function useDishAdd(item: YumloMenuItem) {
   const hasVariants = Boolean(variants && variants.length > 0);
   const [pickerOpen, setPickerOpen] = useState(false);
   const custom = PRODUCT_CUSTOMIZATIONS[item.id];
+  /** Fenêtre de choix : variantes, ou options requises (même sans variante). */
+  const needsPicker = hasVariants || Boolean(custom);
   const [modalVariantId, setModalVariantId] = useState(() => (custom ? "" : (variants?.[0]?.id ?? "")));
   /** Plat personnalisé : option choisie par section (id de section → id d'option). */
   const [chosen, setChosen] = useState<Record<string, string>>({});
@@ -33,7 +36,7 @@ export function useDishAdd(item: YumloMenuItem) {
   const openerRef = useRef<HTMLElement | null>(null);
 
   const openPicker = (e?: { currentTarget: EventTarget | null }) => {
-    if (!hasVariants || !variants?.length) return;
+    if (!needsPicker) return;
     const fromEvent = e?.currentTarget;
     const active = document.activeElement;
     openerRef.current =
@@ -42,7 +45,7 @@ export function useDishAdd(item: YumloMenuItem) {
         : active instanceof HTMLElement && active !== document.body
           ? active
           : null;
-    setModalVariantId(custom ? "" : variants[0].id);
+    setModalVariantId(custom ? "" : (variants?.[0]?.id ?? ""));
     setChosen({});
     setQuantity(1);
     setPickerOpen(true);
@@ -52,8 +55,14 @@ export function useDishAdd(item: YumloMenuItem) {
     hasVariants && variants
       ? (variants.find((x) => x.id === modalVariantId) ?? (custom ? null : variants[0]))
       : null;
-  /** Plat personnalisé : ajout possible seulement avec une variante et une option par section. */
-  const customReady = Boolean(custom && selectedInModal && custom.groups.every((g) => chosen[g.id]));
+  /** Plat personnalisé : ajout possible seulement avec une variante (s'il en a) et une option par section. */
+  const customReady = Boolean(
+    custom && (!hasVariants || selectedInModal) && custom.groups.every((g) => chosen[g.id]),
+  );
+  /** Messages des sections encore sans choix (« Veuillez choisir votre plat »). */
+  const missingMessages = custom
+    ? custom.groups.flatMap((g) => (!chosen[g.id] && g.missingMessage ? [g.missingMessage] : []))
+    : [];
 
   useEffect(() => {
     if (!pickerOpen) return;
@@ -110,7 +119,7 @@ export function useDishAdd(item: YumloMenuItem) {
 
   const handleAdd = (e?: { currentTarget: EventTarget | null }) => {
     if (isFormuleMidiOffer(item) && !isFormuleMidiAvailableAt()) return;
-    if (hasVariants) {
+    if (needsPicker) {
       openPicker(e);
       return;
     }
@@ -118,14 +127,15 @@ export function useDishAdd(item: YumloMenuItem) {
   };
 
   const confirmVariantAdd = () => {
-    if (!hasVariants || !variants || !selectedInModal) return;
     if (custom) {
       if (!customReady) return;
       const line = customizedCartLine(item, selectedInModal, custom, chosen);
-      for (let i = 0; i < quantity; i += 1) addItem(line.id, line.name, selectedInModal.priceMAD);
+      const priceMAD = selectedInModal?.priceMAD ?? item.priceMAD;
+      for (let i = 0; i < quantity; i += 1) addItem(line.id, line.name, priceMAD);
       setPickerOpen(false);
       return;
     }
+    if (!hasVariants || !variants || !selectedInModal) return;
     for (let i = 0; i < quantity; i += 1) {
       addItem(`${item.id}:${selectedInModal.id}`, `${item.name} — ${selectedInModal.label}`, selectedInModal.priceMAD);
     }
@@ -134,9 +144,12 @@ export function useDishAdd(item: YumloMenuItem) {
 
   /**
    * Prix unitaire du bouton : celui de la variante choisie (prix final enregistré), sinon le plus bas
-   * tant qu'aucune variante n'est choisie (plat personnalisé, bouton alors désactivé).
+   * tant qu'aucune variante n'est choisie (plat personnalisé, bouton alors désactivé). Sans variante :
+   * prix du produit.
    */
-  const unitPriceDh = selectedInModal
+  const unitPriceDh = !hasVariants
+    ? Number.parseFloat(item.priceMAD)
+    : selectedInModal
     ? Number.parseFloat(selectedInModal.priceMAD)
     : variants?.length
       ? Math.min(...variants.map((v) => Number.parseFloat(v.priceMAD)))
@@ -203,10 +216,9 @@ export function useDishAdd(item: YumloMenuItem) {
   const qtyButton =
     "grid h-10 w-10 place-items-center rounded-full border border-kaytori-black/15 bg-white text-xl leading-none text-kaytori-green transition-colors disabled:opacity-35";
 
-  const customBody =
-    custom && variants ? (
+  const customBody = custom ? (
       <>
-        {requiredSection(
+        {variants?.length && custom.variantTitle ? requiredSection(
           "variant",
           custom.variantTitle,
           variants.map((v) => ({
@@ -216,7 +228,7 @@ export function useDishAdd(item: YumloMenuItem) {
           })),
           modalVariantId || undefined,
           setModalVariantId,
-        )}
+        ) : null}
         {custom.groups.map((g) =>
           requiredSection(g.id, g.title, g.options, chosen[g.id], (id) => setChosen((c) => ({ ...c, [g.id]: id }))),
         )}
@@ -251,8 +263,7 @@ export function useDishAdd(item: YumloMenuItem) {
 
   const variantModal =
     pickerOpen &&
-    hasVariants &&
-    variants &&
+    needsPicker &&
     typeof document !== "undefined"
       ? createPortal(
           <div
@@ -286,7 +297,7 @@ export function useDishAdd(item: YumloMenuItem) {
                     Votre choix
                   </legend>
                   <div className="clear-both flex flex-col gap-2 pt-3">
-                    {variants.map((v) => {
+                    {(variants ?? []).map((v) => {
                       const checked = v.id === modalVariantId;
                       return (
                         <label
@@ -318,6 +329,14 @@ export function useDishAdd(item: YumloMenuItem) {
                 </fieldset>
               )}
               {quantityRow}
+              {missingMessages.length > 0 ? (
+                <p
+                  role="status"
+                  className="px-4 pb-3 text-center font-sans text-[0.78rem] font-medium text-red-700 sm:px-5"
+                >
+                  {missingMessages.join(" · ")}
+                </p>
+              ) : null}
               <div className="flex flex-col gap-2 border-t border-kaytori-black/[0.06] bg-[#f2ebe3]/90 px-4 py-4 sm:flex-row-reverse sm:px-5">
                 <button
                   type="button"

@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { useCart } from "../cart/CartContext";
+import { PRODUCT_CUSTOMIZATIONS } from "../data/productOptions";
+import type { YumloMenuItem } from "../data/yumloMenu";
 import {
   FALLBACK_COVER_SLIDE,
   coverSlideSrcSet,
@@ -10,6 +12,8 @@ import {
   type CoverSlide,
 } from "../data/coverBanners";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
+import { useOptionalMenu } from "./MenuProvider";
+import { useDishAdd } from "./useDishAdd";
 
 const AUTOPLAY_MS = 3000;
 const RESUME_MS = 4500;
@@ -82,6 +86,25 @@ export function CoverCarousel() {
     settledRef.current.add(slideId);
   }, []);
 
+  const current = slides[index] ?? slides[0];
+  /**
+   * Produit lié à l'affiche visible, pour la fenêtre de choix (Formule Duo 2 : plat obligatoire).
+   * Plat du menu chargé, sinon nom + prix de l'affiche.
+   */
+  const menu = useOptionalMenu();
+  const coverProductId = current?.productId ?? "";
+  const coverItem: YumloMenuItem = menu?.items.find((it) => it.id === coverProductId) ?? {
+    id: coverProductId,
+    category: "",
+    name: current?.productName ?? "",
+    description: "",
+    priceMAD: current?.productPriceMAD ?? "0",
+    currency: "MAD",
+    image: "",
+  };
+  const coverChoice = useDishAdd(coverItem);
+  const needsChoice = Boolean(coverProductId && PRODUCT_CUSTOMIZATIONS[coverProductId]);
+
   useEffect(() => {
     if (preloadedCoverSlides() !== undefined) return;
     let cancelled = false;
@@ -124,7 +147,8 @@ export function CoverCarousel() {
 
   useEffect(() => {
     // Désactivé dans l'admin (ou pas encore connu) : aucune minuterie ; navigation manuelle intacte.
-    if (autoplay !== true || slides.length <= 1 || paused || reducedMotion || dragging) return;
+    // Fenêtre de choix ouverte : l'affiche (donc le produit) ne change pas sous le client.
+    if (autoplay !== true || slides.length <= 1 || paused || reducedMotion || dragging || coverChoice.pickerOpen) return;
     const id = window.setInterval(() => {
       // Attendre que l'affiche suivante soit chargée : jamais de cadre vide en défilement automatique.
       setIndex((i) => {
@@ -133,7 +157,7 @@ export function CoverCarousel() {
       });
     }, AUTOPLAY_MS);
     return () => window.clearInterval(id);
-  }, [autoplay, slides, paused, reducedMotion, dragging]);
+  }, [autoplay, slides, paused, reducedMotion, dragging, coverChoice.pickerOpen]);
 
   const goRelative = useCallback(
     (delta: number) => {
@@ -172,7 +196,6 @@ export function CoverCarousel() {
     }
   };
 
-  const current = slides[index] ?? slides[0];
   const canAdd =
     Boolean(current?.productId && current.productName && current.productPriceMAD) && current !== undefined;
   const inCart =
@@ -184,8 +207,13 @@ export function CoverCarousel() {
     e.stopPropagation();
     e.preventDefault();
     if (!canAdd || !current.productId || !current.productName || !current.productPriceMAD) return;
-    addItem(current.productId, current.productName, current.productPriceMAD);
     pauseForInteraction();
+    // Produit à choix obligatoire : même fenêtre que sur le menu, jamais d'ajout direct.
+    if (needsChoice) {
+      coverChoice.handleAdd(e);
+      return;
+    }
+    addItem(current.productId, current.productName, current.productPriceMAD);
   };
 
   const n = slides.length;
@@ -291,6 +319,7 @@ export function CoverCarousel() {
           </div>
         </>
       ) : null}
+      {coverChoice.variantModal}
     </div>
   );
 }
