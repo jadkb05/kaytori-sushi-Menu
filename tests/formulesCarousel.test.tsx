@@ -47,14 +47,27 @@ describe("FormulesCarousel : cadre unique", () => {
     expect(html).toContain("overflow-x-auto");
   });
 
-  it("désactive le bouton midi hors créneau Casablanca (texte Disponible de 11h30 à 15h)", async () => {
+  it("autorise la carte midi à 17h inclus Casablanca", async () => {
     const { casablancaLocalToUtc } = await import("../src/data/formuleMidiAvailability");
-    // Lundi 26 oct 2026, 15:00 Casablanca → hors créneau (offset local, pas UTC fixe).
     vi.useFakeTimers();
-    vi.setSystemTime(casablancaLocalToUtc(2026, 10, 26, 15, 0, 0));
+    vi.setSystemTime(casablancaLocalToUtc(2026, 10, 26, 17, 0));
+    try {
+      const html = renderCarousel([midi]);
+      expect(html).toContain("Ajouter au panier");
+      expect(html).not.toContain('aria-disabled="true"');
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("désactive le bouton midi hors créneau Casablanca (texte Disponible de 11h30 à 17h)", async () => {
+    const { casablancaLocalToUtc } = await import("../src/data/formuleMidiAvailability");
+    // Lundi 26 oct 2026, 17:01 Casablanca → hors créneau (offset local, pas UTC fixe).
+    vi.useFakeTimers();
+    vi.setSystemTime(casablancaLocalToUtc(2026, 10, 26, 17, 1, 0));
     try {
       const html = renderCarousel([duo, midi]);
-      expect(html).toContain("Disponible de 11h30 à 15h");
+      expect(html).toContain("Disponible de 11h30 à 17h");
       expect(html).toContain("Ajouter au panier"); // Duo reste commandable
       expect(html).toMatch(/aria-disabled="true"/);
     } finally {
