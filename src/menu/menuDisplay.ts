@@ -136,19 +136,25 @@ export function dishImage(item: YumloMenuItem) {
 }
 
 /**
+ * Largeur de la grande vignette Supabase : 96 px affichés × 3 (iPhone) = 288 px, sans marge perdue.
+ * 224 px couvre les écrans 2x jusqu'à 112 px affichés.
+ */
+const SUPABASE_THUMB_LARGE_WIDTH = 288;
+
+/**
  * Vignettes WebP légères (scripts/generate-menu-thumbs.py) pour une image d'origine de
- * /menu-hd-*\/ ou /starters-hd/ : 224 px et 336 px pour un affichage en 88–112 px.
- * Photo Supabase Storage : mêmes largeurs via la transformation d'images Supabase.
+ * /menu-hd-*\/ ou /starters-hd/ : 224 px et 336 px pour un affichage en 84–112 px.
+ * Photo Supabase Storage : 224 px et 288 px via la transformation d'images Supabase.
  * null pour toute autre image : on garde alors l'original.
  */
-export function dishThumbs(src: string): { small: string; large: string } | null {
+export function dishThumbs(src: string): { small: string; large: string; srcSet: string } | null {
   const small = supabaseImageUrl(src, 224);
-  const large = supabaseImageUrl(src, 336);
-  if (small && large) return { small, large };
+  const large = supabaseImageUrl(src, SUPABASE_THUMB_LARGE_WIDTH);
+  if (small && large) return { small, large, srcSet: `${small} 224w, ${large} ${SUPABASE_THUMB_LARGE_WIDTH}w` };
   const m = src.match(/^\/((?:menu-hd-[^/]+)|starters-hd)\/([^/]+)\.(?:png|jpe?g|webp)$/i);
   if (!m) return null;
   const base = `/menu-thumbs/${m[1]}/${m[2]}`;
-  return { small: `${base}-224.webp`, large: `${base}-336.webp` };
+  return { small: `${base}-224.webp`, large: `${base}-336.webp`, srcSet: `${base}-224.webp 224w, ${base}-336.webp 336w` };
 }
 
 /** Prix le plus bas parmi les variantes (affichage « dès X DH ») ; prix du plat sinon. */

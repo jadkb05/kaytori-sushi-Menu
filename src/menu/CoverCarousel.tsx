@@ -63,8 +63,9 @@ function initialSlides(): CoverSlide[] {
 }
 
 /**
- * Carrousel de couverture : auto 3 s vers la droite (si activé dans l'admin), boucle, pause pendant le glissement
- * (doigt / souris), reprise après interaction. Photos d'origine (object-cover, sans filtre).
+ * Carrousel de couverture : auto 3 s vers la droite (si activé dans l'admin), un seul tour puis arrêt sur la
+ * première photo (les suivantes ne sont plus téléchargées en boucle), pause pendant le glissement
+ * (doigt / souris), reprise après interaction ; navigation manuelle toujours en boucle. Photos d'origine (object-cover, sans filtre).
  * « + » or en bas à droite quand la photo est liée à une formule (nom + prix catalogue).
  */
 export function CoverCarousel() {
@@ -74,6 +75,10 @@ export function CoverCarousel() {
   /** Réglage admin « défilement automatique » ; undefined tant qu'il n'est pas connu (aucun défilement). */
   const [autoplay, setAutoplay] = useState<boolean | undefined>(preloadedCoverAutoplay);
   const [index, setIndex] = useState(0);
+  /** Tour automatique terminé (retour à la première photo) : plus de défilement automatique. */
+  const [cycleDone, setCycleDone] = useState(false);
+  const indexRef = useRef(index);
+  indexRef.current = index;
   const [paused, setPaused] = useState(false);
   const [dragPx, setDragPx] = useState(0);
   const [dragging, setDragging] = useState(false);
@@ -116,6 +121,7 @@ export function CoverCarousel() {
       }
       setSlides(remote);
       setIndex(0);
+      setCycleDone(false);
     });
     return () => {
       cancelled = true;
@@ -148,16 +154,16 @@ export function CoverCarousel() {
   useEffect(() => {
     // Désactivé dans l'admin (ou pas encore connu) : aucune minuterie ; navigation manuelle intacte.
     // Fenêtre de choix ouverte : l'affiche (donc le produit) ne change pas sous le client.
-    if (autoplay !== true || slides.length <= 1 || paused || reducedMotion || dragging || coverChoice.pickerOpen) return;
+    if (autoplay !== true || cycleDone || slides.length <= 1 || paused || reducedMotion || dragging || coverChoice.pickerOpen) return;
     const id = window.setInterval(() => {
       // Attendre que l'affiche suivante soit chargée : jamais de cadre vide en défilement automatique.
-      setIndex((i) => {
-        const next = (i + 1) % slides.length;
-        return settledRef.current.has(slides[next].id) ? next : i;
-      });
+      const next = (indexRef.current + 1) % slides.length;
+      if (!settledRef.current.has(slides[next].id)) return;
+      setIndex(next);
+      if (next === 0) setCycleDone(true);
     }, AUTOPLAY_MS);
     return () => window.clearInterval(id);
-  }, [autoplay, slides, paused, reducedMotion, dragging, coverChoice.pickerOpen]);
+  }, [autoplay, cycleDone, slides, paused, reducedMotion, dragging, coverChoice.pickerOpen]);
 
   const goRelative = useCallback(
     (delta: number) => {

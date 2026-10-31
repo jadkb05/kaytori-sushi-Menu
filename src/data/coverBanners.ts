@@ -132,8 +132,8 @@ export async function fetchPublishedCoverSlides(): Promise<CoverSlide[] | null> 
   });
 }
 
-/** Largeurs servies pour les couvertures Supabase (pleine largeur, mobile 3x → desktop). */
-const COVER_IMAGE_WIDTHS = [640, 960, 1280, 1600] as const;
+/** Largeurs servies pour les couvertures Supabase (carrousel mobile pleine largeur) : 1280 px au plus. */
+export const COVER_IMAGE_WIDTHS = [640, 960, 1280] as const;
 
 /** srcSet de la couverture : bannière locale multi-résolutions, ou versions allégées Supabase. */
 export function coverSlideSrcSet(slide: CoverSlide): string | undefined {

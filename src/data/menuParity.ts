@@ -49,6 +49,12 @@ export type MenuParityModel = {
 };
 
 /** Reproduit l'ordre d'affichage de MenuPage : catégories non vides, puis sous-sections. */
+/** Vignettes comparées par la parité (le srcSet en découle). */
+function parityThumbs(src: string): { small: string; large: string } | null {
+  const thumbs = dishThumbs(src);
+  return thumbs && { small: thumbs.small, large: thumbs.large };
+}
+
 export function toParityModel(menu: MenuSnapshot): MenuParityModel {
   const categories: ParityCategory[] = [];
   const products: ParityProduct[] = [];
@@ -74,7 +80,7 @@ export function toParityModel(menu: MenuSnapshot): MenuParityModel {
           currency: it.currency,
           image: it.image,
           displayedImage,
-          thumbs: dishThumbs(displayedImage),
+          thumbs: parityThumbs(displayedImage),
           variants: (it.variants ?? []).map((v) => ({ id: v.id, label: v.label, priceMAD: v.priceMAD })),
         });
       }

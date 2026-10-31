@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState, type RefObject } from "react";
 import { useCart } from "../cart/CartContext";
 import {
   FORMULE_MIDI_UNAVAILABLE_LABEL,
@@ -21,6 +21,36 @@ const FORMULE_FRAME_ASPECT = "aspect-[909/1024]";
 
 /** Largeurs servies pour les affiches Supabase (carte de 62vw à 17rem, écrans 1x à 3x). */
 const FORMULE_IMAGE_WIDTHS = [360, 540, 750, 960] as const;
+
+/** GIF transparent 1×1 : affiche pas encore demandée (le fond du cadre reste visible, `alt` conservé). */
+const POSTER_PLACEHOLDER = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
+/**
+ * True dès que la carte arrive à moins d'une largeur de rangée de la zone visible du carrousel.
+ * `loading="lazy"` ne suffit pas : les navigateurs chargent aussi les cartes hors champ d'une rangée
+ * horizontale tant qu'elle est proche de l'écran (≈ 1,1 Mo d'affiches dès l'ouverture du menu).
+ * Une fois vraie, reste vraie. Sans IntersectionObserver : true immédiatement (comportement d'avant).
+ */
+function useNearCarouselView(cardRef: RefObject<HTMLElement | null>, scrollerRef: RefObject<HTMLElement | null>): boolean {
+  const [near, setNear] = useState(() => typeof IntersectionObserver === "undefined");
+  useEffect(() => {
+    const card = cardRef.current;
+    if (near || !card) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((e) => e.isIntersecting)) {
+          setNear(true);
+          observer.disconnect();
+        }
+      },
+      // Marge horizontale seulement : le défilement vertical reste géré par loading="lazy".
+      { root: scrollerRef.current, rootMargin: "0px 100% 0px 100%" },
+    );
+    observer.observe(card);
+    return () => observer.disconnect();
+  }, [near, cardRef, scrollerRef]);
+  return near;
+}
 
 function Chevron({ direction }: { direction: "left" | "right" }) {
   return (
@@ -47,10 +77,12 @@ function FormuleCard({
   item,
   highlighted,
   midiAvailable,
+  scrollerRef,
 }: {
   item: YumloMenuItem;
   highlighted: boolean;
   midiAvailable: boolean;
+  scrollerRef: RefObject<HTMLUListElement | null>;
 }) {
   /** Même ajout au panier que les autres plats (Formule Duo 2 : fenêtre de choix du plat). */
   const { handleAdd, variantModal } = useDishAdd(item);
@@ -66,9 +98,12 @@ function FormuleCard({
   /** Affiche Supabase allégée (même fichier redimensionné) ; erreur → fichier d'origine. */
   const [resizedFailed, setResizedFailed] = useState(false);
   const srcSet = resizedFailed ? null : supabaseImageSrcSet(original, FORMULE_IMAGE_WIDTHS);
+  const cardRef = useRef<HTMLLIElement>(null);
+  const showPoster = useNearCarouselView(cardRef, scrollerRef);
 
   return (
     <li
+      ref={cardRef}
       id={dishAnchorId(item.id)}
       className="relative w-[64%] shrink-0 touch-manipulation min-[400px]:w-[60%] min-[480px]:w-[46%] md:w-[calc((100%-1rem)/2)] lg:w-auto"
     >
@@ -80,9 +115,9 @@ function FormuleCard({
         <div className="relative w-full shrink-0 rounded-xl bg-kaytori-gold/10 p-1 ring-1 ring-kaytori-gold/45 md:rounded-2xl md:p-1.5 lg:w-[17rem]">
           <div className={`relative w-full ${FORMULE_FRAME_ASPECT}`}>
             <img
-              src={original}
-              srcSet={srcSet ?? undefined}
-              onError={srcSet ? () => setResizedFailed(true) : undefined}
+              src={showPoster ? original : POSTER_PLACEHOLDER}
+              srcSet={showPoster ? (srcSet ?? undefined) : undefined}
+              onError={showPoster && srcSet ? () => setResizedFailed(true) : undefined}
               alt={`Affiche ${item.name} : ${item.description}, ${formatPriceDH(item.priceMAD)} DH`}
               width={imageSize.width}
               height={imageSize.height}
@@ -206,6 +241,7 @@ export function FormulesCarousel({
             item={item}
             highlighted={item.id === highlightId}
             midiAvailable={midiAvailable}
+            scrollerRef={listRef}
           />
         ))}
       </ul>

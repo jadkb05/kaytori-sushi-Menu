@@ -17,6 +17,14 @@ const QUALITY_STEP = 0.05;
 export const PHOTO_TARGET_BYTES = 250 * 1024;
 /** Garde-fou mémoire : au-delà, le décodage peut faire planter un téléphone. */
 export const PHOTO_MAX_INPUT_PIXELS = 50_000_000;
+/** Photos de couverture (carrousel mobile, servi au plus en 1280 px) : 1600 px maximum. */
+export const COVER_MAX_DIMENSION = 1600;
+export const COVER_TARGET_BYTES = 400 * 1024;
+
+/** Limites de l'optimisation : photos produits par défaut. */
+export type PhotoLimits = { maxDimension: number; targetBytes: number };
+const PRODUCT_LIMITS: PhotoLimits = { maxDimension: PHOTO_MAX_DIMENSION, targetBytes: PHOTO_TARGET_BYTES };
+export const COVER_LIMITS: PhotoLimits = { maxDimension: COVER_MAX_DIMENSION, targetBytes: COVER_TARGET_BYTES };
 
 export type OutputMime = "image/webp" | "image/jpeg";
 
@@ -75,9 +83,13 @@ function renamed(name: string, mime: OutputMime): string {
 /**
  * Redimensionne et compresse. Le fichier doit déjà avoir passé validatePhotoFile (type et 5 Mo).
  * Le fichier d'origine est conservé tel quel seulement s'il est déjà en JPEG/WebP, ≤ 1254 px et
- * ≤ 250 Ko (aucune perte de qualité inutile).
+ * ≤ 250 Ko (aucune perte de qualité inutile). `limits` : autres bornes (couvertures : COVER_LIMITS).
  */
-export async function optimizePhoto(file: File, codec: ImageCodec): Promise<PhotoOptimizeResult> {
+export async function optimizePhoto(
+  file: File,
+  codec: ImageCodec,
+  limits: PhotoLimits = PRODUCT_LIMITS,
+): Promise<PhotoOptimizeResult> {
   let image: DecodedImage;
   try {
     image = await codec.decode(file);
@@ -90,14 +102,14 @@ export async function optimizePhoto(file: File, codec: ImageCodec): Promise<Phot
     if (w0 * h0 > PHOTO_MAX_INPUT_PIXELS) {
       return { ok: false, error: `Photo trop grande (${w0} × ${h0} pixels) : réduisez-la avant de l'envoyer.` };
     }
-    const { width, height } = targetDimensions(w0, h0);
+    const { width, height } = targetDimensions(w0, h0, limits.maxDimension);
     const base = { originalBytes: file.size, width, height };
 
     if (
       (file.type === "image/jpeg" || file.type === "image/webp") &&
       width === w0 &&
       height === h0 &&
-      file.size <= PHOTO_TARGET_BYTES
+      file.size <= limits.targetBytes
     ) {
       return { ok: true, file, transformed: false, quality: null, ...base };
     }
@@ -108,7 +120,7 @@ export async function optimizePhoto(file: File, codec: ImageCodec): Promise<Phot
         const blob = await codec.encode(image, width, height, mime, quality);
         if (!blob) break; // format non pris en charge par ce navigateur → format suivant
         if (!best || blob.size < best.blob.size) best = { blob, quality };
-        if (blob.size <= PHOTO_TARGET_BYTES) break;
+        if (blob.size <= limits.targetBytes) break;
       }
       if (best) {
         const out = new File([best.blob], renamed(file.name, mime), { type: mime, lastModified: Date.now() });
@@ -153,8 +165,15 @@ export const browserImageCodec: ImageCodec = {
   },
 };
 
-/** Optimiseur par défaut : celui du navigateur ; hors navigateur (Node), fichier inchangé. */
-export const defaultPhotoOptimizer: PhotoOptimizer = (file) =>
-  typeof createImageBitmap === "function"
-    ? optimizePhoto(file, browserImageCodec)
-    : Promise.resolve({ ok: true, file, transformed: false, width: 0, height: 0, originalBytes: file.size, quality: null });
+/** Optimiseur du navigateur pour ces limites ; hors navigateur (Node), fichier inchangé. */
+function browserOptimizer(limits: PhotoLimits): PhotoOptimizer {
+  return (file) =>
+    typeof createImageBitmap === "function"
+      ? optimizePhoto(file, browserImageCodec, limits)
+      : Promise.resolve({ ok: true, file, transformed: false, width: 0, height: 0, originalBytes: file.size, quality: null });
+}
+
+/** Optimiseur par défaut (photos produits). */
+export const defaultPhotoOptimizer: PhotoOptimizer = browserOptimizer(PRODUCT_LIMITS);
+/** Photos de couverture : 1600 px maximum, WebP (JPEG si le navigateur ne sait pas encoder le WebP). */
+export const coverPhotoOptimizer: PhotoOptimizer = browserOptimizer(COVER_LIMITS);

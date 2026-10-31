@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { useEffect, useMemo, useState } from "react";
 import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
+import { ADMIN_PREVIEW_PHOTO_WIDTH, AdminPhoto } from "../components/AdminPhoto";
 import { Field, PriceInput, Section, fieldError } from "../components/formControls";
 import { ErrorState, LoadingState, PageHeader, buttonClass, inputClass } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
@@ -219,7 +220,7 @@ export function FormuleFormPage({ client, productId }: Props) {
               />
             </Field>
             {shownImage ? (
-              <img src={shownImage} alt="Aperçu de l'affiche" className="mt-4 max-h-80 w-auto max-w-full rounded-lg bg-[#0f1815] object-contain ring-1 ring-black/5" />
+              <AdminPhoto src={shownImage} photoWidth={ADMIN_PREVIEW_PHOTO_WIDTH} alt="Aperçu de l'affiche" decoding="async" className="mt-4 max-h-80 w-auto max-w-full rounded-lg bg-[#0f1815] object-contain ring-1 ring-black/5" />
             ) : null}
           </Section>
           <Section title="Informations">

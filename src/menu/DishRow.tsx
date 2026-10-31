@@ -107,7 +107,7 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
     <div className="h-[84px] w-[84px] overflow-hidden rounded-[0.9rem] bg-[#0f1815] min-[375px]:h-[96px] min-[375px]:w-[96px] md:h-[112px] md:w-[112px]">
       <img
         src={useThumb ? thumbs.small : original}
-        srcSet={useThumb ? `${thumbs.small} 224w, ${thumbs.large} 336w` : undefined}
+        srcSet={useThumb ? thumbs.srcSet : undefined}
         sizes={useThumb ? "(min-width: 768px) 112px, (min-width: 375px) 96px, 84px" : undefined}
         onError={useThumb ? () => setThumbFailed(true) : undefined}
         alt=""

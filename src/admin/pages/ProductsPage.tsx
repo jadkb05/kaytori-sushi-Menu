@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import { takeFlash } from "../lib/flash";
 import { AdminLink } from "../components/AdminLink";
+import { ADMIN_LIST_PHOTO_WIDTH, AdminPhoto } from "../components/AdminPhoto";
 import { ArrowDownIcon, ArrowUpIcon, CategoriesIcon, CloseIcon, PencilIcon, PlusIcon, SearchIcon } from "../components/icons";
 import { ErrorState, LoadingState, PageHeader, StatusBadge, Toast, buttonClass, cardClass, focusRing, inputClass, orderButton, touchButton, type ToastNotice } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
@@ -74,8 +75,9 @@ function ProductRow({
       </td>
       <td className="py-3 pl-3 pr-3 max-lg:col-start-2 max-lg:row-span-5 max-lg:row-start-1 max-lg:self-start max-lg:p-0">
         {p.imageUrl ? (
-          <img
+          <AdminPhoto
             src={p.imageUrl}
+            photoWidth={ADMIN_LIST_PHOTO_WIDTH}
             alt=""
             width={48}
             height={48}

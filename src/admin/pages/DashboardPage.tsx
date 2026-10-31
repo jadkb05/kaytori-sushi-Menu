@@ -1,5 +1,6 @@
 import { useMemo, type ReactNode } from "react";
 import { AdminLink } from "../components/AdminLink";
+import { ADMIN_LIST_PHOTO_WIDTH, AdminPhoto } from "../components/AdminPhoto";
 import { ArrowRightIcon, CategoriesIcon, CheckIcon, EyeIcon, EyeOffIcon, ExternalIcon, PlusIcon, ProductsIcon, VariantsIcon } from "../components/icons";
 import { ErrorState, LoadingState, PageHeader, StatCard, cardClass, focusRing } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
@@ -183,7 +184,7 @@ export function DashboardPage() {
                                 <CategoriesIcon className="h-4 w-4" />
                               </span>
                             ) : item.image ? (
-                              <img src={item.image} alt="" width={36} height={36} loading="lazy" className="h-9 w-9 shrink-0 rounded-lg bg-[#0f1815] object-cover opacity-80 grayscale-[35%]" />
+                              <AdminPhoto src={item.image} photoWidth={ADMIN_LIST_PHOTO_WIDTH} alt="" width={36} height={36} loading="lazy" className="h-9 w-9 shrink-0 rounded-lg bg-[#0f1815] object-cover opacity-80 grayscale-[35%]" />
                             ) : (
                               <span className="h-9 w-9 shrink-0 rounded-lg bg-admin-canvas" aria-hidden />
                             )}

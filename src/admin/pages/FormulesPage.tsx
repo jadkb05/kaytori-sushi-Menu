@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { useCallback, useEffect, useMemo, useState, type FormEvent } from "react";
 import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import { AdminLink } from "../components/AdminLink";
+import { ADMIN_LIST_PHOTO_WIDTH, AdminPhoto } from "../components/AdminPhoto";
 import { FormuleSectionOffersList } from "../components/FormuleSectionOffersList";
 import { ArrowDownIcon, ArrowUpIcon, PencilIcon, PlusIcon, TrashIcon } from "../components/icons";
 import { Field } from "../components/formControls";
@@ -408,7 +409,7 @@ export function FormulesPage({ client }: { client: SupabaseClient }) {
           </button>
         </div>
         {p.imageUrl ? (
-          <img src={p.imageUrl} alt="" className="h-20 w-16 shrink-0 rounded-lg bg-[#0f1815] object-contain ring-1 ring-black/5" />
+          <AdminPhoto src={p.imageUrl} photoWidth={ADMIN_LIST_PHOTO_WIDTH} alt="" loading="lazy" decoding="async" className="h-20 w-16 shrink-0 rounded-lg bg-[#0f1815] object-contain ring-1 ring-black/5" />
         ) : (
           <span className="grid h-20 w-16 shrink-0 place-items-center rounded-lg bg-admin-subtle text-xs text-admin-muted">Sans photo</span>
         )}

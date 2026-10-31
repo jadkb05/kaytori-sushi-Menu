@@ -74,4 +74,23 @@ describe("FormulesCarousel : cadre unique", () => {
       vi.useRealTimers();
     }
   });
+
+  it("n'affiche une affiche Supabase qu'à l'approche de la zone visible du carrousel", () => {
+    vi.stubEnv("VITE_SUPABASE_URL", "https://exemple.supabase.co");
+    const poster = "https://exemple.supabase.co/storage/v1/object/public/menu-images/products/p1/affiche.jpg";
+    const item = { ...duo, image: poster };
+    try {
+      // Sans IntersectionObserver : affiche demandée tout de suite (comportement d'avant).
+      expect(renderCarousel([item])).toContain("render/image/public/menu-images/products/p1/affiche.jpg?width=750");
+      // Avec IntersectionObserver : rien n'est téléchargé avant que la carte approche de la vue.
+      vi.stubGlobal("IntersectionObserver", class {});
+      const html = renderCarousel([item]);
+      expect(html).toContain('src="data:image/gif;base64,');
+      expect(html).not.toContain("affiche.jpg");
+      expect(html).toContain('alt="Affiche Formule Duo');
+    } finally {
+      vi.unstubAllGlobals();
+      vi.unstubAllEnvs();
+    }
+  });
 });

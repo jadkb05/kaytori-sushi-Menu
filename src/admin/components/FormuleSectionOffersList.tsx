@@ -9,6 +9,7 @@ import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-
 import { CSS } from "@dnd-kit/utilities";
 import { useRef, useState } from "react";
 import { AdminLink } from "./AdminLink";
+import { ADMIN_LIST_PHOTO_WIDTH, AdminPhoto } from "./AdminPhoto";
 import { GripIcon, PencilIcon, TrashIcon } from "./icons";
 import { StatusBadge, buttonClass, cardClass, inputClass } from "./ui";
 import { ADMIN_DND_MODIFIERS, ADMIN_DROP_ANIMATION, reorderIds, useAdminListSensors } from "../lib/adminDnd";
@@ -81,9 +82,12 @@ function SortableFormuleOffer({
           {...(canDrag ? listeners : {})}
         >
           {product.imageUrl ? (
-            <img
+            <AdminPhoto
               src={product.imageUrl}
+              photoWidth={ADMIN_LIST_PHOTO_WIDTH}
               alt=""
+              loading="lazy"
+              decoding="async"
               className="pointer-events-none h-20 w-16 rounded-lg bg-[#0f1815] object-contain ring-1 ring-black/5"
               draggable={false}
             />
@@ -159,8 +163,9 @@ function FormuleDragPreview({ product }: { product: AdminProduct }) {
       className={`${cardClass} flex w-[min(100vw-2rem,22rem)] items-center gap-3 p-3 shadow-admin-lg ring-2 ring-kaytori-green/50`}
     >
       {product.imageUrl ? (
-        <img
+        <AdminPhoto
           src={product.imageUrl}
+          photoWidth={ADMIN_LIST_PHOTO_WIDTH}
           alt=""
           className="h-16 w-12 shrink-0 rounded-lg bg-[#0f1815] object-contain"
           draggable={false}

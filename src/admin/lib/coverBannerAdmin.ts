@@ -1,10 +1,11 @@
 /**
  * Photos de couverture (Admin → Couverture) : CRUD via RPC dédiées,
  * fichiers dans le bucket public menu-images (chemins cover/…).
- * Aucune retouche : le fichier choisi est conservé octet pour octet.
+ * Nouvelles photos redimensionnées (1600 px maximum) et compressées en WebP avant envoi ;
+ * les photos déjà en ligne ne sont pas retouchées.
  */
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { keepFormulePoster } from "./formuleAdmin";
+import { coverPhotoOptimizer, type PhotoOptimizer } from "./photoOptimize";
 import { saveErrorMessage } from "./productEditor";
 import {
   PHOTO_ACCEPT,
@@ -119,17 +120,18 @@ function storageErrorMessage(message: string): string {
   return `Téléversement impossible : ${message}`;
 }
 
-/** Fichier d'origine → Storage (sans retouche). */
+/** Fichier d'origine → validation → redimensionnement / compression → Storage. */
 export async function uploadCoverPhoto(
   client: SupabaseClient,
   bannerId: string,
   original: File,
+  optimize: PhotoOptimizer = coverPhotoOptimizer,
 ): Promise<PhotoUploadResult> {
   const invalid = validatePhotoFile(original);
   if (invalid) return { ok: false, error: invalid };
-  const kept = await keepFormulePoster(original);
-  if (!kept.ok) return { ok: false, error: kept.error };
-  const file = kept.file;
+  const optimized = await optimize(original);
+  if (!optimized.ok) return { ok: false, error: optimized.error };
+  const file = optimized.file;
   const path = coverStoragePath(bannerId, await sha256Hex(file), file.type);
   const bucket = client.storage.from(PHOTO_BUCKET);
   const { error } = await bucket.upload(path, file, {

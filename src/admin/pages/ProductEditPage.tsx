@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
 import { useEffect, useMemo, useState, type FormEvent } from "react";
+import { ADMIN_PREVIEW_PHOTO_WIDTH, AdminPhoto } from "../components/AdminPhoto";
 import { PhotoCropEditor } from "../components/PhotoCropEditor";
 import { AddVariantButton, Field, FormActionBar, PriceInput, Section, StaticField, VariantFrame, fieldError } from "../components/formControls";
 import { CropIcon, ImageIcon, TrashIcon, UploadIcon } from "../components/icons";
@@ -115,7 +116,7 @@ export function ProductPhotoField({
     <div>
       <div className="relative">
         {shown ? (
-          <img src={shown} alt="" className="aspect-square w-full rounded-lg bg-[#0f1815] object-cover ring-1 ring-black/5" />
+          <AdminPhoto src={shown} photoWidth={ADMIN_PREVIEW_PHOTO_WIDTH} alt="" decoding="async" className="aspect-square w-full rounded-lg bg-[#0f1815] object-cover ring-1 ring-black/5" />
         ) : (
           <div className="grid aspect-square w-full place-items-center rounded-lg border border-dashed border-admin-lineStrong bg-admin-subtle text-admin-muted">
             <span className="flex flex-col items-center gap-2 text-xs font-medium">

@@ -28,14 +28,16 @@ describe("imageTransform", () => {
     expect(supabaseImageUrl(PHOTO, 640)).toBeNull();
   });
 
-  it("dishThumbs : vignettes 224 / 336 px pour une photo Supabase, inchangé pour les fichiers locaux", () => {
+  it("dishThumbs : vignettes 224 / 288 px pour une photo Supabase, inchangé pour les fichiers locaux", () => {
     vi.stubEnv("VITE_SUPABASE_URL", BASE);
     const thumbs = dishThumbs(PHOTO);
     expect(thumbs?.small).toContain("width=224");
-    expect(thumbs?.large).toContain("width=336");
+    expect(thumbs?.large).toContain("width=288");
+    expect(thumbs?.srcSet).toBe(`${thumbs?.small} 224w, ${thumbs?.large} 288w`);
     expect(dishThumbs("/menu-hd-sushi/maki.png")).toEqual({
       small: "/menu-thumbs/menu-hd-sushi/maki-224.webp",
       large: "/menu-thumbs/menu-hd-sushi/maki-336.webp",
+      srcSet: "/menu-thumbs/menu-hd-sushi/maki-224.webp 224w, /menu-thumbs/menu-hd-sushi/maki-336.webp 336w",
     });
   });
 });

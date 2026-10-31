@@ -18,6 +18,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { FORMULES_CATEGORY_ID } from "../../data/formulesPromos";
+import { ADMIN_PREVIEW_PHOTO_WIDTH, AdminPhoto } from "../components/AdminPhoto";
 import { CloseIcon, GripIcon, PlusIcon, TrashIcon } from "../components/icons";
 import {
   ConfirmDialog,
@@ -62,8 +63,9 @@ const dropAnimation: DropAnimation = {
 
 function CoverThumb({ src, className = "" }: { src: string; className?: string }) {
   return (
-    <img
+    <AdminPhoto
       src={src}
+      photoWidth={ADMIN_PREVIEW_PHOTO_WIDTH}
       alt=""
       className={`pointer-events-none h-full w-full object-cover ${className}`}
       loading="lazy"
