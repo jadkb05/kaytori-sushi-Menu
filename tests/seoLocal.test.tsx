@@ -11,7 +11,7 @@ import { staticMenuSource } from "../src/data/menuSource";
 import { MenuProvider } from "../src/menu/MenuProvider";
 import { MenuPage } from "../src/pages/MenuPage";
 
-const SITE_URL = "https://kaytori-sushi-menu.vercel.app/";
+const SITE_URL = "https://www.kaytori.com/";
 const read = (path: string) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
 /** Page publique rendue (menu statique), commentaires React retirés. */

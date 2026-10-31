@@ -6,7 +6,7 @@
 import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 
-const SITE_URL = "https://kaytori-sushi-menu.vercel.app/";
+const SITE_URL = "https://www.kaytori.com/";
 const OG_IMAGE = `${SITE_URL}og/kaytori-sushi-casablanca-1200x630.jpg`;
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const head = html.slice(0, html.indexOf("</head>"));
