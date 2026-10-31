@@ -32,7 +32,7 @@ export type CategoryPosition = {
   /** 1 = premier produit de la catégorie. */
   position: number;
   total: number;
-  /** Plats Thaï / Assortiments : le menu trie automatiquement, la position manuelle n'est pas utilisée. */
+  /** Catégorie hors « list » (ex. Assortiments avant le script 17) : le menu trie automatiquement, la position manuelle n'est pas utilisée. */
   automatic: boolean;
 };
 

@@ -41,6 +41,22 @@ function assortimentSectionTitle(name: string): string {
 
 export type MenuSectionGroup = { title: string; items: YumloMenuItem[] };
 
+/** Sous-sections « Assortiments XX pcs » sur des plats consécutifs de même format (ordre conservé). */
+function groupByPcsTitle(items: readonly YumloMenuItem[]): MenuSectionGroup[] {
+  const groups: MenuSectionGroup[] = [];
+  let currentTitle = "";
+  for (const it of items) {
+    const t = assortimentSectionTitle(it.name);
+    if (groups.length === 0 || t !== currentTitle) {
+      currentTitle = t;
+      groups.push({ title: t, items: [it] });
+    } else {
+      groups[groups.length - 1].items.push(it);
+    }
+  }
+  return groups;
+}
+
 /**
  * Découpe les plats d’un onglet en sous-sections (titres + cartes).
  * Utilisé pour Assortiments (16 / 24 / … pcs) ; Plats Thaï est seulement trié, sans titres.
@@ -51,8 +67,16 @@ export function groupItemsForMenuTab(
   category: string,
   items: YumloMenuItem[],
   mode: CategoryDisplayMode = categoryDisplayMode(category),
+  /**
+   * Ordre manuel (« list ») avec les sous-titres « Assortiments XX pcs » : l'ordre reçu
+   * (sort_order) est conservé tel quel, un sous-titre est ajouté à chaque changement de format.
+   * Voir menuCategoryPcsHeadings (catégorie Assortiments passée en ordre manuel).
+   */
+  pcsHeadings = false,
 ): MenuSectionGroup[] {
   if (items.length === 0) return [];
+
+  if (mode === "list" && pcsHeadings) return groupByPcsTitle(items);
 
   if (mode === "plats_thai_sorted") {
     const sorted = [...items].sort((a, b) => {
@@ -76,18 +100,7 @@ export function groupItemsForMenuTab(
       if (ka !== kb) return ka - kb;
       return a.name.localeCompare(b.name, "fr");
     });
-    const groups: MenuSectionGroup[] = [];
-    let currentTitle = "";
-    for (const it of sorted) {
-      const t = assortimentSectionTitle(it.name);
-      if (groups.length === 0 || t !== currentTitle) {
-        currentTitle = t;
-        groups.push({ title: t, items: [it] });
-      } else {
-        groups[groups.length - 1].items.push(it);
-      }
-    }
-    return groups;
+    return groupByPcsTitle(sorted);
   }
 
   return [{ title: "", items }];

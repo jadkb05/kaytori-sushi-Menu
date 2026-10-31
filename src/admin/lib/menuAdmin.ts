@@ -35,7 +35,10 @@ export type AdminProduct = {
   /** Position dans SA catégorie (1…categoryTotal, produits masqués compris), quel que soit le filtre affiché. */
   position: number;
   categoryTotal: number;
-  /** Ordre manuel (display_mode « list » chargé de la base) : flèches ↑ / ↓ ; sinon « Ordre automatique ». */
+  /**
+   * Ordre manuel (display_mode « list » chargé de la base) : flèches ↑ / ↓ ; sinon « Ordre automatique ».
+   * Assortiments passe en « list » avec supabase/production/17_assortiments_manual_order.sql.
+   */
   manualOrder: boolean;
 };
 

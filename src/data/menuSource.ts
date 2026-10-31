@@ -24,6 +24,12 @@ export type MenuSnapshot = {
    */
   displayModes?: Readonly<Record<string, CategoryDisplayMode>>;
   /**
+   * Catégories en ordre manuel qui gardent les sous-titres « Assortiments XX pcs » (par nom
+   * affiché ; calculé depuis l'identifiant « assortiments », il survit à un renommage).
+   * Absent pour le menu statique (Assortiments y est en tri automatique par pièces).
+   */
+  pcsHeadingCategories?: readonly string[];
+  /**
    * Noms des sections formules (formule_sections), pour le carrousel public.
    * Absent en menu statique : repli sur les 3 libellés initiaux + heuristique.
    */

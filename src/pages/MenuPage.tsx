@@ -10,7 +10,7 @@ import { SITE } from "../config/site";
 import { FORMULE_MIDI_SCHEDULE_HINT, isFormuleMidiOffer } from "../data/formuleMidiAvailability";
 import { isFormuleCarouselCategory } from "../data/formulesPromos";
 import type { MenuSnapshot } from "../data/menuSource";
-import { menuCategoryDisplayMode } from "../data/menuRows";
+import { menuCategoryDisplayMode, menuCategoryPcsHeadings } from "../data/menuRows";
 import { groupItemsForMenuTab } from "../data/menuTabSections";
 import { useIsDesktopCover } from "../hooks/useIsDesktopCover";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
@@ -249,7 +249,7 @@ export function MenuPage() {
     () =>
       SECTIONS.map((s) => ({
         ...s,
-        groups: groupItemsForMenuTab(s.category, [...s.items], menuCategoryDisplayMode(menu, s.category)),
+        groups: groupItemsForMenuTab(s.category, [...s.items], menuCategoryDisplayMode(menu, s.category), menuCategoryPcsHeadings(menu, s.category)),
       })),
     [SECTIONS, menu],
   );

@@ -22,6 +22,10 @@ npm run supabase:parity   # compare le vrai projet Supabase (.env.local) au menu
 - IDs produits et IDs de variantes = ceux de `yumloMenu.ts`, jamais régénérés.
 - Ordre : `sort_order` (catégories, produits = position dans le fichier source, variantes).
 - `display_mode` : `assortiments_by_pcs` (Assortiments), sinon `list` (Plats Thaï compris depuis 20261012000000 ; `plats_thai_sorted` ne sert qu'au retour arrière).
+- Assortiments en ordre manuel (données uniquement, pas de migration de schéma) : `production/16_assortiments_preview_readonly.sql`
+  (aperçu, lecture seule, `controle` = ok partout) puis `production/17_assortiments_manual_order.sql` (une transaction,
+  ordre public conservé, `display_mode` → `list`). Le menu public garde les sous-titres « Assortiments XX pcs » (id `assortiments`).
+  À lancer après le déploiement du front. Retour arrière : `update public.categories set display_mode = 'assortiments_by_pcs' where id = 'assortiments';`
 - Public (`anon`) : lecture du contenu actif uniquement. Écriture : admins (`admin_users`) seulement.
 - Un admin s'ajoute en SQL (`insert into public.admin_users (user_id) values ('<uuid auth.users>')`), jamais depuis le frontend.
 - Frontend : clé `anon` uniquement (`.env.local`, ignoré par Git). La clé `service_role` ne doit jamais être exposée.

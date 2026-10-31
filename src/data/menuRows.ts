@@ -71,6 +71,18 @@ export function categoryDisplayMode(name: string): CategoryDisplayMode {
   return "list";
 }
 
+/**
+ * Identifiant (fixe, même après renommage) de la catégorie Assortiments. Passée en ordre manuel
+ * (« list », script supabase/production/17_assortiments_manual_order.sql), elle garde ses
+ * sous-titres « Assortiments XX pcs » sur le menu public, dans l'ordre choisi dans l'admin.
+ */
+export const ASSORTIMENTS_CATEGORY_ID = "assortiments";
+
+/** Sous-titres « Assortiments XX pcs » en ordre manuel pour cette catégorie du menu chargé. */
+export function menuCategoryPcsHeadings(menu: MenuSnapshot, category: string): boolean {
+  return menu.pcsHeadingCategories?.includes(category) ?? false;
+}
+
 /** Mode d'affichage d'une catégorie du menu chargé : celui de la base, sinon la règle par nom. */
 export function menuCategoryDisplayMode(menu: MenuSnapshot, category: string): CategoryDisplayMode {
   return menu.displayModes?.[category] ?? categoryDisplayMode(category);
@@ -175,5 +187,8 @@ export function rowsToMenu(rows: MenuRows): MenuSnapshot {
     categories: categories.map((c) => c.name),
     items,
     displayModes: Object.fromEntries(categories.map((c) => [c.name, c.display_mode])),
+    pcsHeadingCategories: categories
+      .filter((c) => c.id === ASSORTIMENTS_CATEGORY_ID && c.display_mode === "list")
+      .map((c) => c.name),
   };
 }
