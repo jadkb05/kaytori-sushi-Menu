@@ -5,6 +5,14 @@ menu → catégories → produit → variante éventuelle → panier → command
 
 Stack : Vite 5, React 19, TypeScript, Tailwind CSS. Site statique, aucun backend, aucune variable d'environnement.
 
+Deux pages HTML (build multi-pages Vite) :
+
+- `/` (`index.html` → `src/home/main.tsx`) : page d'accueil du restaurant. Tous ses boutons
+  « Commander » mènent au menu. Les anciens liens `/#formules-midi`, `/#promos`,
+  `/#formules-solo-duo-family` et `/#menu-cat-…` sont redirigés vers `/menu#…`.
+- `/menu` (`menu/index.html` → `src/main.tsx`) : menu digital, panier et commande WhatsApp
+  (réécriture dans `vercel.json`, reproduite en dev / preview par `vite.config.ts`).
+
 ## Commandes
 
 ```bash
@@ -21,6 +29,8 @@ npm run preview  # servir le build localement
 | `src/data/menu.json` | **Source de vérité du menu** : lignes de production (catégories, produits, variantes, sections formules, couvertures, réglage de défilement), exportées de l'ancienne base Supabase le 2026-11-02 |
 | `src/data/productionMenu.ts` | `menu.json` → menu affiché (mêmes fonctions qu'avant : `rowsToMenu`, `publishedFormules`, `replaceFormules`) |
 | `public/media/` | Photos de production (originaux à l'identique, nom = empreinte SHA-256) et versions allégées `-<largeur>.webp` |
+| `src/home/` | Page d'accueil (/) ; photos et plats mis en avant centralisés dans `homeContent.ts` |
+| `public/accueil/` | Photos de l'accueil fournies par le restaurant (originaux + dérivés WebP) ; `salle-kaytori.jpg` = source de l'image de partage `public/og/kaytori-sushi-salle-1200x630.jpg` |
 | `src/data/yumloMenu.ts` | Menu de référence historique (mai 2026), **plus affiché** : tests et repli de catégorie WhatsApp |
 | `src/data/menuTabSections.ts` | Sous-sections (Assortiments par nombre de pièces, Plats Thaï) |
 | `src/data/dishImages.ts`, `startersYakamon.ts` | Correspondance plat → photo |

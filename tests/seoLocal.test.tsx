@@ -150,7 +150,7 @@ describe("SEO-03 : robots.txt et sitemap.xml", () => {
     expect(robots).not.toMatch(/Disallow/i);
   });
 
-  it("sitemap.xml : XML bien formé, une seule URL = canonical, ni /admin ni /menu ni ancre", () => {
+  it("sitemap.xml : XML bien formé, deux URL = canonicals de l'accueil et du menu, ni /admin ni ancre", () => {
     const xml = read("public/sitemap.xml");
     expect(xml.startsWith('<?xml version="1.0" encoding="UTF-8"?>\n')).toBe(true);
     expect(xml).toContain('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">');
@@ -164,9 +164,10 @@ describe("SEO-03 : robots.txt et sitemap.xml", () => {
     }
     expect(stack).toEqual([]);
     const locs = [...xml.matchAll(/<loc>([^<]*)<\/loc>/g)].map((m) => m[1]);
-    expect(locs).toEqual([SITE_URL]);
+    expect(locs).toEqual([SITE_URL, `${SITE_URL}menu`]);
     expect(read("index.html")).toContain(`<link rel="canonical" href="${locs[0]}" />`);
-    expect(xml).not.toMatch(/\/admin|\/menu|#/);
+    expect(read("menu/index.html")).toContain(`<link rel="canonical" href="${locs[1]}" />`);
+    expect(xml).not.toMatch(/\/admin|\/fidelite|#/);
   });
 });
 
@@ -176,11 +177,12 @@ describe("SEO-03 : vercel.json", () => {
     headers: { source: string; headers: { key: string; value: string }[] }[];
   };
 
-  it("rewrites : /menu et /menu/ → index.html ; plus de route /admin (administration supprimée)", () => {
+  it("rewrites : /menu → menu/index.html (application du menu) ; / reste la page d'accueil ; plus de /admin", () => {
     expect(config.rewrites).toEqual([
-      { source: "/menu", destination: "/index.html" },
-      { source: "/menu/", destination: "/index.html" },
+      { source: "/menu", destination: "/menu/index.html" },
+      { source: "/menu/", destination: "/menu/index.html" },
     ]);
+    expect(config.rewrites.some((r) => r.source === "/")).toBe(false);
   });
 
   it("aucun en-tête X-Robots-Tag (plus d'espace /admin à exclure)", () => {

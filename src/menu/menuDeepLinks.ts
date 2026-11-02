@@ -3,12 +3,14 @@
  * #formules-solo-duo-family, #formules-midi, #promos — résolus sur le menu chargé.
  * Résolution par identifiants de section (sinon par libellé) : survit aux renommages admin
  * des sections. Les ancres de section existantes (#menu-cat-…) sont aussi acceptées.
+ * Un plat précis s'ouvre avec son ancre de carte (#plat-<id>, cf. dishAnchorId).
  */
 import { isFormuleMidiOffer } from "../data/formuleMidiAvailability";
 import { isFormuleCarouselCategory } from "../data/formulesPromos";
 import type { MenuSnapshot } from "../data/menuSource";
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { categoryAnchorId } from "./menuDisplay";
+import { dishAnchorId } from "./menuSearch";
 
 export const MENU_DEEP_LINKS = ["formules-solo-duo-family", "formules-midi", "promos"] as const;
 
@@ -63,4 +65,11 @@ export function resolveMenuDeepLink(hash: string, menu: MenuSnapshot): string | 
       // Ancres de section déjà présentes dans la page (#menu-cat-…).
       return menu.categories.find((c) => categoryAnchorId(c) === key) ?? null;
   }
+}
+
+/** Plat visé par un hash « #plat-<id> » sur le menu chargé (id du produit), ou null. */
+export function resolveDishDeepLink(hash: string, menu: MenuSnapshot): string | null {
+  const key = menuDeepLinkFromHash(hash);
+  if (!key.startsWith(dishAnchorId(""))) return null;
+  return menu.items.find((it) => dishAnchorId(it.id) === key)?.id ?? null;
 }

@@ -20,7 +20,7 @@ import { DishRow } from "../menu/DishRow";
 import { FormulesCarousel } from "../menu/FormulesCarousel";
 import { useMenu } from "../menu/MenuProvider";
 import { categoryAnchorId, categoryDisplayTitle, formuleSectionSubtitle } from "../menu/menuDisplay";
-import { resolveMenuDeepLink } from "../menu/menuDeepLinks";
+import { resolveDishDeepLink, resolveMenuDeepLink } from "../menu/menuDeepLinks";
 import { dishAnchorId, type SearchMatch } from "../menu/menuSearch";
 
 /** Durée de la mise en évidence d'un plat trouvé par la recherche (ms). */
@@ -184,12 +184,12 @@ export function MenuPage() {
     if (el) scrollToElement(el, category);
   };
 
-  /** Plat trouvé par la recherche : défilement jusqu'à sa carte, puis brève mise en évidence. */
-  const goToDish = (id: string) => {
+  /** Plat trouvé par la recherche (ou lien direct #plat-<id>) : défilement jusqu'à sa carte, puis brève mise en évidence. */
+  const goToDish = (id: string, instant = false) => {
     const el = document.getElementById(dishAnchorId(id));
     const item = menu.items.find((it) => it.id === id);
     if (!el || !item) return;
-    scrollToElement(el, item.category);
+    scrollToElement(el, item.category, instant);
     setHighlightId(id);
     if (highlightTimer.current !== null) window.clearTimeout(highlightTimer.current);
     highlightTimer.current = window.setTimeout(() => setHighlightId(null), HIGHLIGHT_MS);
@@ -199,7 +199,8 @@ export function MenuPage() {
   }, []);
 
   /**
-   * Lien direct (#formules-solo-duo-family, #formules-midi, #promos) : arrivée sur la section.
+   * Lien direct (#formules-solo-duo-family, #formules-midi, #promos) : arrivée sur la section ;
+   * lien vers un plat (#plat-<id>, page d'accueil) : arrivée sur sa carte, mise en évidence.
    * À l'ouverture (menu déjà chargé : MenuProvider n'affiche
    * la page qu'avec les données), après les polices (hauteurs définitives), et à chaque changement de hash.
    * Sans hash reconnu : aucun effet, navigation inchangée.
@@ -208,13 +209,16 @@ export function MenuPage() {
   deepLinkMenu.current = menu;
   const openDeepLinkRef = useRef<() => void>(() => {});
   openDeepLinkRef.current = () => {
+    const dishId = resolveDishDeepLink(window.location.hash, deepLinkMenu.current);
+    if (dishId) return goToDish(dishId, true);
     const category = resolveMenuDeepLink(window.location.hash, deepLinkMenu.current);
     if (!category) return;
     const el = document.getElementById(categoryAnchorId(category));
     if (el) scrollToElement(el, category, true);
   };
   useEffect(() => {
-    if (!resolveMenuDeepLink(window.location.hash, deepLinkMenu.current)) return;
+    const hash = window.location.hash;
+    if (!resolveMenuDeepLink(hash, deepLinkMenu.current) && !resolveDishDeepLink(hash, deepLinkMenu.current)) return;
     // La page gère elle-même la position : pas de restauration de l'ancien scroll au rechargement.
     if ("scrollRestoration" in history) history.scrollRestoration = "manual";
     let cancelled = false;
@@ -258,7 +262,14 @@ export function MenuPage() {
     <div className="min-h-dvh bg-kaytori-page">
       <header ref={headerRef} className="sticky top-0 z-30 bg-[#0c1712]">
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-2.5 px-3 sm:gap-3 sm:px-6">
-          <BrandLogo size={36} className="ring-1 ring-kaytori-gold/30" />
+          {/* Logo : retour à la page d'accueil du restaurant (/). */}
+          <a
+            href="/"
+            aria-label="Accueil Kaytôri Sushi"
+            className="shrink-0 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-kaytori-gold/70"
+          >
+            <BrandLogo size={36} className="ring-1 ring-kaytori-gold/30" />
+          </a>
           <div className="min-w-0 flex-1 leading-none">
             {/* Titre principal de la page (seul H1 public) : rendu visuel identique à l'ancien <p>. */}
             <h1 className="truncate font-display text-[1.1rem] font-semibold tracking-tight text-kaytori-cream">

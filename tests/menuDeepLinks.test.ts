@@ -1,11 +1,11 @@
 /**
- * Liens directs (#formules-solo-duo-family, #formules-midi, #promos).
+ * Liens directs (#formules-solo-duo-family, #formules-midi, #promos) et liens vers un plat (#plat-<id>).
  */
 import { describe, expect, it } from "vitest";
 import { promoteFormulesCategory, replaceFormules, type FormuleSectionProbe } from "../src/data/formulesMenu";
 import { getStaticMenu, type MenuSnapshot } from "../src/data/menuSource";
 import type { YumloMenuItem } from "../src/data/yumloMenu";
-import { menuDeepLinkFromHash, resolveMenuDeepLink } from "../src/menu/menuDeepLinks";
+import { menuDeepLinkFromHash, resolveDishDeepLink, resolveMenuDeepLink } from "../src/menu/menuDeepLinks";
 import { categoryAnchorId } from "../src/menu/menuDisplay";
 
 const SECTIONS: FormuleSectionProbe[] = [
@@ -75,5 +75,25 @@ describe("liens directs du menu (3 sections formules)", () => {
   it("lecture du hash insensible à la casse et aux espaces", () => {
     expect(menuDeepLinkFromHash("#Formules-Midi ")).toBe("formules-midi");
     expect(resolveMenuDeepLink("#PROMOS", SUPABASE_LIKE)).toBe("Promotions");
+  });
+});
+
+describe("lien direct vers un plat (#plat-<id>)", () => {
+  const menu = getStaticMenu();
+
+  it("plat existant : renvoie son id (hash insensible à la casse)", () => {
+    expect(resolveDishDeepLink("#plat-36987b1e67", menu)).toBe("36987b1e67");
+    expect(resolveDishDeepLink("#Plat-36987B1E67", menu)).toBe("36987b1e67");
+  });
+
+  it("plat inconnu, autre lien ou hash vide : null (navigation inchangée)", () => {
+    expect(resolveDishDeepLink("#plat-inconnu", menu)).toBeNull();
+    expect(resolveDishDeepLink("#plat-", menu)).toBeNull();
+    expect(resolveDishDeepLink("#promos", menu)).toBeNull();
+    expect(resolveDishDeepLink("", menu)).toBeNull();
+  });
+
+  it("n'interfère pas avec les liens de section", () => {
+    expect(resolveMenuDeepLink("#plat-36987b1e67", menu)).toBeNull();
   });
 });
