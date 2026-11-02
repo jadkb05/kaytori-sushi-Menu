@@ -205,3 +205,95 @@ export const ImageIcon = (p: IconProps) => (
     <path d="m20.5 16-4.5-4.5L7 19.5" />
   </Svg>
 );
+
+/* ------------------------------------------------------------------ espace fidélité */
+
+export const LockIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="5" y="10.5" width="14" height="9.5" rx="2" />
+    <path d="M8.5 10.5V7.5a3.5 3.5 0 0 1 7 0v3" />
+  </Svg>
+);
+
+export const QrIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="4" y="4" width="6" height="6" rx="1" />
+    <rect x="14" y="4" width="6" height="6" rx="1" />
+    <rect x="4" y="14" width="6" height="6" rx="1" />
+    <path d="M14 14h2.5v2.5H14zM17.5 17.5H20V20h-2.5zM20 14v1.5M14 20h1.5" />
+  </Svg>
+);
+
+export const GiftIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <rect x="4" y="9" width="16" height="4" rx="1" />
+    <path d="M5.5 13v6.5h13V13M12 9v10.5" />
+    <path d="M12 9c-1.5-3.5-5-4-5-1.5C7 9 12 9 12 9Zm0 0c1.5-3.5 5-4 5-1.5C17 9 12 9 12 9Z" />
+  </Svg>
+);
+
+export const LinkIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1" />
+    <path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1" />
+  </Svg>
+);
+
+export const UndoIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M9 8 5 12l4 4" />
+    <path d="M5 12h9a5 5 0 0 1 0 10h-2" />
+  </Svg>
+);
+
+/** Fleur de cerisier à cinq pétales : un tampon. */
+export const BlossomIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M12 12c-1.8-2.2-1.8-5.2 0-7.5 1.8 2.3 1.8 5.3 0 7.5Zm0 0c2.6-1 5.5-.2 7.2 2.1-2.6 1.1-5.5.3-7.2-2.1Zm0 0c.2 2.8-1.5 5.3-4.3 6.2-.2-2.8 1.5-5.3 4.3-6.2Zm0 0c2.8.9 4.5 3.4 4.3 6.2-2.8-.9-4.5-3.4-4.3-6.2Zm0 0c-1.7 2.4-4.6 3.2-7.2 2.1 1.7-2.3 4.6-3.1 7.2-2.1Z" />
+  </Svg>
+);
+
+export const WhatsappIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4.5 19.5 5.6 16a8 8 0 1 1 2.6 2.6Z" />
+    <path d="M9.5 9.5c0 2.5 2.5 5 5 5l1-1.5-1.8-.9-.8.8c-.9-.4-1.6-1.1-2-2l.8-.8-.9-1.8Z" />
+  </Svg>
+);
+
+export const UsersIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <circle cx="9" cy="8.5" r="3.25" />
+    <path d="M3.5 19.5c.6-3.1 2.8-5 5.5-5s4.9 1.9 5.5 5" />
+    <circle cx="16.75" cy="9.25" r="2.5" />
+    <path d="M16.5 14.5c2.1.1 3.6 1.7 4 4.25" />
+  </Svg>
+);
+
+/** Pile de pièces : les points. */
+export const CoinsIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <ellipse cx="12" cy="6.5" rx="6.5" ry="2.5" />
+    <path d="M5.5 6.5v4c0 1.4 2.9 2.5 6.5 2.5s6.5-1.1 6.5-2.5v-4" />
+    <path d="M5.5 10.5v4c0 1.4 2.9 2.5 6.5 2.5s6.5-1.1 6.5-2.5v-4" />
+    <path d="M5.5 14.5v3c0 1.4 2.9 2.5 6.5 2.5s6.5-1.1 6.5-2.5v-3" />
+  </Svg>
+);
+
+export const ChartIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M5 19.5V13M10 19.5V9M15 19.5V11.5M20 19.5V5.5" />
+  </Svg>
+);
+
+export const HomeIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="M4 10.5 12 4l8 6.5" />
+    <path d="M6 9v10.5h4.5V14h3v5.5H18V9" />
+  </Svg>
+);
+
+export const SparkleIcon = (p: IconProps) => (
+  <Svg {...p}>
+    <path d="m12 3 1.9 5.8a2 2 0 0 0 1.3 1.3L21 12l-5.8 1.9a2 2 0 0 0-1.3 1.3L12 21l-1.9-5.8a2 2 0 0 0-1.3-1.3L3 12l5.8-1.9a2 2 0 0 0 1.3-1.3L12 3Z" />
+  </Svg>
+);

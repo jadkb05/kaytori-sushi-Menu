@@ -1,14 +1,18 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "rewrites": [
-    { "source": "/menu", "destination": "/index.html" },
-    { "source": "/menu/", "destination": "/index.html" },
-    { "source": "/admin", "destination": "/index.html" },
-    { "source": "/admin/:path*", "destination": "/index.html" }
+    { "source": "/menu", "destination": "/menu/index.html" },
+    { "source": "/menu/", "destination": "/menu/index.html" },
+    { "source": "/admin", "destination": "/menu/index.html" },
+    { "source": "/admin/:path*", "destination": "/menu/index.html" },
+    { "source": "/fidelite", "destination": "/menu/index.html" },
+    { "source": "/fidelite/:path*", "destination": "/menu/index.html" }
   ],
   "headers": [
     { "source": "/admin", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
     { "source": "/admin/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }] },
+    { "source": "/fidelite", "headers": [{ "key": "Referrer-Policy", "value": "no-referrer" }] },
+    { "source": "/fidelite/:path*", "headers": [{ "key": "X-Robots-Tag", "value": "noindex, nofollow" }, { "key": "Referrer-Policy", "value": "no-referrer" }] },
     { "source": "/assets/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=31536000, immutable" }] }
   ]
 }

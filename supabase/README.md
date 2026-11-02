@@ -31,3 +31,19 @@ npm run supabase:parity   # compare le vrai projet Supabase (.env.local) au menu
 - Frontend : clé `anon` uniquement (`.env.local`, ignoré par Git). La clé `service_role` ne doit jamais être exposée.
 - Le seed est idempotent (upsert, aucune suppression) mais remet les lignes concernées à l'état du statique :
   ne pas le relancer sur une base déjà modifiée depuis l'admin.
+
+## Carte de fidélité (phase 1 : base de données uniquement)
+
+Schéma dédié `loyalty` (jamais exposé par l'API) et fonctions `public.loyalty_*` (SECURITY DEFINER,
+droits vérifiés dans chaque fonction). Aucun objet du menu n'est modifié ; `is_admin()` est seulement appelée.
+
+| Fichier | Rôle |
+|---|---|
+| `migrations/20261026120000_loyalty.sql` | Tables `loyalty.settings/staff/customers/cards/events`, journal en ajout seul, 15 RPC |
+| `production/13_loyalty.sql` | Installation gardée (refusée si déjà présente ou si `01_schema.sql` manque). Programme installé **fermé** |
+| `production/14_loyalty_verify_readonly.sql` | Vérification en lecture seule (11 contrôles, tous `ok`) |
+| `production/15_loyalty_grant_staff.template.sql` | Déclarer un manager ou un owner (un compte Supabase Auth par personne) |
+| `production/98_loyalty_rollback.sql` | Retour arrière ; refuse de supprimer des cartes sans seconde confirmation. À lancer avant `99_rollback.sql` |
+
+Arrêter le programme sans rien perdre : `loyalty_update_settings({"is_active": false})` (owner).
+Tests : `tests/loyalty.test.ts`, `tests/loyaltyProduction.test.ts`.

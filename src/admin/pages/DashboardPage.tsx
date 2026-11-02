@@ -1,11 +1,12 @@
 import { useMemo, type ReactNode } from "react";
 import { AdminLink } from "../components/AdminLink";
 import { ADMIN_LIST_PHOTO_WIDTH, AdminPhoto } from "../components/AdminPhoto";
-import { ArrowRightIcon, CategoriesIcon, CheckIcon, EyeIcon, EyeOffIcon, ExternalIcon, PlusIcon, ProductsIcon, VariantsIcon } from "../components/icons";
+import { ArrowRightIcon, BlossomIcon, CategoriesIcon, CheckIcon, EyeIcon, EyeOffIcon, ExternalIcon, PlusIcon, ProductsIcon, VariantsIcon } from "../components/icons";
 import { ErrorState, LoadingState, PageHeader, StatCard, cardClass, focusRing } from "../components/ui";
 import { useAdminMenuData } from "../hooks/AdminMenuData";
 import { buildCategoryList, buildProductList, computeDashboardStats } from "../lib/menuAdmin";
 import { ADMIN_ROUTES, productEditPath } from "../lib/routes";
+import { STAFF_ROUTES } from "../loyalty/routes";
 
 /** Nombre d'éléments masqués listés avant « et N autres ». */
 const HIDDEN_LIMIT = 6;
@@ -157,6 +158,13 @@ export function DashboardPage() {
                   <span className="sr-only"> (nouvel onglet)</span>
                   <ArrowRightIcon className="ml-auto h-4 w-4 text-admin-muted transition-[transform,color] group-hover:text-kaytori-green motion-safe:group-hover:translate-x-0.5" />
                 </a>
+                <AdminLink href={STAFF_ROUTES.home} className={actionClass}>
+                  <span className="grid h-8 w-8 place-items-center rounded-lg bg-kaytori-greenDark text-kaytori-gold">
+                    <BlossomIcon className="h-4 w-4" />
+                  </span>
+                  Cartes de fidélité
+                  <ArrowRightIcon className="ml-auto h-4 w-4 text-admin-muted transition-[transform,color] group-hover:text-kaytori-green motion-safe:group-hover:translate-x-0.5" />
+                </AdminLink>
               </div>
             </section>
 

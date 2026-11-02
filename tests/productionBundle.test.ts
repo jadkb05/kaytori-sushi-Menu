@@ -42,7 +42,8 @@ const verify = async (d: PGlite) => (await d.query<{ controle: string; ok: boole
 describe("fichiers générés à jour", () => {
   it("01_schema.sql contient chaque migration à l'identique, dans l'ordre", () => {
     let from = 0;
-    for (const f of migrationFiles()) {
+    // La fidélité a son propre script (13_loyalty.sql) : 01_schema.sql ne regroupe que le menu.
+    for (const f of migrationFiles().filter((name) => !name.endsWith("_loyalty.sql"))) {
       const sql = readFileSync(new URL(`../supabase/migrations/${f}`, import.meta.url), "utf8").trimEnd();
       const at = SCHEMA.indexOf(sql, from);
       expect(at, f).toBeGreaterThan(from);

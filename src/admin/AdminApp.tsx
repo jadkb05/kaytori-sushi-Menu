@@ -7,8 +7,9 @@
  *   /admin/products/new création d'un produit
  *   /admin/products/:id édition d'un produit existant
  *   /admin/categories   catégories (lecture seule)
+ *   /admin/fidelite…    espace fidélité du personnel (chargé à part, son propre contrôle d'accès)
  */
-import { useEffect, useMemo } from "react";
+import { Suspense, lazy, useEffect, useMemo } from "react";
 import { getSupabaseClient } from "../lib/supabase/client";
 import { AdminLayout } from "./components/AdminLayout";
 import { CenteredCard, LoadingState } from "./components/ui";
@@ -17,6 +18,7 @@ import { useAdminAuth } from "./hooks/useAdminAuth";
 import { navigate, useAdminPath } from "./hooks/useAdminPath";
 import { signInAdmin, signOutAdmin } from "./lib/auth";
 import { resolveAdminRoute } from "./lib/routes";
+import { isStaffLoyaltyPath } from "./loyalty/routes";
 import { AccessDeniedPage, AccessErrorPage, UnconfiguredPage } from "./pages/AccessPages";
 import { CategoriesPage } from "./pages/CategoriesPage";
 import { DashboardPage } from "./pages/DashboardPage";
@@ -44,7 +46,26 @@ function useAdminDocument() {
   }, []);
 }
 
+/**
+ * Fidélité : téléchargée seulement sur /admin/fidelite… Accès distinct de la gestion du menu :
+ * un membre du personnel de fidélité (manager) n'est pas administrateur du menu, et le banc
+ * d'essai local n'ouvre aucune session Supabase.
+ */
+const StaffLoyaltyApp = lazy(() => import("./loyalty/StaffLoyaltyApp"));
+
 export default function AdminApp() {
+  const path = useAdminPath();
+  if (isStaffLoyaltyPath(path)) {
+    return (
+      <Suspense fallback={<div className="min-h-dvh bg-kaytori-page" />}>
+        <StaffLoyaltyApp />
+      </Suspense>
+    );
+  }
+  return <MenuAdminApp />;
+}
+
+function MenuAdminApp() {
   useAdminDocument();
   const client = useMemo(() => getSupabaseClient(), []);
   const { access, refresh } = useAdminAuth(client);

@@ -1,8 +1,9 @@
 import type { ReactNode } from "react";
 import { BrandLogo } from "../../components/BrandLogo";
 import { ADMIN_ROUTES, type AdminContentPage } from "../lib/routes";
+import { STAFF_ROUTES } from "../loyalty/routes";
 import { AdminLink } from "./AdminLink";
-import { CategoriesIcon, CoverIcon, DashboardIcon, ExternalIcon, FormulesIcon, LogoutIcon, ProductsIcon } from "./icons";
+import { BlossomIcon, CategoriesIcon, CoverIcon, DashboardIcon, ExternalIcon, FormulesIcon, LogoutIcon, ProductsIcon } from "./icons";
 import { focusRing } from "./ui";
 
 const NAV: { page: Exclude<AdminContentPage, "productEdit" | "productCreate" | "formuleEdit" | "formuleCreate">; href: string; label: string; icon: typeof DashboardIcon }[] = [
@@ -70,6 +71,14 @@ export function AdminLayout({
               );
             })}
           </ul>
+          <p className="mt-7 px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-admin-muted">Fidélité</p>
+          <AdminLink
+            href={STAFF_ROUTES.home}
+            className={`group flex h-10 items-center gap-3 rounded-lg px-3 text-sm font-medium text-admin-soft transition-colors hover:bg-admin-canvas hover:text-admin-ink ${focusRing}`}
+          >
+            <BlossomIcon className="h-[18px] w-[18px] text-admin-muted group-hover:text-admin-soft" />
+            Cartes de fidélité
+          </AdminLink>
           <p className="mt-7 px-3 pb-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-admin-muted">Site</p>
           <a
             href="/menu"

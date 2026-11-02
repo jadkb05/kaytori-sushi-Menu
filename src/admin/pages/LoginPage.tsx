@@ -4,7 +4,13 @@ import { AlertIcon } from "../components/icons";
 import { CenteredCard, Spinner, inputClass, primaryButtonClass } from "../components/ui";
 
 /** Connexion email + mot de passe. La redirection suit l'état d'accès (useAdminAuth). */
-export function LoginPage({ onSignIn }: { onSignIn: (email: string, password: string) => Promise<string | null> }) {
+export function LoginPage({
+  onSignIn,
+  subtitle = "Espace administrateur · gestion du menu",
+}: {
+  onSignIn: (email: string, password: string) => Promise<string | null>;
+  subtitle?: string;
+}) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -25,7 +31,7 @@ export function LoginPage({ onSignIn }: { onSignIn: (email: string, password: st
       <div className="mb-7 flex flex-col items-center text-center">
         <BrandLogo size={56} className="shadow-admin-sm ring-4 ring-admin-tint" />
         <p className="mt-4 font-display text-[1.375rem] font-semibold text-admin-ink">Kaytôri Sushi</p>
-        <h1 className="mt-1 text-sm font-medium text-admin-soft">Espace administrateur · gestion du menu</h1>
+        <h1 className="mt-1 text-sm font-medium text-admin-soft">{subtitle}</h1>
       </div>
       <form onSubmit={submit} className="space-y-4" noValidate>
         <div>
