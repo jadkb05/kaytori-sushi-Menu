@@ -1,7 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { App } from "./App";
-import { isAdminPath } from "./admin/lib/routes";
 import "./index.css";
 
 /**
@@ -23,7 +22,7 @@ function startLikeFirstVisit() {
   }, 500);
 }
 
-if (!isAdminPath(window.location.pathname)) startLikeFirstVisit();
+startLikeFirstVisit();
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

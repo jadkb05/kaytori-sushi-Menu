@@ -5,11 +5,12 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { CartProvider } from "../src/cart/CartContext";
-import { getStaticMenu, staticMenuSource } from "../src/data/menuSource";
+import { getStaticMenu } from "../src/data/menuSource";
 import { YUMLO_MENU } from "../src/data/yumloMenu";
 import { getDisplayProductName } from "../src/menu/menuDisplay";
 import { MenuProvider } from "../src/menu/MenuProvider";
 import { MenuPage } from "../src/pages/MenuPage";
+import { REFERENCE_MENU } from "./helpers/referenceMenu";
 
 const display = (name: string, category: string) => getDisplayProductName({ name }, category);
 
@@ -179,7 +180,7 @@ describe("audit du menu actuel", () => {
 
 describe("page menu (statique)", () => {
   const html = renderToStaticMarkup(
-    <MenuProvider source={staticMenuSource}>
+    <MenuProvider menu={REFERENCE_MENU}>
       <CartProvider>
         <MenuPage />
       </CartProvider>

@@ -1,54 +1,19 @@
 /**
- * Photos de couverture : ordre public, seed migration, RPC admin (PGlite).
+ * Photos de couverture : ordre public, formule liée, données de production (src/data/menu.json).
  */
-import { readFileSync } from "node:fs";
-import { afterEach, describe, expect, it } from "vitest";
-import {
-  COVER_BANNERS_MIGRATION_HINT,
-  coverBannerPosition,
-  coverMoveTarget,
-  coverStoragePath,
-  newCoverBannerId,
-  orderedCoverBanners,
-  reorderCoverBanners,
-  type CoverBannerRow,
-} from "../src/admin/lib/coverBannerAdmin";
-import { ADMIN_ROUTES, resolveAdminRoute } from "../src/admin/lib/routes";
+import { describe, expect, it } from "vitest";
 import {
   COVER_PRODUCT_LINKS,
+  PRODUCTION_COVER_AUTOPLAY,
+  PRODUCTION_COVER_SLIDES,
   activeCoverSlides,
+  buildCoverSlides,
   FALLBACK_COVER_SLIDE,
+  preloadedCoverAutoplay,
+  preloadedCoverSlides,
   resolveCoverProductId,
 } from "../src/data/coverBanners";
-import { createPgliteSupabase } from "./helpers/pgliteSupabase";
-import { createMigratedDb, runSeed } from "./helpers/supabaseTestDb";
-
-const ADMIN = { id: "11111111-1111-1111-1111-111111111111", email: "admin@kaytori.test" };
-const COVER_MIGRATION = readFileSync(
-  new URL("../supabase/migrations/20261024200000_cover_banners.sql", import.meta.url),
-  "utf8",
-);
-const COVER_PRODUCT_MIGRATION = readFileSync(
-  new URL("../supabase/migrations/20261024210000_cover_banner_product.sql", import.meta.url),
-  "utf8",
-);
-
-let db: Awaited<ReturnType<typeof createMigratedDb>> | null = null;
-afterEach(async () => {
-  await db?.close();
-  db = null;
-});
-
-function row(partial: Partial<CoverBannerRow> & Pick<CoverBannerRow, "id">): CoverBannerRow {
-  return {
-    image_url: `/x/${partial.id}.jpg`,
-    storage_path: null,
-    sort_order: 0,
-    is_active: true,
-    product_id: null,
-    ...partial,
-  };
-}
+import { PRODUCTION_MENU_DATA } from "../src/data/productionMenu";
 
 describe("coverBanners (helpers)", () => {
   it("ordonne et filtre les actives pour le carrousel public", () => {
@@ -66,169 +31,42 @@ describe("coverBanners (helpers)", () => {
     expect(resolveCoverProductId({ id: "cover-778984f58f", product_id: "formule-family" })).toBe("formule-family");
     expect(resolveCoverProductId({ id: "cover-default", product_id: null })).toBeNull();
     expect(COVER_PRODUCT_LINKS["cover-5bdc163cc0"]).toBe("721f54c1ed");
-    expect(COVER_PRODUCT_MIGRATION).toContain("product_id");
-  });
-
-  it("positions et déplacement", () => {
-    const banners = [row({ id: "a", sort_order: 0 }), row({ id: "b", sort_order: 1 }), row({ id: "c", sort_order: 2 })];
-    expect(orderedCoverBanners(banners).map((b) => b.id)).toEqual(["a", "b", "c"]);
-    expect(coverBannerPosition(banners, "b")).toBe(2);
-    expect(coverMoveTarget(1, 3, "up")).toBeNull();
-    expect(coverMoveTarget(1, 3, "down")).toBe(2);
-    expect(coverMoveTarget(3, 3, "down")).toBeNull();
-  });
-
-  it("réordonne par indices et réécrit sort_order (glisser-déposer)", () => {
-    const banners = [row({ id: "a", sort_order: 0 }), row({ id: "b", sort_order: 1 }), row({ id: "c", sort_order: 2 })];
-    const moved = reorderCoverBanners(banners, 2, 0);
-    expect(moved.map((b) => b.id)).toEqual(["c", "a", "b"]);
-    expect(moved.map((b) => b.sort_order)).toEqual([0, 1, 2]);
-    expect(reorderCoverBanners(banners, 1, 1).map((b) => b.id)).toEqual(["a", "b", "c"]);
-    expect(reorderCoverBanners(banners, -1, 0).map((b) => b.id)).toEqual(["a", "b", "c"]);
-  });
-
-  it("chemins Storage cover/ et ids uniques", () => {
-    const hash = "a".repeat(64);
-    expect(coverStoragePath("cover-ab12", hash, "image/jpeg")).toBe(`cover/cover-ab12/${"a".repeat(32)}.jpg`);
-    const id = newCoverBannerId([row({ id: "cover-default" })]);
-    expect(id).toMatch(/^cover-[a-z0-9]+$/);
-    expect(id).not.toBe("cover-default");
-  });
-
-  it("route admin /admin/cover", () => {
-    expect(resolveAdminRoute(ADMIN_ROUTES.cover, { status: "admin", email: "a@b.c" })).toEqual({
-      kind: "page",
-      page: "cover",
-    });
-    expect(resolveAdminRoute(ADMIN_ROUTES.cover, { status: "signedOut" })).toEqual({
-      kind: "redirect",
-      to: ADMIN_ROUTES.login,
-    });
   });
 });
 
-describe("cover_banners (migration + RPC)", () => {
-  it("seed, create, reorder, deactivate, delete", async () => {
-    db = await createMigratedDb();
-    const seeded = await db.query<{ id: string; image_url: string; sort_order: number; is_active: boolean }>(
-      "select id, image_url, sort_order, is_active from public.cover_banners order by sort_order, id",
+describe("couvertures de production", () => {
+  it("21 couvertures dans l'ordre sort_order puis id, toutes servies depuis /media/", () => {
+    const rows = [...PRODUCTION_MENU_DATA.cover_banners].sort(
+      (a, b) => a.sort_order - b.sort_order || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0),
     );
-    expect(seeded.rows).toEqual([
-      {
-        id: "cover-default",
-        image_url: "/banner/kaytori-makis-1280.webp",
-        sort_order: 0,
-        is_active: true,
-      },
-    ]);
-
-    await db.exec(`
-      insert into auth.users (id) values ('${ADMIN.id}');
-      insert into public.admin_users (user_id) values ('${ADMIN.id}');
-    `);
-    const admin = createPgliteSupabase(db, ADMIN);
-
-    const created = await admin.rpc("admin_create_cover_banner", {
-      p_id: "cover-ref-1",
-      p_image_url: "https://example.test/1.jpg",
-      p_storage_path: "cover/cover-ref-1/abc.jpg",
-      p_is_active: true,
-      p_position: 1,
-    });
-    expect(created.error).toBeNull();
-
-    const order1 = await db.query<{ id: string }>("select id from public.cover_banners order by sort_order, id");
-    expect(order1.rows.map((r) => r.id)).toEqual(["cover-ref-1", "cover-default"]);
-
-    const updated = await admin.rpc("admin_update_cover_banner", {
-      p_banner_id: "cover-default",
-      p_changes: { is_active: false },
-      p_position: null,
-    });
-    expect(updated.error).toBeNull();
-
-    const active = await db.query<{ id: string }>(
-      "select id from public.cover_banners where is_active order by sort_order, id",
-    );
-    expect(active.rows.map((r) => r.id)).toEqual(["cover-ref-1"]);
-
-    const first = await admin.rpc("admin_update_cover_banner", {
-      p_banner_id: "cover-default",
-      p_changes: { is_active: true },
-      p_position: 1,
-    });
-    expect(first.error).toBeNull();
-    const order2 = await db.query<{ id: string }>("select id from public.cover_banners order by sort_order, id");
-    expect(order2.rows.map((r) => r.id)).toEqual(["cover-default", "cover-ref-1"]);
-
-    const deleted = await admin.rpc("admin_delete_cover_banner", { p_banner_id: "cover-ref-1" });
-    expect(deleted.error).toBeNull();
-    const left = await db.query<{ id: string }>("select id from public.cover_banners");
-    expect(left.rows.map((r) => r.id)).toEqual(["cover-default"]);
-
-    expect(COVER_BANNERS_MIGRATION_HINT).toContain("10_cover_banners.sql");
-    expect(COVER_MIGRATION).toContain("create table public.cover_banners");
+    expect(PRODUCTION_COVER_SLIDES.map((s) => s.id)).toEqual(rows.map((r) => r.id));
+    expect(PRODUCTION_COVER_SLIDES).toHaveLength(21);
+    for (const s of PRODUCTION_COVER_SLIDES) expect(s.imageUrl).toMatch(/^\/media\/cover\/[^/]+\/[0-9a-f]{32}\.(jpe?g|png|webp)$/);
   });
 
-  it("refuse les RPC sans droits admin", async () => {
-    db = await createMigratedDb();
-    const anon = createPgliteSupabase(db, null);
-    const res = await anon.rpc("admin_create_cover_banner", {
-      p_id: "cover-x",
-      p_image_url: "/x.jpg",
-      p_storage_path: null,
-      p_is_active: true,
-      p_position: null,
-    });
-    expect(res.error).toBeTruthy();
+  it("formule liée : nom et prix du catalogue ; 20 couvertures sur 21 sont commandables", () => {
+    const linked = PRODUCTION_COVER_SLIDES.filter((s) => s.productId);
+    expect(linked).toHaveLength(20);
+    for (const s of linked) {
+      const p = PRODUCTION_MENU_DATA.products.find((x) => x.id === s.productId)!;
+      expect(s.productName).toBe(p.name);
+      expect(s.productPriceMAD).toBe(Number(p.price).toFixed(2));
+    }
   });
 
-  it("lie une couverture à une formule (product_id) à la création ou ensuite", async () => {
-    db = await createMigratedDb();
-    await runSeed(db);
-    await db.exec(`
-      insert into auth.users (id) values ('${ADMIN.id}');
-      insert into public.admin_users (user_id) values ('${ADMIN.id}');
-    `);
-    const admin = createPgliteSupabase(db, ADMIN);
+  it("produit lié masqué ou inconnu : couverture décorative (sans « + »)", () => {
+    const data = {
+      categories: [{ id: "c", name: "C", sort_order: 0, is_active: true, display_mode: "list" as const }],
+      products: [],
+      cover_banners: [{ id: "x", image_url: "/media/cover/x/a.jpg", storage_path: null, sort_order: 0, is_active: true, product_id: "absent" }],
+    };
+    expect(buildCoverSlides(data)[0].productId).toBeNull();
+  });
 
-    const created = await admin.rpc("admin_create_cover_banner", {
-      p_id: "cover-duo-new",
-      p_image_url: "https://example.test/duo.jpg",
-      p_storage_path: null,
-      p_is_active: true,
-      p_position: null,
-      p_product_id: "formule-duo",
-    });
-    expect(created.error).toBeNull();
-    const linkedAtCreate = await db.query<{ product_id: string | null }>(
-      "select product_id from public.cover_banners where id = 'cover-duo-new'",
-    );
-    expect(linkedAtCreate.rows[0]?.product_id).toBe("formule-duo");
-
-    const solo = await admin.rpc("admin_create_cover_banner", {
-      p_id: "cover-photo-only",
-      p_image_url: "https://example.test/deco.jpg",
-      p_storage_path: null,
-      p_is_active: true,
-      p_position: null,
-      p_product_id: null,
-    });
-    expect(solo.error).toBeNull();
-    const photoOnly = await db.query<{ product_id: string | null }>(
-      "select product_id from public.cover_banners where id = 'cover-photo-only'",
-    );
-    expect(photoOnly.rows[0]?.product_id).toBeNull();
-
-    const cleared = await admin.rpc("admin_update_cover_banner", {
-      p_banner_id: "cover-duo-new",
-      p_changes: { product_id: null },
-      p_position: null,
-    });
-    expect(cleared.error).toBeNull();
-    const after = await db.query<{ product_id: string | null }>(
-      "select product_id from public.cover_banners where id = 'cover-duo-new'",
-    );
-    expect(after.rows[0]?.product_id).toBeNull();
+  it("défilement automatique désactivé (réglage de production), connu immédiatement", () => {
+    expect(PRODUCTION_MENU_DATA.site_settings.cover_autoplay).toBe(false);
+    expect(PRODUCTION_COVER_AUTOPLAY).toBe(false);
+    expect(preloadedCoverAutoplay()).toBe(false);
+    expect(preloadedCoverSlides()).toEqual([...PRODUCTION_COVER_SLIDES]);
   });
 });

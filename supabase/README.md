@@ -1,7 +1,11 @@
-# Supabase — base du menu (préparation CMS)
+# Supabase — ARCHIVE (plus utilisé par le site)
 
-**État : préparé, non utilisé par le site.** Le menu public lit toujours `src/data/yumloMenu.ts`
-(source `static`, voir `src/data/menuSource.ts`).
+**État (2026-11-02, branche `migration/static-menu`) : archivé.** Le menu public lit
+`src/data/menu.json` (export de la production) et les photos de `public/media/` ; l'administration
+`/admin` a été supprimée. Ce dossier est conservé tel quel pour un éventuel retour arrière
+(schéma, RLS, fonctions, migrations, scripts de production). Les commandes ci-dessous concernaient
+l'ancien fonctionnement ; leurs scripts et tests ont été retirés (voir l'historique Git, commit
+`c1ff598`, pour les retrouver).
 
 | Fichier | Rôle |
 |---|---|

@@ -6,7 +6,7 @@ import { CLIENT_DISH_IMAGES, CUSTOM_DISH_IMAGES } from "../data/dishImages";
 import { STARTER_IMAGE_URL_BY_ID } from "../data/startersYakamon";
 import { ZIP_ORDER_DISH_IMAGES } from "../data/zipOrderDishImages";
 import type { YumloMenuItem } from "../data/yumloMenu";
-import { supabaseImageUrl } from "../lib/supabase/imageTransform";
+import { mediaImageUrl } from "../lib/media";
 
 export function formatPriceDH(priceMAD: string) {
   const parts = priceMAD.split(".");
@@ -119,9 +119,9 @@ export function getDisplayProductName(product: { name: string }, category: strin
 }
 
 /**
- * Image affichée d'un plat. `item.image` est prioritaire : en mode Supabase, c'est la photo
- * gérée depuis l'admin (products.image_url). En mode statique, `image` est identique à l'entrée
- * des tables ci-dessous pour chaque plat (vérifié par le test de référence) : rendu inchangé.
+ * Image affichée d'un plat. `item.image` est prioritaire : c'est la photo de production
+ * (products.image_url, src/data/menu.json). Dans le menu de référence, `image` est identique à
+ * l'entrée des tables ci-dessous pour chaque plat (vérifié par le test de référence).
  * Les tables ne servent plus que de repli si un plat n'a pas d'image.
  */
 export function dishImage(item: YumloMenuItem) {
@@ -136,21 +136,21 @@ export function dishImage(item: YumloMenuItem) {
 }
 
 /**
- * Largeur de la grande vignette Supabase : 96 px affichés × 3 (iPhone) = 288 px, sans marge perdue.
+ * Largeur de la grande vignette d'une photo /media/ : 96 px affichés × 3 (iPhone) = 288 px, sans marge perdue.
  * 224 px couvre les écrans 2x jusqu'à 112 px affichés.
  */
-const SUPABASE_THUMB_LARGE_WIDTH = 288;
+const MEDIA_THUMB_LARGE_WIDTH = 288;
 
 /**
  * Vignettes WebP légères (scripts/generate-menu-thumbs.py) pour une image d'origine de
  * /menu-hd-*\/ ou /starters-hd/ : 224 px et 336 px pour un affichage en 84–112 px.
- * Photo Supabase Storage : 224 px et 288 px via la transformation d'images Supabase.
+ * Photo de /media/ : 224 px et 288 px pré-générées (scripts/build-static-menu.py).
  * null pour toute autre image : on garde alors l'original.
  */
 export function dishThumbs(src: string): { small: string; large: string; srcSet: string } | null {
-  const small = supabaseImageUrl(src, 224);
-  const large = supabaseImageUrl(src, SUPABASE_THUMB_LARGE_WIDTH);
-  if (small && large) return { small, large, srcSet: `${small} 224w, ${large} ${SUPABASE_THUMB_LARGE_WIDTH}w` };
+  const small = mediaImageUrl(src, 224);
+  const large = mediaImageUrl(src, MEDIA_THUMB_LARGE_WIDTH);
+  if (small && large) return { small, large, srcSet: `${small} 224w, ${large} ${MEDIA_THUMB_LARGE_WIDTH}w` };
   const m = src.match(/^\/((?:menu-hd-[^/]+)|starters-hd)\/([^/]+)\.(?:png|jpe?g|webp)$/i);
   if (!m) return null;
   const base = `/menu-thumbs/${m[1]}/${m[2]}`;
