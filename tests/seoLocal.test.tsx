@@ -7,16 +7,16 @@ import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
 import { CartProvider } from "../src/cart/CartContext";
 import { SITE, whatsappHref } from "../src/config/site";
-import { staticMenuSource } from "../src/data/menuSource";
 import { MenuProvider } from "../src/menu/MenuProvider";
 import { MenuPage } from "../src/pages/MenuPage";
+import { REFERENCE_MENU } from "./helpers/referenceMenu";
 
 const SITE_URL = "https://www.kaytori.com/";
 const read = (path: string) => readFileSync(new URL(`../${path}`, import.meta.url), "utf8");
 
 /** Page publique rendue (menu statique), commentaires React retirés. */
 const page = renderToStaticMarkup(
-  <MenuProvider source={staticMenuSource}>
+  <MenuProvider menu={REFERENCE_MENU}>
     <CartProvider>
       <MenuPage />
     </CartProvider>
@@ -144,7 +144,7 @@ describe("JSON-LD = informations visibles", () => {
 });
 
 describe("SEO-03 : robots.txt et sitemap.xml", () => {
-  it("robots.txt : tout autorisé (y compris /admin, pour que son noindex soit lu), sitemap référencé", () => {
+  it("robots.txt : tout autorisé, sitemap référencé", () => {
     const robots = read("public/robots.txt");
     expect(robots).toBe(`User-agent: *\nAllow: /\n\nSitemap: ${SITE_URL}sitemap.xml\n`);
     expect(robots).not.toMatch(/Disallow/i);
@@ -176,25 +176,22 @@ describe("SEO-03 : vercel.json", () => {
     headers: { source: string; headers: { key: string; value: string }[] }[];
   };
 
-  it("rewrites inchangés (/menu, /menu/, /admin, /admin/:path* → index.html)", () => {
+  it("rewrites : /menu et /menu/ → index.html ; plus de route /admin (administration supprimée)", () => {
     expect(config.rewrites).toEqual([
       { source: "/menu", destination: "/index.html" },
       { source: "/menu/", destination: "/index.html" },
-      { source: "/admin", destination: "/index.html" },
-      { source: "/admin/:path*", destination: "/index.html" },
     ]);
   });
 
-  it("X-Robots-Tag noindex, nofollow sur /admin et /admin/:path* uniquement", () => {
-    const noindex = config.headers.filter((h) => h.headers.some((x) => x.key === "X-Robots-Tag"));
-    expect(noindex.map((h) => h.source)).toEqual(["/admin", "/admin/:path*"]);
-    for (const h of noindex) expect(h.headers).toEqual([{ key: "X-Robots-Tag", value: "noindex, nofollow" }]);
+  it("aucun en-tête X-Robots-Tag (plus d'espace /admin à exclure)", () => {
+    expect(config.headers.filter((h) => h.headers.some((x) => x.key === "X-Robots-Tag"))).toEqual([]);
   });
 
-  it("cache immutable sur les assets hashés de Vite uniquement", () => {
+  it("cache immutable sur les fichiers nommés par empreinte : assets Vite et photos /media/", () => {
     const cache = config.headers.filter((h) => h.headers.some((x) => x.key === "Cache-Control"));
     expect(cache).toEqual([
       { source: "/assets/(.*)", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
+      { source: "/media/(.*)", headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }] },
     ]);
   });
 });

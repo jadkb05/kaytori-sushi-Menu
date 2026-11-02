@@ -8,7 +8,7 @@ import { FORMULE_IMAGE_SIZE, FORMULE_IMAGE_SIZE_BY_ID } from "../data/formulesPr
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { useFormuleMidiAvailable } from "../hooks/useFormuleMidiAvailable";
 import { usePrefersReducedMotion } from "../hooks/usePrefersReducedMotion";
-import { supabaseImageSrcSet } from "../lib/supabase/imageTransform";
+import { mediaImageSrcSet } from "../lib/media";
 import { dishImage, formatPriceDH } from "./menuDisplay";
 import { dishAnchorId } from "./menuSearch";
 import { useDishAdd } from "./useDishAdd";
@@ -19,7 +19,7 @@ import { useDishAdd } from "./useDishAdd";
  */
 const FORMULE_FRAME_ASPECT = "aspect-[909/1024]";
 
-/** Largeurs servies pour les affiches Supabase (carte de 62vw à 17rem, écrans 1x à 3x). */
+/** Largeurs servies pour les affiches de /media/ (carte de 62vw à 17rem, écrans 1x à 3x). */
 const FORMULE_IMAGE_WIDTHS = [360, 540, 750, 960] as const;
 
 /** GIF transparent 1×1 : affiche pas encore demandée (le fond du cadre reste visible, `alt` conservé). */
@@ -95,9 +95,9 @@ function FormuleCard({
   const imageSize = FORMULE_IMAGE_SIZE_BY_ID[item.id] ?? FORMULE_IMAGE_SIZE;
   const midiBlocked = isFormuleMidiOffer(item) && !midiAvailable;
   const original = dishImage(item);
-  /** Affiche Supabase allégée (même fichier redimensionné) ; erreur → fichier d'origine. */
+  /** Affiche allégée (même fichier redimensionné) ; erreur → fichier d'origine. */
   const [resizedFailed, setResizedFailed] = useState(false);
-  const srcSet = resizedFailed ? null : supabaseImageSrcSet(original, FORMULE_IMAGE_WIDTHS);
+  const srcSet = resizedFailed ? null : mediaImageSrcSet(original, FORMULE_IMAGE_WIDTHS);
   const cardRef = useRef<HTMLLIElement>(null);
   const showPoster = useNearCarouselView(cardRef, scrollerRef);
 

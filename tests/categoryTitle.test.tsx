@@ -1,18 +1,17 @@
 /**
  * Nombre de pièces après le titre de certaines catégories (affichage uniquement) :
- * les noms réels des catégories (données, Supabase, ancres, ordre) restent inchangés.
+ * les noms réels des catégories (données, ancres, ordre) restent inchangés.
  */
-import type { PGlite } from "@electric-sql/pglite";
 import { renderToStaticMarkup } from "react-dom/server";
-import { afterAll, beforeAll, describe, expect, it } from "vitest";
+import { describe, expect, it } from "vitest";
 import { CartProvider } from "../src/cart/CartContext";
 import { rowsToMenu } from "../src/data/menuRows";
-import { getStaticMenu, staticMenuSource, type MenuSnapshot } from "../src/data/menuSource";
-import { YUMLO_CATEGORIES } from "../src/data/yumloMenu";
+import { getMenu, getStaticMenu } from "../src/data/menuSource";
 import { categoryAnchorId, categoryDisplayTitle } from "../src/menu/menuDisplay";
 import { MenuProvider } from "../src/menu/MenuProvider";
 import { MenuPage } from "../src/pages/MenuPage";
-import { createMigratedDb, readMenuRows, runSeed } from "./helpers/supabaseTestDb";
+import { YUMLO_CATEGORIES } from "../src/data/yumloMenu";
+import { REFERENCE_MENU } from "./helpers/referenceMenu";
 
 /** Titres affichés attendus pour les catégories du menu actuel (les autres : nom seul). */
 const EXPECTED: Record<string, string> = {
@@ -74,7 +73,7 @@ describe("categoryDisplayTitle", () => {
 describe("menu statique : titres affichés sur la page", () => {
   it("titres avec quantités, ordre et ancres inchangés, données intactes", async () => {
     const html = renderToStaticMarkup(
-      <MenuProvider source={staticMenuSource}>
+      <MenuProvider menu={REFERENCE_MENU}>
         <CartProvider>
           <MenuPage />
         </CartProvider>
@@ -97,25 +96,24 @@ describe("menu statique : titres affichés sur la page", () => {
   });
 });
 
-describe("menu Supabase (migrations + seed réels)", () => {
-  let db: PGlite;
-  let supabaseMenu: MenuSnapshot;
-  beforeAll(async () => {
-    db = await createMigratedDb();
-    await runSeed(db);
-    supabaseMenu = rowsToMenu(await readMenuRows(db));
+describe("menu de production : titres affichés", () => {
+  it("noms en données inchangés (sans « pcs »), suffixes d'affichage appliqués", () => {
+    const menu = getMenu();
+    expect(menu.categories.some((c) => c.includes("pcs"))).toBe(false);
+    for (const c of menu.categories) {
+      if (EXPECTED[c]) expect(categoryDisplayTitle(c)).toBe(EXPECTED[c]);
+    }
+    const html = renderToStaticMarkup(
+      <MenuProvider>
+        <CartProvider>
+          <MenuPage />
+        </CartProvider>
+      </MenuProvider>,
+    );
+    expect(sectionTitles(html).map((t) => t.id)).toEqual(menu.categories.map(categoryAnchorId));
   });
-  afterAll(() => db.close());
 
-  it("mêmes titres affichés que le statique, noms en base inchangés", async () => {
-    expect(supabaseMenu.categories).toEqual([...YUMLO_CATEGORIES]);
-    expect(supabaseMenu.categories.map(categoryDisplayTitle)).toEqual(YUMLO_CATEGORIES.map(expectedTitle));
-    const rows = await readMenuRows(db);
-    expect(rows.categories.find((c) => c.id === "nigiri")!.name).toBe("Nigiri");
-    expect(rows.categories.some((c) => c.name.includes("pcs"))).toBe(false);
-  });
-
-  it("catégorie créée depuis le CMS avec un nom du mapping (ex. Temakis) → suffixe appliqué", () => {
+  it("catégorie au nom du mapping (ex. Temakis) → suffixe appliqué", () => {
     const menu = rowsToMenu({
       categories: [
         { id: "temakis", name: "Temakis", sort_order: 0, is_active: true, display_mode: "list" },

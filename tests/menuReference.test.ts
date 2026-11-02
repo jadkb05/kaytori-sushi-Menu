@@ -7,7 +7,8 @@ import { existsSync, readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { buildWhatsappOrderMessage } from "../src/cart/buildOrderMessage";
 import { compareParityModels, toParityModel, type MenuParityModel } from "../src/data/menuParity";
-import { ACTIVE_MENU_SOURCE, getMenu, getStaticMenu } from "../src/data/menuSource";
+import { getMenu, getStaticMenu } from "../src/data/menuSource";
+import { PRODUCTION_MENU } from "../src/data/productionMenu";
 import { YUMLO_CATEGORIES, YUMLO_MENU } from "../src/data/yumloMenu";
 import {
   MENU_REFERENCE_FILE,
@@ -20,12 +21,12 @@ const reference = JSON.parse(readFileSync(MENU_REFERENCE_FILE, "utf8")) as MenuP
 const current = toParityModel(getStaticMenu());
 
 describe("source du menu", () => {
-  it("la source active est le fichier statique yumloMenu.ts", async () => {
-    expect(ACTIVE_MENU_SOURCE.id).toBe("static");
+  it("menu public = données de production ; yumloMenu.ts = référence historique non affichée", () => {
     const menu = getStaticMenu();
     expect(menu.items).toBe(YUMLO_MENU);
     expect(menu.categories).toBe(YUMLO_CATEGORIES);
-    expect(await getMenu()).toBe(menu);
+    expect(getMenu()).toBe(PRODUCTION_MENU);
+    expect(getMenu()).not.toBe(menu);
   });
 });
 

@@ -1,8 +1,11 @@
-import { supabaseImageSrcSet } from "../lib/supabase/imageTransform";
+import { mediaImageSrcSet } from "../lib/media";
+import menuData from "./menu.json";
+import { formatDbPrice } from "./menuRows";
+import type { ProductionMenuData } from "./productionMenu";
 
 /**
  * Photos de couverture du menu public (carrousel).
- * Lecture des lignes actives ordonnées ; repli sur la bannière statique historique.
+ * Lignes actives ordonnées de src/data/menu.json ; repli sur la bannière statique historique.
  * Une couverture peut pointer vers une formule (product_id) pour le « + » panier.
  */
 export type CoverSlide = {
@@ -64,80 +67,37 @@ export function activeCoverSlides(rows: readonly CoverRow[]): CoverSlide[] {
     }));
 }
 
-function priceToMadString(price: unknown): string {
-  const n = typeof price === "number" ? price : Number.parseFloat(String(price ?? ""));
-  if (!Number.isFinite(n)) return "0.00";
-  return n.toFixed(2);
-}
-
 /**
- * null = indisponible (pas de client / table absente) → le composant garde le repli statique.
- * Tableau (éventuellement vide) = lecture OK ; vide → repli aussi.
+ * Couvertures actives, ordonnées (sort_order puis id), avec nom et prix de la formule liée
+ * (produit actif dans une catégorie active, comme l'ancienne lecture publique) ; sinon décorative.
  */
-export async function fetchPublishedCoverSlides(): Promise<CoverSlide[] | null> {
-  if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) return null;
-  const { getSupabaseClient } = await import("../lib/supabase/client");
-  const client = getSupabaseClient();
-  if (!client) return null;
-
-  let rows: CoverRow[] | null = null;
-  const withProduct = await client
-    .from("cover_banners")
-    .select("id, image_url, sort_order, is_active, product_id")
-    .eq("is_active", true)
-    .order("sort_order")
-    .order("id");
-  if (withProduct.error && /product_id|column/i.test(withProduct.error.message)) {
-    const fallback = await client
-      .from("cover_banners")
-      .select("id, image_url, sort_order, is_active")
-      .eq("is_active", true)
-      .order("sort_order")
-      .order("id");
-    if (fallback.error) {
-      if (/does not exist|schema cache/i.test(fallback.error.message)) return null;
-      return null;
-    }
-    rows = (fallback.data ?? []) as CoverRow[];
-  } else if (withProduct.error) {
-    if (/does not exist|schema cache/i.test(withProduct.error.message)) return null;
-    return null;
-  } else {
-    rows = (withProduct.data ?? []) as CoverRow[];
-  }
-
-  const slides = activeCoverSlides(rows);
-  const productIds = [...new Set(slides.map((s) => s.productId).filter((id): id is string => Boolean(id)))];
-  if (productIds.length === 0) return slides;
-
-  const products = await client
-    .from("products")
-    .select("id, name, price, is_active")
-    .in("id", productIds)
-    .eq("is_active", true);
-  if (products.error || !products.data) return slides;
-
-  const byId = new Map(
-    products.data.map((p) => [
-      String(p.id),
-      { name: String(p.name), priceMAD: priceToMadString(p.price) },
-    ]),
+export function buildCoverSlides(data: Pick<ProductionMenuData, "categories" | "products" | "cover_banners">): CoverSlide[] {
+  const activeCategories = new Set(data.categories.filter((c) => c.is_active).map((c) => c.id));
+  const products = new Map(
+    data.products.filter((p) => p.is_active && activeCategories.has(p.category_id)).map((p) => [p.id, p]),
   );
-
-  return slides.map((s) => {
-    if (!s.productId) return s;
-    const p = byId.get(s.productId);
-    if (!p) return { ...s, productId: null };
-    return { ...s, productName: p.name, productPriceMAD: p.priceMAD };
+  return activeCoverSlides(data.cover_banners).map((slide) => {
+    if (!slide.productId) return slide;
+    const p = products.get(slide.productId);
+    if (!p) return { ...slide, productId: null };
+    return { ...slide, productName: p.name, productPriceMAD: formatDbPrice(p.price) };
   });
 }
 
-/** Largeurs servies pour les couvertures Supabase (carrousel mobile pleine largeur) : 1280 px au plus. */
+const PRODUCTION_DATA = menuData as ProductionMenuData;
+
+/** Couvertures publiques de la production (src/data/menu.json). */
+export const PRODUCTION_COVER_SLIDES: readonly CoverSlide[] = buildCoverSlides(PRODUCTION_DATA);
+
+/** Réglage « défilement automatique des couvertures » de la production (site_settings.cover_autoplay). */
+export const PRODUCTION_COVER_AUTOPLAY: boolean = PRODUCTION_DATA.site_settings.cover_autoplay !== false;
+
+/** Largeurs servies pour les couvertures (carrousel mobile pleine largeur) : 1280 px au plus. */
 export const COVER_IMAGE_WIDTHS = [640, 960, 1280] as const;
 
-/** srcSet de la couverture : bannière locale multi-résolutions, ou versions allégées Supabase. */
+/** srcSet de la couverture : bannière locale multi-résolutions, ou versions allégées de /media/. */
 export function coverSlideSrcSet(slide: CoverSlide): string | undefined {
-  return slide.srcSet ?? supabaseImageSrcSet(slide.imageUrl, COVER_IMAGE_WIDTHS) ?? undefined;
+  return slide.srcSet ?? mediaImageSrcSet(slide.imageUrl, COVER_IMAGE_WIDTHS) ?? undefined;
 }
 
 /**
@@ -162,60 +122,31 @@ function preloadFirstCoverImage(slides: readonly CoverSlide[]): void {
   document.head.appendChild(link);
 }
 
-let coverSlidesRequest: Promise<CoverSlide[] | null> | null = null;
-let coverSlidesResult: CoverSlide[] | null | undefined;
+let firstCoverPreloaded = false;
 
 /**
- * Lecture unique et partagée des couvertures : lancée par MenuProvider en même temps que le menu,
- * puis réutilisée par CoverCarousel (pas de seconde requête, pas de bannière de repli intermédiaire).
+ * Couvertures (données statiques, disponibles immédiatement). Au premier appel (MenuProvider),
+ * précharge la première photo, comme le faisait l'ancienne lecture distante.
  */
 export function preloadPublishedCoverSlides(): Promise<CoverSlide[] | null> {
-  coverSlidesRequest ??= fetchPublishedCoverSlides()
-    .catch(() => null)
-    .then((slides) => {
-      coverSlidesResult = slides;
-      if (slides && slides.length > 0) preloadFirstCoverImage(slides);
-      // Indisponible : un nouvel essai (bouton « Réessayer » du menu) relancera la lecture.
-      if (slides === null) coverSlidesRequest = null;
-      return slides;
-    });
-  return coverSlidesRequest;
+  if (!firstCoverPreloaded) {
+    firstCoverPreloaded = true;
+    preloadFirstCoverImage(PRODUCTION_COVER_SLIDES);
+  }
+  return Promise.resolve([...PRODUCTION_COVER_SLIDES]);
 }
 
-/** Résultat déjà reçu de preloadPublishedCoverSlides() ; undefined tant que la lecture est en cours. */
+/** Couvertures publiques (jamais undefined : aucune lecture réseau en attente). */
 export function preloadedCoverSlides(): CoverSlide[] | null | undefined {
-  return coverSlidesResult;
+  return [...PRODUCTION_COVER_SLIDES];
 }
 
-/**
- * Réglage « défilement automatique des couvertures » (site_settings.cover_autoplay).
- * true par défaut : réglage absent, table non installée ou lecture impossible → comportement actuel.
- */
-export async function fetchCoverAutoplay(): Promise<boolean> {
-  if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) return true;
-  const { getSupabaseClient } = await import("../lib/supabase/client");
-  const client = getSupabaseClient();
-  if (!client) return true;
-  const { data, error } = await client.from("site_settings").select("cover_autoplay").eq("id", "default").maybeSingle();
-  if (error || !data) return true;
-  return data.cover_autoplay !== false;
-}
-
-let coverAutoplayRequest: Promise<boolean> | null = null;
-let coverAutoplayResult: boolean | undefined;
-
-/** Lecture unique du réglage, lancée par MenuProvider avec le menu et réutilisée par CoverCarousel. */
+/** Réglage de défilement automatique (statique). */
 export function preloadCoverAutoplay(): Promise<boolean> {
-  coverAutoplayRequest ??= fetchCoverAutoplay()
-    .catch(() => true)
-    .then((autoplay) => {
-      coverAutoplayResult = autoplay;
-      return autoplay;
-    });
-  return coverAutoplayRequest;
+  return Promise.resolve(PRODUCTION_COVER_AUTOPLAY);
 }
 
-/** Réglage déjà reçu ; undefined tant que la lecture est en cours. */
+/** Réglage de défilement automatique, connu immédiatement. */
 export function preloadedCoverAutoplay(): boolean | undefined {
-  return coverAutoplayResult;
+  return PRODUCTION_COVER_AUTOPLAY;
 }

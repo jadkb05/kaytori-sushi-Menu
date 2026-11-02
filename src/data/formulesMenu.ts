@@ -1,6 +1,6 @@
 /**
- * Formules publiées : lues dans Supabase (catégorie formules-promos) et posées sur le menu
- * statique, sans remplacer les autres catégories.
+ * Formules publiées : lignes de la catégorie formules-promos (src/data/menu.json, export de la
+ * base de production) posées sur le menu, sans remplacer les autres catégories.
  *
  * Mode dynamique (formule_sections disponible) :
  *   - regroupement strict par formule_section_id → nom actuel de la section ;
@@ -208,73 +208,4 @@ export function replaceFormules(
 /** Remonte / scinde les formules (heuristique — menu sans overlay dynamique). */
 export function promoteFormulesCategory(menu: MenuSnapshot): MenuSnapshot {
   return splitFormulesForPublicMenu(menu);
-}
-
-/**
- * Lecture publique. null = indisponibilité réelle → garder le menu déjà chargé (statique).
- * Si la table formule_sections est lisible, `sections` est un tableau (éventuellement vide)
- * et remplace intégralement l'affichage formules précédent.
- */
-export async function fetchPublishedFormules(): Promise<PublishedFormulesResult | null> {
-  if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) return null;
-  const { getSupabaseClient } = await import("../lib/supabase/client");
-  const client = getSupabaseClient();
-  if (!client) return null;
-
-  // Requêtes indépendantes lancées ensemble (une seule attente réseau au lieu de trois).
-  const [category, withDesc, withSection] = await Promise.all([
-    client.from("categories").select("id, is_active").eq("id", FORMULES_CATEGORY_ID).maybeSingle(),
-    client
-      .from("formule_sections")
-      .select("id, name, description, sort_order, is_active")
-      .eq("is_active", true)
-      .order("sort_order"),
-    client
-      .from("products")
-      .select(
-        "id, category_id, name, description, price, currency, image_url, thumb_small_url, thumb_large_url, sort_order, is_active, formule_section_id",
-      )
-      .eq("category_id", FORMULES_CATEGORY_ID)
-      .eq("is_active", true)
-      .order("sort_order"),
-  ]);
-  if (category.error || !category.data) return null;
-
-  let sectionsData: unknown[] | null = null;
-  let sectionsError: { message: string } | null = null;
-  if (withDesc.error && /description|column/i.test(withDesc.error.message)) {
-    const fallback = await client
-      .from("formule_sections")
-      .select("id, name, sort_order, is_active")
-      .eq("is_active", true)
-      .order("sort_order");
-    sectionsData = fallback.data;
-    sectionsError = fallback.error;
-  } else {
-    sectionsData = withDesc.data;
-    sectionsError = withDesc.error;
-  }
-
-  const sectionsAvailable = !sectionsError;
-  const sections = sectionsAvailable ? ((sectionsData ?? []) as FormuleSectionProbe[]) : null;
-
-  if (sectionsAvailable) {
-    if (withSection.error) return null;
-    const items = publishedFormules(category.data, (withSection.data ?? []) as FormuleProductRow[], sections);
-    if (items === null) return null;
-    return { items, sections };
-  }
-
-  const products = await client
-    .from("products")
-    .select(
-      "id, category_id, name, description, price, currency, image_url, thumb_small_url, thumb_large_url, sort_order, is_active",
-    )
-    .eq("category_id", FORMULES_CATEGORY_ID)
-    .eq("is_active", true)
-    .order("sort_order");
-  if (products.error) return null;
-  const items = publishedFormules(category.data, (products.data ?? []) as ProductRow[], null);
-  if (items === null) return null;
-  return { items, sections: null };
 }
