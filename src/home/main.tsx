@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import "../index.css";
 import { HomePage } from "./HomePage";
 import { legacyMenuUrl } from "./legacyMenuHash";
+import { warmMenu } from "./warmMenu";
 
 /** Page d'accueil (/). Les anciens liens du menu (« /#formules-midi »…) repartent vers /menu. */
 const menuUrl = legacyMenuUrl(window.location.hash);
@@ -14,4 +15,5 @@ if (menuUrl) {
       <HomePage />
     </StrictMode>,
   );
+  warmMenu();
 }

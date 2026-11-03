@@ -25,8 +25,41 @@ function menuHtmlRewrites(): Plugin {
   };
 }
 
+/**
+ * Page d'accueil : prépare l'ouverture du menu pendant que le client regarde la vitrine.
+ * Au build, on connaît les fichiers (hachés) du menu : on les annonce dans index.html
+ * (`<meta name="kaytori-menu-assets">`, lu par src/home/warmMenu.ts qui les télécharge en tâche de fond)
+ * et on ajoute des règles de spéculation (Chrome/Android : /menu pré-rendu, ouverture quasi instantanée).
+ */
+function warmMenuFromHome(): Plugin {
+  return {
+    name: "warm-menu-from-home",
+    apply: "build",
+    transformIndexHtml: {
+      order: "post",
+      handler(html, ctx) {
+        if (!ctx.bundle || ctx.path !== "/index.html") return html;
+        const menuEntry = Object.values(ctx.bundle).find(
+          (c) => c.type === "chunk" && c.isEntry && c.name === "menu",
+        );
+        if (!menuEntry || menuEntry.type !== "chunk") return html;
+        const css = [...(menuEntry.viteMetadata?.importedCss ?? [])];
+        const assets = [menuEntry.fileName, ...menuEntry.imports, ...css].map((f) => `/${f}`);
+        const rules = {
+          prefetch: [{ source: "list", urls: ["/menu"], eagerness: "eager" }],
+          prerender: [{ source: "list", urls: ["/menu"], eagerness: "moderate" }],
+        };
+        return [
+          { tag: "meta", attrs: { name: "kaytori-menu-assets", content: assets.join(",") }, injectTo: "head" },
+          { tag: "script", attrs: { type: "speculationrules" }, children: JSON.stringify(rules), injectTo: "head" },
+        ];
+      },
+    },
+  };
+}
+
 export default defineConfig({
-  plugins: [menuHtmlRewrites(), react()],
+  plugins: [menuHtmlRewrites(), warmMenuFromHome(), react()],
   build: {
     rollupOptions: {
       input: {
