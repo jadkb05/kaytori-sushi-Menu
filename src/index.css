@@ -31,7 +31,7 @@
 @layer components {
   /** Page d'accueil : filet doré fin et coins adoucis des photos encadrées (pas des photos plein écran). */
   .photo-frame {
-    @apply rounded-[5px] border border-home-frame;
+    @apply rounded-[10px] border border-home-frame/90;
   }
   .btn-shine {
     @apply relative overflow-hidden;

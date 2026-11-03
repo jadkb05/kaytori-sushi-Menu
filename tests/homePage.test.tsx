@@ -120,8 +120,13 @@ describe("page d'accueil : informations pratiques (confirmées, identiques au me
       expect(visibleText).toContain(days);
       expect(visibleText).toContain(range);
     }
-    // Rien de non confirmé : pas de code postal, de livraison ni de réservation annoncées.
-    expect(visibleText.toLowerCase()).not.toMatch(/livraison|réserv|\b20\d{3}\b/);
+    // Portable et WhatsApp : mêmes numéros que le menu (bouton « Appeler » et commandes).
+    expect(page).toContain(`href="tel:+${SITE.callE164}"`);
+    expect(visibleText).toContain(SITE.callDisplay);
+    expect(page).toContain(`phone=${SITE.whatsappE164}`);
+    // Rien de non confirmé : pas de code postal ni de réservation annoncés. La livraison est
+    // affichée par le menu (« Livraison gratuite ») : l'engagement « Livraison rapide » est autorisé.
+    expect(visibleText.toLowerCase()).not.toMatch(/réserv|\b20\d{3}\b/);
   });
 });
 

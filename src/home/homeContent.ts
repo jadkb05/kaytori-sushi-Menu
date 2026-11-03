@@ -32,12 +32,13 @@ export const HERO_PHOTO: ResponsiveImage = {
 
 /**
  * Photo du hero sur téléphone et tablette en portrait (fournie par le restaurant, original :
- * public/accueil/hero-mobile.png). Plats en bas, salle et fresques au-dessus.
+ * public/accueil/hero-mobile-salle.jpg) : la salle, ses lanternes et la fresque ; le titre et les
+ * boutons se placent sur le feuillage flou du premier plan, assombri par un voile vert (#001814).
  */
 export const HERO_MOBILE_PHOTO = {
-  srcSet: "/accueil/hero-mobile-640.webp 640w, /accueil/hero-mobile-941.webp 941w",
-  width: 941,
-  height: 1671,
+  srcSet: "/accueil/hero-mobile-salle-640.webp 640w, /accueil/hero-mobile-salle-853.webp 853w",
+  width: 853,
+  height: 1280,
   /** Même règle que le <link rel="preload"> d'index.html. */
   media: "(max-width: 1023px) and (orientation: portrait)",
 } as const;

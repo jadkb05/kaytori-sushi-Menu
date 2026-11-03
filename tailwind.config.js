@@ -50,17 +50,23 @@ export default {
          * papier washi ; « leaf » = fond exact des photos de plats du menu (fusion sans bord).
          */
         home: {
-          washi: "#F4EEE2",
-          paper: "#EAE1D0",
-          ink: "#14251D",
-          soft: "#52625A",
+          /** Crème ivoire des sections claires. */
+          washi: "#F5F0E6",
+          paper: "#EBE3D3",
+          /** Encre vert-noir des titres sur crème. */
+          ink: "#0B2219",
+          soft: "#4E5C55",
           velvet: "#0F3B2C",
-          night: "#0A2219",
+          /** Vert profond : header, sections sombres. */
+          night: "#08291F",
+          /** Noir chaud, pour les contrastes (infos, pied de page). */
+          deep: "#0D1511",
           leaf: "#215134",
-          lantern: "#E3B15A",
-          lanternSoft: "#F1D9A6",
+          /** Or champagne. */
+          lantern: "#D9AD5B",
+          lanternSoft: "#EED6A4",
           /** Filet doré des photos (classe .photo-frame). */
-          frame: "#D9AD55",
+          frame: "#D9AD5B",
         },
         /** Espace /admin uniquement : fond ivoire, surfaces, encres et teinte de marque. */
         admin: {

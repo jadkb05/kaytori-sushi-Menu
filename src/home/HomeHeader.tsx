@@ -1,25 +1,36 @@
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ReactNode } from "react";
 import { BrandLogo } from "../components/BrandLogo";
 import { SITE } from "../config/site";
+import { BagIcon, Seigaiha } from "./HomeDecor";
 import { HOME_SECTIONS, MENU_PATH } from "./homeContent";
 
 const focusRing =
   "outline-none focus-visible:ring-2 focus-visible:ring-home-lantern focus-visible:ring-offset-2 focus-visible:ring-offset-home-night";
 
 /** Bouton principal « Commander » : mène toujours au menu digital existant. */
-export function OrderLink({ className = "", children = "Commander" }: { className?: string; children?: string }) {
+export function OrderLink({
+  className = "",
+  children = "Commander",
+  icon,
+}: {
+  className?: string;
+  children?: string;
+  /** Icône à côté du libellé (sac dans le header, flèche dans les sections). */
+  icon?: ReactNode;
+}) {
   return (
     <a
       href={MENU_PATH}
-      className={`inline-flex min-h-[44px] items-center justify-center rounded-full bg-home-lantern px-6 font-sans text-[0.95rem] font-semibold text-home-night transition-colors hover:bg-home-lanternSoft ${focusRing} ${className}`}
+      className={`group inline-flex min-h-[44px] items-center justify-center gap-2.5 rounded-full bg-home-lantern px-6 font-sans text-[0.95rem] font-semibold text-home-night shadow-[0_8px_24px_-10px_rgba(217,173,91,0.7)] transition-colors hover:bg-home-lanternSoft ${focusRing} ${className}`}
     >
+      {icon}
       {children}
     </a>
   );
 }
 
 /**
- * En-tête de la page d'accueil : transparent sur la photo, fond plein dès que la page défile.
+ * En-tête de la page d'accueil : vert profond et filet doré ; une ombre apparaît dès que la page défile.
  * Téléphone : navigation dans un panneau ouvert par un bouton (Échap ou un lien le referme).
  */
 export function HomeHeader() {
@@ -50,14 +61,16 @@ export function HomeHeader() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-40 transition-colors duration-300 ${
-        filled ? "bg-home-night/95 shadow-[0_1px_0_rgba(227,177,90,0.18)] backdrop-blur" : "bg-transparent"
-      }`}
+      className={`fixed inset-x-0 top-0 z-40 transition-shadow duration-300 ${
+        filled ? "shadow-[0_10px_30px_-12px_rgba(0,0,0,0.6)]" : ""
+      } isolate border-b border-home-lantern/35 bg-home-night`}
     >
-      <div className="mx-auto flex h-16 max-w-[90rem] items-center gap-3 px-4 sm:px-8 md:h-[4.5rem] lg:px-12">
-        <a href="/" className={`flex min-h-[44px] items-center gap-3 rounded-full pr-2 text-white ${focusRing}`}>
-          <BrandLogo size={38} className="ring-1 ring-home-lantern/40" />
-          <span className="whitespace-nowrap font-mincho text-[1.05rem] font-semibold leading-none max-[379px]:sr-only sm:text-[1.15rem]">{SITE.nameAccent} Sushi</span>
+      {/* Seigaiha très léger, en fondu vers le centre : présent sans gêner le logo ni le bouton. */}
+      <Seigaiha className="right-0 top-0 -z-10 h-16 w-[55%] md:h-[4.5rem] [mask-image:linear-gradient(to_left,black,transparent)]" opacity={0.4} />
+      <div className="mx-auto flex h-16 max-w-[90rem] items-center gap-2 px-3.5 sm:px-8 md:h-[4.5rem] lg:px-12">
+        <a href="/" className={`flex min-h-[44px] min-w-0 items-center gap-2.5 rounded-full pr-1 text-white sm:gap-3 ${focusRing}`}>
+          <BrandLogo size={38} className="shrink-0 ring-1 ring-home-lantern ring-offset-2 ring-offset-home-night" />
+          <span className="shrink-0 whitespace-nowrap font-display text-[1rem] font-medium leading-none max-[339px]:sr-only sm:text-[1.3rem]">{SITE.nameAccent} Sushi</span>
         </a>
 
         <nav aria-label="Navigation principale" className="ml-auto hidden lg:block">
@@ -75,7 +88,7 @@ export function HomeHeader() {
           </ul>
         </nav>
 
-        <OrderLink className="ml-auto px-5 text-[0.9rem] lg:ml-4" />
+        <OrderLink className="ml-auto shrink-0 gap-1.5 px-3.5 text-[0.86rem] max-sm:!min-h-[42px] max-sm:!px-[1.25rem] max-sm:!text-[0.92rem] max-[379px]:!px-[0.95rem] max-[379px]:!text-[0.86rem] sm:gap-2 sm:px-5 sm:text-[0.9rem] lg:ml-4" icon={<BagIcon className="-ml-0.5 max-[399px]:hidden" />} />
 
         <button
           ref={toggleRef}
@@ -84,13 +97,13 @@ export function HomeHeader() {
           aria-controls={panelId}
           aria-label={open ? "Fermer la navigation" : "Ouvrir la navigation"}
           onClick={() => setOpen((v) => !v)}
-          className={`-mr-1.5 inline-flex h-11 w-11 items-center justify-center rounded-full text-white lg:hidden ${focusRing}`}
+          className={`-mr-2 inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-white lg:hidden ${focusRing}`}
         >
           <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round">
             {open ? (
               <path d="M5 5l12 12M17 5L5 17" />
             ) : (
-              <path d="M3 7h16M3 15h16" />
+              <path d="M3 6h16M3 11h16M3 16h16" />
             )}
           </svg>
         </button>
@@ -100,7 +113,7 @@ export function HomeHeader() {
         id={panelId}
         aria-label="Navigation principale"
         hidden={!open}
-        className="border-t border-home-lantern/15 bg-home-night lg:hidden"
+        className="border-t border-home-lantern/20 bg-home-night lg:hidden"
       >
         <ul className="mx-auto max-w-[90rem] px-4 pb-6 pt-2 sm:px-8">
           {[...HOME_SECTIONS.map((s) => ({ href: `#${s.id}`, label: s.label })), { href: MENU_PATH, label: "La carte" }].map(
@@ -109,7 +122,7 @@ export function HomeHeader() {
                 <a
                   href={link.href}
                   onClick={() => setOpen(false)}
-                  className={`flex min-h-[56px] items-center font-mincho text-[1.35rem] text-white ${focusRing}`}
+                  className={`flex min-h-[56px] items-center font-display text-[1.4rem] text-white transition-colors hover:text-home-lanternSoft ${focusRing}`}
                 >
                   {link.label}
                 </a>
