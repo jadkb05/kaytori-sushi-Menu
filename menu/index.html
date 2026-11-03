@@ -55,7 +55,52 @@
     />
   </head>
   <body class="antialiased text-kaytori-green bg-kaytori-cream">
-    <div id="root"></div>
+    <div id="root">
+      <!--
+        Squelette affiché dès le HTML, avant l'exécution de JavaScript (sinon : page crème vide le temps
+        de télécharger et d'exécuter le bundle). React le remplace entièrement au premier rendu.
+        En-tête = copie conforme de celui de MenuPage (mêmes classes : aucun saut à l'apparition du menu).
+        Pas de H1 ici : le seul H1 est celui du menu.
+      -->
+      <div data-app-shell class="min-h-dvh bg-kaytori-page" aria-busy="true">
+        <div class="sticky top-0 z-30 bg-[#0c1712]">
+          <div class="mx-auto flex h-14 max-w-5xl items-center gap-2.5 px-3 sm:gap-3 sm:px-6">
+            <span class="inline-flex shrink-0 overflow-hidden rounded-full ring-1 ring-kaytori-gold/30" style="width: 36px; height: 36px">
+              <img src="/kaytori-logo-2026.webp" alt="" width="36" height="36" class="block h-full w-full object-cover object-center" aria-hidden="true" />
+            </span>
+            <div class="min-w-0 flex-1 leading-none">
+              <p class="truncate font-display text-[1.1rem] font-semibold tracking-tight text-kaytori-cream">Kaytôri Sushi</p>
+              <p class="mt-1.5 whitespace-nowrap font-sans text-[0.625rem] font-semibold uppercase tracking-[0.18em] text-kaytori-gold/85">Sushi · Wok · Thaï</p>
+            </div>
+            <span class="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-kaytori-gold/40 text-kaytori-goldLight sm:h-10 sm:w-10" aria-hidden="true">
+              <svg viewBox="0 0 24 24" class="h-[1.15rem] w-[1.15rem]" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7" />
+                <path d="m20 20-3.5-3.5" />
+              </svg>
+            </span>
+            <a
+              href="tel:+212665801807"
+              class="inline-flex min-h-[44px] shrink-0 items-center gap-1.5 rounded-full border border-kaytori-gold/40 px-3.5 font-sans text-[0.68rem] font-semibold uppercase tracking-[0.12em] text-kaytori-goldLight sm:min-h-[40px] sm:px-4 sm:text-[0.72rem]"
+              aria-label="Appeler 06 65 80 18 07"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4 shrink-0" aria-hidden="true" focusable="false">
+                <path d="M6.6 3.5h2.6l1.4 4-2 1.4a12 12 0 0 0 6.5 6.5l1.4-2 4 1.4v2.6a2 2 0 0 1-2.2 2A17 17 0 0 1 4.6 5.7a2 2 0 0 1 2-2.2Z" />
+              </svg>
+              <span class="max-[359px]:sr-only">Appeler</span>
+            </a>
+          </div>
+          <div class="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-kaytori-gold/55 to-transparent" aria-hidden="true"></div>
+        </div>
+        <div class="flex flex-col items-center gap-3 px-6 pt-[22vh] text-center" role="status">
+          <span class="flex gap-1.5" aria-hidden="true">
+            <span class="h-1.5 w-1.5 rounded-full bg-kaytori-gold motion-safe:animate-pulse"></span>
+            <span class="h-1.5 w-1.5 rounded-full bg-kaytori-gold/70 motion-safe:animate-pulse [animation-delay:200ms]"></span>
+            <span class="h-1.5 w-1.5 rounded-full bg-kaytori-gold/40 motion-safe:animate-pulse [animation-delay:400ms]"></span>
+          </span>
+          <p class="font-sans text-[0.8rem] font-medium text-kaytori-muted">Chargement du menu…</p>
+        </div>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
