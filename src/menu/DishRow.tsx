@@ -82,7 +82,7 @@ function keepQuantityTogether(name: string): string {
  * `highlighted` : brève mise en évidence quand la recherche mène à ce plat.
  */
 export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; highlighted?: boolean }) {
-  const { hasVariants, pickerOpen, openPicker, handleAdd, variantModal } = useDishAdd(item);
+  const { hasVariants, pickerOpen, openPicker, handleAdd, removeOne, variantModal } = useDishAdd(item);
   const { lines } = useCart();
   /** Nom affiché sous le titre de catégorie (le panier garde le nom complet). */
   const displayName = getDisplayProductName(item, item.category);
@@ -193,10 +193,11 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
       </span>
     </span>
   );
-  /** Bouton « + » : rond, du même vert que les fonds de photos. */
+  /** Ronds « + » / « − » : « + » plein, du même vert que les fonds de photos ; « − » en contour. */
+  const round = "grid h-8 w-8 place-items-center rounded-full transition-transform group-active/btn:scale-95";
   const plus = (
     <span
-      className="grid h-8 w-8 place-items-center rounded-full bg-kaytori-photoGreen text-kaytori-goldLight shadow-[0_6px_14px_-8px_rgba(31,81,51,0.8)] transition-transform group-active/add:scale-95"
+      className={`${round} bg-kaytori-photoGreen text-kaytori-goldLight shadow-[0_6px_14px_-8px_rgba(31,81,51,0.8)]`}
       aria-hidden
     >
       <svg viewBox="0 0 20 20" className="h-[15px] w-[15px]">
@@ -204,8 +205,15 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
       </svg>
     </span>
   );
-  const sideClass =
-    "group/add relative z-[1] flex w-[5rem] shrink-0 flex-col items-center outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-kaytori-green/50 min-[375px]:w-[5.4rem]";
+  const minus = (
+    <span className={`${round} border border-kaytori-photoGreen/45 bg-white text-kaytori-photoGreen`} aria-hidden>
+      <svg viewBox="0 0 20 20" className="h-[15px] w-[15px]">
+        <path d="M4 10h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" fill="none" />
+      </svg>
+    </span>
+  );
+  const btnClass =
+    "group/btn grid place-items-center rounded-full p-0.5 outline-none focus-visible:ring-2 focus-visible:ring-kaytori-green/50";
 
   return (
     <li id={dishAnchorId(item.id)} className="touch-manipulation">
@@ -216,30 +224,32 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
       >
         <div className="relative z-[1] flex min-w-0 flex-1 items-center py-2.5 pl-2.5 pr-2">{body}</div>
 
-        {hasVariants ? (
-          <div className={sideClass}>
+        <div className="relative z-[1] flex w-[5rem] shrink-0 flex-col items-center min-[375px]:w-[5.4rem]">
+          {/* Le prix reste une grande zone tactile (même action que « + ») ; pour le clavier, seuls « − » / « + » comptent. */}
+          <button type="button" tabIndex={-1} aria-hidden onClick={handleAdd} className="flex w-full flex-1 outline-none">
             {priceBlock}
+          </button>
+          <div className="flex items-center justify-center gap-1 px-1 py-1.5">
+            {inCart > 0 ? (
+              <button
+                type="button"
+                onClick={removeOne}
+                className={btnClass}
+                aria-label={`Retirer une unité de ${displayName} du panier`}
+              >
+                {minus}
+              </button>
+            ) : null}
             <button
               type="button"
               onClick={handleAdd}
-              className="group/add grid place-items-center px-2 py-2 outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-kaytori-green/50"
-              aria-label={`Choisir une option pour ${displayName}`}
+              className={btnClass}
+              aria-label={hasVariants ? `Choisir une option pour ${displayName}` : `Ajouter ${displayName} au panier`}
             >
               {plus}
             </button>
           </div>
-        ) : (
-          /* Plat simple : prix et « + » forment une seule zone tactile (même action que « + »). */
-          <button
-            type="button"
-            onClick={handleAdd}
-            className={`${sideClass} text-left`}
-            aria-label={`Ajouter ${displayName} au panier`}
-          >
-            {priceBlock}
-            <span className="grid place-items-center px-2 py-2">{plus}</span>
-          </button>
-        )}
+        </div>
       </article>
       {variantModal}
     </li>

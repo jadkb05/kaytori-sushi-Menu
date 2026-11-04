@@ -20,7 +20,7 @@ import { formatPriceDH, getDisplayProductName } from "./menuDisplay";
  *   fenêtre avec les seules options, au prix du produit ; ligne « Nom — Plat : X ».
  */
 export function useDishAdd(item: YumloMenuItem) {
-  const { addItem } = useCart();
+  const { addItem, lines, decrement } = useCart();
   const variants = item.variants;
   const hasVariants = Boolean(variants && variants.length > 0);
   const [pickerOpen, setPickerOpen] = useState(false);
@@ -124,6 +124,17 @@ export function useDishAdd(item: YumloMenuItem) {
       return;
     }
     addItem(item.id, item.name, item.priceMAD);
+  };
+
+  /** « − » : retire une unité de la dernière ligne ajoutée pour ce plat (variante comprise) ; à 0 la ligne disparaît. */
+  const removeOne = () => {
+    for (let i = lines.length - 1; i >= 0; i -= 1) {
+      const id = lines[i].id;
+      if (id === item.id || id.startsWith(`${item.id}:`)) {
+        decrement(id);
+        return;
+      }
+    }
   };
 
   const confirmVariantAdd = () => {
@@ -360,5 +371,5 @@ export function useDishAdd(item: YumloMenuItem) {
         )
       : null;
 
-  return { hasVariants, pickerOpen, selectedInModal, openPicker, handleAdd, variantModal };
+  return { hasVariants, pickerOpen, selectedInModal, openPicker, handleAdd, removeOne, variantModal };
 }

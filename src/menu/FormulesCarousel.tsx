@@ -85,7 +85,7 @@ function FormuleCard({
   scrollerRef: RefObject<HTMLUListElement | null>;
 }) {
   /** Même ajout au panier que les autres plats (Formule Duo 2 : fenêtre de choix du plat). */
-  const { handleAdd, variantModal } = useDishAdd(item);
+  const { handleAdd, removeOne, variantModal } = useDishAdd(item);
   const { lines } = useCart();
   /** Lignes du produit, y compris celles avec un choix (`id:plat=…`). */
   const inCart = useMemo(
@@ -108,7 +108,7 @@ function FormuleCard({
       className="relative w-[64%] shrink-0 touch-manipulation min-[400px]:w-[60%] min-[480px]:w-[46%] md:w-[calc((100%-1rem)/2)] lg:w-auto"
     >
       <article
-        className={`flex h-full flex-col gap-2 rounded-[1.2rem] bg-[linear-gradient(160deg,#0a4632_0%,#003024_55%,#00241b_100%)] p-1.5 text-kaytori-cream shadow-[0_14px_22px_-16px_rgba(0,36,27,0.8)] ring-1 transition-shadow duration-500 motion-reduce:transition-none md:gap-2.5 md:rounded-[1.4rem] md:p-2.5 ${
+        className={`flex h-full flex-col gap-2 rounded-[1.2rem] bg-home-night p-1.5 text-kaytori-cream shadow-[0_14px_22px_-16px_rgba(0,36,27,0.8)] ring-1 transition-shadow duration-500 motion-reduce:transition-none md:gap-2.5 md:rounded-[1.4rem] md:p-2.5 ${
           highlighted ? "ring-2 ring-kaytori-gold" : "ring-kaytori-gold/25"
         }`}
       >
@@ -127,10 +127,36 @@ function FormuleCard({
               className="absolute inset-0 h-full w-full rounded-lg object-contain object-center md:rounded-[10px]"
             />
           </div>
+          {midiBlocked ? null : (
+            /* « + » posé sur l'affiche, en bas au milieu ; dès que la formule est au panier, un « − » apparaît à côté. */
+            <div className="absolute inset-x-0 bottom-1 flex items-center justify-center gap-0.5 md:bottom-2">
+              {inCart > 0 ? (
+                <button
+                  type="button"
+                  onClick={removeOne}
+                  aria-label={`Retirer une unité de ${item.name} du panier`}
+                  className={roundBtn}
+                >
+                  <span className={`${round} border border-kaytori-gold/80 bg-home-night text-kaytori-goldLight`} aria-hidden>
+                    <svg viewBox="0 0 20 20" className="h-[13px] w-[13px]">
+                      <path d="M4 10h12" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+                    </svg>
+                  </span>
+                </button>
+              ) : null}
+              <button type="button" onClick={handleAdd} aria-label={`Ajouter ${item.name} au panier`} className={roundBtn}>
+                <span className={`${round} bg-[linear-gradient(135deg,#F9E39A_0%,#EBC447_55%,#D4A520_100%)] text-kaytori-black shadow-[0_4px_12px_-4px_rgba(0,0,0,0.55)]`} aria-hidden>
+                  <svg viewBox="0 0 20 20" className="h-[13px] w-[13px]">
+                    <path d="M10 4v12M4 10h12" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" fill="none" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          )}
           {inCart > 0 ? (
             <span
               key={inCart}
-              className="absolute -right-1.5 -top-1.5 grid h-7 min-w-7 place-items-center rounded-full border-2 border-[#003024] bg-kaytori-gold px-1.5 font-sans text-[0.75rem] font-bold tabular-nums text-kaytori-black motion-safe:animate-badge-pop"
+              className="absolute -right-1.5 -top-1.5 grid h-7 min-w-7 place-items-center rounded-full border-2 border-home-night bg-kaytori-gold px-1.5 font-sans text-[0.75rem] font-bold tabular-nums text-kaytori-black motion-safe:animate-badge-pop"
               aria-label={`${inCart} au panier`}
             >
               {inCart}
@@ -148,24 +174,17 @@ function FormuleCard({
           >
             {FORMULE_MIDI_UNAVAILABLE_LABEL}
           </button>
-        ) : (
-          <button
-            type="button"
-            onClick={handleAdd}
-            aria-label={`Ajouter ${item.name} au panier`}
-            className="mt-auto inline-flex min-h-[40px] w-full items-center justify-center gap-1.5 whitespace-nowrap rounded-full bg-gold-shine px-3 font-sans text-[0.8rem] font-semibold text-kaytori-black shadow-[0_6px_18px_-8px_rgba(212,175,55,0.7)] transition-[filter] active:brightness-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight focus-visible:ring-offset-2 focus-visible:ring-offset-[#003024] md:min-h-[42px] md:gap-2 md:px-4 md:text-[0.9rem]"
-          >
-            <svg viewBox="0 0 16 16" className="h-4 w-4" aria-hidden>
-              <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" fill="none" />
-            </svg>
-            Ajouter au panier
-          </button>
-        )}
+        ) : null}
       </article>
       {variantModal}
     </li>
   );
 }
+
+/** Ronds « + » / « − » posés sur l'affiche : un peu plus petits que ceux des plats (28 px), pleins. */
+const roundBtn =
+  "group/btn grid place-items-center rounded-full p-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-goldLight focus-visible:ring-offset-2 focus-visible:ring-offset-home-night";
+const round = "grid h-7 w-7 place-items-center rounded-full transition-transform group-active/btn:scale-95";
 
 /**
  * Rangée horizontale des formules : glissement au doigt libre (sans aimantation), flèches ← / →
@@ -219,11 +238,11 @@ export function FormulesCarousel({
   };
 
   const arrowClass =
-    "absolute top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-kaytori-gold/50 bg-[#003024]/90 text-kaytori-goldLight shadow-[0_6px_16px_-6px_rgba(0,36,27,0.7)] backdrop-blur-sm transition-opacity duration-200 active:bg-[#00241b] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-gold disabled:pointer-events-none disabled:opacity-0 motion-reduce:transition-none md:grid";
+    "absolute top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 place-items-center rounded-full border border-kaytori-gold/50 bg-home-night/90 text-kaytori-goldLight shadow-[0_6px_16px_-6px_rgba(0,36,27,0.7)] backdrop-blur-sm transition-opacity duration-200 active:bg-home-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-kaytori-gold disabled:pointer-events-none disabled:opacity-0 motion-reduce:transition-none md:grid";
 
   if (items.length === 0) {
     return (
-      <p className="rounded-[1.2rem] border border-kaytori-gold/25 bg-[#003024] px-4 py-8 text-center font-sans text-sm text-kaytori-cream/85">
+      <p className="rounded-[1.2rem] border border-kaytori-gold/25 bg-home-night px-4 py-8 text-center font-sans text-sm text-kaytori-cream/85">
         Aucune formule disponible pour le moment.
       </p>
     );
