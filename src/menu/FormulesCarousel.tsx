@@ -137,7 +137,7 @@ function FormuleCard({
                   aria-label={`Retirer une unité de ${item.name} du panier`}
                   className={roundBtn}
                 >
-                  <span className={`${round} border-[1.5px] border-kaytori-gold bg-home-night text-kaytori-goldLight`} aria-hidden>
+                  <span className={`${round} bg-home-night text-kaytori-goldLight`} aria-hidden>
                     <svg viewBox="0 0 20 20" className="h-[13px] w-[13px]">
                       <path d="M4 10h12" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" fill="none" />
                     </svg>
@@ -145,7 +145,7 @@ function FormuleCard({
                 </button>
               ) : null}
               <button type="button" onClick={handleAdd} aria-label={`Ajouter ${item.name} au panier`} className={roundBtn}>
-                <span className={`${round} border-[1.5px] border-kaytori-gold bg-[linear-gradient(135deg,#F9E39A_0%,#EBC447_55%,#D4A520_100%)] text-kaytori-greenMid`} aria-hidden>
+                <span className={`${round} bg-[linear-gradient(135deg,#F9E39A_0%,#EBC447_55%,#D4A520_100%)] text-kaytori-greenMid`} aria-hidden>
                   <svg viewBox="0 0 20 20" className="h-[13px] w-[13px]">
                     <path d="M10 4v12M4 10h12" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" fill="none" />
                   </svg>
