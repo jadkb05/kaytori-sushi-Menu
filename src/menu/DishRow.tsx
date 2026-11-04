@@ -193,11 +193,15 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
       </span>
     </span>
   );
-  /** Ronds « + » / « − » : « + » plein, du même vert que les fonds de photos ; « − » en contour. */
-  const round = "grid h-8 w-8 place-items-center rounded-full transition-transform group-active/btn:scale-95";
+  /**
+   * Ronds « + » / « − » : même diamètre, même ombre et même icône, pour qu'ils paraissent de la même taille.
+   * « + » plein, du même vert que les fonds de photos ; « − » blanc cerclé de ce vert.
+   */
+  const round =
+    "grid h-8 w-8 place-items-center rounded-full shadow-[0_6px_14px_-8px_rgba(31,81,51,0.8)] transition-transform group-active/btn:scale-95";
   const plus = (
     <span
-      className={`${round} bg-kaytori-photoGreen text-kaytori-goldLight shadow-[0_6px_14px_-8px_rgba(31,81,51,0.8)]`}
+      className={`${round} border-[1.5px] border-kaytori-photoGreen bg-kaytori-photoGreen text-kaytori-goldLight`}
       aria-hidden
     >
       <svg viewBox="0 0 20 20" className="h-[15px] w-[15px]">
@@ -206,7 +210,7 @@ export function DishRow({ item, highlighted = false }: { item: YumloMenuItem; hi
     </span>
   );
   const minus = (
-    <span className={`${round} border border-kaytori-photoGreen/45 bg-white text-kaytori-photoGreen`} aria-hidden>
+    <span className={`${round} border-[1.5px] border-kaytori-photoGreen bg-white text-kaytori-photoGreen`} aria-hidden>
       <svg viewBox="0 0 20 20" className="h-[15px] w-[15px]">
         <path d="M4 10h12" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" fill="none" />
       </svg>

@@ -272,7 +272,7 @@ export function CoverCarousel() {
           }}
           onClick={onAdd}
         >
-          <span aria-hidden>+</span>
+          <span aria-hidden className="text-kaytori-greenMid">+</span>
           {inCart > 0 ? (
             <span
               key={inCart}
