@@ -18,6 +18,7 @@ import { CoverCarousel } from "../menu/CoverCarousel";
 import { DesktopCoverBanner } from "../menu/DesktopCoverBanner";
 import { DishRow } from "../menu/DishRow";
 import { FormulesCarousel } from "../menu/FormulesCarousel";
+import { Seigaiha } from "../home/HomeDecor";
 import { useMenu } from "../menu/MenuProvider";
 import { categoryAnchorId, categoryDisplayTitle, formuleSectionSubtitle } from "../menu/menuDisplay";
 import { resolveDishDeepLink, resolveMenuDeepLink } from "../menu/menuDeepLinks";
@@ -260,7 +261,9 @@ export function MenuPage() {
 
   return (
     <div className="min-h-dvh bg-kaytori-page">
-      <header ref={headerRef} className="sticky top-0 z-30 bg-[#0c1712]">
+      <header ref={headerRef} className="sticky top-0 z-30 isolate bg-home-night">
+        {/* Même habillage que l'en-tête de la vitrine : vert profond + seigaiha en fondu à droite. */}
+        <Seigaiha className="right-0 top-0 -z-10 h-full w-[55%] [mask-image:linear-gradient(to_left,black,transparent)]" opacity={0.4} />
         <div className="mx-auto flex h-14 max-w-5xl items-center gap-2.5 px-3 sm:gap-3 sm:px-6">
           {/* Logo : retour à la page d'accueil du restaurant (/). */}
           <a

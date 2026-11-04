@@ -10,6 +10,7 @@ import {
 } from "../data/formuleMidiAvailability";
 import type { YumloMenuItem } from "../data/yumloMenu";
 import { useFormuleMidiAvailable } from "../hooks/useFormuleMidiAvailable";
+import { Seigaiha } from "../home/HomeDecor";
 import { useMenu } from "../menu/MenuProvider";
 import { dishImage, dishThumbs } from "../menu/menuDisplay";
 import { CheckoutForm, OrderRecap, splitName } from "./CheckoutSteps";
@@ -287,7 +288,9 @@ export function OrderReview({ onClose }: Props) {
       aria-labelledby="order-review-title"
       className="fixed inset-0 z-[70] flex flex-col bg-kaytori-cream"
     >
-      <header className="relative shrink-0 bg-[#0c1712]">
+      <header className="relative isolate shrink-0 bg-home-night">
+        {/* Même habillage que l'en-tête du menu et de la vitrine : vert profond + seigaiha en fondu à droite. */}
+        <Seigaiha className="right-0 top-0 -z-10 h-full w-[55%] [mask-image:linear-gradient(to_left,black,transparent)]" opacity={0.4} />
         <div className="mx-auto flex h-14 max-w-lg items-center gap-1 px-1.5 sm:px-3">
           <button
             type="button"

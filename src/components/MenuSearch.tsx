@@ -108,7 +108,7 @@ export function MenuSearch({ menu, headerHeight, onSelect }: Props) {
         aria-haspopup="dialog"
         aria-expanded={open}
         aria-label="Rechercher un plat ou une catégorie"
-        className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-kaytori-gold/40 text-kaytori-goldLight outline-none transition-colors hover:border-kaytori-gold/70 focus-visible:ring-2 focus-visible:ring-kaytori-gold/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0c1712] active:bg-white/10 sm:h-10 sm:w-10"
+        className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-kaytori-gold/40 text-kaytori-goldLight outline-none transition-colors hover:border-kaytori-gold/70 focus-visible:ring-2 focus-visible:ring-kaytori-gold/80 focus-visible:ring-offset-2 focus-visible:ring-offset-home-night active:bg-white/10 sm:h-10 sm:w-10"
       >
         <SearchIcon className="h-[1.15rem] w-[1.15rem]" />
       </button>
