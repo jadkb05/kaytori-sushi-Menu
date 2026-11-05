@@ -137,7 +137,7 @@ function FormuleCard({
                   aria-label={`Retirer une unité de ${item.name} du panier`}
                   className={roundBtn}
                 >
-                  <span className={`${round} bg-home-night text-kaytori-goldLight`} aria-hidden>
+                  <span className={`${round} bg-kaytori-cream text-kaytori-greenMid`} aria-hidden>
                     <svg viewBox="0 0 20 20" className="h-[13px] w-[13px]">
                       <path d="M4 10h12" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" fill="none" />
                     </svg>
