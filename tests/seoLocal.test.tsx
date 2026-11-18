@@ -174,15 +174,23 @@ describe("SEO-03 : robots.txt et sitemap.xml", () => {
 describe("SEO-03 : vercel.json", () => {
   const config = JSON.parse(read("vercel.json")) as {
     rewrites: { source: string; destination: string }[];
+    redirects: { source: string; destination: string; permanent: boolean }[];
     headers: { source: string; headers: { key: string; value: string }[] }[];
   };
 
   it("rewrites : /menu → menu/index.html (application du menu) ; / reste la page d'accueil ; plus de /admin", () => {
     expect(config.rewrites).toEqual([
       { source: "/menu", destination: "/menu/index.html" },
-      { source: "/menu/", destination: "/menu/index.html" },
     ]);
     expect(config.rewrites.some((r) => r.source === "/")).toBe(false);
+  });
+
+  it("redirections 308 des doublons (/index.html, /menu/, /menu/index.html) vers les URL canoniques", () => {
+    expect(config.redirects).toEqual([
+      { source: "/index.html", destination: "/", permanent: true },
+      { source: "/menu/", destination: "/menu", permanent: true },
+      { source: "/menu/index.html", destination: "/menu", permanent: true },
+    ]);
   });
 
   it("aucun en-tête X-Robots-Tag (plus d'espace /admin à exclure)", () => {
